@@ -1,0 +1,7 @@
+logs
+tests/reports/*
+tests/screenshots/*
+tests/generated/*
+.buildpath
+.project
+.settings

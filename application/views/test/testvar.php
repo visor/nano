@@ -1,0 +1,1 @@
+<?php echo $title; ?>. <?php foreach ($array as $key => $value): ?><?php echo $key; ?>=<?php echo $value; ?>.<?php endforeach; ?>
