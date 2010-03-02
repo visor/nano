@@ -7,11 +7,8 @@ class CustomDispatcherTest extends TestUtils_TestCase {
 	 */
 	private $dispatcher;
 
-	public static function setUpBeforeClass() {
-		require_once dirName(__FILE__) . DS . '_files' . DS . 'Test_Dispatcher.php';
-	}
-
 	protected function setUp() {
+		require_once dirName(__FILE__) . DS . '_files' . DS . 'Test_Dispatcher.php';
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->dispatcher->setCustom(new Test_Dispatcher());
 	}
