@@ -18,7 +18,6 @@
 	</filter>
 
 	<logging>
-		<log type="junit"         target="./tests/reports/junit.xml" logIncompleteSkipped="true" />
 		<log type="coverage-html" target="./tests/reports/report" charset="UTF-8" yui="true" highlight="false" lowUpperBound="35" highLowerBound="70" />
 	</logging>
 

@@ -10,3 +10,4 @@ require dirName(__FILE__) . '/../library/Nano.php';
 Nano::instance();
 Nano::config('selenium');
 Nano_Db::setDefault('test');
+

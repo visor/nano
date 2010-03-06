@@ -2,6 +2,8 @@ logs
 tests/reports/*
 tests/screenshots/*
 tests/generated/*
+application/*.log
+application/settings/*
 .buildpath
 .project
 .settings
