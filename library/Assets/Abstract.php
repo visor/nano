@@ -2,13 +2,12 @@
 
 abstract class Assets_Abstract {
 
-	const DEFAULT_NAME  = 'default';
 	const DEFAULT_GROUP = 'default';
 
 	/**
 	 * @var array[string]
 	 */
-	protected $data = array();
+	protected $items = array();
 
 	/**
 	 * @var mixed[string]
@@ -16,9 +15,9 @@ abstract class Assets_Abstract {
 	protected $variables = array();
 
 	/**
-	 * @var int
+	 * @var string
 	 */
-	protected $time;
+	protected $output = null;
 
 	/**
 	 * @var string
@@ -32,72 +31,21 @@ abstract class Assets_Abstract {
 
 	/**
 	 * @return string
-	 * @param string $name
-	 */
-	abstract public function tag($name = self::DEFAULT_NAME);
-
-	/**
-	 * @param string $file
-	 */
-	public function php($file, $group = self::DEFAULT_GROUP) {
-		$this->addData(true, $group, $file, null, true);
-		return $this;
-	}
-
-	/**
-	 * @return boolean
-	 * @param string $name
-	 */
-	public function exists($name = self::DEFAULT_NAME) {
-		return file_exists($this->getBaseDirectory($name));
-	}
-
-	/**
-	 * @return void
-	 * @param string $name
-	 */
-	public function load($name = self::DEFAULT_NAME) {
-		$meta = $this->getMeta($name);
-		$this->data      = $meta['files'];
-		$this->variables = $meta['variables'];
-		$this->time      = $meta['time'];
-	}
-
-	/**
-	 * @return void
-	 * @param string $name
-	 */
-	public function build($name = self::DEFAULT_NAME) {
-		$dir = $this->getBaseDirectory($name);
-		if (!file_exists($dir)) {
-			mkDir($dir);
-		}
-		foreach ($this->data as $groupName => $files) {
-			$contents = $this->buildGroup($groupName, $files);
-			$contents = $this->replaceVariables($contents);
-			$contents = $this->postProcessing($contents);
-			$this->write($name, $groupName, $contents);
-		}
-		$this->writeMeta($name);
-	}
-
-	/**
-	 * @return void
-	 * @param string $name
+	 * @param string $url
+	 * @param array $item
 	 * @param string $group
 	 */
-	public function import($name = self::DEFAULT_NAME, $group = self::DEFAULT_GROUP) {
-		$this->load($name);
-		if ($this->isModified()) {
-			header('Last-Modified: ' . gmDate('D, j M Y H:i:s', $this->time) .' GMT');
-			header('Expires: ' . gmDate('D, j M Y H:i:s', $this->time + Date::ONE_MONTH) .' GMT');
-			header('Cache-Control: max-age=' . Date::ONE_MONTH .', public');
-			include $this->getCacheFileName($name, $group);
-		} else {
-			header('Last-Modified: ' . gmDate('D, j M Y H:i:s', $this->time) .' GMT', true, 304);
-			header('Expires: ' . gmDate('D, j M Y H:i:s', $this->time + Date::ONE_MONTH) .' GMT');
-			header('Cache-Control: max-age=' . Date::ONE_MONTH .', public');
-		}
+	abstract protected function tag($url, array $item, $group);
+
+	/**
+	 * Sets output folder for compiled assets
+	 *
+	 * @return Assets_Abstract
+	 * @param string $path
+	 */
+	public function setOutput($path) {
+		$this->output = $path;
+		return $this;
 	}
 
 	/**
@@ -105,8 +53,37 @@ abstract class Assets_Abstract {
 	 *
 	 * @return array
 	 */
-	public function getData() {
-		return $this->data;
+	public function getItems() {
+		return $this->items;
+	}
+
+	/**
+	 * @return Assets_Abstract
+	 * @param boolean $append
+	 * @param boolean $script
+	 * @param string $file
+	 * @param string $group
+	 * @param array $params
+	 */
+	public function addItem($append, $php, $file, array $params = array()) {
+		$key = $this->createKey($params);
+		if (isset($this->items[$key][$file])) {
+			return $this;
+		}
+		$item = array(
+			  'params' => $params
+			, 'php'    => $php
+		);
+		if (!isset($this->items[$key])) {
+			$this->items[$key] = array($file => $item);
+			return $this;
+		}
+		if ($append) {
+			$this->items[$key][$file] = $item;
+		} else {
+			$this->items[$key] = array_merge(array($file => $item), $this->items[$key]);
+		}
+		return $this;
 	}
 
 	/**
@@ -126,94 +103,126 @@ abstract class Assets_Abstract {
 	}
 
 	/**
-	 * @return Assets_Abstract
-	 * @param int $value
+	 * @return void
+	 * @param string $name
+	 * @param string $group
 	 */
-	public function setTime($value) {
-		$this->time = $value;
-		return $this;
-	}
+	public function import() {
+		if (null === $this->output) {
+			throw new RuntimeException('No output folder');
+		}
+		if (!is_dir($this->output)) {
+			throw new RuntimeException('No output folder');
+		}
 
-	protected function addData($append, $group, $file, $params = null, $script = false) {
-		$item = array(
-			  'file'   => $file
-			, 'params' => $params
-			, 'script' => $script
-		);
-		if (!isset($this->data[$group])) {
-			$this->data[$group] = array($item);
-			return;
+		$base   = $this->generateBaseName();
+		$folder = $this->getBasePath($base);
+		if (!file_exists($folder)) {
+			mkDir($folder, 0777, true);
 		}
-		if ($append) {
-			$this->data[$group][] = $item;
-		} else {
-			array_unshift($this->data[$group], $item);
+		$tags = array();
+		foreach ($this->items as $group => $item) {
+			$tags[] = $this->tag($this->getGroupUrl($base, $group), $item, $group);
+			$this->write($base, $group);
 		}
+		return implode(PHP_EOL, $tags);
 	}
 
 	/**
-	 * Generates group name using passed parameters
+	 * Returns contents of given group
 	 *
 	 * @return string
-	 * @param  string $param1[, string $param2[, ...]]
+	 * @param string $group
 	 */
-	protected function getGroup() {
-		$params = func_get_args();
-		return implode('-', $params);
+	public function get($group = self::DEFAULT_GROUP) {
+		return $this->getGroupContents($group);
+	}
+
+	/**
+	 * @return void
+	 * @param string $base
+	 * @param string $group
+	 */
+	protected function write($base, $group) {
+		$file     = $this->getGroupFile($base, $group);
+		$contents = $this->getGroupContents($group);
+		file_put_contents($file, $contents);
 	}
 
 	/**
 	 * @return string
-	 * @param string $name
+	 * @param string $string
 	 */
-	protected function getBaseDirectory($name) {
-		return Nano::config('assets')->path . DS . $this->type . DS . $name;
+	protected function postProcessing($string) {
+		return $string;
 	}
 
 	/**
-	 * @return DirectoryIterator
-	 * @param string $name
+	 * Builds string key for given group and params array
+	 *
+	 * @return string
+	 * @param string $group
+	 * @param string[string] $params
 	 */
-	protected function getFiles($name) {
-	}
-
-	/**
-	 * @return array
-	 * @param string $name
-	 */
-	protected function getMeta($name) {
-		$source    = $this->getMetaFileName($name);
-		$files     = array();
-		$variables = array();
-		$time      = array();
-		if (file_exists($source)) {
-			include($source);
+	protected function createKey(array $params) {
+		$result = array_values($params);
+		if (empty($result)) {
+			$result = array(self::DEFAULT_GROUP);
 		}
-		return array(
-			  'files'     => $files
-			, 'variables' => $variables
-			, 'time'      => $time
-		);
+		$result = implode('-', $result);
+		$result = strToLower($result);
+		$result = str_replace(' ', '', $result);
+
+		return $result;
 	}
 
 	/**
 	 * @return string
-	 * @param string $groupName
-	 * @param array $files
 	 */
-	protected function buildGroup($groupName, array $files) {
+	protected function generateBaseName() {
+		return md5(serialize($this->items));
+	}
+
+	/**
+	 * @return string
+	 * @param string $base
+	 */
+	protected function getBasePath($base) {
+		return $this->output . DS . $this->type . DS . $base;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function getGroupFile($base, $group) {
+		return $this->output . DS . $this->type . DS . $base . DS . $group . '.' . $this->ext;
+	}
+
+	/**
+	 * @return string
+	 * @param string $base
+	 * @param string $group
+	 */
+	protected function getGroupUrl($base, $group) {
+		return Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext;
+	}
+
+	/**
+	 * @return string
+	 * @param string $group
+	 */
+	protected function getGroupContents($group) {
 		$result = '';
-		foreach ($files as $info) {
-			if (true === $info['script']) {
+		foreach ($this->items[$group] as $file => $item) {
+			if (true === $item['php']) {
 				ob_start();
-				include($info['file']);
+				include($file);
 				$result .= ob_get_clean();
-				ob_end_clean();
 			} else {
-				$result .= file_get_contents($info['file']);
+				$result .= file_get_contents($file);
 			}
 		}
-		return $result;
+		return $this->replaceVariables($result);
 	}
 
 	/**
@@ -226,64 +235,6 @@ abstract class Assets_Abstract {
 			$result = str_replace('<?=$' . $name . '?>', $value, $result);
 		}
 		return $result;
-	}
-
-	/**
-	 * @return string
-	 * @param string $string
-	 */
-	protected function postProcessing($string) {
-		return $string;
-	}
-
-	/**
-	 * @param string $name
-	 * @param string $group
-	 * @param string $string
-	 */
-	protected function write($name, $group, $string) {
-		$dir = $this->getBaseDirectory($name);
-		file_put_contents($this->getCacheFileName($name, $group), $string);
-	}
-
-	/**
-	 * @return string
-	 * @param string $name
-	 * @param string $group
-	 */
-	protected function getMetaFileName($name) {
-		return $this->getBaseDirectory($name) . DIRECTORY_SEPARATOR . 'meta.php';
-	}
-
-	/**
-	 * @return string
-	 * @param string $name
-	 * @param string $group
-	 */
-	protected function getCacheFileName($name, $group) {
-		return $this->getBaseDirectory($name) . DIRECTORY_SEPARATOR . $group . '.' . $this->ext;
-	}
-
-	protected function writeMeta($name) {
-		$contents = '<?php' . PHP_EOL
-			. PHP_EOL . '$files = ' . var_export($this->data, true) . ';'
-			. PHP_EOL . '$variables = ' . var_export($this->variables, true) . ';'
-			. PHP_EOL . '$time = ' . date('U', $this->time ? $this->time : time()) . ';';
-		;
-		file_put_contents($this->getMetaFileName($name), $contents);
-	}
-
-	/**
-	 * @return boolean
-	 */
-	protected function isModified() {
-		if (!isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
-			return true;
-		}
-		if (strToTime($_SERVER['HTTP_IF_MODIFIED_SINCE']) > $this->time) {
-			return true;
-		}
-		return false;
 	}
 
 }

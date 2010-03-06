@@ -42,7 +42,7 @@ class Assets_StylesTest extends TestUtils_TestCase {
 	}
 
 	public function tearDown() {
-		$this->styles = null;
+		unset($this->styles);
 	}
 
 }

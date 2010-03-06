@@ -4,6 +4,8 @@ tests/screenshots/*
 tests/generated/*
 application/*.log
 application/settings/*
+public/assets/scrips/*
+public/assets/styles/*
 .buildpath
 .project
 .settings
