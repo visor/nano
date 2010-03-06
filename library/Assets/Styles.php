@@ -1,4 +1,4 @@
-. '<?php
+<?php
 
 /**
  * @method Assets_Styles php() php(string $file, string $group)
@@ -23,7 +23,7 @@ class Assets_Styles extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function append($path, $media = null, $condition = null) {
-		return $this->addItem(true, false, $path, $condition, $this->getMedia($media));
+		return $this->addItem(true, false, $path, $this->getParams($media, $condition));
 	}
 
 	/**
@@ -33,7 +33,7 @@ class Assets_Styles extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function prepend($path, $media = null, $condition = null) {
-		$this->addData(false, false, $path, $condition, $this->getMedia($media));
+		$this->addData(false, false, $path, $this->getParams($media, $condition));
 		return $this;
 	}
 
@@ -44,7 +44,7 @@ class Assets_Styles extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function appendPHP($path, $media = null, $condition = null) {
-		return $this->addItem(true, true, $path, $condition, $this->getMedia($media));
+		return $this->addItem(true, true, $path, $this->getParams($media, $condition));
 	}
 
 	/**
@@ -54,31 +54,43 @@ class Assets_Styles extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function prependPHP($path, $media = null, $condition = null) {
-		return $this->addData(false, true, $path, $condition, $this->getMedia($media));
+		return $this->addData(false, true, $path, $this->getParams($media, $condition));
 	}
 
 	/**
 	 * @return string
 	 * @param string $url
-	 * @param array $item
-	 * @param string $group
+	 * @param array $params
 	 */
-	protected function tag($url, array $item, $group) {
-		if (isset($item['params']['media'])) {
-			return '<link rel="stylesheet" type="text/css" href="' . $url . '" media="' . $item['params']['media'] .'" />';
+	protected function tag($url, array $params) {
+		$before = '';
+		$after  = '';
+		$media  = '';
+		if (isset($params['condition'])) {
+			$before = '<!--[if ' . $params['condition'] .']>';
+			$after  = '<![endif]-->';
 		}
-		return '<link rel="stylesheet" type="text/css" href="' . $url . '" />';
+		if (isset($params['media'])) {
+			$media = 'media="' . $params['media'] .'" ';
+		}
+		return $before . '<link rel="stylesheet" type="text/css" href="' . $url . '" ' . $media . '/>' . $after;
 	}
 
 	/**
 	 * @return string[string]
 	 * @param string $media
 	 */
-	protected function getMedia($media) {
-		if (null === $media) {
+	protected function getParams($media, $condition) {
+		if (null === $media && null === $condition) {
 			return array();
 		}
-		return array('media' => $media);
+		if (null === $media) {
+			return array('condition' => $condition);
+		}
+		if (null === $condition) {
+			return array('media' => $media);
+		}
+		return array('media' => $media, 'condition' => $condition);
 	}
 
 	/**

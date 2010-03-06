@@ -14,125 +14,55 @@ class Assets_ScriptTest extends TestUtils_TestCase {
 
 	public function setUp() {
 		$this->scripts = new Assets_Scripts();
-		$this->dir     = $this->files->get($this, DS . 'scripts');
+		$this->scripts->setOutput($this->files->get($this, DS . 'output'));
+		$this->files->clean($this, DS . 'output');
+		$time = time();
+
+		touch($this->files->get($this, '/input/file1'), $time);
+		touch($this->files->get($this, '/input/file2'), $time);
+		touch($this->files->get($this, '/input/file3'), $time);
+		touch($this->files->get($this, '/input/file4'), $time);
 	}
 
-	public function testAdding() {
-		$this->scripts
-			->append('file01')
-			->prepend('file02')
-			->appendPHP('file03')
-			->append('file04')
-			->prepend('file05')
-			->prependPHP('file06')
-		;
-		$actual   = $this->scripts->getItems();
-		$expected = array(
-			array(
-				  'file'   => 'file04'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file02'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file01'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file03'
-				, 'params' => null
-				, 'script' => false
-			)
-		);
-		self::assertEquals($expected, $actual);
+	public function testSimpleTag() {
+		$this->scripts->append($this->files->get($this, '/input/file1'));
+		self::assertEquals($this->getTag('default', null), $this->scripts->import());
 	}
 
-	public function testLoading() {
-		self::markTestIncomplete('Not implemented yet');
-		$this->scripts->load('test-load');
+	public function testConditionTag() {
+		$this->scripts->append($this->files->get($this, '/input/file1'), 'gt IE 6');
+		self::assertEquals($this->getTag('gtie6', 'gt IE 6'), $this->scripts->import());
 
-		$data     = $this->scripts->getData();
-		$actual   = $data[Assets_Abstract::DEFAULT_NAME];
-		$expected = array(
-			array(
-				  'file'   => 'file04'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file02'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file01'
-				, 'params' => null
-				, 'script' => false
-			)
-			, array(
-				  'file'   => 'file03'
-				, 'params' => null
-				, 'script' => false
-			)
-		);
-		self::assertEquals($expected, $actual);
-	}
+		$this->scripts->clean();
+		$this->scripts->append($this->files->get($this, '/input/file1'), 'IE 7');
+		self::assertEquals($this->getTag('ie7', 'IE 7'), $this->scripts->import());
 
-	public function testBuild() {
-		self::markTestIncomplete('Not implemented yet');
-		$this->scripts->append($this->file('test01.js'));
-		$this->scripts->append($this->file('test02.js'));
+		$this->scripts->clean();
+		$this->scripts->append($this->files->get($this, '/input/file1'), 'IE 7');
+		$this->scripts->append($this->files->get($this, '/input/file1'), 'IE 6');
 
-		$name = 'test';
-		$this->scripts->build($name);
-		$file = $this->dir . '/' . $name . '/' . Assets_Abstract::DEFAULT_NAME . '.js';
-		self::assertFileExists($file);
-		self::assertEquals("var var1 = 'test01';\nvar var2 = 'test02';\n", file_get_contents($file));
-	}
-
-	public function testBuildWithVariables() {
-		self::markTestIncomplete('Not implemented yet');
-		$this->scripts->variable('v1', 'var1');
-		$this->scripts->variable('v2', 'var2');
-		$this->scripts->append($this->file('test03.js'));
-		$this->scripts->append($this->file('test04.js'));
-
-		$name = 'test-var';
-		$this->scripts->build($name);
-		$file = $this->dir . '/' . $name . '/' . Assets_Abstract::DEFAULT_NAME . '.js';
-		self::assertFileExists($file);
-		self::assertEquals("var var1 = 'test03var2';\nvar var2 = 'test04var1';\n", file_get_contents($file));
-	}
-
-	public function testBuildScript() {
-		self::markTestIncomplete('Not implemented yet');
-		$this->scripts->php($this->file('test05.php'));
-		$name = 'test-php';
-		$this->scripts->build($name);
-		$file = $this->dir . '/' . $name . '/' . Assets_Abstract::DEFAULT_NAME . '.js';
-		self::assertFileExists($file);
-		self::assertEquals('//code executed', file_get_contents($file));
-	}
-
-	public function testGenerateTag() {
-		self::markTestIncomplete();
+		$expected = $this->getTag('ie7', 'IE 7') . PHP_EOL . $this->getTag('ie6', 'IE 6');
+		self::assertEquals($expected, $this->scripts->import());
 	}
 
 	public function tearDown() {
+		$this->files->clean($this, DS . 'output');
 		$this->scripts = null;
 	}
 
-	/**
-	 * @return string
-	 * @param string $name
-	 */
-	protected function file($name) {
-		return dirName(__FILE__) . '/_files/' . $name;
+	protected function getBase() {
+		return md5(serialize($this->scripts->getItems()));
+	}
+
+	protected function getTag($group, $condition) {
+		$url      = Nano::config('assets')->url . '/scripts/' . $this->getBase() . '/' . $group . '.js';
+		$time     = fileMTime($this->files->get($this, DS . 'input') . DS . 'file1');
+		$template = '%s<script type="text/javascript" src="%s"></script>%s';
+		return sprintf($template,
+			  $condition ? '<!--[if ' . $condition . ']>' : null
+			, $url . '?' . $time
+			, $condition ? '<![endif]-->' : null
+		);
 	}
 
 }

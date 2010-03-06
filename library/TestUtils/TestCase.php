@@ -40,6 +40,13 @@ class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	/**
+	 * @return TestUtils_Stub_ReturnReal
+	 */
+	public function returnReal() {
+		return new TestUtils_Stub_ReturnReal();
+	}
+
 	protected function getTestFile($path) {
 		$class = new ReflectionClass($this);
 		return dirName($class->getFileName()) . '/_files' . $path;

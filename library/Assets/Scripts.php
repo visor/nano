@@ -21,7 +21,7 @@ class Assets_Scripts extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function append($path, $condition = null) {
-		return $this->addItem(true, false, $path, $condition);
+		return $this->addItem(true, false, $path, $condition ? array('condition' => $condition) : array());
 	}
 
 	/**
@@ -30,7 +30,7 @@ class Assets_Scripts extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function prepend($path, $condition = null) {
-		return $this->addItem(false, false, $path, $condition);
+		return $this->addItem(false, false, $path, $condition ? array('condition' => $condition) : array());
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Assets_Scripts extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function appendPHP($path, $condition = null) {
-		return $this->addItem(true, true, $path, $condition);
+		return $this->addItem(true, true, $path, $condition ? array('condition' => $condition) : array());
 	}
 
 	/**
@@ -48,17 +48,22 @@ class Assets_Scripts extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function prependPHP($path, $condition = null) {
-		return $this->addItem(false, true, $path, $condition);
+		return $this->addItem(false, true, $path, $condition ? array('condition' => $condition) : array());
 	}
 
 	/**
 	 * @return string
 	 * @param string $url
-	 * @param array $item
-	 * @param string $group
+	 * @param array $params
 	 */
-	protected function tag($url, array $item, $group) {
-		return '<script type="text/javascript>" src="' . $url . '"></script>';
+	protected function tag($url, array $params) {
+		$before = '';
+		$after  = '';
+		if (isset($params['condition'])) {
+			$before = '<!--[if ' . $params['condition'] . ']>';
+			$after  = '<![endif]-->';
+		}
+		return $before . '<script type="text/javascript" src="' . $url . '"></script>' . $after;
 	}
 
 }

@@ -32,10 +32,9 @@ abstract class Assets_Abstract {
 	/**
 	 * @return string
 	 * @param string $url
-	 * @param array $item
-	 * @param string $group
+	 * @param array $params
 	 */
-	abstract protected function tag($url, array $item, $group);
+	abstract protected function tag($url, array $params);
 
 	/**
 	 * Sets output folder for compiled assets
@@ -67,24 +66,32 @@ abstract class Assets_Abstract {
 	 */
 	public function addItem($append, $php, $file, array $params = array()) {
 		$key = $this->createKey($params);
-		if (isset($this->items[$key][$file])) {
+		if (isset($this->items[$key]['files'][$file])) {
 			return $this;
 		}
-		$item = array(
-			  'params' => $params
-			, 'php'    => $php
-		);
 		if (!isset($this->items[$key])) {
-			$this->items[$key] = array($file => $item);
+			$this->items[$key] = array(
+				  'files'  => array($file => $php)
+				, 'params' => $params
+			);
 			return $this;
 		}
 		if ($append) {
-			$this->items[$key][$file] = $item;
+			$this->items[$key]['files'][$file] = $php;
 		} else {
-			$this->items[$key] = array_merge(array($file => $item), $this->items[$key]);
+			$this->items[$key]['files'] = array_merge(array($file => $php), $this->items[$key]['files']);
 		}
 		return $this;
 	}
+
+	/**
+	 * @return Assets_Abstract
+	 */
+	public function clean() {
+		$this->items = array();
+		return $this;
+	}
+
 
 	/**
 	 * @return Assets_Abstract
@@ -122,8 +129,10 @@ abstract class Assets_Abstract {
 		}
 		$tags = array();
 		foreach ($this->items as $group => $item) {
-			$tags[] = $this->tag($this->getGroupUrl($base, $group), $item, $group);
-			$this->write($base, $group);
+			if ($this->shouldWrite($base, $group)) {
+				$this->write($base, $group);
+			}
+			$tags[] = $this->tag($this->getGroupUrl($base, $group), $item['params'], $group);
 		}
 		return implode(PHP_EOL, $tags);
 	}
@@ -135,7 +144,23 @@ abstract class Assets_Abstract {
 	 * @param string $group
 	 */
 	public function get($group = self::DEFAULT_GROUP) {
-		return $this->getGroupContents($group);
+		$this->import();
+		return file_get_contents($this->getGroupFile($this->generateBaseName(), $group));
+	}
+
+	/**
+	 * @return boolean
+	 * @param string $base
+	 * @param string $group
+	 */
+	protected function shouldWrite($base, $group) {
+		$time = $this->getGroupTime($base, $group);
+		foreach ($this->items[$group]['files'] as $file => $php) {
+			if (fileMTime($file) > $time) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -144,9 +169,11 @@ abstract class Assets_Abstract {
 	 * @param string $group
 	 */
 	protected function write($base, $group) {
+		$time     = null;
 		$file     = $this->getGroupFile($base, $group);
-		$contents = $this->getGroupContents($group);
+		$contents = $this->getGroupContents($group, $time);
 		file_put_contents($file, $contents);
+		touch($file, $time);
 	}
 
 	/**
@@ -204,22 +231,40 @@ abstract class Assets_Abstract {
 	 * @param string $group
 	 */
 	protected function getGroupUrl($base, $group) {
-		return Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext;
+		return Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group);
+	}
+
+	/**
+	 * @return int
+	 * @param string $group
+	 */
+	protected function getGroupTime($base, $group) {
+		$file = $this->getGroupFile($base, $group);
+		if (file_exists($file)) {
+			return fileMTime($file);
+		}
+		return 0;
 	}
 
 	/**
 	 * @return string
 	 * @param string $group
+	 * @param int $time
 	 */
-	protected function getGroupContents($group) {
+	protected function getGroupContents($group, &$time) {
 		$result = '';
-		foreach ($this->items[$group] as $file => $item) {
-			if (true === $item['php']) {
+		$time   = 0;
+		foreach ($this->items[$group]['files'] as $file => $php) {
+			if (true === $php) {
 				ob_start();
 				include($file);
 				$result .= ob_get_clean();
 			} else {
 				$result .= file_get_contents($file);
+			}
+			$fileTime = fileMTime($file);
+			if ($time < $fileTime) {
+				$time = $fileTime;
 			}
 		}
 		return $this->replaceVariables($result);
