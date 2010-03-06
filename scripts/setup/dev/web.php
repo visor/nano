@@ -1,6 +1,7 @@
 <?php
 
 $config = (object)array(
-	  'baseUrl' => ''
+	  'root'  => ROOT . DS . 'public'
+	, 'url'   => ''
 	, 'index' => 'index.php'
 );

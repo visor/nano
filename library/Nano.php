@@ -2,7 +2,7 @@
 
 define('DS',          DIRECTORY_SEPARATOR);
 define('PS',          PATH_SEPARATOR);
-define('LIB',         dirName(__FILE__));
+define('LIB',         __DIR__);
 define('ROOT',        dirName(LIB));
 define('PACK',        ROOT . DS . 'packages');
 define('APP',         ROOT . DS . 'application');
@@ -15,6 +15,8 @@ define('HELPERS',     APP . DS . 'helpers');
 define('PUBLIC',      ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
 define('ENV',         Nano::config('env'));
+define('WEB_ROOT',    Nano::config('web')->root);
+define('WEB_URL',     Nano::config('web')->url);
 
 require LIB . DS . 'Nano' . DS . 'Loader.php';
 

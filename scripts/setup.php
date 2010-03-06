@@ -5,20 +5,22 @@ function fromTo($from, $to) {
 }
 
 echo 'Setting up', PHP_EOL;
-$root = realPath(dirName(__FILE__) . '/../application/settings') . DS;
+$root = realPath(__DIR__ . '/../application/settings') . DIRECTORY_SEPARATOR;
 $env  = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : 'dev';
 fromTo('env.php', $root . 'env.php');
 file_put_contents($root . 'env.php', '<?php $config = \'' . $env . '\';');
-require_once dirName(dirName(__FILE__)) . '/lib/Nano.php';
+
+require dirName(__DIR__) . '/library/Nano.php';
 
 $files = array(
 	  'db.php'        => 'db.php'
 	, 'log.php'       => 'log.php'
 	, 'selenium.php'  => 'selenium.php'
 	, 'web.php'       => 'web.php'
+	, 'assets.php'    => 'assets.php'
 );
 
-$source = dirName(__FILE__) . '/setup/' . $env;
+$source = __DIR__ . '/setup/' . $env;
 
 if (file_exists($source)) {
 	foreach ($files as $from => $to) {
@@ -42,14 +44,3 @@ if (file_exists($source . '.php')) {
 }
 
 Nano::reloadConfig();
-require dirName(__FILE__) . '/include.php';
-define('DOCUMENT_ROOT', dirName(ROOT));
-echo PHP_EOL;
-
-try {
-	Nano_Db::close();
-	$migration = new Nano_Migrate();
-	$migration->run();
-} catch (Exception $e) {
-	echo $e;
-}
