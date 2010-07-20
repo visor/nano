@@ -33,8 +33,7 @@ class Assets_Styles extends Assets_Abstract {
 	 * @param string $condition
 	 */
 	public function prepend($path, $media = null, $condition = null) {
-		$this->addData(false, false, $path, $this->getParams($media, $condition));
-		return $this;
+		return $this->addItem(false, false, $path, $this->getParams($media, $condition));
 	}
 
 	/**

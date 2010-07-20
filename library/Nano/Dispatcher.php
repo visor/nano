@@ -5,25 +5,45 @@ class Nano_Dispatcher {
 	const SUFFIX_CONTROLLER = 'Controller';
 	const SUFFIX_ACTION     = 'Action';
 
+	const ERROR_NOT_FOUND   = 404;
+	const ERROR_INTERNAL    = 500;
+
+	const CONTEXT           = 'context';
+
 	/**
 	 * @var Nano_Dispatcher_Custom
 	 */
-	protected $custom     = null;
+	protected $custom             = null;
+
+	/**
+	 * @var Nano_Dispatcher_Context
+	 */
+	protected $context            = null;
 
 	/**
 	 * @var string
 	 */
-	protected $controller = null;
+	protected $controller         = null;
+
+	/**
+	 * @var Nano_C
+	 */
+	protected $controllerInstance = null;
 
 	/**
 	 * @var string
 	 */
-	protected $action     = null;
+	protected $action             = null;
 
 	/**
 	 * @var string[string]
 	 */
-	protected $params     = array();
+	protected $params             = array();
+
+	/**
+	 * @var boolean
+	 */
+	protected $throw              = false;
 
 	public static function formatName($name, $controller = true) {
 		$result = strToLower($name);
@@ -46,18 +66,37 @@ class Nano_Dispatcher {
 	 * @return Nano_Dispatcher
 	 */
 	public function clean() {
-		$this->controller = null;
-		$this->action     = null;
-		$this->params     = array();
+		$this->controller        = null;
+		$this->action            = null;
+		$this->params            = array();
+		$this->controllerInstace = null;
 		return $this;
 	}
 
 	/**
-	 * @return Dispatcher
+	 * @return Nano_Dispatcher
 	 * @param Nano_Dispatcher_Custom $value
 	 */
 	public function setCustom(Nano_Dispatcher_Custom $value) {
 		$this->custom = $value;
+		return $this;
+	}
+
+	/**
+	 * @return Nano_Dispatcher
+	 * @param Nano_Dispatcher_Context $value
+	 */
+	public function setContext(Nano_Dispatcher_Context $value) {
+		$this->context = $value;
+		return $this;
+	}
+
+	/**
+	 * @return Nano_Dispatcher
+	 * @param boolean $value
+	 */
+	public function throwExceptions($value) {
+		$this->throw = $value;
 		return $this;
 	}
 
@@ -67,18 +106,29 @@ class Nano_Dispatcher {
 	 * @param string $url
 	 */
 	public function dispatch(Nano_Routes $routes, $url) {
-		$route = $this->getRoute($routes, $url);
-		if (null !== $route) {
-			return $this->run($route);
-		}
-		if ($this->custom) {
-			$result = $this->custom->dispatch();
-			if (false !== $result) {
-				return $result;
+		try {
+			if ($this->context) {
+				$this->context->detect();
+				if ($this->context->needRedirect()) {
+					$this->context->redirect($url);
+					return null;
+				}
 			}
-			throw new Exception('404');
+			$route = $this->getRoute($routes, $url);
+			if (null !== $route) {
+				return $this->run($route);
+			}
+			if ($this->custom) {
+				$result = $this->custom->dispatch();
+				if (false !== $result) {
+					return $result;
+				}
+				throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+			}
+			throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+		} catch (Exception $e) {
+			$this->handleError($e);
 		}
-		throw new Exception('404');
 	}
 
 	/**
@@ -86,7 +136,15 @@ class Nano_Dispatcher {
 	 * @param Nano_Route $route
 	 */
 	public function run(Nano_Route $route) {
-		return $this->getController($route)->run($this->action());
+		if ($route instanceof Nano_Route_Runnable) { /* @var $route Nano_Route_Runnable */
+			$route->run();
+			return null;
+		}
+		$this->controllerInstance = $this->getController($route);
+		if ($this->context) {
+			$this->controllerInstance->context = $this->context->get();
+		}
+		return $this->controllerInstance->run($this->action());
 	}
 
 	/**
@@ -113,7 +171,7 @@ class Nano_Dispatcher {
 	 */
 	public function getRoute(Nano_Routes $routes, $url) {
 		$testUrl = trim($url, '/');
-		foreach ($routes as $route) { /** @var $route Route */
+		foreach ($routes as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
 				return $route;
 			}
@@ -127,14 +185,18 @@ class Nano_Dispatcher {
 	 * @param string $url
 	 */
 	public function test(Nano_Route $route, $url) {
-		$matches = array();
-		$result  = (1 == preg_match($route->pattern(), $url, $matches));
-		if (false === $result) {
+		if (false === $route->match($url)) {
 			return false;
 		}
-
-		$this->buildParams($matches);
+		$this->buildParams($route->matches());
 		return true;
+	}
+
+	/**
+	 * @return Nano_C
+	 */
+	public function controllerInstance() {
+		return $this->controllerInstance;
 	}
 
 	/**
@@ -202,6 +264,25 @@ class Nano_Dispatcher {
 		if (null === $this->controller) {
 			$this->controller = $route->controller();
 		}
+	}
+
+	protected function handleError(Exception $error) {
+		if ($this->throw) {
+			throw $error;
+		}
+
+		$className = Nano::config('web')->error;
+		if (!$className) {
+			throw $error;
+		}
+
+		$controller = new $className($this); /* @var $controller Nano_C */
+		$action     = 'e404';
+		if (self::ERROR_NOT_FOUND != $error->getCode()) {
+			$action = 'e500';
+		}
+		$controller->error = $error;
+		echo $controller->run($action);
 	}
 
 }

@@ -21,8 +21,4 @@ class RenderTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('Some title. 01=foo.03=bar.', $result);
 	}
 
-	protected function tearDown() {
-		unset($this->dispatcher);
-	}
-
 }

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group nano
+ */
 class CustomDispatcherTest extends TestUtils_TestCase {
 
 	/**
@@ -8,9 +11,10 @@ class CustomDispatcherTest extends TestUtils_TestCase {
 	private $dispatcher;
 
 	protected function setUp() {
-		require_once dirName(__FILE__) . DS . '_files' . DS . 'Test_Dispatcher.php';
+		require_once $this->getTestFile('/Test_Dispatcher.php');
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->dispatcher->setCustom(new Test_Dispatcher());
+		$this->dispatcher->throwExceptions(true);
 	}
 
 	public function testAcceptCustom() {
@@ -19,8 +23,8 @@ class CustomDispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testNotAcceptCustom() {
-		$this->setExpectedException('Exception', '404');
-		$this->dispatcher->dispatch(new Nano_Routes(), '');
+		$dispatcher = $this->dispatcher;
+		self::assertException(function() use ($dispatcher) { $dispatcher->throwExceptions(true)->dispatch(new Nano_Routes(), ''); }, 'Exception', '404');
 	}
 
 	protected function tearDown() {

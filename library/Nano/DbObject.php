@@ -15,7 +15,6 @@ abstract class Nano_DbObject {
 		if (is_scalar($this->primaryKey)) {
 			$this->primaryKey = array($this->primaryKey);
 		}
-
 		if ($this->isPrimaryKey($row) && false === $create) {
 			$where = self::db()->buildWhere($this->getPrimaryKey($row));
 			$data  = self::db()->getRow('select * from `' . $this->table . '` where ' . $where, PDO::FETCH_ASSOC);
@@ -29,7 +28,7 @@ abstract class Nano_DbObject {
 			if (is_array($row)) {
 				$this->loadData($row);
 			}
-			$this->__isNew = true;
+			$this->__isNew = $create;
 		}
 		$this->init();
 	}
@@ -73,7 +72,8 @@ abstract class Nano_DbObject {
 	public function save() {
 		$this->beforeSave();
 
-		if ($this->isNew()) {
+		$isNew = $this->isNew();
+		if ($isNew) {
 			$data = $this->data;
 			if ($this->increment) {
 				foreach ($this->getPrimaryKey() as $field => $value) {
@@ -91,7 +91,7 @@ abstract class Nano_DbObject {
 			self::db()->update($this->table, $data, $where);
 		}
 
-		$this->afterSave();
+		$this->afterSave($isNew);
 		$this->__isNew = false;
 		return $this;
 	}
@@ -145,7 +145,10 @@ abstract class Nano_DbObject {
 		if (!in_array($property, $this->properties)) {
 			return null;
 		}
-		return $this->data[$property];
+		if (isset($this->data[$property])) {
+			return $this->data[$property];
+		}
+		return null;
 	}
 
 	/**
@@ -161,6 +164,14 @@ abstract class Nano_DbObject {
 	}
 
 	/**
+	 * @return boolean
+	 * @param string $property
+	 */
+	public function __isset($property) {
+		return isset($this->data[$property]);
+	}
+
+	/**
 	 * @return Nano_Db
 	 */
 	protected static function db() {
@@ -172,7 +183,7 @@ abstract class Nano_DbObject {
 	 * @param string $className
 	 * @param scalar[string] $row
 	 */
-	protected static function createNew($className, array $row = array()) {
+	protected static function create($className, array $row = array()) {
 		return new $className($row, true);
 	}
 
@@ -183,14 +194,14 @@ abstract class Nano_DbObject {
 	 * @param int $limit
 	 * @param string $orderBy
 	 */
-	protected static function getAll($className, $table, $offset, $limit, $orderBy) {
-		return self::find($className, $table, null, $offset, $limit, $orderBy);
+	protected static function getAllRows($className, $table, $offset, $limit, $orderBy) {
+		return self::findRows($className, $table, null, $offset, $limit, $orderBy);
 	}
 
-	protected static function find($className, $table, $where = null, $offset = null, $limit = null, $orderBy = null) {
+	protected static function findRows($className, $table, $where = null, $offset = null, $limit = null, $orderBy = null) {
 		$result = array();
 		$query = 'select * from ' . $table;
-		if (null !== $where) {
+		if (!empty($where)) {
 			$query .= ' where ' . self::db()->buildWhere($where);
 		}
 		if (null !== $orderBy) {
@@ -213,7 +224,7 @@ abstract class Nano_DbObject {
 	 * @param int $limit
 	 * @param string $orderBy
 	 */
-	protected static function countAll($className, $table, array $where = array()) {
+	protected static function countAllRows($className, $table, $where = null) {
 		$result = null;
 		$query = 'select count(*) from ' . $table;
 		if (!empty($where)) {
@@ -223,8 +234,33 @@ abstract class Nano_DbObject {
 		return $result;
 	}
 
+	/**
+	 * @return PDOStatement
+	 * @param sql_select $query
+	 */
+	protected static function fetchThis(sql_select $query) {
+		$class = get_called_class();
+		return self::db()->query(
+			  $query->toString(self::db())
+			, PDO::FETCH_CLASS
+			, $class
+			, array(null, false)
+		);
+	}
+
+	/**
+	 * @return sql_query
+	 * @param string $class
+	 * @param string $alias
+	 */
+	protected static function createQuery($class, $alias = null) {
+		$name   = constant($class . '::NAME');
+		$prefix = ($alias ? $alias : $name) . '.';
+		return sql::select($prefix . '*')->from($alias ? array($alias => $name) : $name);
+	}
+
 	protected function beforeSave() {}
-	protected function afterSave() {}
+	protected function afterSave($isNew) {}
 	protected function beforeDelete() {}
 	protected function afterDelete() {}
 

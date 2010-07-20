@@ -1,14 +1,6 @@
 <?php
 
-class NanoMigrate_StepTest extends PHPUnit_Framework_TestCase {
-
-	protected $backupGlobals = false;
-
-	protected function setUp() {
-		if (false === Nano::config('db')) {
-			self::markTestSkipped('No database configuration');
-		}
-	}
+class Nano_Migrate_StepTest extends PHPUnit_Framework_TestCase {
 
 	public function testEmptyFolder() {
 		$step = $this->createStep('01_empty');

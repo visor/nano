@@ -2,6 +2,9 @@
 
 class Nano_HelperBroker {
 
+	/**
+	 * @var Nano_Helper[string]
+	 */
 	private static $helpers = array();
 
 	/**
@@ -29,16 +32,17 @@ class Nano_HelperBroker {
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
+	 * @param boolean $isClass
 	 */
-	public function get($name) {
+	public function get($name, $isClass = false) {
 		$key = strToLower($name);
 		if (array_key_exists($key, self::$helpers)) {
 			return self::$helpers[$key];
 		}
 
-		$helper = $this->search($name);
+		$helper = $this->search($isClass ? $name : $key, $isClass);
 		if (null === $helper) {
-			throw new RuntimeException('Helper ' . $helper . ' not found');;
+			throw new RuntimeException('Helper ' . $name . ' not found');
 		}
 
 		self::$helpers[$key] = $helper;
@@ -48,10 +52,14 @@ class Nano_HelperBroker {
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
+	 * @param boolean $isClass
 	 */
-	protected function search($name) {
-		$className = $name . 'Helper';
-		$fileName  = HELPERS . DS . $name . '.php';
+	protected function search($name, $isClass) {
+		if ($isClass) {
+			$className = $name;
+		} else {
+			$className = ucFirst($name) . 'Helper';
+		}
 		if (!class_exists($className)) {
 			return null;
 		}

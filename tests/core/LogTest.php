@@ -6,6 +6,10 @@ class LogTest extends PHPUnit_Framework_TestCase {
 		Nano_Log::clear();
 	}
 
+	public function testFileName() {
+		self::assertEquals(Nano::config('log'), Nano_Log::getFile());
+	}
+
 	public function testClear() {
 		Nano_Log::clear();
 		self::assertFileNotExists(Nano_Log::getFile());

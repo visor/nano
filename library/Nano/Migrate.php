@@ -19,6 +19,11 @@ class Nano_Migrate {
 	 */
 	protected $silent = false;
 
+	/**
+	 * @var Nano_Db
+	 */
+	protected $db = null;
+
 	public function __construct($path = null) {
 		if (null === $path) {
 			$path = APP . '/migrate';
@@ -28,36 +33,55 @@ class Nano_Migrate {
 	}
 
 	/**
-	 * @return boolean
-	 * @param Nano_Db $db
+	 * @return Nano_Db
 	 */
-	public function run() {
-		Nano_Db::instance()->beginTransaction();
+	public function getDb() {
+		if (null === $this->db) {
+			$this->setDb(Nano::db());
+		}
+		return $this->db;
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_Db $value
+	 */
+	public function setDb(Nano_Db $value) {
+		$this->db = $value;
+	}
+
+	/**
+	 * @return boolean
+	 * @param string $onlyVersion
+	 */
+	public function run($onlyVersion = null) {
 		try {
-			$version = $this->getCurrentVersion();
-			$run     = ('' == $version ? true : false);
-			$last    = $version;
-			$this->logAllStart($version);
+			$this->logAllStart();
+			$transaction = false;
 			foreach ($this->getSteps() as $name => $step) { /* @var $step Nano_Migrate_Step */
-				if ($run) {
-					$last = $name;
-					$this->logStepStart($name, $step);
-					$step->run(Nano_Db::instance());
-					$this->logStepDone($name, $step);
+				if (Nano_Migrate_Version::exists($this->getDb(), $name)) {
 					continue;
 				}
-				if ($name == $version) {
-					$run = true;
+				if (null !== $onlyVersion && $onlyVersion !== $name) {
+					continue;
 				}
+
+				$this->logStepStart($name, $step);
+				$this->getDb()->beginTransaction();
+				$transaction = true;
+				$step->run($this->getDb());
+				$this->getDb()->commit();
+				Nano_Migrate_Version::add($this->getDb(), $name);
+				$transaction = false;
+				$this->logStepDone($name, $step);
 			}
-			$this->setCurrentVersion($last);
-			$this->logAllDone($last);
+			$this->logAllDone();
 		} catch (Exception $e) {
-			Nano_Db::instance()->rollBack();
+			if (true === $transaction) {
+				$this->getDb()->rollBack();
+			}
 			throw $e;
 		}
-
-		Nano_Db::instance()->commit();
 		return true;
 	}
 
@@ -79,21 +103,6 @@ class Nano_Migrate {
 		return $this->steps;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getCurrentVersion() {
-		return Nano_Migrate_Version::get();
-	}
-
-	/**
-	 * @return void
-	 * @param string $version
-	 */
-	protected function setCurrentVersion($version) {
-		Nano_Migrate_Version::set($version);
-	}
-
 	protected function loadSteps() {
 		$i = new DirectoryIterator($this->getPath());
 		foreach ($i as $item) { /* @var $item DirectoryIterator */
@@ -106,11 +115,11 @@ class Nano_Migrate {
 		ksort($this->steps, SORT_STRING);
 	}
 
-	protected function logAllStart($version) {
+	protected function logAllStart() {
 		if ($this->silent) {
 			return;
 		}
-		echo 'Start updates from ' . $version . PHP_EOL;
+		echo 'Starting updates' . PHP_EOL;
 	}
 
 	protected function logStepStart($name, $step) {
@@ -127,11 +136,11 @@ class Nano_Migrate {
 		echo PHP_EOL;
 	}
 
-	protected function logAllDone($version) {
+	protected function logAllDone() {
 		if ($this->silent) {
 			return;
 		}
-		echo 'Updated to ' . $version . PHP_EOL;
+		echo 'Done.' . PHP_EOL;
 	}
 
 }

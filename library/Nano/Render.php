@@ -12,10 +12,10 @@ class Nano_Render {
 		$variables = get_object_vars($object);
 		$content   = self::view($object, $controller, $action);
 		$head      =
-			  self::file(self::getFileName($controller, 'controller.head'), $variables, false)
-			. self::file(self::getFileName($controller, $action . '.head'), $variables, false)
+			  self::file(self::getFileName($controller, 'controller.head', $object->context), $variables, false)
+			. self::file(self::getFileName($controller, $action . '.head', $object->context), $variables, false)
 		;
-		$fileName  = LAYOUTS . DS . $object->layout . '.php';
+		$fileName  = self::addContext(LAYOUTS . DS . $object->layout, $object->context) . '.php';
 
 		$variables['content']    = $content;
 		$variables['head']       = $head;
@@ -31,12 +31,12 @@ class Nano_Render {
 	 * @param string $action
 	 */
 	public static function view(Nano_C $object, $controller, $action) {
-		$fileName  = self::getFileName($controller, $action);
+		$fileName  = self::getFileName($controller, $action, $object->context);
 		$variables = get_object_vars($object);
 
 		$variables['controller'] = $controller;
 		$variables['action']     = $action;
-		return self::file($fileName, $variables);
+		return self::file($fileName, $variables, true);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class Nano_Render {
 		}
 
 		extract($variables);
-		$helper = Nano_HelperBroker::instance();
+		$helper = Nano::helper();
 
 		ob_start();
 		include($fileName);
@@ -74,8 +74,21 @@ class Nano_Render {
 	 * @param string $controller
 	 * @param string $action
 	 */
-	public static function getFileName($controller, $action) {
-		return VIEWS . DS . $controller . DS . $action . '.php';
+	public static function getFileName($controller, $action, $context = null) {
+		return self::addContext(VIEWS . DS . $controller . DS . $action, $context) . '.php';
+	}
+
+	/**
+	 * @return string
+	 * @param string $path
+	 * @param string $context
+	 */
+	protected static function addContext($path, $context) {
+		$result = $path;
+		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT != $context && null !== $context) {
+			$result .= '.' . $context;
+		}
+		return $result;
 	}
 
 }

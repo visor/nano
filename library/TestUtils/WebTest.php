@@ -254,17 +254,51 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected $pageUrl = '';
 
+	/**
+	 * @var Faker
+	 */
+	protected $faker;
+
+	/**
+	 * @var boolean
+	 */
+	protected $clearDbAfterTest = true;
+
+	/**
+	 * @var boolean
+	 */
+	protected $clearLogAfterTest = true;
+
 	protected function runTest() {
 		$this->autoStop = false;
 		try {
 			parent::runTest();
 		} catch (Exception $e) {
-			$this->captureEntirePageScreenshot(TESTS . DS . 'screenshots' . DS . get_class($this) . '_' . $this->getName(false) . '.png');
+			$this->screenshot(null);
+//			try {
+//				$this->stop();
+//			} catch (RuntimeException $e) {}
 			throw $e;
 		}
 		try {
 			$this->stop();
-		} catch (Exception $e) {}
+		} catch (RuntimeException $e) {}
+	}
+
+	protected function screenshot($suffix = null, $screen = false) {
+		$folder         = TESTS . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR;
+		$screenFileName = $folder . 'screen_' . get_class($this) . '_' . $this->getName(false);
+		$windowFileName = $folder . get_class($this) . '_' . $this->getName(false);
+		if ($suffix) {
+			$screenFileName .= '_' . $suffix;
+			$windowFileName .= '_' . $suffix;
+		}
+		$screenFileName .= '.png';
+		$windowFileName .= '.png';
+		$this->captureEntirePageScreenshot($windowFileName);
+		if ($screen) {
+			$this->captureScreenshot($screenFileName);
+		}
 	}
 
 	protected function setUp() {
@@ -274,6 +308,8 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 		}
 		$this->checkConnection();
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
+
+		require_once LIB . '/vendor/faker/faker.php';
 
 		Nano_Db::clean();
 
@@ -291,7 +327,12 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	protected function setUpData() {}
 
 	protected function tearDown() {
-		Nano_Db::clean();
+		if ($this->clearDbAfterTest) {
+			Nano_Db::clean();
+		}
+		if ($this->clearLogAfterTest) {
+			Nano_Log::clear();
+		}
 		parent::tearDown();
 	}
 
@@ -329,31 +370,6 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected function assertLocation($expected, $message = '') {
 		self::assertEquals('http://' . SITE_URL . $expected, $this->getLocation(), $message = '');
-	}
-
-	/**
-	 * @return void
-	 * @param string $message
-	 */
-	protected function assertFlash($message) {
-		self::assertEquals($message, $this->getText('css=#flash'));
-	}
-
-	/**
-	 * @return void
-	 */
-	protected function assertNoFlash() {
-		$this->assertFlash('');
-	}
-
-	protected function runScript($script) {
-		$eval   =
-			  'var W = selenium.browserbot.getCurrentWindow(); '
-			. 'var code = function() {' . $script . '}();'
-			. 'var result = (W.jQuery.toJSON) ? W.jQuery.toJSON(code) : code;'
-		;
-		$result = $this->getEval($eval);
-		return json_decode($result);
 	}
 
 	/**

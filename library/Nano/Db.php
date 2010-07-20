@@ -86,9 +86,35 @@ class Nano_Db extends PDO {
 		return $this->query($query)->fetch($fetchMode);
 	}
 
+	public function getCol($query) {
+		$result = array();
+		$rows   = $this->query($query, PDO::FETCH_NUM);
+		foreach ($rows as $row) {
+			$result[] = $row[0];
+		}
+		return $result;
+	}
+
+	public function getAll($query, $fetchMode = PDO::FETCH_OBJ) {
+		return $this->query($query)->fetchAll($fetchMode);
+	}
+
 	public function getCell($query) {
 		$row = $this->query($query)->fetch(PDO::FETCH_NUM);
 		return $row[0];
+	}
+
+	/**
+	 * @return array
+	 * @param string $query
+	 */
+	public function getAssoc($query) {
+		$rows = $this->query($query, PDO::FETCH_NUM);
+		$result = array();
+		foreach ($rows as $row) {
+			$result[$row[0]] = $row[1];
+		}
+		return $result;
 	}
 
 	public function insert($table, array $values) {

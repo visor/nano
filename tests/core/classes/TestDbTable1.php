@@ -30,7 +30,7 @@ class TestDbTable1 extends Nano_DbObject {
 			  'field1' => $field1
 			, 'field2' => $field2
 		);
-		return parent::createNew(__CLASS__, $data);
+		return parent::create(__CLASS__, $data);
 	}
 
 	public static function createTable() {

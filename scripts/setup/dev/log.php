@@ -1,3 +1,3 @@
 <?php
 
-$config = APP . '/dev-visor.log';
+$config = APP . DS . 'dev.log';

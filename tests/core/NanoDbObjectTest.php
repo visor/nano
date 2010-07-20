@@ -1,9 +1,9 @@
 <?php
 
-require_once dirName(__FILE__) . '/_files/TestDbTable1.php';
-require_once dirName(__FILE__) . '/_files/TestDbTable2.php';
+require_once dirName(__FILE__) . '/classes/TestDbTable1.php';
+require_once dirName(__FILE__) . '/classes/TestDbTable2.php';
 
-class NanoDbObjectTest extends PHPUnit_Framework_TestCase {
+class Nano_DbObjectTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @var Nano_Db
@@ -13,9 +13,6 @@ class NanoDbObjectTest extends PHPUnit_Framework_TestCase {
 	protected $backupGlobals = false;
 
 	protected function setUp() {
-		if (false === Nano::config('db')) {
-			self::markTestSkipped('No database configuration');
-		}
 		Nano_Db::clean();
 		TestDbTable1::dropTable();
 		TestDbTable2::dropTable();

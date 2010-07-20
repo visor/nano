@@ -145,13 +145,26 @@ class Assets_AbstractTest extends TestUtils_TestCase {
 		$this->asset->import();
 		touch($this->files->get($this, '/input/file1'));
 		touch($this->files->get($this, '/input/file2'));
+		$this->asset->clean();
+		$this->asset->addItem(true, false, $file1, array('group1'));   //append file
+		$this->asset->addItem(true, true, $file2, array('group2'));    //append php
+		$this->asset->addItem(false, false, $file3, array('group3'));  //prepend file
+		$this->asset->addItem(false, true, $file4, array('group4'));   //prepend php
+
 		$this->asset->import();
+
+		$this->asset->clean();
+		$this->asset->addItem(true, false, $file1, array('group1'));   //append file
+		$this->asset->addItem(true, true, $file2, array('group2'));    //append php
+		$this->asset->addItem(false, false, $file3, array('group3'));  //prepend file
+		$this->asset->addItem(false, true, $file4, array('group4'));   //prepend php
+
 		touch($this->files->get($this, '/input/file3'));
 		touch($this->files->get($this, '/input/file4'));
 		$this->asset->import();
 	}
 
-	public function testGetting() {
+	public function testDisplay() {
 		$file1 = $this->files->get($this, '/input/file1');
 		$file2 = $this->files->get($this, '/input/file2');
 		$file3 = $this->files->get($this, '/input/file3');
@@ -168,16 +181,16 @@ class Assets_AbstractTest extends TestUtils_TestCase {
 			->will($this->returnCallBack(array($this->asset, 'publicWrite')))
 		;
 
-		self::assertEquals('file1', $this->asset->get('group1'));
-		self::assertEquals('file2', $this->asset->get('group2'));
-		self::assertEquals('file3', $this->asset->get('group3'));
-		self::assertEquals('file4', $this->asset->get('group4'));
-		self::assertEquals('file1', $this->asset->get('group1'));
-		self::assertEquals('file2', $this->asset->get('group2'));
-		self::assertEquals('file3', $this->asset->get('group3'));
-		self::assertEquals('file4', $this->asset->get('group4'));
+		$headers = array();
+		self::assertEquals('file1', $this->asset->display('group1', $headers));
+		self::assertEquals('file2', $this->asset->display('group2', $headers));
+		self::assertEquals('file3', $this->asset->display('group3', $headers));
+		self::assertEquals('file4', $this->asset->display('group4', $headers));
+		self::assertEquals('file1', $this->asset->display('group1', $headers));
+		self::assertEquals('file2', $this->asset->display('group2', $headers));
+		self::assertEquals('file3', $this->asset->display('group3', $headers));
+		self::assertEquals('file4', $this->asset->display('group4', $headers));
 	}
-
 
 	public function tearDown() {
 		unset($this->styles);

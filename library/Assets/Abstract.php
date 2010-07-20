@@ -15,9 +15,9 @@ abstract class Assets_Abstract {
 	protected $variables = array();
 
 	/**
-	 * @var string
+	 * @var int
 	 */
-	protected $output = null;
+	protected $time = 0;
 
 	/**
 	 * @var string
@@ -30,11 +30,27 @@ abstract class Assets_Abstract {
 	protected $ext = null;
 
 	/**
+	 * @var string
+	 */
+	protected $output = null;
+
+	public function __construct() {
+		$this->time = 0;
+	}
+
+	/**
 	 * @return string
 	 * @param string $url
 	 * @param array $params
 	 */
 	abstract protected function tag($url, array $params);
+
+	/**
+	 * @return string
+	 */
+	public function getType() {
+		return $this->type;
+	}
 
 	/**
 	 * Sets output folder for compiled assets
@@ -73,6 +89,7 @@ abstract class Assets_Abstract {
 			$this->items[$key] = array(
 				  'files'  => array($file => $php)
 				, 'params' => $params
+				, 'time'   => fileMTime($file)
 			);
 			return $this;
 		}
@@ -80,6 +97,10 @@ abstract class Assets_Abstract {
 			$this->items[$key]['files'][$file] = $php;
 		} else {
 			$this->items[$key]['files'] = array_merge(array($file => $php), $this->items[$key]['files']);
+		}
+		$time = fileMTime($file);
+		if ($time > $this->items[$key]['time']) {
+			$this->items[$key]['time'] = $time;
 		}
 		return $this;
 	}
@@ -110,9 +131,7 @@ abstract class Assets_Abstract {
 	}
 
 	/**
-	 * @return void
-	 * @param string $name
-	 * @param string $group
+	 * @return string
 	 */
 	public function import() {
 		if (null === $this->output) {
@@ -142,10 +161,86 @@ abstract class Assets_Abstract {
 	 *
 	 * @return string
 	 * @param string $group
+	 * @param array $headers
 	 */
-	public function get($group = self::DEFAULT_GROUP) {
+	public function display($group = self::DEFAULT_GROUP, &$headers = null) {
 		$this->import();
-		return file_get_contents($this->getGroupFile($this->generateBaseName(), $group));
+		$time     = $this->items[$group]['time'];
+		$modified = $this->isModified($group);
+		if (is_array($headers)) {
+			if ($modified) {
+				$headers[] = 'X-Status: 200';
+			} else {
+				$headers[] = 'X-Status: 304';
+			}
+			$headers[] = 'Last-Modified: ' . gmDate('D, j M Y H:i:s', $time) .' GMT';
+			$headers[] = 'Expires: ' . gmDate('D, j M Y H:i:s', $time + Date::ONE_MONTH) .' GMT';
+			$headers[] = 'Cache-Control: max-age=' . Date::ONE_MONTH .', public';
+		} else {
+			if ($modified) {
+				header('X-Status: 200', true, 200);
+			} else {
+				header('X-Status: 304', true, 304);
+			}
+			header('Expires: ' . gmDate('D, j M Y H:i:s', $time + Date::ONE_MONTH) .' GMT');
+			header('Cache-Control: max-age=' . Date::ONE_MONTH .', public, must-revalidate, post-check=0, pre-check=0');
+			header('Last-Modified: ' . gmDate('D, j M Y H:i:s', $time) .' GMT', true, $modified ? null : 304);
+		}
+		if ($modified) {
+			return file_get_contents($this->getGroupFile($this->generateBaseName(), $group));
+		}
+		return null;
+	}
+
+	/**
+	 * Removes all generated assets
+	 *
+	 * @return void
+	 * @param array $ignore
+	 * @param boolean $verbose
+	 */
+	public function clearCache(array $ignore = array(), $verbose = false, $path = null) {
+		if (!in_array('.svn', $ignore)) {
+			$ignore[] = '.svn';
+		}
+		if (null === $path) {
+			$path = $this->getBasePath();
+		}
+		$i = new DirectoryIterator($path);
+		foreach ($i as $item) {
+			if ($item->isDot()) {
+				continue;
+			}
+			if (in_array($item->getBaseName(), $ignore)) {
+				continue;
+			}
+			if ($item->isDir()) {
+				$this->clearCache(array(), $verbose, $item->getPathName());
+				$result = @rmDir($item->getPathName());
+			} else {
+				$result = @unlink($item->getPathName());
+			}
+			if (true === $verbose) {
+				echo $item->getPathName();
+				if (false === $result) {
+					echo ' ERROR';
+				}
+				echo PHP_EOL;
+			}
+		}
+	}
+
+	/**
+	 * @return string
+	 * @param string $base
+	 */
+	public function getBasePath($base = null) {
+		$result = $this->output . DS . $this->type;
+		if (null === $base) {
+			return $result;
+		}
+		$result .= DS . $base;
+		return $result;
 	}
 
 	/**
@@ -155,10 +250,8 @@ abstract class Assets_Abstract {
 	 */
 	protected function shouldWrite($base, $group) {
 		$time = $this->getGroupTime($base, $group);
-		foreach ($this->items[$group]['files'] as $file => $php) {
-			if (fileMTime($file) > $time) {
-				return true;
-			}
+		if ($this->items[$group]['time'] > $time) {
+			return true;
 		}
 		return false;
 	}
@@ -174,6 +267,7 @@ abstract class Assets_Abstract {
 		$contents = $this->getGroupContents($group, $time);
 		file_put_contents($file, $contents);
 		touch($file, $time);
+		return $time;
 	}
 
 	/**
@@ -207,15 +301,7 @@ abstract class Assets_Abstract {
 	 * @return string
 	 */
 	protected function generateBaseName() {
-		return md5(serialize($this->items));
-	}
-
-	/**
-	 * @return string
-	 * @param string $base
-	 */
-	protected function getBasePath($base) {
-		return $this->output . DS . $this->type . DS . $base;
+		return md5(serialize($this->items) . serialize($this->variables));
 	}
 
 	/**
@@ -280,6 +366,20 @@ abstract class Assets_Abstract {
 			$result = str_replace('<?=$' . $name . '?>', $value, $result);
 		}
 		return $result;
+	}
+
+	/**
+	 * @return boolean
+	 * @param string $group
+	 */
+	protected function isModified($group) {
+		if (!isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+			return true;
+		}
+		if (strToTime($_SERVER['HTTP_IF_MODIFIED_SINCE']) < $this->items[$group]['time']) {
+			return true;
+		}
+		return false;
 	}
 
 }

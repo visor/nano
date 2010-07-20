@@ -12,6 +12,7 @@ define('MODELS',      APP . DS . 'models');
 define('LAYOUTS',     APP . DS . 'layouts');
 define('VIEWS',       APP . DS . 'views');
 define('HELPERS',     APP . DS . 'helpers');
+define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC',      ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
 define('ENV',         Nano::config('env'));
@@ -64,8 +65,8 @@ final class Nano {
 			if (false !== strPos($url, '?')) {
 				$url = subStr($url, 0, strPos($url, '?'));
 			}
-			if (self::config('web')->baseUrl && 0 === strPos($url, self::config('web')->baseUrl)) {
-				$url = subStr($url, strLen(self::config('web')->baseUrl));
+			if (self::config('web')->url && 0 === strPos($url, self::config('web')->url)) {
+				$url = subStr($url, strLen(self::config('web')->url));
 			}
 			if (self::config('web')->index) {
 				$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
@@ -76,9 +77,9 @@ final class Nano {
 
 	/**
 	 * @return string
-	 * @param Route $route
+	 * @param Nano_Route $route
 	 */
-	public static function runRoute(Route $route) {
+	public static function runRoute(Nano_Route $route) {
 		return self::instance()->dispatcher->run($route);
 	}
 
@@ -94,6 +95,13 @@ final class Nano {
 	 */
 	public static function dispatcher() {
 		return self::instance()->dispatcher;
+	}
+
+	/**
+	 * @return Nano_HelperBroker
+	 */
+	public static function helper() {
+		return Nano_HelperBroker::instance();
 	}
 
 	/**
@@ -134,6 +142,13 @@ final class Nano {
 	}
 
 	/**
+	 * @return Nano_Message
+	 */
+	public static function message() {
+		return Nano_Message::instance();
+	}
+
+	/**
 	 * @return boolean
 	 * @param unknown_type $className
 	 */
@@ -152,6 +167,7 @@ final class Nano {
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
 		$this->initLibrary();
+		$this->setupErrorReporting();
 	}
 
 	private function initLibrary() {
@@ -162,6 +178,16 @@ final class Nano {
 			. PS . HELPERS
 			. PS . get_include_path()
 		);
+	}
+
+	private function setupErrorReporting() {
+		if (self::config('web')->errorReporting) {
+			error_reporting(E_ALL | E_STRICT);
+			ini_set('display_errors', true);
+		} else {
+			error_reporting(0);
+			ini_set('display_errors', false);
+		}
 	}
 
 	private function __clone() { throw new RuntimeException(); }

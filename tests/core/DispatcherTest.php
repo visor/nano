@@ -2,6 +2,8 @@
 
 class DispatcherTest extends PHPUnit_Framework_TestCase {
 
+	protected $backupGlobals = false;
+
 	/**
 	 * @var Nano_Dispatcher
 	 */
@@ -12,13 +14,13 @@ class DispatcherTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testFormatting() {
-		$this->assertEquals('TestController',        Nano_Dispatcher::formatName('test', true));
-		$this->assertEquals('AnotherTestController', Nano_Dispatcher::formatName('another-test', true));
+		$this->assertEquals('TestController',         Nano_Dispatcher::formatName('test', true));
+		$this->assertEquals('AnotherTestController',  Nano_Dispatcher::formatName('another-test', true));
 		$this->assertEquals('Another_testController', Nano_Dispatcher::formatName('another_test', true));
 
-		$this->assertEquals('testAction',        Nano_Dispatcher::formatName('test', false));
-		$this->assertEquals('anotherTestAction', Nano_Dispatcher::formatName('another-test', false));
-		$this->assertEquals('another_testAction', Nano_Dispatcher::formatName('another_test', false));
+		$this->assertEquals('testAction',             Nano_Dispatcher::formatName('test', false));
+		$this->assertEquals('anotherTestAction',      Nano_Dispatcher::formatName('another-test', false));
+		$this->assertEquals('another_testAction',     Nano_Dispatcher::formatName('another_test', false));
 	}
 
 	public function testTestEmptyUrl() {
@@ -51,10 +53,6 @@ class DispatcherTest extends PHPUnit_Framework_TestCase {
 		$c = $this->dispatcher->getController(Nano_Route::create('', 'test', 'test'));
 		$this->assertType('Nano_C', $c);
 		$this->assertType('TestController', $c);
-	}
-
-	protected function tearDown() {
-		unset($this->dispatcher);
 	}
 
 }

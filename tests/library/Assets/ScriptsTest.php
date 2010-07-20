@@ -16,12 +16,11 @@ class Assets_ScriptTest extends TestUtils_TestCase {
 		$this->scripts = new Assets_Scripts();
 		$this->scripts->setOutput($this->files->get($this, DS . 'output'));
 		$this->files->clean($this, DS . 'output');
-		$time = time();
 
-		touch($this->files->get($this, '/input/file1'), $time);
-		touch($this->files->get($this, '/input/file2'), $time);
-		touch($this->files->get($this, '/input/file3'), $time);
-		touch($this->files->get($this, '/input/file4'), $time);
+		touch($this->files->get($this, '/input/file1'));
+		touch($this->files->get($this, '/input/file2'));
+		touch($this->files->get($this, '/input/file3'));
+		touch($this->files->get($this, '/input/file4'));
 	}
 
 	public function testSimpleTag() {
@@ -51,7 +50,7 @@ class Assets_ScriptTest extends TestUtils_TestCase {
 	}
 
 	protected function getBase() {
-		return md5(serialize($this->scripts->getItems()));
+		return md5(serialize($this->scripts->getItems()) . serialize(array()));
 	}
 
 	protected function getTag($group, $condition) {
