@@ -1,12 +1,12 @@
 <?php
 
 $config = (object)array(
-	  'root'  => ROOT . DS . 'public'
-	, 'url'   => ''
-	, 'index' => 'index.php'
+	  'root'           => ROOT . DS . 'public'
+	, 'url'            => ''
+	, 'index'          => 'index.php'
 
-	, 'domain' => 'nano.lc'
+	, 'domain'         => 'nano.lc'
 
-	, 'error'  => 'ErrorController'
+	, 'error'          => 'ErrorController'
 	, 'errorReporting' => true
 );

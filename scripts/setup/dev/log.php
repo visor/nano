@@ -1,3 +1,3 @@
 <?php
 
-$config = APP . DS . 'dev.log';
+$config = ROOT . DS . 'logs/' . ENV .'.log';
