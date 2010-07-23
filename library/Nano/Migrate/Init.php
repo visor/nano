@@ -17,8 +17,8 @@ class Nano_Migrate_Init {
 	 */
 	public static function mysql(Nano_Db $db) {
 		$db->exec('create table ' . Nano_Migrate::VERSION_TABLE . '(
-			  id smallint primary key
-			, version text
+			  id bigint not null auto_increment primary key
+			, version text unique
 		)');
 	}
 
@@ -27,8 +27,8 @@ class Nano_Migrate_Init {
 	 * @param Nano_Db $db
 	 */
 	public static function sqlite(Nano_Db $db) {
-		$db->exec('create table if not exists ' . Nano_Migrate::VERSION_TABLE . '(
-			  id integer primary key
+		$db->exec('create table ' . Nano_Migrate::VERSION_TABLE . '(
+			  id integer not null primary key
 			, version text
 		)');
 	}
