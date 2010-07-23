@@ -18,7 +18,8 @@ class Nano_Migrate_Init {
 	public static function mysql(Nano_Db $db) {
 		$db->exec('create table ' . Nano_Migrate::VERSION_TABLE . '(
 			  id bigint not null auto_increment primary key
-			, version text unique
+			, version varchar(255) unique
+
 		)');
 	}
 
