@@ -1,4 +1,4 @@
-logs
+logs/*
 tests/reports/*
 tests/screenshots/*
 tests/generated/*
@@ -9,3 +9,4 @@ public/assets/styles/*
 .buildpath
 .project
 .settings
+!logs/empty
