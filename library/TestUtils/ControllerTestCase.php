@@ -14,13 +14,22 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 
 	protected function setUp() {
 		Nano_Db::clean();
-		$this->fixture()->createAllTestData();
 		$this->dispatcher = new Nano_Dispatcher();
 	}
 
 	protected function tearDown() {
 		Nano_Db::clean();
 		Nano_Db::close();
+	}
+
+	/**
+	 * @return string
+	 * @param string|Nano_C $controller
+	 * @param string $action
+	 */
+	protected function invokeControllerAction($controller, $action) {
+		$instance = ($controller instanceof Nano_C) ? $controller : new $controller(Nano::dispatcher()); /* @var $instance Nano_C */
+		return $instance->run($action);
 	}
 
 	/**

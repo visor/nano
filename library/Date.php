@@ -9,6 +9,15 @@ class Date extends DateTime {
 	const ONE_MONTH     = 2592000; /* 30*24*60*60 */
 
 	/**
+	 * @var Date
+	 */
+	private static $now = null;
+
+	private static $monthes = array(
+		'января', 'февраль', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+	);
+
+	/**
 	 * @return Date
 	 * @param string $string
 	 */
@@ -21,6 +30,28 @@ class Date extends DateTime {
 		}
 		return new self($string);
 	}
+
+	/**
+	 * @return Date
+	 */
+	public static function now() {
+		if (null === self::$now) {
+			self::$now = Date::create('now');
+		}
+		return self::$now;
+	}
+
+	/**
+	 * For test purpose only
+	 */
+	public static function invalidateNow() {
+		self::$now = null;
+	}
+
+	public function month() {
+		return self::$monthes[$this->format('m') - 1];
+	}
+
 
 	/**
 	 * @return Date
@@ -62,6 +93,10 @@ class Date extends DateTime {
 		}
 		$format = 'Date::FORMAT_' . strToUpper($type);
 		return $this->format(constant($format));
+	}
+
+	public function __toString() {
+		return $this->format(Date::ISO8601);
 	}
 
 }

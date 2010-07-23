@@ -204,6 +204,9 @@ class sql_select {
 	 * @param int $count
 	 */
 	public function limitPage($page, $count) {
+		if (null === $page) {
+			return $this;
+		}
 		if ($page < 1) {
 			$page = 1;
 		}

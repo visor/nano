@@ -30,7 +30,7 @@ class sql {
 	 * @param string $operation
 	 * @param sql_expr|sql_custom|string $right
 	 */
-	public static function expr($left, $operation = null, $right = null) {
+	public static function expr($left = null, $operation = null, $right = null) {
 		return new sql_expr($left, $operation, $right);
 	}
 

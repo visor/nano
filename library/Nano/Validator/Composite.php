@@ -6,7 +6,8 @@ class Nano_Validator_Composite extends Nano_Validator implements Nano_Validator_
 	 * @return Nano_Validator
 	 * @param Nano_Validator_Interface $validator
 	 */
-	public function append(Nano_Validator_Interface $validator) {
+	public function append(Nano_Validator $validator, $message = null) {
+		$validator->setMessage($message);
 		$this->validators[] = $validator;
 		return $this;
 	}

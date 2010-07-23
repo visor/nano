@@ -12,8 +12,20 @@ class sql_expr {
 	 * @param string $operation
 	 * @param sql_expr|sql_custom|string $right
 	 */
-	public function __construct($left, $operation = null, $right = null) {
-		$this->addPart(sql::SQL_NONE, $left, $operation, $right);
+	public function __construct($left = null, $operation = null, $right = null) {
+		if (null !== $left) {
+			$this->add($left, $operation, $right);
+		}
+	}
+
+	/**
+	 * @return sql_expr
+	 * @param sql_expr|sql_custom|string $left
+	 * @param string $operation
+	 * @param sql_expr|sql_custom|string $right
+	 */
+	public function add($left, $operation = null, $right = null) {
+		return $this->addPart(sql::SQL_NONE, $left, $operation, $right);
 	}
 
 	/**
