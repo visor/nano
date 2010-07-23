@@ -1,8 +1,8 @@
 <?php
 
-require dirName(__FILE__) . '/include.php';
+require dirName(__DIR__) . '/library/Nano.php';
+Nano::instance();
 
-$version = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : '';
+$database = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
 
-Nano_Migrate_Init::init(Nano::db());
-Nano_Migrate_Version::set($version);
+Nano_Migrate_Init::init(Nano::db($database));
