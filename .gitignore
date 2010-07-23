@@ -10,3 +10,4 @@ public/assets/styles/*
 .project
 .settings
 !logs/empty
+!application/settings/routes.php
