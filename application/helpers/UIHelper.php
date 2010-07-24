@@ -26,14 +26,22 @@ class UIHelper extends Nano_Helper {
 		return '<p class="info ' . $type . '"><span class="info_inner">' . $text . '</span></p>';
 	}
 
-	public function textField($name, $title, $value = null, $css = null, $description = null) {
+	public function inputField($type, $name, $title, $value = null, $css = null, $description = null) {
 		return
 			'<p>'
 				. '<label for="' . $name . '">' . $title . '</label>'
-				. '<input ' . ($css ? 'class="' . $css . '"' : '') . ' type="text" name="' . $name . '" id="' . $name . '" value="' . htmlSpecialChars($value) . '" />'
+				. '<input ' . ($css ? 'class="' . $css . '"' : '') . ' type="' . $type . '" name="' . $name . '" id="' . $name . '" value="' . htmlSpecialChars($value) . '" />'
 				. ($description ? '<small>' . $description . '</small>' : '')
 			. '</p>'
 		;
+	}
+
+	public function textField($name, $title, $value = null, $css = null, $description = null) {
+		return $this->inputField('text', $name, $title, $value, $css, $description);
+	}
+
+	public function fileField($name, $title, $css = null, $description = null) {
+		return $this->inputField('file', $name, $title, null, $css, $description);
 	}
 
 	public function textareaField($name, $title, $value = null, $css = null, $description = null) {
@@ -46,6 +54,32 @@ class UIHelper extends Nano_Helper {
 				. ($description ? '<small>' . $description . '</small>' : '')
 			. '</p>'
 		;
+	}
+
+	public function selectField($name, $title, array $options, $selected = null, $css = null, $description = null) {
+		$result = '<p>'
+			. '<label for="' . $name . '">' . $title . '</label>'
+			. '<select ' . ($css ? 'class="' . $css . '"' : '') . ' name="' . $name . '" id="' . $name . '">'
+		;
+		foreach ($options as $value => $title) {
+			$result .= '<option value="' . $value . ($value == $selected ? ' selected="selected"' : '') . '">' . $title . '</option>';
+		}
+		$result .= '</select>' . ($description ? '<small>' . $description . '</small>' : '') . '</p>';
+		return $result;
+	}
+
+	public function radioField($name, $title, array $options, $selected = null, $css = null, $description = null) {
+		$result = '<p>';
+		foreach ($options as $value => $title) {
+			$id = $name . '-' . $value;
+			$result .= '<label for="' . $id . '">'
+					. '<input class="check" type="radio" name="' . $name . '" id="' . $id . '" value="' . $value . '"' . ($selected ? ' checked="checked"' : '') . ' />'
+				 	. '&nbsp;' . $title
+				 . '</label>'
+			;
+		}
+		$result .= '</p>';
+		return $result;
 	}
 
 	public function boolField($name, $title, $checked = null) {
