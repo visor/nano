@@ -244,47 +244,6 @@ a.inline_tip {
 	padding-right: 13px;
 }
 
-#colorchanger {
-	z-index: 8;
-	display: none;
-	position: absolute;
-	color: white;
-	top: 33px;
-	right: 35px;
-	border-left: 1px solid #333;
-	border-right: 1px solid #333;
-	background: black;
-	width: 100px;
-}
-
-#colorchanger a {
-	padding: 5px;
-	border-bottom: 1px solid #333;
-	color: #fff;
-	display: block;
-	font-size: 10px;
-	text-decoration: none;
-}
-
-#colorchanger a:hover {
-	background: #222;
-}
-
-#colorchanger span.redtheme {
-	background: url('<?=$images?>/bullet_red.gif') left 0px no-repeat;
-	padding-left: 16px;
-}
-
-#colorchanger span.bluetheme {
-	background: url('<?=$images?>/bullet_blue.gif') left 0px no-repeat;
-	padding-left: 16px;
-}
-
-#colorchanger span.greentheme {
-	background: url('<?=$images?>/bullet_green.gif') left 0px no-repeat;
-	padding-left: 16px;
-}
-
 #menu {
 	float: left;
 }
@@ -365,7 +324,6 @@ a.inline_tip {
 }
 
 #menu ul.group li a.more {
-	
 }
 
 #menu .dashboard {
@@ -432,12 +390,11 @@ a.inline_tip {
 }
 
 #tabs {
-	
 }
 
 #tabs .container {
 	height: 25px;
-	padding-top: 8px;
+	padding-top: 7px;
 	width: 938px !important;
 	background: #eee;
 }
@@ -733,18 +690,23 @@ textarea {
 	border: 1px solid #999;
 	background: #ffffe6;
 	font-size: 12px !important;
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif !important;
+	/*font-family: "Trebuchet MS", Arial, Helvetica, sans-serif !important;*/
 	color: #333 !important;
-	font-style: italic;
+	/*font-style: italic;*/
 }
 
 .largeInput {
-	padding: 6px 5px;
+	padding: 6px 3px;
 	border: 1px solid #999;
 	background: #ffffe6;
-	font-size: 15px !important;
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif !important;
+	font-size: 20px !important;
+	/*font-family: "Trebuchet MS", Arial, Helvetica, sans-serif !important;*/
 	color: #333 !important;
+}
+
+.check {
+	margin-top: 2px;
+	vertical-align: middle;
 }
 
 form .small {

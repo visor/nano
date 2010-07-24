@@ -26,7 +26,37 @@ class UIHelper extends Nano_Helper {
 		return '<p class="info ' . $type . '"><span class="info_inner">' . $text . '</span></p>';
 	}
 
-	public function input() {
+	public function textField($name, $title, $value = null, $css = null, $description = null) {
+		return
+			'<p>'
+				. '<label for="' . $name . '">' . $title . '</label>'
+				. '<input ' . ($css ? 'class="' . $css . '"' : '') . ' type="text" name="' . $name . '" id="' . $name . '" value="' . htmlSpecialChars($value) . '" />'
+				. ($description ? '<small>' . $description . '</small>' : '')
+			. '</p>'
+		;
+	}
+
+	public function textareaField($name, $title, $value = null, $css = null, $description = null) {
+		return
+			'<p>'
+				. '<label for="' . $name . '">' . $title . '</label>'
+				. '<textarea ' . ($css ? 'class="' . $css . '"' : '') . ' name="' . $name . '" id="' . $name . '" style="height: 75px">'
+					. htmlSpecialChars($value)
+				. '</textarea>'
+				. ($description ? '<small>' . $description . '</small>' : '')
+			. '</p>'
+		;
+	}
+
+	public function boolField($name, $title, $checked = null) {
+		return
+			'<p>'
+				. '<label for="' . $name . '">'
+					. '<input class="check" type="checkbox" name="' . $name . '" id="' . $name . '" value="1"' . ($checked ? ' checked="checked"' : '') . ' />'
+				 	. '&nbsp;' . $title
+				 . '</label>'
+			. '</p>'
+		;
 	}
 
 }
