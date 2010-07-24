@@ -4,13 +4,13 @@
 			  'title' => 'Dashboard elements'
 			, 'url'   => '/cp'
 		)
-		, 'edit' => array(
-			  'title' => 'Form example'
-			, 'url'   => '/cp/edit/321'
-		)
 		, 'items' => array(
 			  'title' => 'List example'
 			, 'url'   => '/cp/items'
+		)
+		, 'edit' => array(
+			  'title' => 'Form example'
+			, 'url'   => '/cp/edit/321'
 		)
 	);
 

@@ -559,7 +559,7 @@ a.inline_tip {
 	margin-right: 5px;
 }
 
-#portlets .fixed {
+.portlet .fixed {
 	cursor: auto;
 }
 
@@ -627,7 +627,7 @@ a.inline_tip {
 	border: 0px;
 }
 
-#box-table-a {
+.box-table-a {
 	font-size: 12px;
 	margin: 0px;
 	text-align: left;
@@ -635,7 +635,7 @@ a.inline_tip {
 	border-bottom: none;
 }
 
-#box-table-a th {
+.box-table-a th {
 	font-size: 13px;
 	font-weight: normal;
 	padding: 8px;
@@ -645,7 +645,7 @@ a.inline_tip {
 	text-align: left;
 }
 
-#box-table-a td {
+.box-table-a td {
 	padding: 8px;
 	background: none;
 	border-top: 1px solid #ccc;
@@ -653,16 +653,16 @@ a.inline_tip {
 	border-bottom: none !important;
 }
 
-#box-table-a tr:hover td {
+.box-table-a tr:hover td {
 	background: #fbfbfb;
 	color: #333;
 }
 
-#box-table-a tr.footer {
+.box-table-a tr.footer {
 	background: none !important;
 }
 
-#box-table-a tr.footer:hover td {
+.box-table-a tr.footer:hover td {
 	background: none !important;
 }
 
