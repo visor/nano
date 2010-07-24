@@ -5,6 +5,14 @@ body {
 	color: #333;
 }
 
+a,a:active,a:link,a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
 #logo {
 	font-size: 24px;
 	font-style: italic;
@@ -13,8 +21,12 @@ body {
 	line-height: 69px;
 }
 
+#header {
+	height: 123px;
+}
+
 #content {
-	background: url(<?=$images?>/bg_content.gif) left top repeat-x #FFFFFF;
+	background: url('<?=$images?>/bg_content.gif') left top repeat-x #fff;
 	width: 938px !important;
 	border-left: 1px solid #9c9c9c;
 	border-right: 1px solid #9c9c9c;
@@ -96,6 +108,26 @@ a.edit_inline {
 	margin-right: 5px;
 }
 
+a.delete_inline {
+	background: url(<?=$images?>/icons/action_delete.gif) no-repeat left top;
+	display: inline-block;
+	line-height: 16px;
+	color: #d23333 !important;
+	font-size: 10px;
+	padding-left: 20px;
+	margin-right: 5px;
+}
+
+a.reject_inline {
+	background: url(<?=$images?>/icons/action_remove.gif) no-repeat left top;
+	display: inline-block;
+	line-height: 16px;
+	color: #d23333 !important;
+	font-size: 10px;
+	padding-left: 20px;
+	margin-right: 5px;
+}
+
 a.approve_inline {
 	background: url(<?=$images?>/icons/action_check.gif) no-repeat left top;
 	display: inline-block;
@@ -110,13 +142,19 @@ a.approve_inline {
 	margin-left: 15px;
 }
 
+h1 {
+	font-size: 22px;
+	display: block;
+	margin-top: 10px;
+}
+
 h1.dashboard {
-	background: url(<?=$images?>/icon_dashboard_small.gif) left 3px no-repeat;
+	background: url('<?=$images?>/icon_dashboard_small.gif') left 3px no-repeat;
 	padding-left: 35px;
 }
 
 h1.content_edit {
-	background: url(<?=$images?>/icon_content_small.gif) left 3px no-repeat;
+	background: url('<?=$images?>/icon_content_small.gif') left 3px no-repeat;
 	padding-left: 35px;
 }
 
@@ -128,9 +166,6 @@ h3 {
 	font-size: 13px !important;
 }
 
-/*******************************************************************************
-  EVENTBOX (title -> rightbox)
-*******************************************************************************/
 #eventbox {
 	font-size: 11px;
 	text-align: right;
@@ -142,12 +177,12 @@ h3 {
 
 a.inline_calendar {
 	padding-left: 21px;
-	background: url(<?=$images?>/icons/calendar.gif) no-repeat left top;
+	background: url('<?=$images?>/icons/calendar.gif') no-repeat left top;
 }
 
 a.inline_tip {
 	padding-left: 21px;
-	background: url(<?=$images?>/icons/lightbulb_off.gif) no-repeat left top;
+	background: url('<?=$images?>/icons/lightbulb_off.gif') no-repeat left top;
 }
 
 .hidden_calendar {
@@ -167,14 +202,27 @@ a.inline_tip {
 	text-indent: -99999px !important;
 }
 
-/*******************************************************************************
-  USER TOOLS
-*******************************************************************************/
 #user_tools {
-	background: url(<?=$images?>/bg_usertools_right.gif) right top no-repeat;
+	background: url('<?=$images?>/bg_usertools_right.gif') right top no-repeat;
 	height: 34px;
 	padding-right: 9px;
 	float: right;
+}
+
+#user_tools span {
+	background: url('<?=$images?>/bg_usertools_left.gif') left top no-repeat #000;
+	height: 34px;
+	padding-left: 9px;
+	line-height: 34px;
+	font-size: 10px;
+	color: #b0b0b0;
+	display: block;
+	float: right;
+}
+
+#user_tools a {
+	color: #fff;
+	text-decoration: none;
 }
 
 #user_tools a:hover {
@@ -182,7 +230,7 @@ a.inline_tip {
 }
 
 #user_tools a.mail {
-	background: url(<?=$images?>/icon_mail_small.gif) left 2px no-repeat;
+	background: url('<?=$images?>/icon_mail_small.gif') left 2px no-repeat;
 	padding-left: 17px;
 	margin-right: 5px;
 }
@@ -192,7 +240,7 @@ a.inline_tip {
 }
 
 .dropdown {
-	background: url(<?=$images?>/arrow_mini_down.gif) no-repeat right 3px;
+	background: url('<?=$images?>/arrow_mini_down.gif') no-repeat right 3px;
 	padding-right: 13px;
 }
 
@@ -209,28 +257,34 @@ a.inline_tip {
 	width: 100px;
 }
 
+#colorchanger a {
+	padding: 5px;
+	border-bottom: 1px solid #333;
+	color: #fff;
+	display: block;
+	font-size: 10px;
+	text-decoration: none;
+}
+
 #colorchanger a:hover {
 	background: #222;
 }
 
 #colorchanger span.redtheme {
-	background: url(<?=$images?>/bullet_red.gif) left 0px no-repeat;
+	background: url('<?=$images?>/bullet_red.gif') left 0px no-repeat;
 	padding-left: 16px;
 }
 
 #colorchanger span.bluetheme {
-	background: url(<?=$images?>/bullet_blue.gif) left 0px no-repeat;
+	background: url('<?=$images?>/bullet_blue.gif') left 0px no-repeat;
 	padding-left: 16px;
 }
 
 #colorchanger span.greentheme {
-	background: url(<?=$images?>/bullet_green.gif) left 0px no-repeat;
+	background: url('<?=$images?>/bullet_green.gif') left 0px no-repeat;
 	padding-left: 16px;
 }
 
-/*******************************************************************************
-  MENU
-*******************************************************************************/
 #menu {
 	float: left;
 }
@@ -310,48 +364,52 @@ a.inline_tip {
 	background-position: bottom left;
 }
 
+#menu ul.group li a.more {
+	
+}
+
 #menu .dashboard {
-	background-image: url(<?=$images?>/icon_dashboard.png);
+	background-image: url('<?=$images?>/icon_dashboard.png');
 	background-repeat: no-repeat;
 }
 
 #menu .content {
-	background-image: url(<?=$images?>/icon_edit.png);
+	background-image: url('<?=$images?>/icon_edit.png');
 	background-repeat: no-repeat;
 }
 
 #menu .reports {
-	background-image: url(<?=$images?>/icon_reports.png);
+	background-image: url('<?=$images?>/icon_reports.png');
 	background-repeat: no-repeat;
 }
 
 #menu .users {
-	background-image: url(<?=$images?>/icon_users.png);
+	background-image: url('<?=$images?>/icon_users.png');
 	background-repeat: no-repeat;
 }
 
 #menu .media_library {
-	background-image: url(<?=$images?>/icon_media.png);
+	background-image: url('<?=$images?>/icon_media.png');
 	background-repeat: no-repeat;
 }
 
 #menu .event_manager {
-	background-image: url(<?=$images?>/icon_clock.png);
+	background-image: url('<?=$images?>/icon_clock.png');
 	background-repeat: no-repeat;
 }
 
 #menu .newsletter {
-	background-image: url(<?=$images?>/icon_news.png);
+	background-image: url('<?=$images?>/icon_news.png');
 	background-repeat: no-repeat;
 }
 
 #menu .settings {
-	background-image: url(<?=$images?>/icon_settings.png);
+	background-image: url('<?=$images?>/icon_settings.png');
 	background-repeat: no-repeat;
 }
 
 #hidden_submenu {
-	background: #fff;
+	background: #FFF;
 	padding: 10px;
 	display: none;
 	width: 918px !important;
@@ -369,6 +427,21 @@ a.inline_tip {
 	margin-left: 30px;
 }
 
+#menu .additional a span {
+	border-right: 1px solid #dfdcbb;
+}
+
+#tabs {
+	
+}
+
+#tabs .container {
+	height: 25px;
+	padding-top: 8px;
+	width: 938px !important;
+	background: #eee;
+}
+
 #tabs ul {
 	margin: 0px 0px 0px 10px;
 	padding: 0px;
@@ -376,7 +449,27 @@ a.inline_tip {
 }
 
 #tabs ul li {
-	display: inline;
+	margin:1px 0 0;
+}
+
+#tabs ul li a {
+	font-family: Arial, Helvetica, sans-serif;
+	display: block;
+	float: left;
+	height: 25px;
+	margin-right: 3px;
+	font-size: 11px;
+	font-weight: bold;
+	overflow: hidden;
+	border-bottom: 0px;
+	background: #dedede;
+	text-decoration: none;
+	color: #440202;
+}
+
+#tabs ul li a:hover {
+	text-decoration: underline;
+	background-color: #fff;
 }
 
 #tabs ul li a span {
@@ -388,9 +481,21 @@ a.inline_tip {
 	white-space: nowrap;
 }
 
+#tabs ul li a.current {
+	background-color: #fff;
+}
+
 #tabs ul li.first a span {
 	padding-left: 15px;
 	padding-right: 15px;
+}
+
+#tabs .container {
+	border-bottom: none;
+}
+
+#tabs ul li a {
+	border: 0px;
 }
 
 #tabs ul li a.current {
@@ -413,9 +518,6 @@ a.inline_tip {
 	color: #1b486a !important;
 }
 
-/*******************************************************************************
-  PORTLETS AND GRID
-*******************************************************************************/
 #portlets {
 	padding: 0px 10px;
 }
@@ -473,16 +575,13 @@ a.inline_tip {
 	border: 1px dashed #999 !important;
 	visibility: visible !important;
 	height: 100px !important;
-	background: #EBEBEB;
+	background: #ebebeb;
 }
 
 .ui-sortable-placeholder * {
 	visibility: hidden;
 }
 
-/*******************************************************************************
-  Informational Messages
-*******************************************************************************/
 .info {
 	display: block;
 	background: url('<?=$images?>/informationbar_right.gif') no-repeat right top;
@@ -505,7 +604,7 @@ a.inline_tip {
 }
 
 .info .info_inner {
-	color: #4985B2;
+	color: #4985b2;
 	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
 	border: 0px;
 }
@@ -528,15 +627,35 @@ a.inline_tip {
 	border: 0px;
 }
 
-/*******************************************************************************
-  TABLE DESIGN 
-*******************************************************************************/
 #box-table-a {
 	font-size: 12px;
 	margin: 0px;
 	text-align: left;
 	border-collapse: separate;
 	border-bottom: none;
+}
+
+#box-table-a th {
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #efefef;
+	border-top: 1px solid #fff;
+	color: #333;
+	text-align: left;
+}
+
+#box-table-a td {
+	padding: 8px;
+	background: none;
+	border-top: 1px solid #ccc;
+	color: #666;
+	border-bottom: none !important;
+}
+
+#box-table-a tr:hover td {
+	background: #fbfbfb;
+	color: #333;
 }
 
 #box-table-a tr.footer {
@@ -547,14 +666,35 @@ a.inline_tip {
 	background: none !important;
 }
 
-/*******************************************************************************
-  PAGINATION
-*******************************************************************************/
 .pagination {
 	border: 0;
 	margin: 0;
 	padding: 0;
 	font-size: 10px;
+}
+
+.pagination a {
+	border: solid 1px #dedede;
+	margin-right: 2px;
+}
+
+.pagination .previous-off,.pagination .next-off {
+	color: #888;
+	display: inline-block;
+	font-weight: normal;
+	padding: 3px 4px;
+}
+
+.pagination .next a,.pagination .previous a {
+	font-weight: bold;
+	border: solid 1px #fff;
+}
+
+.pagination .active {
+	color: #000;
+	font-weight: bold;
+	display: inline-block;
+	padding: 4px 6px;
 }
 
 .pagination a:link,.pagination a:visited {
@@ -568,15 +708,16 @@ a.inline_tip {
 	border: 1px solid #999;
 }
 
-/*******************************************************************************
-  FORMS
-*******************************************************************************/
 form label {
 	display: block !important;
 	line-height: normal !important;
 	margin: 5px 0px;
 	font-size: 12px;
 	font-weight: bold;
+}
+
+form label.right {
+	text-align: right !important;
 }
 
 input[type=text] {
@@ -618,17 +759,50 @@ form .wide {
 	width: 890px;
 }
 
+form .full {
+	width: 100%;
+}
+
+.button {
+	margin: 0px;
+	padding: 0px !important;
+	border: 0px;
+	display: block;
+	float: left;
+	height: 29px;
+	margin-right: 6px;
+	margin-top: 10px;
+	padding-right: 12px !important;
+	text-decoration: none;
+	overflow: hidden;
+	font-size: 12px;
+	outline: none !important;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.button span {
+	display: block;
+	line-height: 29px;
+	padding: 0px 0px 0px 12px;
+	outline: none !important;
+	float: left;
+}
+
 .button:hover {
 	background-position: right bottom;
 	text-decoration: none !important
+}
+
+.button:hover span {
+	background-position: left bottom;
 }
 
 .button_grey {
 	margin: 0px;
 	padding: 0px !important;
 	border: 0px;
-	background: transparent url('<?=$images?>/but_right_grey.gif') no-repeat scroll top right;
-	color: #555;
+	background: transparent url('<?=$images?>/but_right_grey.gif') no-repeat scroll top right; color : #555;
 	display: block;
 	float: left;
 	height: 30px;
@@ -641,6 +815,7 @@ form .wide {
 	outline: none !important;
 	cursor: pointer;
 	font-weight: bold;
+	color: #555;
 }
 
 .button_grey span {
@@ -662,14 +837,75 @@ form .wide {
 	color: #333;
 }
 
+.button_ok {
+	margin: 0px;
+	padding: 0px !important;
+	border: 0px;
+	display: block;
+	float: left;
+	height: 30px;
+	margin-right: 6px;
+	margin-top: 10px;
+	padding-right: 15px !important;
+	text-decoration: none;
+	overflow: hidden;
+	font-size: 12px;
+	outline: none !important;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.button_ok span {
+	display: block;
+	line-height: 30px;
+	padding: 0px 0px 0px 35px;
+	outline: none !important;
+	float: left;
+}
+
 .button_ok:hover {
 	background-position: right bottom;
 	text-decoration: none !important
 }
 
+.button_ok:hover span {
+	background-position: left bottom;
+}
+
+.button_notok {
+	margin: 0px;
+	padding: 0px !important;
+	border: 0px;
+	display: block;
+	float: left;
+	height: 30px;
+	margin-right: 6px;
+	margin-top: 10px;
+	padding-right: 15px !important;
+	text-decoration: none;
+	overflow: hidden;
+	font-size: 12px;
+	outline: none !important;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.button_notok span {
+	display: block;
+	line-height: 30px;
+	padding: 0px 0px 0px 35px;
+	outline: none !important;
+	float: left;
+	font-style: italic;
+}
+
 .button_notok:hover {
 	background-position: right bottom;
 	text-decoration: none !important
+}
+
+.button_notok:hover span {
+	background-position: left bottom;
 }
 
 .button_grey_round {
@@ -711,9 +947,6 @@ form .wide {
 	color: #333;
 }
 
-/*******************************************************************************
-  MODAL BOX OVERRIDE
-*******************************************************************************/
 .ui-dialog {
 	padding: 0px !important;
 	border: none 0 !important;
@@ -736,4 +969,13 @@ form .wide {
 	-moz-border-radius-bottomright: 0px !important;
 	-moz-border-radius-topleft: 4px;
 	-moz-border-radius-topright: 4px;
+}
+
+.ui-dialog .ui-dialog-content {
+	border: 1px solid #aaa !important;
+}
+
+.ui-widget-overlay {
+	background: #000 !important;
+	opacity: 0.7 !important;
 }

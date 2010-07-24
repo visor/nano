@@ -16,6 +16,7 @@ class ControlPanelAssets implements Nano_C_Plugin {
 			->append(WEB_ROOT . '/resources/styles/960.css')
 			->append(WEB_ROOT . '/resources/styles/reset.css')
 			->append(WEB_ROOT . '/resources/styles/text.css')
+			->append(WEB_ROOT . '/resources/styles/default.css')
 			->append(WEB_ROOT . '/resources/styles/blue.css')
 //			->append(WEB_ROOT . '/resources/styles/green.css')
 //			->append(WEB_ROOT . '/resources/styles/red.css')

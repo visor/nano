@@ -12,6 +12,7 @@ class ControlPanelController extends Nano_C {
 	public function itemsAction() {
 		$this->pageTitle = 'Items list example';
 		$this->pageClass = 'content_edit';
+		$this->items     = array();
 	}
 
 	public function editAction() {

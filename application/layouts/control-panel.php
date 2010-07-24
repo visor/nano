@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="container_16" id="wrapper">
-		<div class="grid_8" id="logo"><a href="http://nicetheme.net" target="_blank" style="color: #fff">...</a></div>
+		<div class="grid_8" id="logo"><a href="/cp" style="color: #fff"><?php echo Nano::message()->m('cp-title'); ?></a></div>
 		<div class="grid_8">
 			<div id="user_tools"><span>Welcome <a href="#">Admin Username</a> | <a href="/cp/logout">Logout</a></span></div>
 		</div>
