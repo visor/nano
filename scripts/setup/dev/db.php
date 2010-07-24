@@ -3,7 +3,7 @@
 $config = array(
 	'default' => array(
 		  'type'     => 'mysql'
-		, 'dsn'      => 'host=localhost;dbname=avrora'
+		, 'dsn'      => 'host=localhost;dbname=nano'
 		, 'username' => 'user'
 		, 'password' => ''
 		, 'options'  => array(
@@ -12,7 +12,7 @@ $config = array(
 	)
 	, 'test' => array(
 		  'type'     => 'mysql'
-		, 'dsn'      => 'host=localhost;dbname=avrora_test'
+		, 'dsn'      => 'host=localhost;dbname=nano_test'
 		, 'username' => 'user'
 		, 'password' => ''
 		, 'options'  => array(
