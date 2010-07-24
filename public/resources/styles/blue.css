@@ -661,6 +661,12 @@ a.inline_tip {
 	padding: 6px 10px 0px 35px;
 }
 
+.info .info_inner {
+	color: #4985B2;
+	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
+	border: 0px;
+}
+
 .success .info_inner {
 	color: #5a801b;
 	background: url('<?=$images?>/icon_success.gif') no-repeat left top;
@@ -676,12 +682,6 @@ a.inline_tip {
 .error .info_inner {
 	color: #c00;
 	background: url('<?=$images?>/icon_error.gif') no-repeat left top;
-	border: 0px;
-}
-
-.info .info_inner {
-	color: #4985B2;
-	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
 	border: 0px;
 }
 

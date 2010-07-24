@@ -661,27 +661,27 @@ a.inline_tip {
 	padding: 6px 10px 0px 35px;
 }
 
-#success .info_inner {
+.info .info_inner {
+	color: #4985B2;
+	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
+	border: 0px;
+}
+
+.success .info_inner {
 	color: #5a801b;
 	background: url('<?=$images?>/icon_success.gif') no-repeat left top;
 	border: 0px;
 }
 
-#warning .info_inner {
+.warning .info_inner {
 	color: #E89326;
 	background: url('<?=$images?>/icon_warning.gif') no-repeat left top;
 	border: 0px;
 }
 
-#error .info_inner {
+.error .info_inner {
 	color: #C00;
 	background: url('<?=$images?>/icon_error.gif') no-repeat left top;
-	border: 0px;
-}
-
-#info .info_inner {
-	color: #4985B2;
-	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
 	border: 0px;
 }
 
