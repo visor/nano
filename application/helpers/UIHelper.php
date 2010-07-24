@@ -8,8 +8,9 @@ class UIHelper extends Nano_Helper {
 
 	public function blockStart($title, $image = null, $titleClass = null, $contentClass = null) {
 		return
-			'<div class="portlet">'
-				. '<div class="portlet-header' . ($titleClass ? ' ' . $titleClass : '') . '">'
+			'<div class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">'
+				. '<div class="portlet-header' . ($titleClass ? ' ' . $titleClass : '') . ' ui-widget-header ui-corner-top">'
+					. '<span class="ui-icon ui-icon-triangle-1-n"></span>'
 					. ($image ? '<img src="/resources/images/icons/' . $image . '" width="16" height="16" alt="' . $title .'" title="' . $title .'" />' : '')
 					. $title
 				. '</div>'
@@ -23,6 +24,9 @@ class UIHelper extends Nano_Helper {
 
 	public function message($type, $text) {
 		return '<p class="info ' . $type . '"><span class="info_inner">' . $text . '</span></p>';
+	}
+
+	public function input() {
 	}
 
 }

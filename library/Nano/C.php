@@ -129,6 +129,15 @@ abstract class Nano_C {
 		return $this->dispatcher()->param($name, $default);
 	}
 
+	/**
+	 * @param string $to
+	 * @param int $status
+	 */
+	protected function redirect($to, $status = 302) {
+		$this->markRendered();
+		header('Location: ' . $to, true, $status);
+	}
+
 	protected function addPlugin(Nano_C_Plugin $plugin) {
 		$this->plugins->attach($plugin);
 	}

@@ -8,12 +8,6 @@ $(document).ready(function() {
 	if ($('.column').length > 0) {
 		$('.column').disableSelection();
 	}
-	$('.portlet').addClass('ui-widget ui-widget-content ui-helper-clearfix ui-corner-all')
-	.find('.portlet-header')
-		.addClass('ui-widget-header ui-corner-top')
-		.prepend('<span class="ui-icon ui-icon-triangle-1-n"></span>')
-		.end()
-	;
 	$('.portlet-header .ui-icon').click(function() {
 		$(this).parents('.portlet:first').find('.portlet-content').slideToggle('fast');
 		$(this).toggleClass('ui-icon-triangle-1-s'); 
