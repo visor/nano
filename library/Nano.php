@@ -12,6 +12,8 @@ define('MODELS',      APP . DS . 'models');
 define('LAYOUTS',     APP . DS . 'layouts');
 define('VIEWS',       APP . DS . 'views');
 define('HELPERS',     APP . DS . 'helpers');
+define('PLUGINS',     APP . DS . 'plugins');
+define('APP_LIB',     APP . DS . 'library');
 define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC',      ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
@@ -173,8 +175,10 @@ final class Nano {
 	private function initLibrary() {
 		set_include_path(
 			LIB
+			. PS . APP_LIB
 			. PS . MODELS
 			. PS . CONTROLLERS
+			. PS . PLUGINS
 			. PS . HELPERS
 			. PS . get_include_path()
 		);

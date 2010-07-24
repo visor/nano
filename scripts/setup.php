@@ -18,6 +18,7 @@ $files = array(
 	, 'selenium.php'  => 'selenium.php'
 	, 'web.php'       => 'web.php'
 	, 'assets.php'    => 'assets.php'
+	, 'plugins.php'   => 'plugins.php'
 );
 
 $source = __DIR__ . '/setup/' . $env;

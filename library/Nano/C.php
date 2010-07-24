@@ -41,6 +41,7 @@ abstract class Nano_C {
 		$this->dispatcher = $dispatcher;
 		$this->helper     = Nano::helper();
 		$this->plugins    = new SplObjectStorage();
+		$this->plugins->addAll(Nano::config('plugins'));
 	}
 
 	/**
@@ -52,7 +53,7 @@ abstract class Nano_C {
 		$method = Nano_Dispatcher::formatName($action, false);
 		$result = null;
 
-		$this->init();
+		$this->runInit();
 		if (false !== $this->runBefore()) {
 			try {
 				$result = $this->$method();
@@ -130,6 +131,16 @@ abstract class Nano_C {
 
 	protected function addPlugin(Nano_C_Plugin $plugin) {
 		$this->plugins->attach($plugin);
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function runInit() {
+		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+			$plugin->init($this);
+		}
+		$this->init();
 	}
 
 	/**
