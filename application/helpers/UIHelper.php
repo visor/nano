@@ -10,7 +10,7 @@ class UIHelper extends Nano_Helper {
 		return
 			'<div class="portlet">'
 				. '<div class="portlet-header' . ($titleClass ? ' ' . $titleClass : '') . '">'
-					. ($image ? '<img src="/resources/images/icons/' . $images . '" width="16" height="16" alt="' . $title .'" title="' . $title .'" />' : '')
+					. ($image ? '<img src="/resources/images/icons/' . $image . '" width="16" height="16" alt="' . $title .'" title="' . $title .'" />' : '')
 					. $title
 				. '</div>'
 				. '<div class="portlet-content' . ($contentClass ? ' ' . $contentClass : '') . '">'
