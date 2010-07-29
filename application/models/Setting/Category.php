@@ -8,9 +8,9 @@ class Setting_Category extends Nano_DbObject {
 	protected $primaryKey = array('setting_category_id');
 	protected $properties = array(
 		  'setting_category_id'
+		, 'name'
 		, 'title'
 		, 'description'
-		, 'name'
 		, 'order'
 	);
 
@@ -19,33 +19,65 @@ class Setting_Category extends Nano_DbObject {
 	 */
 	private static $cache = null;
 
+	public static function append($name, $title, $description = null) {
+		try {
+			$category = self::create(__CLASS__, array(
+				  'name'        => $name
+				, 'title'       => $title
+				, 'description' => $description
+				, 'order'       => self::getNexOrderValue()
+			));
+			$category->save();
+			self::invalidate();
+			return true;
+		} catch (PDOException $e) {
+			Nano_Log::message($e);
+			return false;
+		}
+	}
+
 	/**
 	 * @return mixed
 	 * @param string $category
 	 * @param string $name
 	 */
-	public static function getByName($name) {
+	public static function get($name) {
 		self::load();
-		//return from cache
+		if (isset(self::$cache[$name])) {
+			return self::$cache[$name];
+		}
+		throw new Nano_Exception('Category "' . $name . '" not found');
 	}
 
 	/**
-	 * @return void
-	 * @param string $category
-	 * @param string $name
-	 * @param scalar $value
+	 * @return Setting_Category[string]
 	 */
-	public static function set($category, $name, $value) {
-		//save to db...
-		self::invalidate();
+	public static function all() {
+		self::load();
+		return self::$cache;
 	}
 
-	private static function load() {
-		self::$cache = array();
+	protected static function load() {
+		if (null === self::$cache) {
+			self::$cache = self::loadCache();
+		}
 	}
 
-	private static function invalidate() {
+	protected static function loadCache() {
+		$result = array();
+		$rows   = self::fetchThis(sql::select('*')->from(self::NAME)->order(Nano::db()->quoteName('order')));
+		foreach ($rows as $row) {
+			$result[$row->name] = $row;
+		}
+		return $result;
+	}
+
+	protected static function invalidate() {
 		self::$cache = null;
+	}
+
+	protected static function getNexOrderValue() {
+		return (int)self::db()->getCell('select max(' . self::db()->quoteName('order') . ') + 1 from ' . self::NAME);
 	}
 
 }

@@ -16,4 +16,8 @@ class Nano_Db_mysql {
 		}
 	}
 
+	public static function quoteName($value) {
+		return '`' . $value . '`';
+	}
+
 }

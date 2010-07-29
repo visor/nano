@@ -42,11 +42,8 @@ class Nano_Db extends PDO {
 	}
 
 	public static function clean() {
-		$class = 'Nano_Db_' . Nano::db()->getType();
-		if (!class_exists($class, false)) {
-			require LIB . '/Nano/Db/' . Nano::db()->getType() . '.php';
-		}
-		call_user_func(array($class, 'clean'), Nano::db());
+		$class = self::getTypeClass();
+		$class::clean(self::db());
 	}
 
 	public static function close($name = null) {
@@ -100,7 +97,9 @@ class Nano_Db extends PDO {
 	}
 
 	public function getCell($query) {
+		Nano_Log::message($query);
 		$row = $this->query($query)->fetch(PDO::FETCH_NUM);
+		Nano_Log::message(var_export($row, true));
 		return $row[0];
 	}
 
@@ -121,7 +120,7 @@ class Nano_Db extends PDO {
 		$sqlFields = array();
 		$sqlValues = array();
 		foreach ($values as $field => $value) {
-			$sqlFields[] = $field;
+			$sqlFields[] = $this->quoteName($field);
 			$sqlValues[] = null === $value ? 'null' : $this->quote($value);
 		}
 		$query = 'insert into ' . $table . '(' . implode(', ', $sqlFields) . ') values (' . implode(', ', $sqlValues) . ')';
@@ -131,7 +130,7 @@ class Nano_Db extends PDO {
 	public function update($table, array $values, $where) {
 		$sqlValues = array();
 		foreach ($values as $field => $value) {
-			$sqlValues[] = $field . ' = ' . (null === $value ? 'null' : $this->quote($value));
+			$sqlValues[] = $this->quoteName($field) . ' = ' . (null === $value ? 'null' : $this->quote($value));
 		}
 		$query = 'update ' . $table . ' set ' . implode(', ', $sqlValues) . ' where ' . $this->buildWhere($where);
 		return $this->exec($query);
@@ -143,6 +142,15 @@ class Nano_Db extends PDO {
 		return $this->exec($query);
 	}
 
+	/**
+	 * @return string
+	 * @param string $string
+	 */
+	public function quoteName($string) {
+		$class = self::getTypeClass();
+		return $class::quoteName($string);
+	}
+
 	public function buildWhere($where) {
 		if (is_string($where)) {
 			return $where;
@@ -151,12 +159,19 @@ class Nano_Db extends PDO {
 		$result = array();
 		foreach ($where as $column => $value) {
 			if (null === $value) {
-				$result[] = $column . ' is null';
+				$result[] = $this->quoteName($column) . ' is null';
 			} else {
-				$result[] = $column . ' = ' . $this->quote($value);
+				$result[] = $this->quoteName($column) . ' = ' . $this->quote($value);
 			}
 		}
 		return implode(' and ', $result);
 	}
 
+	protected static function getTypeClass() {
+		$result = 'Nano_Db_' . Nano::db()->getType();
+		if (!class_exists($result, false)) {
+			require LIB . '/Nano/Db/' . Nano::db()->getType() . '.php';
+		}
+		return $result;
+	}
 }

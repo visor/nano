@@ -9,13 +9,14 @@ class Setting extends Nano_DbObject {
 	protected $properties = array(
 		  'setting_id'
 		, 'setting_category_id'
-		, 'title'
-		, 'description'
+		, 'type'
 		, 'name'
 		, 'value'
+		, 'title'
+		, 'description'
 		, 'default'
-		, 'order'
 		, 'values'
+		, 'order'
 	);
 
 	/**
@@ -43,12 +44,9 @@ class Setting extends Nano_DbObject {
 	 * @param scalar $value
 	 */
 	public static function set($category, $name, $value) {
-		$categoryId = Setting_Category::getByName($category);
-		if (null === $categoryId) {
-			return false;
-		}
 		try {
-			Nano::db()->update(
+			$categoryId = Setting_Category::get($category)->setting_category_id;
+			self::db()->update(
 				  self::NAME
 				, array('value' => $value)
 				, array(
@@ -65,15 +63,38 @@ class Setting extends Nano_DbObject {
 
 	public static function getFromCategory($category) {
 		static::load();
-		//return from cache
 	}
 
-	public static function append($category, $title, $description, $name, $value, $default, array $values = array()) {
-		$categoryId = Setting_Category::getByName($category);
-		if (null === $categoryId) {
+	/**
+	 * @return boolean
+	 * @param string $category
+	 * @param string $type
+	 * @param string $name
+	 * @param string $title
+	 * @param string $description
+	 * @param scalar $default
+	 * @param array $values
+	 */
+	public static function append($category, $type, $name, $title, $description = null, $default = null, array $values = array()) {
+		try {
+			$categoryId = Setting_Category::get($category)->setting_category_id;
+			$setting    = parent::create(__CLASS__, array(
+				  'setting_category_id' => $categoryId
+				, 'type'                => $type
+				, 'name'                => $name
+				, 'value'               => null
+				, 'title'               => $title
+				, 'description'         => $description
+				, 'default'             => $default
+				, 'values'              => ($values ? null : serialize($values))
+				, 'order'               => self::getNexOrderValue()
+			));
+			$setting->save();
+			return true;
+		} catch (Nano_Exception $e) {
+			Nano_Log::message($e);
 			return false;
 		}
-		//add setting to the end of category
 	}
 
 	protected static function load() {
@@ -83,11 +104,32 @@ class Setting extends Nano_DbObject {
 	}
 
 	protected static function loadCache() {
-		return array();
+		$result = array();
+		$query  = sql::select('s.*')
+			->from(array('s' => self::NAME))
+			->innerJoin(array('c' => Setting_Category::NAME), 's.setting_category_id = c.setting_category_id', 'c.name c_name')
+			->order('c.' . self::db()->quoteName('order'))
+			->order('s.' . self::db()->quoteName('order'))
+		;
+		$rows   = self::db()->query($query->toString(self::db()));
+		foreach ($rows as $row) {
+			$category = Setting_Category::get($row->c_name)->name;
+			$value    = $row->value ? $row->value : $row->default;
+			if (isset($result[$category])) {
+				$result[$category][$row->name] = $value;
+			} else {
+				$result[$category] = array($row->name => $value);
+			}
+		}
+		return $result;
 	}
 
 	protected static function invalidate() {
 		self::$cache = null;
+	}
+
+	protected static function getNexOrderValue() {
+		return (int)self::db()->getCell('select max(' . self::db()->quoteName('order') . ') + 1 from ' . self::NAME);
 	}
 
 }
