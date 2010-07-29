@@ -25,16 +25,44 @@ class Setting extends Nano_DbObject {
 	protected static $cache = null;
 
 	/**
-	 * @return mixed
+	 * @return scalar
 	 * @param string $category
 	 * @param string $name
 	 */
 	public static function get($category, $name) {
+		$setting = self::getObject($category, $name);
+		if (null === $setting) {
+			return null;
+		}
+		if (null !== $setting->value) {
+			return $setting->value;
+		}
+		return $setting->default;
+	}
+
+	/**
+	 * @return Setting
+	 * @param string $category
+	 * @param string $name
+	 */
+	public static function getObject($category, $name) {
 		static::load();
 		if (isset(self::$cache[$category][$name])) {
 			return self::$cache[$category][$name];
 		}
 		return null;
+	}
+
+	/**
+	 * @return array
+	 * @param string $name
+	 */
+	public static function getCategory($name) {
+		static::load();
+		if (isset(self::$cache[$name])) {
+			return self::$cache[$name];
+		}
+		return array();
 	}
 
 	/**
@@ -107,18 +135,17 @@ class Setting extends Nano_DbObject {
 		$result = array();
 		$query  = sql::select('s.*')
 			->from(array('s' => self::NAME))
-			->innerJoin(array('c' => Setting_Category::NAME), 's.setting_category_id = c.setting_category_id', 'c.name c_name')
+			->innerJoin(array('c' => Setting_Category::NAME), 's.setting_category_id = c.setting_category_id')
 			->order('c.' . self::db()->quoteName('order'))
 			->order('s.' . self::db()->quoteName('order'))
 		;
-		$rows   = self::db()->query($query->toString(self::db()));
+		$rows   = self::fetchThis($query);
 		foreach ($rows as $row) {
-			$category = Setting_Category::get($row->c_name)->name;
-			$value    = $row->value ? $row->value : $row->default;
+			$category = Setting_Category::getById($row->setting_category_id)->name;
 			if (isset($result[$category])) {
-				$result[$category][$row->name] = $value;
+				$result[$category][$row->name] = $row;
 			} else {
-				$result[$category] = array($row->name => $value);
+				$result[$category] = array($row->name => $row);
 			}
 		}
 		return $result;

@@ -8,6 +8,7 @@ Nano::routes()
 	->add('^cp/edit/(?P<id>\d+)$', 'control-panel', 'edit')
 
 	->add('^cp/settings$',                  'setting', 'index')
+	->add('^cp/settings/save$',             'setting', 'save')
 	->add('^cp/settings/(?P<category>.+)$', 'setting', 'index')
 
 	->add('^login$',  'auth', 'login')

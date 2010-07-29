@@ -30,6 +30,7 @@ class ControlPanelAssets implements Nano_C_Plugin {
 			->append(WEB_ROOT . '/resources/scripts/ui.dialog.js')
 			->append(WEB_ROOT . '/resources/scripts/ui.datepicker.js')
 			->append(WEB_ROOT . '/resources/scripts/effects.js')
+			->append(WEB_ROOT . '/resources/scripts/cp.js')
 		;
 	}
 

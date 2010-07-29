@@ -37,6 +37,15 @@ class Setting_Category extends Nano_DbObject {
 	}
 
 	/**
+	 * Setting_Category
+	 */
+	public static function first() {
+		self::load();
+		reset(self::$cache);
+		return current(self::$cache);
+	}
+
+	/**
 	 * @return mixed
 	 * @param string $category
 	 * @param string $name
@@ -47,6 +56,16 @@ class Setting_Category extends Nano_DbObject {
 			return self::$cache[$name];
 		}
 		throw new Nano_Exception('Category "' . $name . '" not found');
+	}
+
+	public static function getById($id) {
+		self::load();
+		foreach (self::$cache as $category) {
+			if ($id == $category->setting_category_id) {
+				return $category;
+			}
+		}
+		throw new Nano_Exception('Category with id "' . $name . '" not found');
 	}
 
 	/**

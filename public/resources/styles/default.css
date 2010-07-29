@@ -63,11 +63,15 @@ a:hover {
 }
 
 .floatLeft {
-	float: left;
+	float: left !important;
 }
 
 .floatRight {
-	float: right;
+	float: right !important;
+}
+
+.right {
+	text-align: right !important;
 }
 
 a.edit_icon {

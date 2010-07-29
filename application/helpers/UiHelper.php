@@ -93,4 +93,8 @@ class UiHelper extends Nano_Helper {
 		;
 	}
 
+	public function submit($title) {
+		return '<p class="ui-helper-clearfix"><a class="button floatRight submit" href="#"><span>' . $title . '</span></a></p>';
+	}
+
 }
