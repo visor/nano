@@ -25,11 +25,11 @@
 					<li class="item middle" id="six"><a href="#" class="main"><span class="outer"><span class="inner event_manager">Event Manager</span></span></a></li>
 					<li class="item middle" id="seven"><a href="#" class="main"><span class="outer"><span class="inner newsletter">Newsletter</span></span></a></li>
 */?>
-					<li class="item last" id="eight"><a href="/cp/setting" class="main"><span class="outer"><span class="inner settings">Settings</span></span></a></li>
+					<li class="item last" id="eight"><a href="/cp/settings" class="main"><span class="outer"><span class="inner settings">Settings</span></span></a></li>
 				</ul>
 			</div>
 		</div>
-		<?php if (empty($noTabs)): ?><div class="grid_16"><div id="tabs"><div class="container"><ul><?php echo Nano_Render::script($controller, '_tabs', $variables); ?></ul></div></div></div><?php endif; ?>
+		<?php if (empty($noTabs)): ?><div class="grid_16"><div id="tabs"><div class="container"><ul><?php echo Nano_Render::script($controller, '_tabs', $variables, false); ?></ul></div></div></div><?php endif; ?>
 		<div class="grid_16" id="content">
 			<div class="grid_9"><h1 class="<?php echo $pageClass; ?>"><?php echo $pageTitle; ?></h1></div>
 			<div class="clear"></div>
