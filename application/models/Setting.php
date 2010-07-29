@@ -87,7 +87,7 @@ class Setting extends Nano_DbObject {
 				, 'description'         => $description
 				, 'default'             => $default
 				, 'values'              => ($values ? null : serialize($values))
-				, 'order'               => self::getNexOrderValue()
+				, 'order'               => self::getNexOrderValue($categoryId)
 			));
 			$setting->save();
 			return true;
@@ -128,8 +128,8 @@ class Setting extends Nano_DbObject {
 		self::$cache = null;
 	}
 
-	protected static function getNexOrderValue() {
-		return (int)self::db()->getCell('select max(' . self::db()->quoteName('order') . ') + 1 from ' . self::NAME);
+	protected static function getNexOrderValue($id) {
+		return (int)self::db()->getCell('select max(' . self::db()->quoteName('order') . ') + 1 from ' . self::NAME . ' where setting_category_id = ' . self::db()->quote($id));
 	}
 
 }

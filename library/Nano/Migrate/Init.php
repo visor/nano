@@ -19,7 +19,6 @@ class Nano_Migrate_Init {
 		$db->exec('create table ' . Nano_Migrate::VERSION_TABLE . '(
 			  id bigint not null auto_increment primary key
 			, version varchar(255) unique
-
 		)');
 	}
 
