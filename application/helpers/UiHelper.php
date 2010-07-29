@@ -1,6 +1,6 @@
 <?php
 
-class UIHelper extends Nano_Helper {
+class UiHelper extends Nano_Helper {
 
 	public function invoke() {
 		return $this;
