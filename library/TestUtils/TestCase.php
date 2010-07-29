@@ -10,6 +10,32 @@ class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
 	}
 
+	public static function getObjectProperty($object, $name) {
+		$class    = new ReflectionClass($object);
+		$property = $class->getProperty($name);
+		if (!$property->isPublic()) {
+			$property->setAccessible(true);
+		}
+		$result = $property->getValue($property->isStatic() ? null : $object);
+		if (!$property->isPublic()) {
+			$property->setAccessible(false);
+		}
+		return $result;
+	}
+
+	public static function setObjectProperty($object, $name, $value) {
+		$class    = new ReflectionClass($object);
+		$property = $class->getProperty($name);
+		if (!$property->isPublic()) {
+			$property->setAccessible(true);
+		}
+		$result = $property->setValue($property->isStatic() ? null : $object, $value);
+		if (!$property->isPublic()) {
+			$property->setAccessible(false);
+		}
+		return $result;
+	}
+
 	public static function assertException($runnable, $class, $message) {
 		try {
 			$runnable();

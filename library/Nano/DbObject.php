@@ -1,6 +1,6 @@
 <?php
 
-abstract class Nano_DbObject {
+abstract class Nano_DbObject implements Nano_Editable {
 
 	protected $table      = null;
 	protected $primaryKey = array('id');
@@ -64,6 +64,25 @@ abstract class Nano_DbObject {
 			$result[$field] = isset($data[$field]) ? $data[$field] : null;
 		}
 		return $result;
+	}
+
+	/**
+	 * @return Nano_Editable
+	 * @param array $data
+	 */
+	public function populate(array $data) {
+		foreach ($this->properties as $name) {
+			if (isset($data[$name])) {
+				$this->__set($name, $data[$name]);
+			}
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function toForm() {
+		return $this->toArray();
 	}
 
 	/**
