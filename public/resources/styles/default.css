@@ -33,7 +33,7 @@ a:hover {
 	padding: 10px 0px;
 }
 
-#textcontent {
+.textcontent {
 	padding: 10px !important;
 	width: 900px !important;
 }

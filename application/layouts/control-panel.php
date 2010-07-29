@@ -33,6 +33,7 @@
 		<div class="grid_16" id="content">
 			<div class="grid_9"><h1 class="<?php echo $pageClass; ?>"><?php echo $pageTitle; ?></h1></div>
 			<div class="clear"></div>
+			<?php echo $helper->ui()->showMessages('<div class="grid_15 textcontent">', '</div>'); ?>
 			<?php echo $content; ?>
 			<div class="clear"></div>
 		</div>

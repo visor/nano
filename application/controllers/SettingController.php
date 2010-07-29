@@ -15,6 +15,7 @@ class SettingController extends Nano_C {
 		$settings = isset($_POST['setting']) ? (array)$_POST['setting'] : array();
 		Nano_Log::message(var_export($settings, true));
 		if (empty($settings)) {
+			$this->helper->ui()->addMessage('warning', 'Settings not found');
 			$this->redirect('/cp/settings');
 		}
 		foreach ($settings as $category => $options) {
@@ -22,6 +23,7 @@ class SettingController extends Nano_C {
 				Setting::set($category, $name, $value);
 			}
 		}
+		$this->helper->ui()->addMessage('success', 'Settings have been saved successfully');
 		$this->redirect('/cp/settings/' . $category);
 	}
 }

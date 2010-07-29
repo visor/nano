@@ -10,6 +10,7 @@ class ControlPanelAssets implements Nano_C_Plugin {
 		if ('control-panel' !== $controller->layout) {
 			return;
 		}
+		session_start();
 		Nano::message()->load('control-panel');
 		Assets::style()
 			->variable('images', WEB_URL . '/resources/images')

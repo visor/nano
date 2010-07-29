@@ -1,4 +1,4 @@
-<div class="grid_15" id="textcontent">
+<div class="grid_15 textcontent">
 <form method="post">
 
 	<?php echo $helper->ui()->textField('field-01', 'First field', '111<>', 'smallInput wide', 'field description and example'); ?>

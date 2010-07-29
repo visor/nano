@@ -1,4 +1,4 @@
-<div class="grid_15" id="textcontent">
+<div class="grid_15 textcontent">
 <?php echo $helper->ui()->blockStart('Item list example', 'exclamation.gif', 'fixed', 'nopadding'); ?>
 <table width="100%" cellpadding="0" cellspacing="0" class="box-table-a list">
 	<thead>

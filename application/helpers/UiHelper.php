@@ -26,6 +26,28 @@ class UiHelper extends Nano_Helper {
 		return '<p class="info ' . $type . '"><span class="info_inner">' . $text . '</span></p>';
 	}
 
+	public function addMessage($type, $text) {
+		if (!isset($_SESSION['info-message'])) {
+			$_SESSION['info-message'] = array();
+		}
+		$_SESSION['info-message'][] = array(
+			  'type' => $type
+			, 'text' => $text
+		);
+	}
+
+	public function showMessages($before, $after) {
+		if (!isset($_SESSION['info-message'])) {
+			return;
+		}
+		echo $before;
+		foreach ($_SESSION['info-message'] as $message) {
+			echo $this->message($message['type'], $message['text']);;
+		}
+		unset($_SESSION['info-message']);
+		echo $after;
+	}
+
 	public function inputField($type, $name, $title, $value = null, $css = null, $description = null) {
 		return
 			'<p>'
