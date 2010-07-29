@@ -166,6 +166,7 @@ final class Nano {
 	}
 
 	private function __construct() {
+		spl_autoload_register('nano_autoload');
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
 		$this->initLibrary();
@@ -200,6 +201,6 @@ final class Nano {
 
 }
 
-function __autoload($className) {
+function nano_autoload($className) {
 	return Nano::autoload($className);
 }
