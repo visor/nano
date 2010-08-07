@@ -43,7 +43,7 @@ class Nano_Db extends PDO {
 
 	public static function clean() {
 		$class = self::getTypeClass();
-		$class::clean(self::db());
+		$class::clean(self::instance());
 	}
 
 	public static function close($name = null) {
@@ -97,7 +97,6 @@ class Nano_Db extends PDO {
 	}
 
 	public function getCell($query) {
-		Nano_Log::message($query);
 		$row = $this->query($query)->fetch(PDO::FETCH_NUM);
 		Nano_Log::message(var_export($row, true));
 		return $row[0];
