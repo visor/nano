@@ -73,6 +73,7 @@ class RequestHelper extends Nano_Helper {
 		if (!isset($_SESSION[self::KEY_URL])) {
 			$_SESSION[self::KEY_URL] = $_SERVER['REQUEST_URI'];
 		}
+		return $this;
 	}
 
 	/**
@@ -94,6 +95,7 @@ class RequestHelper extends Nano_Helper {
 		if (!isset($_SESSION[self::KEY_REFERER])) {
 			$_SESSION[self::KEY_REFERER] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 		}
+		return $this;
 	}
 
 	/**
