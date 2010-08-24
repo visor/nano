@@ -129,7 +129,6 @@ class Nano_Form {
 		return null;
 	}
 
-
 	/**
 	 * @return Nano_Validator
 	 * @param int $value
