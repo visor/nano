@@ -4,7 +4,6 @@ define('DS',          DIRECTORY_SEPARATOR);
 define('PS',          PATH_SEPARATOR);
 define('LIB',         __DIR__);
 define('ROOT',        dirName(LIB));
-define('PACK',        ROOT . DS . 'packages');
 define('APP',         ROOT . DS . 'application');
 define('SETTINGS',    APP . DS . 'settings');
 define('CONTROLLERS', APP . DS . 'controllers');
@@ -150,39 +149,13 @@ final class Nano {
 		return Nano_Message::instance();
 	}
 
-	/**
-	 * @return boolean
-	 * @param unknown_type $className
-	 */
-	public static function autoload($className) {
-		try {
-			if (false === include(Nano_Loader::classToPath($className))) {
-				return false;
-			}
-			return true;
-		} catch (Exception $e) {
-			return false;
-		}
-	}
-
 	private function __construct() {
+		Nano_Loader::initLibraries();
 		spl_autoload_register('nano_autoload');
+
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
-		$this->initLibrary();
 		$this->setupErrorReporting();
-	}
-
-	private function initLibrary() {
-		set_include_path(
-			LIB
-			. PS . APP_LIB
-			. PS . MODELS
-			. PS . CONTROLLERS
-			. PS . PLUGINS
-			. PS . HELPERS
-			. PS . get_include_path()
-		);
 	}
 
 	private function setupErrorReporting() {
@@ -202,5 +175,5 @@ final class Nano {
 }
 
 function nano_autoload($className) {
-	return Nano::autoload($className);
+	return Nano_Loader::load($className);
 }
