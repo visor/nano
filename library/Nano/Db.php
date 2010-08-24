@@ -43,7 +43,7 @@ class Nano_Db extends PDO {
 
 	public static function clean() {
 		$class = self::getTypeClass();
-		$class::clean(self::db());
+		$class::clean(self::instance());
 	}
 
 	public static function close($name = null) {
