@@ -5,6 +5,7 @@ define('PS',          PATH_SEPARATOR);
 define('LIB',         __DIR__);
 define('ROOT',        dirName(LIB));
 define('APP',         ROOT . DS . 'application');
+define('MODULES',     APP . DS . 'modules');
 define('SETTINGS',    APP . DS . 'settings');
 define('CONTROLLERS', APP . DS . 'controllers');
 define('MODELS',      APP . DS . 'models');
@@ -21,6 +22,7 @@ define('WEB_ROOT',    Nano::config('web')->root);
 define('WEB_URL',     Nano::config('web')->url);
 
 require LIB . DS . 'Nano' . DS . 'Loader.php';
+require LIB . DS . 'Nano' . DS . 'Modules.php';
 
 final class Nano {
 
@@ -33,6 +35,11 @@ final class Nano {
 	 * @var Nano_Dispatcher
 	 */
 	private $dispatcher;
+
+	/**
+	 * @var Nano_Modules
+	 */
+	private $modules;
 
 	/**
 	 * @var Nano_Routes
@@ -89,6 +96,13 @@ final class Nano {
 	 */
 	public static function routes() {
 		return self::instance()->routes;
+	}
+
+	/**
+	 * @return Nano_Modules
+	 */
+	public static function modules() {
+		return self::instance()->modules;
 	}
 
 	/**
@@ -150,7 +164,9 @@ final class Nano {
 	}
 
 	private function __construct() {
-		Nano_Loader::initLibraries();
+		$this->modules = new Nano_Modules();
+
+		Nano_Loader::initLibraries($this->modules);
 		spl_autoload_register('nano_autoload');
 
 		$this->dispatcher = new Nano_Dispatcher();
