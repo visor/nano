@@ -1,6 +1,14 @@
 <?php
 
-class sql_expr {
+/*
+ * add($left, $operation = null, $right = null)
+ * addAnd($left, $operation = null, $right = null)
+ * addOr($left, $operation = null, $right = null)
+ * isEmpty()
+ * toString(Nano_Db $db = null)
+*/
+
+class sql_expr extends DSL {
 
 	/**
 	 * @var array()
@@ -8,14 +16,37 @@ class sql_expr {
 	protected $parts = array();
 
 	/**
-	 * @param sql_expr|sql_custom|string $left
-	 * @param string $operation
-	 * @param sql_expr|sql_custom|string $right
+	 * @param sql_expr $parent
 	 */
-	public function __construct($left = null, $operation = null, $right = null) {
-		if (null !== $left) {
-			$this->add($left, $operation, $right);
-		}
+	public function __construct(sql_expr $parent = null) {
+		parent::__construct($parent, null);
+	}
+
+	/**
+	 * @return sql_expr
+	 */
+	public function begin() {
+		$result = new self($this);
+		$this->add($result);
+		return $result;
+	}
+
+	/**
+	 * @return sql_expr
+	 */
+	public function beginOr() {
+		$result = new self($this);
+		$this->addOr($result);
+		return $result;
+	}
+
+	/**
+	 * @return sql_expr
+	 */
+	public function beginAnd() {
+		$result = new self($this);
+		$this->addAnd($result);
+		return $result;
 	}
 
 	/**
@@ -79,6 +110,13 @@ class sql_expr {
 			$result .= ')';
 		}
 		return $result;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->toString(null);
 	}
 
 	public function __call($name, $arguments) {
