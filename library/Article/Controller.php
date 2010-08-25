@@ -43,11 +43,11 @@ abstract class Article_Controller extends Editable_Controller {
 		$class = $this->articleClass;
 		$this->pager = $this->helper->pager('page', self::ITEMS_PER_PAGE, $class::countAll());
 		$this->items = $class::getAll($this->pager->getCurrentPage(), $this->pager->getLimit());
+		$this->helper->saveUrl();
 	}
 
 	public function publishAction() {
-		$this->helper->request()->saveReferer();
-		$this->backUrl = $this->helper->request()->restoreReferer();
+		$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
 		try {
 			$date = Date::create($_GET['date']);
 			$this->getEditable()->publish($date)->save();
@@ -58,8 +58,7 @@ abstract class Article_Controller extends Editable_Controller {
 	}
 
 	public function unpublishAction() {
-		$this->helper->request()->saveReferer();
-		$this->backUrl = $this->helper->request()->restoreReferer();
+		$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
 		try {
 			$this->getEditable()->unpublish()->save();
 			$this->goBack(true, $this->messageKey . '-unpublish-success');
