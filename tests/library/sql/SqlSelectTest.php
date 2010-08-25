@@ -58,23 +58,23 @@ class SqlSelectTest extends PHPUnit_Framework_TestCase {
 			"select * from t where (a = 'b')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->where(sql::expr('a', '=', 'b'))
+				->where(sql::expr()->add('a', '=', 'b'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
 			"select * from t where (a = 'b') and (c = 'd')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->where(sql::expr('a', '=', 'b'))
-				->where(sql::expr('c', '=', 'd'))
+				->where(sql::expr()->add('a', '=', 'b'))
+				->where(sql::expr()->add('c', '=', 'd'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
 			"select * from t where (a = 'b') or (c = 'd')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->where(sql::expr('a', '=', 'b'))
-				->orWhere(sql::expr('c', '=', 'd'))
+				->where(sql::expr()->add('a', '=', 'b'))
+				->orWhere(sql::expr()->add('c', '=', 'd'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
@@ -117,23 +117,23 @@ class SqlSelectTest extends PHPUnit_Framework_TestCase {
 			"select * from t having (a = 'b')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->having(sql::expr('a', '=', 'b'))
+				->having(sql::expr()->add('a', '=', 'b'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
 			"select * from t having (a = 'b') and (c = 'd')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->having(sql::expr('a', '=', 'b'))
-				->having(sql::expr('c', '=', 'd'))
+				->having(sql::expr()->add('a', '=', 'b'))
+				->having(sql::expr()->add('c', '=', 'd'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
 			"select * from t having (a = 'b') or (c = 'd')"
 			, sql::select(sql::ALL)
 				->from('t')
-				->having(sql::expr('a', '=', 'b'))
-				->orHaving(sql::expr('c', '=', 'd'))
+				->having(sql::expr()->add('a', '=', 'b'))
+				->orHaving(sql::expr()->add('c', '=', 'd'))
 				->toString(Nano::db())
 		);
 		self::assertEquals(
