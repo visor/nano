@@ -14,7 +14,6 @@ require dirName(__DIR__) . '/library/Nano.php';
 
 $files = array(
 	  'db.php'        => 'db.php'
-	, 'log.php'       => 'log.php'
 	, 'selenium.php'  => 'selenium.php'
 	, 'web.php'       => 'web.php'
 	, 'assets.php'    => 'assets.php'
