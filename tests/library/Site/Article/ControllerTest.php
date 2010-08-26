@@ -27,17 +27,17 @@ class Article_ControllerTest extends TestUtils_ControllerTestCase {
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(1, $this->controller->pager->getCurrentPage());
 		self::assertEquals(0, $this->controller->pager->getTotalPages());
-		self::assertEquals(Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
+		self::assertEquals(Site_Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
 		self::assertEquals(0, $this->controller->pager->getOffset());
 
-		$this->createItems(2 * Article_Controller::ITEMS_PER_PAGE + 1);
+		$this->createItems(2 * Site_Article_Controller::ITEMS_PER_PAGE + 1);
 
 		self::assertNull($this->invokeControllerAction($this->controller, 'index'));
 		self::assertType('PagerHelper', $this->controller->pager);
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(1, $this->controller->pager->getCurrentPage());
 		self::assertEquals(3, $this->controller->pager->getTotalPages());
-		self::assertEquals(Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
+		self::assertEquals(Site_Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
 		self::assertEquals(0, $this->controller->pager->getOffset());
 
 		$_REQUEST['page'] = 2;
@@ -46,8 +46,8 @@ class Article_ControllerTest extends TestUtils_ControllerTestCase {
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(2, $this->controller->pager->getCurrentPage());
 		self::assertEquals(3, $this->controller->pager->getTotalPages());
-		self::assertEquals(Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
-		self::assertEquals(Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getOffset());
+		self::assertEquals(Site_Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getLimit());
+		self::assertEquals(Site_Article_Controller::ITEMS_PER_PAGE, $this->controller->pager->getOffset());
 	}
 
 	public function testPublishAction() {

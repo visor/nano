@@ -1,6 +1,6 @@
 <?php
 
-abstract class Article_Controller extends Editable_Controller {
+abstract class Site_Article_Controller extends Site_Editable_Controller {
 
 	/**
 	 * Class name of the article object
@@ -10,7 +10,7 @@ abstract class Article_Controller extends Editable_Controller {
 	protected $articleClass = null;
 
 	/**
-	 * @return Article_DbObject
+	 * @return Site_Article_DbObject
 	 */
 	public function getEditable() {
 		$class = $this->articleClass;
@@ -43,7 +43,6 @@ abstract class Article_Controller extends Editable_Controller {
 		$class = $this->articleClass;
 		$this->pager = $this->helper->pager('page', self::ITEMS_PER_PAGE, $class::countAll());
 		$this->items = $class::getAll($this->pager->getCurrentPage(), $this->pager->getLimit());
-		$this->helper->saveUrl();
 	}
 
 	public function publishAction() {

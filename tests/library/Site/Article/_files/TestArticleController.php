@@ -1,6 +1,6 @@
 <?php
 
-class TestArticleController extends Article_Controller {
+class TestArticleController extends Site_Article_Controller {
 
 	protected $messagesKey  = 'article';
 

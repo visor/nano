@@ -68,7 +68,7 @@ class Editable_ControllerTest extends TestUtils_ControllerTestCase {
 	protected function setUp() {
 		Nano::db()->delete(TestEditable::NAME);
 		$form = new Nano_Form(array('title'));
-		$this->controller = $this->getMockForAbstractClass('Editable_Controller', array(Nano::dispatcher()));
+		$this->controller = $this->getMockForAbstractClass('Site_Editable_Controller', array(Nano::dispatcher()));
 		$this->controller->expects($this->any())
 			->method('getForm')
 			->will($this->returnValue($form))

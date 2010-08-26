@@ -58,7 +58,7 @@ abstract class Nano_C {
 			try {
 				$result = $this->$method();
 			} catch (Exception $e) {
-				ErrorLog::append($e);
+				//ErrorLog::append($e);
 				throw $e;
 			}
 		}

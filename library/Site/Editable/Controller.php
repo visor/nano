@@ -1,6 +1,6 @@
 <?php
 
-abstract class Editable_Controller extends Nano_C {
+abstract class Site_Editable_Controller extends Nano_C {
 
 	const ITEMS_PER_PAGE = 20;
 
@@ -15,7 +15,7 @@ abstract class Editable_Controller extends Nano_C {
 	protected $backUrl     = null;
 
 	/**
-	 * @return Article_DbObject
+	 * @return Nano_DbObject
 	 */
 	abstract public function getEditable();
 

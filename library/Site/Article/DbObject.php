@@ -10,7 +10,7 @@
  * @property Date $published
  * @property booolean $active
  */
-abstract class Article_DbObject extends Nano_DbObject implements Nano_Editable {
+abstract class Site_Article_DbObject extends Nano_DbObject implements Nano_Editable {
 
 	protected $primaryKey = array('article_id');
 
@@ -26,7 +26,7 @@ abstract class Article_DbObject extends Nano_DbObject implements Nano_Editable {
 	);
 
 	/**
-	 * @return Article_DbObject
+	 * @return Site_Article_DbObject
 	 * @param string $title
 	 * @param string $body
 	 */
@@ -38,7 +38,7 @@ abstract class Article_DbObject extends Nano_DbObject implements Nano_Editable {
 	}
 
 	/**
-	 * @return Article_DbObject
+	 * @return Site_Article_DbObject
 	 * @param int $id
 	 */
 	public static function get($id) {
@@ -137,13 +137,14 @@ abstract class Article_DbObject extends Nano_DbObject implements Nano_Editable {
 	}
 
 	/**
-	 * @return Nano_Editable
+	 * @return Site_Article_DbObject
 	 * @param array $data
 	 */
 	public function populate(array $data) {
 		foreach ($data as $property => $value) {
 			$this->__set($property, $value);
 		}
+		return $this;
 	}
 
 	/**
