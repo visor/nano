@@ -10,7 +10,7 @@
  * @property Date $published
  * @property booolean $active
  */
-abstract class Sortable_DbObject extends Article_DbObject {
+abstract class Site_Sortable_DbObject extends Site_Article_DbObject {
 
 	protected $primaryKey = array('sortable_id');
 
@@ -25,7 +25,7 @@ abstract class Sortable_DbObject extends Article_DbObject {
 	);
 
 	/**
-	 * @return Article_DbObject
+	 * @return Site_Sortable_DbObject
 	 * @param string $title
 	 * @param string $body
 	 */
@@ -41,15 +41,19 @@ abstract class Sortable_DbObject extends Article_DbObject {
 	}
 
 	public function moveTop() {
+		return true;
 	}
 
 	public function moveUp() {
+		return true;
 	}
 
 	public function moveDown() {
+		return true;
 	}
 
 	public function moveBottom() {
+		return true;
 	}
 
 }

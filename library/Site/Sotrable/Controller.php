@@ -3,7 +3,7 @@
 /**
  * @method Sortable_DbObject getEditable()
  */
-abstract class Sortable_Controller extends Article_Controller {
+abstract class Site_Sortable_Controller extends Site_Article_Controller {
 
 	/**
 	 * @return Nano_Form
