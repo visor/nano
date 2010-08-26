@@ -3,7 +3,7 @@
 /**
  * @property TestUtils_Mixin_Files $files
  */
-class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
+abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
