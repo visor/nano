@@ -22,6 +22,7 @@ class ControlPanelAssets implements Nano_C_Plugin {
 //			->append(WEB_ROOT . '/resources/styles/green.css')
 //			->append(WEB_ROOT . '/resources/styles/red.css')
 			->append(WEB_ROOT . '/resources/styles/smoothness-ui.css')
+			->append(WEB_ROOT . '/resources/styles/actions.css')
 		;
 		Assets::script()
 			->append(WEB_ROOT . '/resources/scripts/jquery.min.js')
