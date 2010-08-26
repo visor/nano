@@ -1,6 +1,6 @@
 <?php
 
-class TestArticle extends Article_DbObject {
+class TestArticle extends Site_Article_DbObject {
 
 	const NAME = 'phpunit_test_articles';
 

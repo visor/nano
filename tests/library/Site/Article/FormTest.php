@@ -8,7 +8,7 @@ class Article_FormTest extends TestUtils_TestCase {
 	protected $valid = array();
 
 	public function testRequiredValues() {
-		$form  = new Article_Form();
+		$form  = new Site_Article_Form();
 		$tests = array(
 			  'empty'    => array()
 			, 'no-title' => array(

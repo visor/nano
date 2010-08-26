@@ -119,4 +119,29 @@ class UiHelper extends Nano_Helper {
 		return '<p class="ui-helper-clearfix"><a class="button floatRight submit" href="#"><span>' . $title . '</span></a></p>';
 	}
 
+	public function controls($object, $baseUrl, array $actions) {
+		$result = '';
+		$pk     = $object instanceof Nano_DbObject ? reset($object->getPrimaryKey()) : $object;
+		foreach ($actions as $action => $params) {
+			if (is_array($params)) {
+				$result .= $this->createActionLink($baseUrl, $pk, $action, $params[0], $params[1]);
+			} else {
+				$result .= $this->createActionLink($baseUrl, $pk, $action, $params);
+			}
+		}
+		return $result;
+	}
+
+	protected function createActionLink($baseUrl, $pk, $action, $title, $confirm = null) {
+		return
+			'<a'
+				. ' id="action-' . $action . '-' . $pk . '"'
+				. ' class="action-icon action-' . $action . (null === $confirm ? '' : ' confirm') . '"'
+				. ' href="'. $baseUrl . '/' . $action . '/' . $pk . '"'
+				. ' title="' . htmlSpecialChars($title) . '"'
+				. (null === $confirm ? '' : ' confirm="' . htmlSpecialChars($confirm) . '"')
+			. '></a>'
+		;
+	}
+
 }

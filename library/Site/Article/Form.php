@@ -1,6 +1,6 @@
 <?php
 
-class Article_Form extends Nano_Form {
+class Site_Article_Form extends Nano_Form {
 
 	public function __construct() {
 		parent::__construct(array(

@@ -1,6 +1,6 @@
 <?php
 
-class Sortable_Form extends Nano_Form {
+class Site_Sortable_Form extends Nano_Form {
 
 	public function __construct() {
 		parent::__construct(array('title'));
