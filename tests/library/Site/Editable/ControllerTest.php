@@ -40,29 +40,71 @@ class Editable_ControllerTest extends TestUtils_ControllerTestCase {
 
 	public function testSaveActionSuccess() {
 		$_SERVER['REQUEST_URI'] = 'http://example.com';
-		$_REQUEST['title']      = 'some title';
-		self::markTestIncomplete();
+		self::assertEquals(0, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
+
+		$this->controller->expects($this->once())
+			->method('getEditable')
+			->will($this->returnValue(new TestEditable(null, true)))
+		;
+		$this->controller->expects($this->once())
+			->method('getData')
+			->will($this->returnValue(array('title' => 'title')))
+		;
+		$this->controller->saveAction();
+
+		self::assertEquals(1, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
+		$row = Nano::db()->getRow('select * from ' . TestEditable::NAME);
+		self::assertObjectHasAttribute('title', $row);
+		self::assertEquals('title', $row->title);
 		//check in table
-		//check no flash messages
 	}
 
 	public function testSaveActionFails() {
 		$_SERVER['REQUEST_URI'] = 'http://example.com';
-		self::markTestIncomplete();
+		self::assertEquals(0, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
+		$this->controller->getForm()->addValidator('title', new Nano_Validator_False);
+		$this->controller->expects($this->once())
+			->method('getData')
+			->will($this->returnValue(array()))
+		;
+		$this->controller->saveAction();
+		self::assertEquals(0, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
 		//check in table
-		//check no flash messages
 	}
 
 	public function testDeleteActionSuccess() {
 		$_SERVER['REQUEST_URI'] = 'http://example.com';
-		self::markTestIncomplete();
-		//check in table
+		$editable = new TestEditable(null, true);
+		$editable->title = 'some title';
+		$editable->save();
+
+		self::assertEquals(1, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
+		$this->controller->expects($this->any())
+			->method('getEditable')
+			->will($this->returnValue(new TestEditable($editable->id)))
+		;
+		$this->controller->deleteAction();
+		self::assertEquals(0, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
 	}
 
 	public function testDeleteActionFails() {
 		$_SERVER['REQUEST_URI'] = 'http://example.com';
-		self::markTestIncomplete();
-		//check in table
+
+		$editable = $this->getMock('TestEditable', array('delete'), array(null, true));
+		$editable->title = 'some title';
+		$editable->save();
+		$editable->expects($this->any())
+			->method('delete')
+			->will($this->returnValue(false))
+		;
+
+		self::assertEquals(1, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
+		$this->controller->expects($this->any())
+			->method('getEditable')
+			->will($this->returnValue($editable))
+		;
+		$this->controller->deleteAction();
+		self::assertEquals(1, Nano::db()->getCell('select count(*) from ' . TestEditable::NAME));
 	}
 
 	protected function setUp() {

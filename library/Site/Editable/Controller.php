@@ -63,11 +63,11 @@ abstract class Site_Editable_Controller extends Nano_C {
 			$editable->populate($form->getValues());
 			if ($editable->save()) {
 				$this->backUrl = $this->helper->request()->restoreReferer();
-				$this->goBack(true, $this->messageKey . '-' . ($created ? 'create' : 'save') . '-success');
+				$this->goBack(true, ($created ? 'create' : 'save') . '-success');
 				$this->helper->request()->restoreUrl();
 			} else {
 				$this->backUrl = $this->helper->request()->restoreUrl();
-				$this->goBack(false, $this->messageKey . '-' . ($created ? 'create' : 'save') . '-fails');
+				$this->goBack(false, ($created ? 'create' : 'save') . '-fails');
 			}
 		} else {
 			$errors = array();
@@ -87,9 +87,9 @@ abstract class Site_Editable_Controller extends Nano_C {
 	public function deleteAction() {
 		$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
 		if ($this->getEditable()->delete()) {
-			$this->goBack(true, $this->messageKey . '-delete-success');
+			$this->goBack(true, 'delete-success');
 		} else {
-			$this->goBack(false, $this->messageKey . '-delete-fails');
+			$this->goBack(false, 'delete-fails');
 		}
 	}
 
@@ -105,7 +105,7 @@ abstract class Site_Editable_Controller extends Nano_C {
 		if (!$success) {
 			$this->helper->request()->save();
 		}
-		$this->helper->flash(null === $messageId ? null : Nano::message()->m($messageId), !$success, $this->backUrl);
+		$this->helper->flash(null === $messageId ? null : Nano::message()->m($this->messagesKey . '-' . $messageId), !$success, $this->backUrl);
 	}
 
 }

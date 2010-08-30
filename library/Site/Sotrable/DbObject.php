@@ -25,15 +25,6 @@ abstract class Site_Sortable_DbObject extends Site_Article_DbObject {
 	);
 
 	/**
-	 * @return Site_Sortable_DbObject
-	 * @param string $title
-	 * @param string $body
-	 */
-	public static function createNew($title) {
-		return static::create(get_called_class(), array('title' => $title));
-	}
-
-	/**
 	 * @return int
 	 */
 	public function id() {

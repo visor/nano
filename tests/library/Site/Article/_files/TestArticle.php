@@ -29,4 +29,16 @@ class TestArticle extends Site_Article_DbObject {
 		self::db()->query('drop table if exists `' . self::NAME . '`');
 	}
 
+	/**
+	 * @return TestArticle
+	 * @param string $title
+	 * @param string $body
+	 */
+	public static function createNew($title, $body) {
+		return parent::create(get_called_class(), array(
+			  'title' => $title
+			, 'body' => $body
+		));
+	}
+
 }

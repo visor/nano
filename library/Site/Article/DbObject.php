@@ -27,18 +27,6 @@ abstract class Site_Article_DbObject extends Nano_DbObject implements Nano_Edita
 
 	/**
 	 * @return Site_Article_DbObject
-	 * @param string $title
-	 * @param string $body
-	 */
-	public static function createNew($title, $body) {
-		return static::create(get_called_class(), array(
-			  'title' => $title
-			, 'body' => $body
-		));
-	}
-
-	/**
-	 * @return Site_Article_DbObject
 	 * @param int $id
 	 */
 	public static function get($id) {
