@@ -18,7 +18,7 @@ class PagerHelper extends Nano_Helper {
 	 * @param int $itemsPerPage
 	 */
 	public function show($type, $urlTemplate, $currentPage, $totalItems, $itemsPerPage = Site_Pager::PER_PAGE) {
-		return Site_Pager::factory($type, $urlTemplate, $currentPage, $totalItems, $itemsPerPage)->__toString();
+		return Site_Pager::factory($type, $urlTemplate, $currentPage, $totalItems, $itemsPerPage);
 	}
 
 }
