@@ -58,19 +58,7 @@
 		<tr class="footer">
 			<td></td>
 			<td colspan="4" align="right">&nbsp;</td>
-			<td colspan="3" align="right">
-				<div class="pagination">
-					<span class="previous-off">&laquo; Previous</span>
-					<span class="active">1</span>
-					<a href="?page=2">2</a>
-					<a href="?page=3">3</a>
-					<a href="?page=4">4</a>
-					<a href="?page=5">5</a>
-					<a href="?page=6">6</a>
-					<a href="?page=7">7</a>
-					<a href="?page=2" class="next">Next &raquo;</a>
-				</div>
-			</td>
+			<td colspan="3" align="right"><?php echo $helper->pager()->show('simple', '?page=%d', $page, 131); ?></td>
 		</tr>
 	</tbody>
 </table>

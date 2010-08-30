@@ -632,14 +632,20 @@ a.inline_tip {
 	margin: 0;
 	padding: 0;
 	font-size: 10px;
+	list-style: none;
+}
+
+.pagination li {
+	display: inline-block;
+	margin-right: 4px;
 }
 
 .pagination a {
 	border: solid 1px #dedede;
-	margin-right: 2px;
+/*	margin-right: 2px;*/
 }
 
-.pagination .previous-off,.pagination .next-off {
+.pagination .previous-off, .pagination .next-off {
 	color: #888;
 	display: inline-block;
 	font-weight: normal;
@@ -654,8 +660,9 @@ a.inline_tip {
 .pagination .active {
 	color: #000;
 	font-weight: bold;
+	font-size: 1.3em;
 	display: inline-block;
-	padding: 4px 6px;
+	padding: 4px;
 }
 
 .pagination a:link,.pagination a:visited {
