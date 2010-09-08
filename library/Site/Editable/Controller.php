@@ -46,10 +46,11 @@ abstract class Site_Editable_Controller extends Nano_C {
 
 	public function editAction() {
 		$this->form = $this->getForm();
+		$this->item = $this->getEditable();
 		$this->form->populate(
 			$this->helper->request()->restore()
 			? $this->helper->request()->data()
-			: $this->getEditable()->toForm()
+			: $this->item->toForm()
 		);
 		$this->helper->request()->saveUrl()->saveReferer();
 	}
@@ -74,9 +75,8 @@ abstract class Site_Editable_Controller extends Nano_C {
 			foreach ($form->getErrors() as $field => $messages) {
 				$errors = array_merge($errors, $messages);
 			};
-			$this->helper->flash(implode('<br />', $errors), true);
 			$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
-			$this->goBack(false);
+			$this->goBack(false, implode('<br />', $errors));
 		}
 	}
 
