@@ -66,7 +66,7 @@ abstract class Site_Editable_Controller extends Nano_C {
 				$this->goBack(true, ($created ? 'create' : 'save') . '-success');
 				$this->helper->request()->restoreUrl();
 			} else {
-				$this->backUrl = $this->helper->request()->restoreUrl();
+				$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
 				$this->goBack(false, ($created ? 'create' : 'save') . '-fails');
 			}
 		} else {
@@ -75,7 +75,7 @@ abstract class Site_Editable_Controller extends Nano_C {
 				$errors = array_merge($errors, $messages);
 			};
 			$this->helper->flash(implode('<br />', $errors), true);
-			$this->backUrl = $this->helper->request()->restoreUrl();
+			$this->backUrl = $this->helper->request()->saveReferer()->restoreReferer();
 			$this->goBack(false);
 		}
 	}
