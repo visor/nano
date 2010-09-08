@@ -278,8 +278,11 @@ class Nano_Dispatcher {
 
 		$controller = new $className($this); /* @var $controller Nano_C */
 		$action     = 'e404';
-		if (self::ERROR_NOT_FOUND != $error->getCode()) {
+		if (self::ERROR_NOT_FOUND == $error->getCode()) {
+			header('404 Not Found', true, 404);
+		} else {
 			$action = 'e500';
+			header('500 Internal Server Error', true, 500);
 		}
 		$controller->error = $error;
 		echo $controller->run($action);
