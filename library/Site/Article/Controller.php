@@ -41,8 +41,10 @@ abstract class Site_Article_Controller extends Site_Editable_Controller {
 
 	public function listAction() {
 		$class = $this->articleClass;
-		$this->pager = $this->helper->pager('page', self::ITEMS_PER_PAGE, $class::countAll());
-		$this->items = $class::getAll($this->pager->getCurrentPage(), $this->pager->getLimit());
+		$pager = $this->helper->pager()->show('simple', '?page=%d', isset($_GET['page']) ? $_GET['page'] : 1, $class::countAll(), self::ITEMS_PER_PAGE);
+		/** @var $pager Site_Pager_Simple */
+		$this->pager = $pager;
+		$this->items = $class::getAll($this->pager->getCurrentPage(), $this->pager->getItemsPerPage());
 	}
 
 	public function publishAction() {

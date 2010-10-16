@@ -33,10 +33,6 @@ abstract class Nano_DbObject implements Nano_Editable {
 		$this->init();
 	}
 
-	public static function get($primaryKey) {
-		//
-	}
-
 	/**
 	 * @return boolean
 	 */
@@ -255,9 +251,6 @@ abstract class Nano_DbObject implements Nano_Editable {
 		}
 		$result = (int)self::db()->getCell($query);
 		return $result;
-	}
-
-	protected static function loadFromDb(sql_select $query) {
 	}
 
 	/**

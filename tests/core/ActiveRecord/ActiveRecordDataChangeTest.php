@@ -66,4 +66,16 @@ class ActiveRecordDataChangeTest extends TestUtils_TestCase {
 		self::assertEquals(array('id' => 2, 'text' => 'another text'), $record->getChangedData());
 	}
 
+	public function testSettingSameValue() {
+		$record = new ActiveRecordBasic(array('id' => 1, 'text' => 'some text'));
+		$record->id = 1;
+		self::assertEquals(array(), $record->getChangedData());
+	}
+
+	public function testUnsetting() {
+		$record = new ActiveRecordBasic(array('id' => 1, 'text' => 'some text'));
+		unset($record->id);
+		self::assertEquals(array('id' => null), $record->getChangedData());
+	}
+
 }

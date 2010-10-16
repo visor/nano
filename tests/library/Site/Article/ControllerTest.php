@@ -23,7 +23,7 @@ class Article_ControllerTest extends TestUtils_ControllerTestCase {
 
 	public function testIndexAction() {
 		self::assertNull($this->invokeControllerAction($this->controller, 'index'));
-		self::assertType('PagerHelper', $this->controller->pager);
+		self::assertType('Site_Pager_Simple', $this->controller->pager);
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(1, $this->controller->pager->getCurrentPage());
 		self::assertEquals(0, $this->controller->pager->getTotalPages());
@@ -33,7 +33,7 @@ class Article_ControllerTest extends TestUtils_ControllerTestCase {
 		$this->createItems(2 * Site_Article_Controller::ITEMS_PER_PAGE + 1);
 
 		self::assertNull($this->invokeControllerAction($this->controller, 'index'));
-		self::assertType('PagerHelper', $this->controller->pager);
+		self::assertType('Site_Pager_Simple', $this->controller->pager);
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(1, $this->controller->pager->getCurrentPage());
 		self::assertEquals(3, $this->controller->pager->getTotalPages());
@@ -42,7 +42,7 @@ class Article_ControllerTest extends TestUtils_ControllerTestCase {
 
 		$_REQUEST['page'] = 2;
 		self::assertNull($this->invokeControllerAction($this->controller, 'index'));
-		self::assertType('PagerHelper', $this->controller->pager);
+		self::assertType('Site_Pager_Simple', $this->controller->pager);
 		self::assertType('PDOStatement', $this->controller->items);
 		self::assertEquals(2, $this->controller->pager->getCurrentPage());
 		self::assertEquals(3, $this->controller->pager->getTotalPages());

@@ -1,4 +1,3 @@
 <?php
 
-class Cache_Exception extends Nano_Exception {
-}
+class Cache_Exception extends Nano_Exception {}

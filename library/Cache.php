@@ -9,11 +9,30 @@ class Cache {
 	 */
 	public static function instance() {
 		if (null === self::$instance) {
-			$api   = Nano::config('cache')->api;
-			$class = 'Cache_API_' . $api;
-			self::$instance = new $class;
+			self::$instance = self::getApi(Nano::config('cache')->api);
+
+			$config = strToLower(Nano::config('cache')->api);
+			if (isset(Nano::config('cache')->{$config})) {
+				self::$instance->configure($config);
+			}
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * @return Cache_Interface
+	 * @param string $name
+	 */
+	public static function getApi($name) {
+		try {
+			$class = new ReflectionClass('Cache_API_' . $name);
+			if (!$class->implementsInterface('Cache_Interface')) {
+				throw new Cache_Exception();
+			}
+			return $class->newInstance();
+		} catch (ReflectionException $e) {
+			throw new Cache_Exception();
+		}
 	}
 
 	/**

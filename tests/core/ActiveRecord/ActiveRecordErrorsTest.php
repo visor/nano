@@ -37,4 +37,9 @@ class ActiveRecordErrorsTest extends TestUtils_TestCase {
 		self::assertException($runnable, 'ActiveRecord_Exception_NoFields', 'No fields defined for class ActiveRecordNoFields');
 	}
 
+	public function testInvalidConstructorData() {
+		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
+		self::assertException(function() { new ActiveRecordBasic('some value'); }, 'InvalidArgumentException', null);
+	}
+
 }

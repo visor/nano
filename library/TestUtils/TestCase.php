@@ -42,11 +42,13 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 			self::fail('No exception thrown');
 		} catch (Exception $e) {
 			if ($e instanceof $class) {
-				$messageConstraint = new PHPUnit_Framework_Constraint_StringContains($message, true);
-				if (!$messageConstraint->evaluate($e->getMessage())) {
-					throw $messageConstraint->fail($e->getMessage(), PHP_EOL . $e->getTraceAsString());
+				if ($message) {
+					$messageConstraint = new PHPUnit_Framework_Constraint_StringContains($message, true);
+					if (!$messageConstraint->evaluate($e->getMessage())) {
+						throw $messageConstraint->fail($e->getMessage(), PHP_EOL . $e->getTraceAsString());
+					}
+					self::assertTrue(true); // update assertion counter
 				}
-				self::assertTrue(true); // update assertion counter
 				self::assertTrue(true); // update assertion counter
 			} else {
 				if ($e instanceof PHPUnit_Framework_AssertionFailedError && $e->getMessage() === 'No exception thrown') {

@@ -1,13 +1,5 @@
 <?php
 
-/*
- * add($left, $operation = null, $right = null)
- * addAnd($left, $operation = null, $right = null)
- * addOr($left, $operation = null, $right = null)
- * isEmpty()
- * toString(Nano_Db $db = null)
-*/
-
 class sql_expr extends DSL {
 
 	/**
@@ -99,7 +91,7 @@ class sql_expr extends DSL {
 			if ($part['type'] !== sql::SQL_NONE) {
 				$result .= ' ' . $part['type'] . ' ';
 			}
-			$result .= '(';
+//			$result .= '(';
 			if (null !== $part['operation'] && null !== $part['right']) {
 				$result .= $this->operand($db, $part['left'], true) . ' ' . $part['operation'] . ' ' . $this->operand($db, $part['right'], false);
 			} elseif (null !== $part['operation']) {
@@ -107,9 +99,12 @@ class sql_expr extends DSL {
 			} else {
 				$result .= $this->operand($db, $part['left'], true);
 			}
-			$result .= ')';
+//			$result .= ')';
 		}
-		return $result;
+		if (empty($result)) {
+			return $result;
+		}
+		return '(' . $result . ')';
 	}
 
 	/**

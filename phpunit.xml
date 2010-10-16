@@ -9,16 +9,18 @@
 
 	<filter>
 		<whitelist >
-			<directory suffix="Test.php">./tests</directory>
 			<directory suffix=".php"    >./library</directory>
 			<directory suffix=".php"    >./application/controllers</directory>
 			<directory suffix=".php"    >./application/models</directory>
 			<directory suffix=".php"    >./application/helpers</directory>
+			<exclude>
+				<directory>./library/vendor</directory>
+			</exclude>
 		</whitelist>
 	</filter>
 
 	<logging>
-		<log type="coverage-html" target="./tests/reports/report" charset="UTF-8" yui="true" highlight="false" lowUpperBound="35" highLowerBound="70" />
+		<log type="coverage-html" title="Nano Framework" target="./tests/reports/report" charset="UTF-8" yui="true" highlight="false" lowUpperBound="35" highLowerBound="70" />
 	</logging>
 
 </phpunit>

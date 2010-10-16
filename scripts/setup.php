@@ -13,11 +13,12 @@ file_put_contents($root . 'env.php', '<?php $config = \'' . $env . '\';');
 require dirName(__DIR__) . '/library/Nano.php';
 
 $files = array(
-	  'db.php'        => 'db.php'
-	, 'selenium.php'  => 'selenium.php'
-	, 'web.php'       => 'web.php'
-	, 'assets.php'    => 'assets.php'
-	, 'plugins.php'   => 'plugins.php'
+	  'db.php'       => 'db.php'
+	, 'selenium.php' => 'selenium.php'
+	, 'web.php'      => 'web.php'
+	, 'assets.php'   => 'assets.php'
+	, 'plugins.php'  => 'plugins.php'
+	, 'cache.php'    => 'cache.php'
 );
 
 $source = __DIR__ . '/setup/' . $env;

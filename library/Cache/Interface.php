@@ -3,6 +3,12 @@
 interface Cache_Interface {
 
 	/**
+	 * @return void
+	 * @param stdClass $config
+	 */
+	public function configure(stdClass $config);
+
+	/**
 	 * @return mixed
 	 * @param string $key
 	 */
