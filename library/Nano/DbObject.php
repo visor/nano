@@ -6,12 +6,12 @@ abstract class Nano_DbObject implements Nano_Editable {
 	protected $primaryKey = array('id');
 	protected $increment  = true;
 	protected $properties = array();
-
 	protected $data       = array();
-
 	protected $__isNew    = false;
 
 	public function __construct($row, $create = false) {
+		$this->table = static::NAME;
+
 		if (is_scalar($this->primaryKey)) {
 			$this->primaryKey = array($this->primaryKey);
 		}
@@ -31,6 +31,10 @@ abstract class Nano_DbObject implements Nano_Editable {
 			$this->__isNew = $create;
 		}
 		$this->init();
+	}
+
+	public static function get($primaryKey) {
+		//
 	}
 
 	/**
@@ -251,6 +255,9 @@ abstract class Nano_DbObject implements Nano_Editable {
 		}
 		$result = (int)self::db()->getCell($query);
 		return $result;
+	}
+
+	protected static function loadFromDb(sql_select $query) {
 	}
 
 	/**

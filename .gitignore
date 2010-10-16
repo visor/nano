@@ -11,3 +11,7 @@ public/assets/styles/*
 .settings
 !logs/empty
 !application/settings/routes.php
+pmip
+.idea
+cache
+!cache/empty
