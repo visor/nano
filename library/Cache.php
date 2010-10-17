@@ -13,7 +13,7 @@ class Cache {
 
 			$config = strToLower(Nano::config('cache')->api);
 			if (isset(Nano::config('cache')->{$config})) {
-				self::$instance->configure($config);
+				self::$instance->configure(Nano::config('cache')->{$config});
 			}
 		}
 		return self::$instance;
@@ -25,13 +25,14 @@ class Cache {
 	 */
 	public static function getApi($name) {
 		try {
-			$class = new ReflectionClass('Cache_API_' . $name);
+			$className = 'Cache_API_' . $name;
+			$class = new ReflectionClass($className);
 			if (!$class->implementsInterface('Cache_Interface')) {
-				throw new Cache_Exception();
+				throw new Cache_Exception('Invalid cache implementation specified: ' . $className);
 			}
 			return $class->newInstance();
 		} catch (ReflectionException $e) {
-			throw new Cache_Exception();
+			throw new Cache_Exception('Cache implementation ' . $className . ' not found');
 		}
 	}
 

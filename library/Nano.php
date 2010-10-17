@@ -126,12 +126,21 @@ final class Nano {
 	public static function config($name) {
 		if (!isset(self::$configs[$name])) {
 			$config = null;
-			if (false === @include(SETTINGS . DS . $name . '.php')) {
+			if (false === include(SETTINGS . DS . $name . '.php')) {
 				return false;
 			}
-			self::$configs[$name] = $config;
+			self::setConfig($name, $config);
 		}
 		return self::$configs[$name];
+	}
+
+	/**
+	 * @return void
+	 * @param string $name
+	 * @param mixed $config
+	 */
+	public static function setConfig($name, $config) {
+		self::$configs[$name] = $config;
 	}
 
 	/**
