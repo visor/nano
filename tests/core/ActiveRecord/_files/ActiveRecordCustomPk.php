@@ -7,7 +7,7 @@
  */
 class ActiveRecordCustomPk extends ActiveRecordBasic {
 
-	const TABLE_NAME      = 'active_record_test_pk';
+	const TABLE_NAME         = 'active_record_test_pk';
 
 	protected $primaryKey    = array('id1', 'id2');
 	protected $autoIncrement = false;

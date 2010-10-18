@@ -6,7 +6,7 @@
  */
 class ActiveRecordBasic extends ActiveRecord {
 
-	const TABLE_NAME      = 'active_record_test';
+	const TABLE_NAME         = 'active_record_test';
 
 	protected $primaryKey    = array('id');
 	protected $autoIncrement = true;
@@ -20,6 +20,22 @@ class ActiveRecordBasic extends ActiveRecord {
 		, $beforeUpdate = null
 		, $afterUpdate  = null
 	;
+
+	/**
+	 * @return sql_expr
+	 * @param mixed $params
+	 */
+	public function getSelectCriteria($params) {
+		return $this->buildSelectCriteria($params);
+	}
+
+	/**
+	 * @return mixed
+	 * @param mixed $params
+	 */
+	public function getWhereFields($params) {
+		return $this->buildWhereFields($params);
+	}
 
 	/**
 	 * @return sql_expr

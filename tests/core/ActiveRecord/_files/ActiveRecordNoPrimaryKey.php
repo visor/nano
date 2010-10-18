@@ -2,12 +2,10 @@
 
 class ActiveRecordNoPrimaryKey extends ActiveRecord {
 
-	const TABLE_NAME = 'test';
+	const TABLE_NAME         = 'test';
 
-	protected $primaryKey = null;
-
+	protected $primaryKey    = null;
 	protected $autoIncrement = true;
-
-	protected $fields = array('id', 'text');
+	protected $fields        = array('id', 'text');
 
 }

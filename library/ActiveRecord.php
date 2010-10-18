@@ -38,9 +38,16 @@ abstract class ActiveRecord {
 	private $new = null;
 
 	final public function __construct($data = null) {
-		$this->tableName = static::TABLE_NAME;
 		$this->checkConfiguration();
+		$this->tableName = static::TABLE_NAME;
 		$this->setUpData($data);
+	}
+
+	/**
+	 * @return ActiveRecord
+	 */
+	public static function create() {
+		return new static(null);
 	}
 
 	/**
@@ -60,6 +67,7 @@ abstract class ActiveRecord {
 			$result[$name] = $this->__get($name);
 		}
 		if (1 == count($result) && false === $forceArray) {
+			reset($this->primaryKey);
 			return current($result);
 		}
 		return $result;
@@ -91,6 +99,18 @@ abstract class ActiveRecord {
 		$this->beforeDelete();
 		Nano::db()->delete($this->tableName, $where->toString(Nano::db()));
 		$this->afterDelete();
+	}
+
+	/**
+	 * @return ActiveRecord
+	 * @param mixed $primaryKey
+	 */
+	public function findOne($primaryKey = null) {
+		$result = ActiveRecord_Storage::load(
+			  $this
+			, sql::select(sql::ALL)->from($this->tableName)->where($this->buildSelectCriteria($primaryKey))->limit(1, 0)
+		);
+		return $result->fetch();
 	}
 
 	public function __get($field) {
@@ -178,6 +198,43 @@ abstract class ActiveRecord {
 		$this->beforeUpdate();
 		Nano::db()->update($this->tableName, $fields, $where->toString(Nano::db()));
 		$this->afterUpdate();
+	}
+
+	/**
+	 * @return sql_expr
+	 * @param mixed $params
+	 */
+	protected function buildSelectCriteria($params) {
+		$result = sql::expr();
+		foreach ($this->buildWhereFields($params) as $field => $value) {
+			$result->isEmpty()
+				? $result->add($field, '=', $value)
+				: $result->addAnd($field, '=', $value)
+			;
+		}
+		return $result;
+	}
+
+	/**
+	 * @return mixed
+	 * @param mixed $data
+	 */
+	protected function buildWhereFields($data) {
+		if (null === $data) {
+			if (null === $this->getPrimaryKey()) {
+				return array();
+			}
+			return $this->getPrimaryKey(true);
+		}
+		if (is_scalar($data)) {
+			if (1 == count($this->primaryKey)) {
+				reset($this->primaryKey);
+				return array(current($this->primaryKey) => $data);
+			} else {
+				return $this->getPrimaryKey(true);
+			}
+		}
+		return $data;
 	}
 
 	/**
