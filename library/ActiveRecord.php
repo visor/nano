@@ -38,8 +38,8 @@ abstract class ActiveRecord {
 	private $new = null;
 
 	final public function __construct($data = null) {
-		$this->checkConfiguration();
 		$this->tableName = static::TABLE_NAME;
+		$this->checkConfiguration();
 		$this->setUpData($data);
 	}
 
@@ -72,6 +72,27 @@ abstract class ActiveRecord {
 		return array_diff_assoc($this->data, $this->originalData);
 	}
 
+	/**
+	 * @return void
+	 */
+	public function save() {
+		if ($this->isNew()) {
+			$this->insert();
+			return;
+		}
+		$this->update();
+	}
+
+	/**
+	 * @return void
+	 */
+	public function delete() {
+		$where = $this->buildDeleteCriteria();
+		$this->beforeDelete();
+		Nano::db()->delete($this->tableName, $where->toString(Nano::db()));
+		$this->afterDelete();
+	}
+
 	public function __get($field) {
 		if ($this->__isset($field)) {
 			return $this->data[$field];
@@ -97,17 +118,67 @@ abstract class ActiveRecord {
 		$this->data[$field] = null;
 	}
 
+	/**
+	 * @return void
+	 */
 	protected function beforeDelete() {}
 
+	/**
+	 * @return void
+	 */
 	protected function afterDelete() {}
 
+	/**
+	 * @return void
+	 */
 	protected function beforeInsert() {}
 
+	/**
+	 * @return void
+	 */
 	protected function afterInsert() {}
 
+	/**
+	 * @return void
+	 */
 	protected function beforeUpdate() {}
 
+	/**
+	 * @return void
+	 */
 	protected function afterUpdate() {}
+
+	/**
+	 * @return void
+	 */
+	protected function insert() {
+		$this->beforeInsert();
+		Nano::db()->insert($this->tableName, $this->buildInsertFields());
+		if ($this->autoIncrement && 1 == count($this->primaryKey)) {
+			$name = current($this->primaryKey);
+			$this->{$name} = Nano::db()->lastInsertId();
+		}
+		$this->new = false;
+		$this->afterInsert();
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function update() {
+		$where  = $this->buildUpdateCriteria();
+		if ($where->isEmpty()) {
+			return;
+		}
+		$fields = $this->buildUpdateFields();
+		if (empty($fields)) {
+			return;
+		}
+
+		$this->beforeUpdate();
+		Nano::db()->update($this->tableName, $fields, $where->toString(Nano::db()));
+		$this->afterUpdate();
+	}
 
 	/**
 	 * @return array

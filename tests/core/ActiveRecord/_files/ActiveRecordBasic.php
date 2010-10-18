@@ -6,11 +6,20 @@
  */
 class ActiveRecordBasic extends ActiveRecord {
 
-	const TABLE_NAME      = 'test';
+	const TABLE_NAME      = 'active_record_test';
 
 	protected $primaryKey    = array('id');
 	protected $autoIncrement = true;
 	protected $fields        = array('id', 'text');
+
+	public
+		  $beforeDelete = null
+		, $afterDelete  = null
+		, $beforeInsert = null
+		, $afterInsert  = null
+		, $beforeUpdate = null
+		, $afterUpdate  = null
+	;
 
 	/**
 	 * @return sql_expr
@@ -41,13 +50,61 @@ class ActiveRecordBasic extends ActiveRecord {
 	}
 
 	public static function createTable() {
-		Nano::db()->query(
-			''
+		Nano::db()->exec(
+			'create table ' . self::TABLE_NAME . '(id int(11) not null auto_increment primary key, text varchar(100)) AUTO_INCREMENT=1'
 		);
 	}
 
 	public static function deleteTable() {
 		Nano::db()->query('drop table if exists `' . self::TABLE_NAME . '`');
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function beforeDelete() {
+		parent::beforeDelete();
+		$this->{__FUNCTION__} = true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function afterDelete() {
+		parent::afterDelete();
+		$this->{__FUNCTION__} = true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function beforeInsert() {
+		parent::beforeInsert();
+		$this->{__FUNCTION__} = true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function afterInsert() {
+		parent::afterInsert();
+		$this->{__FUNCTION__} = true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function beforeUpdate() {
+		parent::beforeUpdate();
+		$this->{__FUNCTION__} = true;
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function afterUpdate() {
+		parent::afterUpdate();
+		$this->{__FUNCTION__} = true;
 	}
 
 }

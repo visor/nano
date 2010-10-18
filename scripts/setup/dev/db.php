@@ -9,6 +9,7 @@ $config = array(
 		, 'options'  => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 		)
+		, 'log'      => false
 	)
 	, 'test' => array(
 		  'type'     => 'mysql'
@@ -18,5 +19,6 @@ $config = array(
 		, 'options'  => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 		)
+		, 'log'      => APP . DS . 'test-sql.log'
 	)
 );

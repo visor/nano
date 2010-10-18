@@ -54,8 +54,11 @@ class CacheApiMongoDbTest extends TestUtils_TestCase {
 		$this->api->set('someKey', 'someValue', 1000, array('tag1', 'tag2'));
 		self::assertEquals(1, $this->api->collection()->count());
 		$record = $this->api->collection()->findOne(array('key' => 'someKey'));
+
 		self::assertNotNull($record);
-		self::markTestIncomplete('need to check values and tags');
+		self::assertEquals('someKey', $record['key']);
+		self::assertEquals('someValue', $record['value']);
+		self::assertEquals(array('tag1', 'tag2'), $record['tags']);
 	}
 
 	public function testClear() {
