@@ -9,14 +9,14 @@ class SqlExprTest extends PHPUnit_Framework_TestCase {
 
 	public function testSimpleAnd() {
 		self::assertEquals(
-			  "(a = 'b') and (c = 'd')"
+			  "(a = 'b' and c = 'd')"
 			, sql::expr()->add('a', '=', 'b')->addAnd('c', '=', 'd')->__toString()
 		);
 	}
 
 	public function testSimpleOr() {
 		self::assertEquals(
-			  "(a = 'b') or (c = 'd')"
+			  "(a = 'b' or c = 'd')"
 			, sql::expr()->add('a', '=', 'b')->addOr('c', '=', 'd')->__toString()
 		);
 	}
@@ -36,13 +36,18 @@ class SqlExprTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testNestedExpr() {
-		$expected = "((a = 'b') and (c = 'd')) or ((e = 'f') and (g = 'h'))";
-		$expr     = sql::expr()->add(sql::expr()->add('a', '=', 'b')->addAnd('c', '=', 'd'))->addOr(sql::expr()->add('e', '=', 'f')->addAnd('g', '=', 'h'));
+		$expected = "((a = 'b' and c = 'd') or (e = 'f' and g = 'h'))";
+		$expr     = sql::expr()
+			->add(
+				sql::expr()->add('a', '=', 'b')->addAnd('c', '=', 'd')
+			)->addOr(
+				sql::expr()->add('e', '=', 'f')->addAnd('g', '=', 'h')
+			);
 		self::assertEquals($expected, $expr->toString(Nano::db()));
 	}
 
 	public function testDSL() {
-		$expected = "(((a = 'b') and (c = 'd')) or ((e = 'f') and (g = 'h'))) and (active = '1')";
+		$expected = "(((a = 'b' and c = 'd') or (e = 'f' and g = 'h')) and active = '1')";
 		$actual   = sql::expr()
 			->begin()
 				->begin()

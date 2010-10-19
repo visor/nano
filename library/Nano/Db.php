@@ -81,7 +81,7 @@ class Nano_Db extends PDO {
 	 * @param string $password
 	 * @param array $options [optional]
 	 */
-	public function __construct($dsn, $username, $password, $options = null, $name) {
+	public function __construct($dsn, $username = null, $password = null, $options = null, $name = null) {
 		parent::__construct($dsn, $username, $password, $options);
 		$this->name = $name;
 	}

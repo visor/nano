@@ -33,6 +33,16 @@ abstract class ActiveRecord {
 	protected $originalData = array();
 
 	/**
+	 * @var int
+	 */
+	protected $selectLimit = null;
+
+	/**
+	 * @var int
+	 */
+	protected $selectOffset = null;
+
+	/**
 	 * @var boolean
 	 */
 	private $new = null;
@@ -108,9 +118,38 @@ abstract class ActiveRecord {
 	public function findOne($primaryKey = null) {
 		$result = ActiveRecord_Storage::load(
 			  $this
-			, sql::select(sql::ALL)->from($this->tableName)->where($this->buildSelectCriteria($primaryKey))->limit(1, 0)
+			, $this->getSelectQuery($this->buildSelectCriteria($primaryKey))->limit(1, 0)
 		);
 		return $result->fetch();
+	}
+
+	/**
+	 * @return Nano_Db_Statement
+	 * @param array $params
+	 */
+	public function find(array $params = null) {
+		if (null === $params) {
+			$params = $this->getChangedData();
+		}
+		$expr = sql::expr();
+		foreach ($params as $param => $value) {
+			$expr->isEmpty()
+				? $expr->add($param, '=', $value)
+				: $expr->addAnd($param, '=', $value)
+			;
+		}
+		return $this->select($expr);
+	}
+
+	/**
+	 * @return ActiveRecord
+	 * @param int $limit
+	 * @param int $offset
+	 */
+	public function setLimit($limit, $offset = null) {
+		$this->selectLimit = $limit;
+		$this->selectOffset = $offset;
+		return $this;
 	}
 
 	public function __get($field) {
@@ -167,6 +206,29 @@ abstract class ActiveRecord {
 	 * @return void
 	 */
 	protected function afterUpdate() {}
+
+	/**
+	 * @return sql_select
+	 */
+	protected function getSelectQuery(sql_expr $expr = null) {
+		$result = sql::select(sql::ALL)->from($this->tableName);
+		if (null !== $expr && !$expr->isEmpty()) {
+			$result->where($expr);
+		}
+		return $result;
+	}
+
+	/**
+	 * @param sql_expr $expr
+	 * @return Nano_Db_Statement
+	 */
+	protected function select(sql_expr $expr) {
+		$query = $this->getSelectQuery($expr);
+		if ($this->selectLimit) {
+			$query->limit($this->selectLimit, $this->selectOffset);
+		}
+		return ActiveRecord_Storage::load($this, $query);
+	}
 
 	/**
 	 * @return void
