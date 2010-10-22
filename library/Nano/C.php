@@ -49,7 +49,6 @@ abstract class Nano_C {
 	 * @param string $action
 	 */
 	public function run($action) {
-		$class  = new ReflectionClass($this);
 		$method = Nano_Dispatcher::formatName($action, false);
 		$result = null;
 
@@ -58,7 +57,6 @@ abstract class Nano_C {
 			try {
 				$result = $this->$method();
 			} catch (Exception $e) {
-				//ErrorLog::append($e);
 				throw $e;
 			}
 		}
