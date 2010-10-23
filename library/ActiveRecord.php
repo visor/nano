@@ -3,6 +3,11 @@
 abstract class ActiveRecord {
 
 	/**
+	 * @var array
+	 */
+	private static $prototypes = array();
+
+	/**
 	 * @var string
 	 */
 	protected $tableName = null;
@@ -57,7 +62,19 @@ abstract class ActiveRecord {
 	 * @return ActiveRecord
 	 */
 	public static function instance() {
-		return new static(null);
+		return clone static::prototype();
+	}
+
+	/**
+	 * @return ActiveRecord
+	 */
+	public static function prototype() {
+		$name = get_called_class();
+		if (isset(self::$prototypes[$name])) {
+			return self::$prototypes[$name];
+		}
+		self::$prototypes[$name] = new static(null);
+		return self::$prototypes[$name];
 	}
 
 	/**
