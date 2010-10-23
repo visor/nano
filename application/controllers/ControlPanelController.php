@@ -22,4 +22,15 @@ class ControlPanelController extends Nano_C {
 		$this->id        = $this->p('id');
 	}
 
+	public function variablesAction() {
+		$this->pageTitle = 'Edit form example';
+		$this->pageClass = 'dashboard';
+		$this->variable1 = new stdClass();
+		$this->variable2 = Cache::instance();
+		$this->variable3 = $_REQUEST;
+		$this->variable4 = $_SERVER;
+		$this->variable5 = '<some>with<xml>example<elements>contents</elements></xml></some>';
+		return $this->render('common', 'variables');
+	}
+
 }

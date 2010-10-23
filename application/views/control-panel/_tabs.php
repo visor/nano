@@ -12,6 +12,10 @@
 			  'title' => 'Form example'
 			, 'url'   => '/cp/edit/321'
 		)
+		, 'variables' => array(
+			  'title' => 'Dump variables example'
+			, 'url'   => '/cp/variables'
+		)
 	);
 
 	foreach ($links as $linkAction => $link) {
