@@ -24,7 +24,7 @@ class Cookie {
 	 */
 	public static function set($name, $value, $expire = null) {
 		if (null === $expire) {
-			$expire = ONE_MONTH;
+			$expire = self::ONE_MONTH;
 		}
 		setCookie($name, $value, $_SERVER['REQUEST_TIME'] + $expire, '/', self::domain(), true, true);
 		$_COOKIE[$name] = $value;
