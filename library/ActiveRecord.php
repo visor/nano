@@ -56,7 +56,7 @@ abstract class ActiveRecord {
 	/**
 	 * @return ActiveRecord
 	 */
-	public static function create() {
+	public static function instance() {
 		return new static(null);
 	}
 
@@ -121,6 +121,28 @@ abstract class ActiveRecord {
 			, $this->getSelectQuery($this->buildSelectCriteria($primaryKey))->limit(1, 0)
 		);
 		return $result->fetch();
+	}
+
+	/**
+	 * @return int
+	 * @param array $params
+	 */
+	public function count(array $params = null) {
+		if (null === $params) {
+			$params = $this->getChangedData();
+		}
+		$expr  = sql::expr();
+		foreach ($params as $param => $value) {
+			$expr->isEmpty()
+				? $expr->add($param, '=', $value)
+				: $expr->addAnd($param, '=', $value)
+			;
+		}
+		$query = sql::select('count(*)')->from($this->tableName);
+		if (!$expr->isEmpty()) {
+			$query->where($expr);
+		}
+		return (int)Nano::db()->getCell($query);
 	}
 
 	/**

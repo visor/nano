@@ -19,7 +19,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 	}
 
 	public function testActiveRecordFactory() {
-		self::assertType('ActiveRecordBasic', ActiveRecordBasic::create());
+		self::assertType('ActiveRecordBasic', ActiveRecordBasic::instance());
 	}
 
 	public function testPrimaryKeyValue() {
@@ -52,13 +52,13 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		for ($i = 0; $i < 10; $i++) {
 			Nano::db()->insert(ActiveRecordBasic::TABLE_NAME, array('text' => 'record #' . sprintf('%03d', $i)));
 		}
-		$record = ActiveRecordBasic::create()->findOne(array('id' => 1));
+		$record = ActiveRecordBasic::instance()->findOne(array('id' => 1));
 		/** @var $record ActiveRecordBasic */
 		self::assertType('ActiveRecordBasic', $record);
 		self::assertEquals(1, $record->id);
 		self::assertEquals('record #000', $record->text);
 
-		$record = ActiveRecordBasic::create()->findOne(1);
+		$record = ActiveRecordBasic::instance()->findOne(1);
 		/** @var $record ActiveRecordBasic */
 		self::assertType('ActiveRecordBasic', $record);
 		self::assertEquals(1, $record->id);
@@ -71,7 +71,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 			Nano::db()->insert(ActiveRecordBasic::TABLE_NAME, array('text' => $text));
 		}
 
-		$records = ActiveRecordBasic::create()->find(array('text' => 'record #002'));
+		$records = ActiveRecordBasic::instance()->find(array('text' => 'record #002'));
 		self::assertType('Nano_Db_Statement', $records);
 		self::assertEquals(4, $records->rowCount());
 
@@ -79,7 +79,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		/** @var $record ActiveRecordBasic */
 		self::assertEquals('record #002', $record->text);
 
-		$record = ActiveRecordBasic::create();
+		$record = ActiveRecordBasic::instance();
 		/** @var $record ActiveRecordBasic */
 		$record->text = 'record #001';
 		$records = $record->find();
@@ -98,13 +98,26 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		self::assertEquals($record->id, $found->id);
 		self::assertEquals($record->text, $found->text);
 
-		$record = ActiveRecordBasic::create();
+		$record = ActiveRecordBasic::instance();
 		/** @var $record ActiveRecordBasic */
 		$record->setLimit(2, 0);
 		$record->text = 'record #000';
 		$records = $record->find();
 		self::assertType('Nano_Db_Statement', $records);
 		self::assertEquals(2, $records->rowCount());
+	}
+
+	public function testCounting() {
+		for ($i = 1; $i <= 12; $i++) {
+			$text = 'record #' . sprintf('%03d', $i % 3);
+			Nano::db()->insert(ActiveRecordBasic::TABLE_NAME, array('text' => $text));
+		}
+		self::assertEquals(12, ActiveRecordBasic::instance()->count());
+
+		$record = ActiveRecordBasic::instance();
+		$record->id   = 100;
+		$record->text = 'some';
+		self::assertEquals(0, $record->count());
 	}
 
 	protected function tearDown() {

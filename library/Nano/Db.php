@@ -130,7 +130,6 @@ class Nano_Db extends PDO {
 
 	public function getCell($query) {
 		$row = $this->query($query)->fetch(PDO::FETCH_NUM);
-		Nano_Log::message(var_export($row, true));
 		return $row[0];
 	}
 
