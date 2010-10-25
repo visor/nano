@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title><?php echo Nano::message()->m('cp-title'); ?>: <?php echo $pageTitle; ?></title>
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<?php /* <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> */ ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<?php echo Assets::style()->import(), (isset($head) ? $head : ''); ?>
 	<script type="text/javascript">/*<![CDATA[*/ var email = function(s) { var r = function ( t, u, v ) { return String.fromCharCode(((t - u + v ) % (v * 2)) + u); }, b = [], c, i = s.length, a = "a".charCodeAt(), z = a + 26, A = "A".charCodeAt(), Z = A + 26; while (i--) { c = s.charCodeAt(i); if (c >= a && c < z) { b[i] = r(c, a, 13); } else if (c >= A && c < Z) { b[i] = r(c, A, 13); } else { b[i] = s.charAt(i); } }; return b.join(""); }; /*]]>*/</script>

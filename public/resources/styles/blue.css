@@ -44,12 +44,8 @@ h1 {
 	color: #1b486a;
 }
 
-#tabs {
+#tabs, #tabs .container {
 	background: #639ecb;
-}
-
-#tabs .container {
-	background: url('<?=$images?>/tabs_bg.gif.html') repeat-x left top;
 }
 
 #tabs ul li a {
