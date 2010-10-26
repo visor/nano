@@ -41,6 +41,13 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		self::assertEquals(array('text' => 'text'),         $record->getWhereFields(array('text' => 'text')));
 	}
 
+	public function testFieldExists() {
+		self::assertTrue(ActiveRecordBasic::prototype()->fieldExists('id'));
+		self::assertTrue(ActiveRecordBasic::prototype()->fieldExists('text'));
+		self::assertFalse(ActiveRecordBasic::prototype()->fieldExists('id2'));
+		self::assertFalse(ActiveRecordBasic::prototype()->fieldExists('some other field'));
+	}
+
 	public function testSelectCriteria() {
 		$record = new ActiveRecordBasic();
 		self::assertEquals("(id = '1')", $record->getSelectCriteria(array('id' => 1))->toString(Nano::db()));

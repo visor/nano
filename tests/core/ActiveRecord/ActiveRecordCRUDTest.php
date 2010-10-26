@@ -21,6 +21,7 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 	public function testCreate() {
 		$record = new ActiveRecordBasic();
 		$record->text = 'some text';
+		self::assertTrue($record->changed());
 		$record->save();
 
 		self::assertEquals(1, Nano::db()->log()->count());
@@ -28,16 +29,21 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		self::assertNotNull($record->id);
 		self::assertEquals(1, $record->id);
 		self::assertFalse($record->isNew());
+		self::assertFalse($record->changed());
 
 		$record = new ActiveRecordCustomPk();
 		$record->text = 'some text';
 		self::assertException(function () use ($record) { $record->save(); }, 'PDOException', 'Integrity constraint violation');
+		self::assertTrue($record->changed());
 
 		$record->id1 = 10;
 		self::assertException(function () use ($record) { $record->save(); }, 'PDOException', 'Integrity constraint violation');
+		self::assertTrue($record->changed());
 
 		$record->id2 = 20;
+		self::assertTrue($record->changed());
 		$record->save();
+		self::assertFalse($record->changed());
 
 		self::assertEquals(2, Nano::db()->log()->count());
 		self::assertEquals("insert into `" . ActiveRecordCustomPk::TABLE_NAME . "`(`id1`, `id2`, `text`) values ('10', '20', 'some text')", Nano::db()->log()->getLastQuery());
@@ -76,7 +82,9 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		$record->id1  = 2;
 		$record->text = 'some text';
 		$record->save();
-		self::assertEquals(0, Nano::db()->log()->count());
+		self::assertEquals(1, Nano::db()->log()->count());
+		self::assertEquals("update `" . ActiveRecordCustomPk::TABLE_NAME . "` set `text` = 'some text' where (id1 = '2' and id2 = '2')", Nano::db()->log()->getLastQuery());
+		Nano::db()->log()->clean();
 
 		$record->id1  = 2;
 		$record->text = 'some other text';

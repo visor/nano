@@ -113,9 +113,11 @@ abstract class ActiveRecord {
 	public function save() {
 		if ($this->isNew()) {
 			$this->insert();
+			$this->updateOriginalData();
 			return;
 		}
 		$this->update();
+		$this->updateOriginalData();
 	}
 
 	/**
@@ -178,6 +180,21 @@ abstract class ActiveRecord {
 			;
 		}
 		return $this->select($expr);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function changed() {
+		return count($this->getChangedData()) > 0;
+	}
+
+	/**
+	 * @return boolean
+	 * @param string $name
+	 */
+	public function fieldExists($name) {
+		return in_array($name, $this->fields);
 	}
 
 	/**
@@ -287,6 +304,9 @@ abstract class ActiveRecord {
 	 * @return void
 	 */
 	protected function update() {
+		if (!$this->changed()) {
+			return;
+		}
 		$where  = $this->buildUpdateCriteria();
 		if ($where->isEmpty()) {
 			return;
@@ -437,6 +457,13 @@ abstract class ActiveRecord {
 			return;
 		}
 		throw new InvalidArgumentException('Invalid data passed to ' . __CLASS__ . ' constructor');
+	}
+
+	/**
+	 * @return void
+	 */
+	private function updateOriginalData() {
+		$this->originalData = $this->data;
 	}
 
 }
