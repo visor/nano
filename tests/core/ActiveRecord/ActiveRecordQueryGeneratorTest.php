@@ -14,7 +14,7 @@ class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 		$record = new ActiveRecordBasic();
 		self::assertTrue($record->isNew());
 
-		$record = new ActiveRecordBasic(array('id' => 1));
+		$record = new ActiveRecordBasic(array('id' => 1), true);
 		self::assertFalse($record->isNew());
 	}
 

@@ -62,6 +62,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		$record = ActiveRecordBasic::instance()->findOne(array('id' => 1));
 		/** @var $record ActiveRecordBasic */
 		self::assertType('ActiveRecordBasic', $record);
+		self::assertFalse($record->isNew());
 		self::assertEquals(1, $record->id);
 		self::assertEquals('record #000', $record->text);
 

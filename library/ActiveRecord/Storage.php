@@ -10,7 +10,7 @@ class ActiveRecord_Storage {
 	public static function load(ActiveRecord $record, sql_select $query) {
 		$className = get_class($record);
 		$db        = Nano::db();
-		return $db->query($query->toString($db), PDO::FETCH_CLASS, $className, array());
+		return $db->query($query->toString($db), PDO::FETCH_CLASS, $className, array(null, true));
 	}
 
 }

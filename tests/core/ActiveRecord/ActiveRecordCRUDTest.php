@@ -66,7 +66,7 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 			  'id1'  => 1
 			, 'id2'  => 2
 			, 'text' => 'some text'
-		));
+		), true);
 		self::assertFalse($record->isNew());
 		$record->save();
 		self::assertEquals(0, Nano::db()->log()->count());

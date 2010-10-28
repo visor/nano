@@ -52,10 +52,10 @@ abstract class ActiveRecord {
 	 */
 	private $new = null;
 
-	final public function __construct($data = null) {
+	final public function __construct($data = null, $loaded = false) {
 		$this->checkConfiguration();
 		$this->tableName = static::TABLE_NAME;
-		$this->setUpData($data);
+		$this->setUpData($data, $loaded);
 	}
 
 	/**
@@ -170,7 +170,7 @@ abstract class ActiveRecord {
 	 */
 	public function find(array $params = null) {
 		if (null === $params) {
-			$params = $this->getChangedData();
+			$params = $this->getNotNullFields();
 		}
 		$expr = sql::expr();
 		foreach ($params as $param => $value) {
@@ -231,6 +231,10 @@ abstract class ActiveRecord {
 
 	public function __unset($field) {
 		$this->data[$field] = null;
+	}
+
+	public static function __set_state(array $state) {
+		var_export($state);
 	}
 
 	/**
@@ -321,6 +325,18 @@ abstract class ActiveRecord {
 		$this->afterUpdate();
 	}
 
+	/**
+	 * @return array
+	 */
+	protected function getNotNullFields() {
+		$result = array();
+		foreach ($this->fields as $name) {
+			if ($this->__isset($name)) {
+				$result[$name] = $this->__get($name);
+			}
+		}
+		return $result;
+	}
 	/**
 	 * @return sql_expr
 	 * @param mixed $params
@@ -441,19 +457,29 @@ abstract class ActiveRecord {
 	 * @return void
 	 * @throws InvalidArgumentException
 	 * @param array|null $data
+	 * @param boolean $loaded
 	 */
-	private function setUpData($data) {
-		if (null === $data) {
+	private function setUpData($data, $loaded) {
+		if (false === $loaded && null === $data) {
 			$this->new = true;
+			foreach ($this->fields as $name) {
+				$this->originalData[$name] = null;
+			}
 			return;
 		}
 		if (is_array($data)) {
-			$this->new = false;
+			$this->new = !$loaded;
 			foreach ($this->fields as $name) {
-				if (isset($data[$name])) {
-					$this->data[$name] = $this->originalData[$name] = $data[$name];
-				}
+				$this->data[$name] = $this->originalData[$name] = isset($data[$name]) ? $data[$name] : null;
 			}
+			if (true === $loaded) {
+				$this->updateOriginalData();
+			}
+			return;
+		}
+		if (true === $loaded) {
+			$this->new = false;
+			$this->updateOriginalData();
 			return;
 		}
 		throw new InvalidArgumentException('Invalid data passed to ' . __CLASS__ . ' constructor');
