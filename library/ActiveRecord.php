@@ -233,10 +233,6 @@ abstract class ActiveRecord {
 		$this->data[$field] = null;
 	}
 
-	public static function __set_state(array $state) {
-		var_export($state);
-	}
-
 	/**
 	 * @return void
 	 */
