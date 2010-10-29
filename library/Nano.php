@@ -15,7 +15,7 @@ define('HELPERS',     APP . DS . 'helpers');
 define('PLUGINS',     APP . DS . 'plugins');
 define('APP_LIB',     APP . DS . 'library');
 define('MESSAGES',    APP . DS . 'messages');
-define('PUBLIC',      ROOT . DS . 'public');
+define('PUBLIC_DIR',  ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
 define('ENV',         Nano::config('env'));
 define('WEB_ROOT',    Nano::config('web')->root);
@@ -67,6 +67,7 @@ final class Nano {
 	 */
 	public static function run($url = null) {
 		self::instance();
+		TestUtils_WebTest::startCoverage();
 		include SETTINGS . DS . 'routes.php';
 		if (null === $url) {
 			$url = $_SERVER['REQUEST_URI'];
@@ -80,7 +81,13 @@ final class Nano {
 				$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
 			}
 		}
-		echo self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
+		try {
+			echo self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
+		} catch (Exception $e) {
+			TestUtils_WebTest::stopCoverage();
+			throw $e;
+		}
+		TestUtils_WebTest::stopCoverage();
 	}
 
 	/**

@@ -17,7 +17,7 @@ class RenderTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testVithVariables() {
-		$result = $this->dispatcher->run(Nano_Route::create('', 'test', 'testvar'));
+		$result = $this->dispatcher->run(Nano_Route::create('', 'test', 'test-var'));
 		$this->assertEquals('Some title. 01=foo.03=bar.', $result);
 	}
 

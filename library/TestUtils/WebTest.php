@@ -269,6 +269,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected $clearLogAfterTest = true;
 
+
 	/**
 	 * Enable code coverage for browser tests
 	 *
@@ -276,7 +277,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	public static function startCoverage() {
 		if (Nano::isTesting()) {
-			include(TESTS . '/prepend.php');
+			include(PUBLIC_DIR . DS . 'prepend.php');
 		}
 	}
 
@@ -287,7 +288,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	public static function stopCoverage() {
 		if (Nano::isTesting()) {
-			include(TESTS . '/append.php');
+			include(PUBLIC_DIR . DS . 'append.php');
 		}
 	}
 
@@ -324,14 +325,13 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	}
 
 	protected function setUp() {
+		$this->coverageScriptUrl = $this->url('/coverage.php');
 		parent::setUp();
 		if (!SELENIUM_ENABLE) {
 			$this->markTestSkipped('Selenium disabled');
 		}
 		$this->checkConnection();
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
-
-		require_once LIB . '/vendor/faker/faker.php';
 
 		Nano_Db::clean();
 
@@ -364,7 +364,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 *
 	 */
 	protected function url($path) {
-		return 'http://' . SITE_URL . $path;
+		return 'http://' . Nano::config('web')->domain . WEB_URL . $path;
 	}
 
 	/**
@@ -372,7 +372,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected function openPage() {
 		if ($this->pageUrl) {
-			$this->open($this->url($this->pageUrl));
+			$this->openAndWait($this->url($this->pageUrl));
 		}
 	}
 
