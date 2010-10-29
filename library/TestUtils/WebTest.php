@@ -269,6 +269,28 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected $clearLogAfterTest = true;
 
+	/**
+	 * Enable code coverage for browser tests
+	 *
+	 * @return void
+	 */
+	public static function startCoverage() {
+		if (Nano::isTesting()) {
+			include(TESTS . '/prepend.php');
+		}
+	}
+
+	/**
+	 * Enable code coverage for browser tests
+	 *
+	 * @return void
+	 */
+	public static function stopCoverage() {
+		if (Nano::isTesting()) {
+			include(TESTS . '/append.php');
+		}
+	}
+
 	protected function runTest() {
 		$this->autoStop = false;
 		try {

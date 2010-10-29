@@ -1,5 +1,6 @@
 logs/*
 tests/reports/*
+tests/coverage/*
 tests/screenshots/*
 tests/generated/*
 application/*.log
@@ -11,6 +12,8 @@ public/assets/styles/*
 .settings
 !logs/empty
 !application/settings/routes.php
+!application/settings/routes.php.dist
+!tests/coverage/empty
 pmip
 .idea
 cache

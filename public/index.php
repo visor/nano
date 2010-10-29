@@ -2,4 +2,11 @@
 
 require './../library/Nano.php';
 
-Nano::run();
+TestUtils_WebTest::startCoverage();
+try {
+	Nano::run();
+} catch (Exception $e) {
+	TestUtils_WebTest::stopCoverage();
+	throw $e;
+}
+TestUtils_WebTest::stopCoverage();
