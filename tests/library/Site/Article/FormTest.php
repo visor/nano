@@ -8,6 +8,7 @@ class Article_FormTest extends TestUtils_TestCase {
 	protected $valid = array();
 
 	public function testRequiredValues() {
+		self::markTestSkipped('need refactoring');
 		$form  = new Site_Article_Form();
 		$tests = array(
 			  'empty'    => array()

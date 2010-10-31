@@ -86,6 +86,7 @@ class Article_DbObjectTest extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
+		self::markTestSkipped('need refactoring');
 		Nano::db()->delete(TestArticle::NAME);
 	}
 

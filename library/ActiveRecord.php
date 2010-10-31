@@ -267,7 +267,7 @@ abstract class ActiveRecord {
 	 * @return sql_select
 	 */
 	protected function getSelectQuery(sql_expr $expr = null) {
-		$result = sql::select(sql::ALL)->from($this->tableName);
+		$result = sql::select(Nano::db()->quoteName($this->tableName) . '.' . sql::ALL)->from($this->tableName);
 		if (null !== $expr && !$expr->isEmpty()) {
 			$result->where($expr);
 		}

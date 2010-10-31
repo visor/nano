@@ -14,12 +14,12 @@ class NanoModulesTest extends TestUtils_TestCase {
 	public function testPathes() {
 		$this->modules
 			->append('default')
-			->append('other', '/tmp')
-			->append('some', '/path2')
+			->append('other', DS . 'tmp')
+			->append('some', DS . 'path2')
 		;
-		self::assertEquals('/tmp', $this->modules->getPath('other', null));
-		self::assertEquals('/path2', $this->modules->getPath('some', null));
-		self::assertEquals('/path2/views', $this->modules->getPath('some', 'views'));
+		self::assertEquals(DS . 'tmp', $this->modules->getPath('other', null));
+		self::assertEquals(DS . 'path2', $this->modules->getPath('some', null));
+		self::assertEquals(DS . 'path2' . DS .'views', $this->modules->getPath('some', 'views'));
 		self::assertEquals(MODULES . DS  . 'default', $this->modules->getPath('default', null));
 	}
 
@@ -33,12 +33,12 @@ class NanoModulesTest extends TestUtils_TestCase {
 		self::assertFalse($this->modules->active('some'));
 		self::assertFalse($this->modules->active('other'));
 
-		$this->modules->append('some', '/path2');
+		$this->modules->append('some', DS . 'path2');
 		self::assertTrue($this->modules->active('default'));
 		self::assertTrue($this->modules->active('some'));
 		self::assertFalse($this->modules->active('other'));
 
-		$this->modules->append('other', '/tmp');
+		$this->modules->append('other', DS . 'tmp');
 		self::assertTrue($this->modules->active('default'));
 		self::assertTrue($this->modules->active('some'));
 		self::assertTrue($this->modules->active('other'));
