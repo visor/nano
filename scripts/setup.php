@@ -5,33 +5,36 @@ function fromTo($from, $to) {
 }
 
 echo 'Setting up', PHP_EOL;
-$root = realPath(__DIR__ . '/../application/settings') . DIRECTORY_SEPARATOR;
+$root = realPath(__DIR__ . '/../application/settings');
 $env  = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : 'dev';
-fromTo('env.php', $root . 'env.php');
-file_put_contents($root . 'env.php', '<?php $config = \'' . $env . '\';');
+fromTo('env.php', $root . DIRECTORY_SEPARATOR . 'env.php');
+file_put_contents($root  . DIRECTORY_SEPARATOR . 'env.php', '<?php $config = \'' . $env . '\';');
 
 require dirName(__DIR__) . '/library/Nano.php';
 
-$files = array(
+$source = __DIR__ . '/setup/' . $env;
+$files = new DirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'setup' . DIRECTORY_SEPARATOR . $env) /*array(
 	  'db.php'       => 'db.php'
 	, 'selenium.php' => 'selenium.php'
 	, 'web.php'      => 'web.php'
 	, 'assets.php'   => 'assets.php'
 	, 'plugins.php'  => 'plugins.php'
 	, 'cache.php'    => 'cache.php'
-);
+)*/;
 
-$source = __DIR__ . '/setup/' . $env;
+foreach ($files as $from) {
+	/**
+	 * @var DirectoryIterator $from
+	 */
+	if ($from->isDir() || $from->isDot()) {
+		continue;
+	}
 
-if (file_exists($source)) {
-	foreach ($files as $from => $to) {
-		$sourceFile      = $source . DS . $from;
-		$destinationDir  = realPath(dirName($root . $to));
-		$destinationFile = $destinationDir . DS . baseName($to);
-		if (file_exists($sourceFile)) {
-			fromTo($from, $destinationFile);
-			copy($sourceFile, $destinationFile);
-		}
+	$sourceFile      = $from->getPathName();
+	$destinationFile = $root . DS . $from->getBaseName();
+	if (file_exists($sourceFile)) {
+		fromTo($from, $destinationFile);
+		copy($sourceFile, $destinationFile);
 	}
 }
 echo 'Done', PHP_EOL;
