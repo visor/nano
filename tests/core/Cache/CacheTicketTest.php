@@ -15,6 +15,18 @@ class CacheTicketTest extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
+		if (!class_exists('Mongo', false) || !extension_loaded('mongo')) {
+			self::markTestSkipped('No mongo extension');
+		}
+
+		$errNo  = null;
+		$errStr = null;
+		$host   = 'localhost';
+		$port   = 27017;
+		if (!@fsockopen('localhost', 27017, $errNo, $errStr, 1)) {
+			$this->markTestSkipped(sprintf('Mondo not running on %s:%d.', $host, $port));
+		}
+
 		$this->cache = Cache::getApi('MongoDb');
 		$this->cache->configure((object)array('server'  => 'mongodb://localhost:27017/' . CacheApiMongoDbTest::DATABASE_NAME));
 		$this->cache->collection()->remove(array());
@@ -52,8 +64,10 @@ class CacheTicketTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		$this->cache->collection()->remove(array());
-		$this->cache = null;
+		if ($this->cache) {
+			$this->cache->collection()->remove(array());
+			$this->cache = null;
+		}
 	}
 
 }
