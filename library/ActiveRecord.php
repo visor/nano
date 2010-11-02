@@ -390,7 +390,11 @@ abstract class ActiveRecord {
 	 * @return array
 	 */
 	protected function buildUpdateFields() {
-		return array_diff($this->getChangedData(), $this->getPrimaryKey(true));
+		$result = $this->getChangedData();
+		foreach ($this->getPrimaryKey(true) as $field => $value) {
+			unset($result[$field]);
+		}
+		return $result;
 	}
 
 	/**
