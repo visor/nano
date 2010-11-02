@@ -12,6 +12,7 @@ public/assets/styles/*
 .settings
 !logs/empty
 !application/settings/routes.php.dist
+!application/settings/redmine.php.dist
 !tests/coverage/empty
 pmip
 .idea
