@@ -10,17 +10,8 @@ $env  = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : 'dev';
 fromTo('env.php', $root . DIRECTORY_SEPARATOR . 'env.php');
 file_put_contents($root  . DIRECTORY_SEPARATOR . 'env.php', '<?php $config = \'' . $env . '\';');
 
-require dirName(__DIR__) . '/library/Nano.php';
-
 $source = __DIR__ . '/setup/' . $env;
-$files = new DirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'setup' . DIRECTORY_SEPARATOR . $env) /*array(
-	  'db.php'       => 'db.php'
-	, 'selenium.php' => 'selenium.php'
-	, 'web.php'      => 'web.php'
-	, 'assets.php'   => 'assets.php'
-	, 'plugins.php'  => 'plugins.php'
-	, 'cache.php'    => 'cache.php'
-)*/;
+$files = new DirectoryIterator(__DIR__ . DIRECTORY_SEPARATOR . 'setup' . DIRECTORY_SEPARATOR . $env);
 
 foreach ($files as $from) {
 	/**
@@ -31,7 +22,7 @@ foreach ($files as $from) {
 	}
 
 	$sourceFile      = $from->getPathName();
-	$destinationFile = $root . DS . $from->getBaseName();
+	$destinationFile = $root . DIRECTORY_SEPARATOR . $from->getBaseName();
 	if (file_exists($sourceFile)) {
 		fromTo($from, $destinationFile);
 		copy($sourceFile, $destinationFile);
@@ -47,4 +38,5 @@ if (file_exists($source . '.php')) {
 	}
 }
 
+require dirName(__DIR__) . '/library/Nano.php';
 Nano::reloadConfig();

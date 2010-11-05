@@ -1,6 +1,9 @@
 <?php
 
-class WebCoverageTest extends TestUtils_WebTest {
+/**
+ * @group test-utils
+ */
+class TestUtils_WebCoverageTest extends TestUtils_WebTest {
 
 	public function testTestIndex() {
 		$this->pageUrl = '/test-index';

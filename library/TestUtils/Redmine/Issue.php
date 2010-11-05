@@ -80,12 +80,7 @@ class TestUtils_Redmine_Issue extends ActiveResource {
 
 		try {
 			$issue->save();
-			error_log(var_export($issue->response_headers, true) . PHP_EOL, 3, __FILE__ . '.log');
-			error_log(var_export($issue->response_body, true) . PHP_EOL, 3, __FILE__ . '.log');
 		} catch (Exception $e) {
-			error_log($e . PHP_EOL, 3, __FILE__ . '.log');
-			error_log(var_export($issue->response_headers, true) . PHP_EOL, 3, __FILE__ . '.log');
-			error_log(var_export($issue->response_body, true) . PHP_EOL, 3, __FILE__ . '.log');
 		}
 	}
 

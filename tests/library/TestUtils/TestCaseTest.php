@@ -1,6 +1,9 @@
 <?php
 
-class TestCaseTest extends TestUtils_TestCase {
+/**
+ * @group test-utils
+ */
+class TestUtils_TestCaseTest extends TestUtils_TestCase {
 
 	protected $protected = 'some protected value';
 

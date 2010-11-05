@@ -422,7 +422,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	private function checkConnection() {
 		$browser = self::$browsers[0];
 		$errNo = $errStr = null;
-		if (!@fsockopen($browser['host'], $browser['port'], $errNo, $errStr)) {
+		if (!@fsockopen($browser['host'], $browser['port'], $errNo, $errStr, 1)) {
 			$this->markTestSkipped(sprintf('Selenium RC not running on %s:%d.', $browser['host'], $browser['port']));
 		}
 	}

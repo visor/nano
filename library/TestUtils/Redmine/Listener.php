@@ -30,6 +30,7 @@ class TestUtils_Redmine_Listener extends PHPUnit_Extensions_TicketListener {
 	 * @param  PHPUnit_Framework_Test $test
 	 */
 	public function startTest(PHPUnit_Framework_Test $test) {
+		parent::startTest($test);
 		$this->test    = $test;
 		$this->failure = null;
 	}

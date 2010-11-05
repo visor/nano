@@ -1,0 +1,9 @@
+<?php
+
+$config = (object)array(
+	  'site'       => 'http://redmine.org/'
+	, 'user'       => 'redmine'
+	, 'password'   => 'redmine'
+	, 'project_id' => 1
+	, 'source'     => '/'
+);
