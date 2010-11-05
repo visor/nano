@@ -34,6 +34,17 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		self::assertEquals(10, ActiveRecordBasic::prototype()->count());
 	}
 
+	public function testFixtureShouldReturnRecord() {
+		TestUtils_Fixture::instance()->forTest('default', 2);
+		self::assertEquals(2, ActiveRecordBasic::prototype()->count());
+
+		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 0));
+		self::assertEquals('example text for record 000', TestUtils_Fixture::instance()->forTest()->get('default', 0)->text);
+
+		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 1));
+		self::assertEquals('example text for record 001', TestUtils_Fixture::instance()->forTest()->get('default', 1)->text);
+	}
+
 	protected function tearDown() {
 		Nano::db()->rollBack();
 	}
