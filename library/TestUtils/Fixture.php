@@ -85,7 +85,7 @@ class TestUtils_Fixture {
 		}
 
 		$fileName = $this->getFixtureFileName($type);
-		if (fileExists($fileName)) {
+		if (!file_exists($fileName)) {
 			PHPUnit_Framework_Assert::fail('Unknown fixture: ' . $type);
 		}
 		if (!include($fileName)) {
