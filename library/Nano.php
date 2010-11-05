@@ -82,7 +82,11 @@ final class Nano {
 			}
 		}
 		try {
-			echo self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
+			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
+			if ('HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
+				return;
+			}
+			echo $result;
 		} catch (Exception $e) {
 			TestUtils_WebTest::stopCoverage();
 			throw $e;
