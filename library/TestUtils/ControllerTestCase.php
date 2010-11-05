@@ -68,14 +68,4 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 		$_REQUEST = array_merge($_GET, $_POST, $_COOKIE, $_SESSION);
 	}
 
-	/**
-	 * @return KomSindrom_ModelsFixture
-	 */
-	protected function fixture() {
-		if (null === $this->_modelsFixture) {
-			$this->_modelsFixture = $this->getMockForAbstractClass('KomSindrom_ModelsFixture');
-		}
-		return $this->_modelsFixture;
-	}
-
 }
