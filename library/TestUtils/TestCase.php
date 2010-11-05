@@ -96,5 +96,11 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		$this->$property = $class->newInstance();
 	}
 
+	/**
+	 * @return TestUtils_Fixture
+	 */
+	protected function fixture() {
+		return TestUtils_Fixture::instance();
+	}
 
 }
