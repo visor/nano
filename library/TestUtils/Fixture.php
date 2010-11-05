@@ -57,7 +57,7 @@ class TestUtils_Fixture {
 	 * @param string $type
 	 * @param int $index
 	 */
-	protected function get($type, $index = 0) {
+	public function get($type, $index = 0) {
 		if (!isset($this->records[$type])) {
 			return null;
 		}
