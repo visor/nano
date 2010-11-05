@@ -157,7 +157,7 @@ abstract class ActiveRecord {
 				: $expr->addAnd($param, '=', $value)
 			;
 		}
-		$query = sql::select('count(*)')->from($this->tableName);
+		$query = sql::select('count(*)')->from(Nano::db()->quoteName($this->tableName));
 		if (!$expr->isEmpty()) {
 			$query->where($expr);
 		}
