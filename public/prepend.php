@@ -51,9 +51,9 @@
 $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = TESTS . DS . 'reports' . DS . 'coverage';
 
 if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
-    !isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
-    extension_loaded('xdebug')) {
-    $GLOBALS['PHPUNIT_FILTERED_FILES'] = array(__FILE__);
+	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
+	extension_loaded('xdebug')) {
+	$GLOBALS['PHPUNIT_FILTERED_FILES'] = array(__FILE__);
 
-    xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
+	xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
 }

@@ -43,27 +43,27 @@
  */
 
 if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
-    !isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
-    extension_loaded('xdebug')) {
-    $GLOBALS['PHPUNIT_FILTERED_FILES'][] = __FILE__;
+	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
+	extension_loaded('xdebug')) {
+	$GLOBALS['PHPUNIT_FILTERED_FILES'][] = __FILE__;
 
-    $data = xdebug_get_code_coverage();
-    xdebug_stop_code_coverage();
+	$data = xdebug_get_code_coverage();
+	xdebug_stop_code_coverage();
 
-    foreach ($GLOBALS['PHPUNIT_FILTERED_FILES'] as $file) {
-        unset($data[$file]);
-    }
+	foreach ($GLOBALS['PHPUNIT_FILTERED_FILES'] as $file) {
+		unset($data[$file]);
+	}
 
-    if (is_string($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY']) &&
-        is_dir($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'])) {
-        $file = $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] .
-                DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
-    } else {
-        $file = $_SERVER['SCRIPT_FILENAME'];
-    }
+	if (is_string($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY']) &&
+		is_dir($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'])) {
+		$file = $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] .
+				DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
+	} else {
+		$file = $_SERVER['SCRIPT_FILENAME'];
+	}
 
-    file_put_contents(
-      $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . $_COOKIE['PHPUNIT_SELENIUM_TEST_ID'],
-      serialize($data)
-    );
+	file_put_contents(
+	  $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . $_COOKIE['PHPUNIT_SELENIUM_TEST_ID'],
+	  serialize($data)
+	);
 }

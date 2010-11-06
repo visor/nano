@@ -184,10 +184,10 @@ class ActiveResource {
 	 */
 	function get ($method, $options = array ()) {
 		$req = $this->site . $this->element_name;
-        if ($this->_data['id']) {
-          $req .= '/' . $this->_data['id'];
-        }
-        $req .= '/' . $method . '.' . $this->request_format;
+		if ($this->_data['id']) {
+		  $req .= '/' . $this->_data['id'];
+		}
+		$req .= '/' . $method . '.' . $this->request_format;
 		if (count ($options) > 0) {
 			$req .= '?' . http_build_query ($options);
 		}
@@ -201,10 +201,10 @@ class ActiveResource {
 	 */
 	function post ($method, $options = array ()) {
 		$req = $this->site . $this->element_name;
-        if ($this->_data['id']) {
-          $req .= '/' . $this->_data['id'];
-        }
-        $req .= '/' . $method . '.' . $this->request_format;
+		if ($this->_data['id']) {
+		  $req .= '/' . $this->_data['id'];
+		}
+		$req .= '/' . $method . '.' . $this->request_format;
 		return $this->_send_and_receive ($req, 'POST', $options);
 	}
 
@@ -215,10 +215,10 @@ class ActiveResource {
 	 */
 	function put ($method, $options = array ()) {
 		$req = $this->site . $this->element_name;
-        if ($this->_data['id']) {
-          $req .= '/' . $this->_data['id'];
-        }
-        $req .= '/' . $method . '.' . $this->request_format;
+		if ($this->_data['id']) {
+		  $req .= '/' . $this->_data['id'];
+		}
+		$req .= '/' . $method . '.' . $this->request_format;
 		if (count ($options) > 0) {
 			$req .= '?' . http_build_query ($options);
 		}

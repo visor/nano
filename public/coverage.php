@@ -51,36 +51,36 @@ require_once 'PHP/CodeCoverage/Filter.php';
 $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = dirName(__DIR__) . '/tests/reports/coverage';
 
 if (isset($_GET['PHPUNIT_SELENIUM_TEST_ID'])) {
-    $files = File_Iterator_Factory::getFileIterator(
-      $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'],
-      $_GET['PHPUNIT_SELENIUM_TEST_ID']
-    );
+	$files = File_Iterator_Factory::getFileIterator(
+	  $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'],
+	  $_GET['PHPUNIT_SELENIUM_TEST_ID']
+	);
 
-    $coverage = array();
+	$coverage = array();
 
-    foreach ($files as $file) {
-        $filename = $file->getPathName();
-        $data     = unserialize(file_get_contents($filename));
-        @unlink($filename);
-        unset($filename);
+	foreach ($files as $file) {
+		$filename = $file->getPathName();
+		$data     = unserialize(file_get_contents($filename));
+		@unlink($filename);
+		unset($filename);
 
-        foreach ($data as $filename => $lines) {
-            if (PHP_CodeCoverage_Filter::isFile($filename)) {
-                if (!isset($coverage[$filename])) {
-                    $coverage[$filename] = array(
-                      'md5' => md5_file($filename), 'coverage' => $lines
-                    );
-                } else {
-                    foreach ($lines as $line => $flag) {
-                        if (!isset($coverage[$filename]['coverage'][$line]) ||
-                            $flag > $coverage[$filename]['coverage'][$line]) {
-                            $coverage[$filename]['coverage'][$line] = $flag;
-                        }
-                    }
-                }
-            }
-        }
-    }
+		foreach ($data as $filename => $lines) {
+			if (PHP_CodeCoverage_Filter::isFile($filename)) {
+				if (!isset($coverage[$filename])) {
+					$coverage[$filename] = array(
+					  'md5' => md5_file($filename), 'coverage' => $lines
+					);
+				} else {
+					foreach ($lines as $line => $flag) {
+						if (!isset($coverage[$filename]['coverage'][$line]) ||
+							$flag > $coverage[$filename]['coverage'][$line]) {
+							$coverage[$filename]['coverage'][$line] = $flag;
+						}
+					}
+				}
+			}
+		}
+	}
 
-    print serialize($coverage);
+	print serialize($coverage);
 }
