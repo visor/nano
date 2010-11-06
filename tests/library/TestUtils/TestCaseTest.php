@@ -10,8 +10,14 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 	private $private = 'some private value';
 
 	public function testAssertExceptionNoException() {
-		$this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'No exception thrown');
-		self::assertException(function () {}, 'Exception', '');
+		$exception = null;
+		try {
+			self::assertException(function () {}, 'Exception', '');
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+		self::assertType('PHPUnit_Framework_AssertionFailedError', $exception);
+		self::assertEquals('No exception thrown', $exception->getMessage());
 	}
 
 	public function testAssertExceptionWrongExceptionClass() {

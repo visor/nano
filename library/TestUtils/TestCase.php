@@ -41,6 +41,9 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 			$runnable();
 			self::fail('No exception thrown');
 		} catch (Exception $e) {
+			if ($e instanceof PHPUnit_Framework_AssertionFailedError && $e->getMessage() === 'No exception thrown') {
+				throw $e;
+			}
 			if ($e instanceof $class) {
 				if ($message) {
 					$messageConstraint = new PHPUnit_Framework_Constraint_StringContains($message, true);
@@ -51,9 +54,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 				}
 				self::assertTrue(true); // update assertion counter
 			} else {
-				if ($e instanceof PHPUnit_Framework_AssertionFailedError && $e->getMessage() === 'No exception thrown') {
-					throw $e;
-				}
 				$constraint = new PHPUnit_Framework_Constraint_IsInstanceOf($class);
 				throw $constraint->fail($e, 'Expected ' . $class . ' but ' . get_class($e) . ' with message "' . $e->getMessage() . '"' . PHP_EOL . $e->getTraceAsString());
 			}

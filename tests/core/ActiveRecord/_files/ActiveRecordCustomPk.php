@@ -15,7 +15,7 @@ class ActiveRecordCustomPk extends ActiveRecordBasic {
 
 	public static function createTable() {
 		Nano::db()->exec(
-			'create table ' . self::TABLE_NAME . '(id1 int(11) not null, id2 int(11) not null, text varchar(100), primary key (id1, id2)) AUTO_INCREMENT=1'
+			'create table ' . self::TABLE_NAME . '(id1 int(11) not null, id2 int(11) not null, text varchar(100), primary key (id1, id2)) engine=innodb AUTO_INCREMENT=1'
 		);
 	}
 
