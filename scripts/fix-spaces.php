@@ -14,13 +14,18 @@ foreach ($iterator as $file) { /** @var SplFileInfo $file */
 	}
 
 	$source = file_get_contents($file->getPathName());
-	$result = removeTrailingSpaces($source);
+	$result = convertLineEnds($source);
+	$result = removeTrailingSpaces($result);
 	$result = convertIndentationSpaces($result);
 	if ($source === $result) {
 		continue;
 	}
 	file_put_contents($file->getPathName(), $result);
 	echo $file->getPathName(), PHP_EOL;
+}
+
+function convertLineEnds($source) {
+	return preg_replace("/\r\n|\r/m", "\n", $source);
 }
 
 function removeTrailingSpaces($source) {
