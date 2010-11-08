@@ -153,7 +153,7 @@ class sql_expr extends DSL {
 			return $value->toString($db);
 		}
 		if ($field) {
-			return $value;
+			return $db->quoteName($value);
 		}
 		return $db->quote($value);
 	}

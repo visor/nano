@@ -50,8 +50,8 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 
 	public function testSelectCriteria() {
 		$record = new ActiveRecordBasic();
-		self::assertEquals("(id = '1')", $record->getSelectCriteria(array('id' => 1))->toString(Nano::db()));
-		self::assertEquals("(id = '2' and text = 'some')", $record->getSelectCriteria(array('id' => 2, 'text' => 'some'))->toString(Nano::db()));
+		self::assertEquals("(`id` = '1')", $record->getSelectCriteria(array('id' => 1))->toString(Nano::db()));
+		self::assertEquals("(`id` = '2' and `text` = 'some')", $record->getSelectCriteria(array('id' => 2, 'text' => 'some'))->toString(Nano::db()));
 		self::assertEquals('', $record->getSelectCriteria(null)->toString(Nano::db()));
 	}
 
