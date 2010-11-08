@@ -2,6 +2,8 @@
 
 class TestUtils_Mixin_Files extends TestUtils_Mixin {
 
+	const EMPTY_FILE = 'empty';
+
 	/**
 	 * @return string
 	 * @param Nano_TestUtils_TestCase $test
@@ -17,18 +19,24 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 			$dir = $this->get($test, $dir);
 		}
 		$i = new DirectoryIterator($dir);
+		$result = true;
 		foreach ($i as $file) {
 			if ($file->isDot()) {
 				continue;
 			}
+			if (self::EMPTY_FILE == $file->getBaseName()) {
+				$result = false;
+			}
 			if ($file->isDir()) {
-				$this->clean($test, $file->getPathName(), true);
-				rmDir($file->getPathName());
+				if ($this->clean($test, $file->getPathName(), true)) {
+					rmDir($file->getPathName());
+				}
 				continue;
 			}
 			unlink($file->getPathName());
 		}
 		unset($i, $file);
+		return $result;
 	}
 
 }

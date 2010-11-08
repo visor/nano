@@ -18,3 +18,5 @@ pmip
 .idea
 cache
 !cache/empty
+tests/library/Assets/_files/output/*
+!tests/library/Assets/_files/output/empty
