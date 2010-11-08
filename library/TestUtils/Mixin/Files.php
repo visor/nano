@@ -26,6 +26,7 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 			}
 			if (self::EMPTY_FILE == $file->getBaseName()) {
 				$result = false;
+				continue;
 			}
 			if ($file->isDir()) {
 				if ($this->clean($test, $file->getPathName(), true)) {
