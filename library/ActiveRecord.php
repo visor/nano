@@ -267,6 +267,9 @@ abstract class ActiveRecord {
 	}
 
 	public function __get($field) {
+		if (!$this->fieldExists($field)) {
+			throw new ActiveRecord_Exception_UnknownField($field, $this);
+		}
 		if ($this->__isset($field)) {
 			return $this->data[$field];
 		}
@@ -277,7 +280,7 @@ abstract class ActiveRecord {
 	}
 
 	public function __set($field, $value) {
-		if (!in_array($field, $this->fields)) {
+		if (!$this->fieldExists($field)) {
 			throw new ActiveRecord_Exception_UnknownField($field, $this);
 		}
 		if ($this->__get($field) === $value) {
