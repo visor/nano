@@ -42,4 +42,17 @@ class ActiveRecordErrorsTest extends TestUtils_TestCase {
 		self::assertException(function() { new ActiveRecordBasic('some value'); }, 'InvalidArgumentException', null);
 	}
 
+	public function testUnknownFields() {
+		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
+		$runnable = function() {
+			$x = ActiveRecordBasic::prototype()->someField;
+		};
+		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "someField"');
+
+		$runnable = function() {
+			ActiveRecordBasic::prototype()->anotherField = 'some value';
+		};
+		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "anotherField"');
+	}
+
 }

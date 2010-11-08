@@ -2,6 +2,15 @@
 
 abstract class ActiveRecord {
 
+	const REL_CLASS = 'class';
+	const REL_TYPE  = 'type';
+	const REL_EXPR  = 'expr';
+	const REL_FIELD = 'field';
+	const REL_REF   = 'ref';
+
+	const ONE       = 'one';
+	const MANY      = 'many';
+
 	/**
 	 * @var array
 	 */
@@ -28,6 +37,11 @@ abstract class ActiveRecord {
 	protected $fields = null;
 
 	/**
+	 * @var array[string]
+	 */
+	protected $relations = array();
+
+	/**
 	 * @var array
 	 */
 	protected $data = array();
@@ -51,6 +65,8 @@ abstract class ActiveRecord {
 	 * @var boolean
 	 */
 	private $new = null;
+
+	private $_relationValue = array();
 
 	final public function __construct($data = null, $loaded = false) {
 		$this->checkConfiguration();
@@ -183,6 +199,20 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getTableName() {
+		return $this->tableName;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getFields() {
+		return $this->fields;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function changed() {
@@ -195,6 +225,34 @@ abstract class ActiveRecord {
 	 */
 	public function fieldExists($name) {
 		return in_array($name, $this->fields);
+	}
+
+	/**
+	 * @return boolean
+	 * @param string $name
+	 */
+	public function relationExists($name) {
+		return array_key_exists(strToLower($name), $this->relations);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelations() {
+		return $this->relations;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getOneRelations() {
+		$result = array();
+		foreach ($this->relations as $name => $relation) {
+			if (self::ONE === $relation[self::REL_TYPE]) {
+				$result[$name] = $relation;
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -212,7 +270,10 @@ abstract class ActiveRecord {
 		if ($this->__isset($field)) {
 			return $this->data[$field];
 		}
-		return null;
+		if (false === strPos($field, ActiveRecord_Storage::RELATION_SEPARATOR)) {
+			throw new ActiveRecord_Exception_UnknownField($field, $this);
+		}
+		//
 	}
 
 	public function __set($field, $value) {
@@ -226,7 +287,7 @@ abstract class ActiveRecord {
 	}
 
 	public function __isset($field) {
-		return isset($this->data[$field]);
+		return in_array($field, $this->fields);
 	}
 
 	public function __unset($field) {
@@ -267,8 +328,7 @@ abstract class ActiveRecord {
 	 * @return sql_select
 	 */
 	protected function getSelectQuery(sql_expr $expr = null) {
-		$tableName = Nano::db()->quoteName($this->tableName);
-		$result    = sql::select($tableName . '.' . sql::ALL)->from($tableName);
+		$result = ActiveRecord_Storage::getSelectQuery($this);
 		if (null !== $expr && !$expr->isEmpty()) {
 			$result->where($expr);
 		}
@@ -391,11 +451,7 @@ abstract class ActiveRecord {
 	 * @return array
 	 */
 	protected function buildUpdateFields() {
-		$result = $this->getChangedData();
-		foreach ($this->getPrimaryKey(true) as $field => $value) {
-			unset($result[$field]);
-		}
-		return $result;
+		return array_diff($this->getChangedData(), $this->getPrimaryKey(true));
 	}
 
 	/**
