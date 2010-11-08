@@ -125,12 +125,7 @@ class TestUtils_Fixture {
 	 * @param  $type
 	 */
 	protected function typeToName($type) {
-		$name = strToLower($type);
-		$name = str_replace('-', ' ', $name);
-		$name = ucWords($name);
-		$name = str_replace(' ', '', $name);
-		$name = trim($name);
-		return $name;
+		return Strings::typeToClassName($type);
 	}
 
 }

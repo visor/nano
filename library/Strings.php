@@ -28,4 +28,17 @@ class Strings {
 		return String::create($text)->wrap($width, $break)->__toString();
 	}
 
+	/**
+	 * @return void
+	 * @param string $string
+	 */
+	public static function typeToClassName($string) {
+		$result = strToLower($string);
+		$result = str_replace('-', ' ', $result);
+		$result = ucWords($result);
+		$result = str_replace(' ', '', $result);
+		$result = trim($result);
+		return $result;
+	}
+
 }
