@@ -59,7 +59,7 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 
 		$record->text = 'some other text';
 		$record->save();
-		self::assertEquals("update `" . ActiveRecordBasic::TABLE_NAME . "` set `text` = 'some other text' where (id = '1')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("update `" . ActiveRecordBasic::TABLE_NAME . "` set `text` = 'some other text' where (`id` = '1')", Nano::db()->log()->getLastQuery());
 		Nano::db()->log()->clean();
 
 		$record = new ActiveRecordCustomPk(array(
@@ -83,14 +83,14 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		$record->text = 'some text';
 		$record->save();
 		self::assertEquals(1, Nano::db()->log()->count());
-		self::assertEquals("update `" . ActiveRecordCustomPk::TABLE_NAME . "` set `text` = 'some text' where (id1 = '2' and id2 = '2')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("update `" . ActiveRecordCustomPk::TABLE_NAME . "` set `text` = 'some text' where (`id1` = '2' and `id2` = '2')", Nano::db()->log()->getLastQuery());
 		Nano::db()->log()->clean();
 
 		$record->id1  = 2;
 		$record->text = 'some other text';
 		$record->save();
 		self::assertEquals(1, Nano::db()->log()->count());
-		self::assertEquals("update `" . ActiveRecordCustomPk::TABLE_NAME . "` set `text` = 'some other text' where (id1 = '2' and id2 = '2')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("update `" . ActiveRecordCustomPk::TABLE_NAME . "` set `text` = 'some other text' where (`id1` = '2' and `id2` = '2')", Nano::db()->log()->getLastQuery());
 	}
 
 	public function testDelete() {
@@ -102,17 +102,17 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		$record->delete();
 
 		self::assertEquals(1, Nano::db()->log()->count());
-		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (id1 = '1' and id2 = '2')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (`id1` = '1' and `id2` = '2')", Nano::db()->log()->getLastQuery());
 
 		$record->id1 = null;
 		$record->delete();
 		self::assertEquals(2, Nano::db()->log()->count());
-		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (id2 = '2' and text = 'some text')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (`id2` = '2' and `text` = 'some text')", Nano::db()->log()->getLastQuery());
 
 		$record->id2 = null;
 		$record->delete();
 		self::assertEquals(3, Nano::db()->log()->count());
-		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (text = 'some text')", Nano::db()->log()->getLastQuery());
+		self::assertEquals("delete from `" . ActiveRecordCustomPk::TABLE_NAME . "` where (`text` = 'some text')", Nano::db()->log()->getLastQuery());
 
 		$record->text = null;
 		$record->delete();
