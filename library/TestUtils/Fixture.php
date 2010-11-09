@@ -22,6 +22,11 @@ class TestUtils_Fixture {
 	protected $activeRecord = null;
 
 	/**
+	 * @var int
+	 */
+	protected $index = 0;
+
+	/**
 	 * @var array
 	 */
 	private $records = array();
@@ -64,13 +69,34 @@ class TestUtils_Fixture {
 		return isset($this->records[$type][$index]) ? $this->records[$type][$index] : null;
 	}
 
+	/**
+	 * @param string $type
+	 * @return ActiveRecord
+	 */
+	public function getNew($type) {
+		$this->load($type, 1);
+		return $this->get($type, $this->index - 1);
+	}
+
+	/**
+	 * @param string $type
+	 * @param array $data
+	 * @return ActiveRecord
+	 */
+	public function getCustom($type, array $data) {
+		$this->createRecord($type, $this->index, $data);
+		$this->index++;
+		return $this->get($type, $this->index - 1);
+	}
+
 	protected function load($type, $count = 1) {
 		$method = self::FIXTURE_METHOD . $this->typeToName($type);
 		if (!method_exists($this, $method)) {
 			PHPUnit_Framework_Assert::fail('Unknown fixture type: ' . $type);
 		}
-		for ($i = 0; $i < $count; ++$i) {
-			$this->createRecord($type, $i, $this->$method($i));
+		$max = $this->index + $count;
+		for (; $this->index < $max; ++$this->index) {
+			$this->createRecord($type, $this->index, $this->$method($this->index));
 		}
 	}
 
