@@ -92,8 +92,19 @@ class TestUtils_Fixture {
 	/**
 	 * @return TestUtils_Fixture
 	 */
+	public function resetAll() {
+		foreach (self::$fixtures as $fixture) {
+			$fixture->resetIndex();
+		}
+		return $this;
+	}
+
+	/**
+	 * @return TestUtils_Fixture
+	 */
 	public function resetIndex() {
-		$this->index = 0;
+		$this->index   = 0;
+		$this->records = array();
 		return $this;
 	}
 
