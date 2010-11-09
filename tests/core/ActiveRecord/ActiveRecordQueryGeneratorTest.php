@@ -57,12 +57,12 @@ class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 
 		$record->id2 = 20;
 		self::assertFalse($record->getUpdateCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10' and id2 = '20')", $record->getUpdateCriteria()->toString());
+		self::assertEquals("(`id1` = '10' and `id2` = '20')", $record->getUpdateCriteria()->toString());
 		self::assertEquals(array(), $record->getUpdateFields());
 
 		$record->text = 'some text';
 		self::assertFalse($record->getUpdateCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10' and id2 = '20')", $record->getUpdateCriteria()->toString());
+		self::assertEquals("(`id1` = '10' and `id2` = '20')", $record->getUpdateCriteria()->toString());
 		self::assertEquals(array('text' => $record->text), $record->getUpdateFields());
 
 		$record->id2 = null;
@@ -83,23 +83,23 @@ class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 
 		$record->id1 = 10;
 		self::assertFalse($record->getDeleteCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10')", $record->getDeleteCriteria()->toString());
+		self::assertEquals("(`id1` = '10')", $record->getDeleteCriteria()->toString());
 
 		$record->id2 = 20;
 		self::assertFalse($record->getDeleteCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10' and id2 = '20')", $record->getDeleteCriteria()->toString());
+		self::assertEquals("(`id1` = '10' and `id2` = '20')", $record->getDeleteCriteria()->toString());
 
 		$record->text = 'some text';
 		self::assertFalse($record->getDeleteCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10' and id2 = '20')", $record->getDeleteCriteria()->toString());
+		self::assertEquals("(`id1` = '10' and `id2` = '20')", $record->getDeleteCriteria()->toString());
 
 		$record->id2 = null;
 		self::assertFalse($record->getDeleteCriteria()->isEmpty());
-		self::assertEquals("(id1 = '10' and text = 'some text')", $record->getDeleteCriteria()->toString());
+		self::assertEquals("(`id1` = '10' and `text` = 'some text')", $record->getDeleteCriteria()->toString());
 
 		$record->id1 = null;
 		self::assertFalse($record->getDeleteCriteria()->isEmpty());
-		self::assertEquals("(text = 'some text')", $record->getDeleteCriteria()->toString());
+		self::assertEquals("(`text` = 'some text')", $record->getDeleteCriteria()->toString());
 	}
 
 }

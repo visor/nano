@@ -16,8 +16,14 @@ class Nano_Db_mysql {
 		}
 	}
 
+	/**
+	 * @return string
+	 * @param string $value
+	 */
 	public static function quoteName($value) {
-		return '`' . $value . '`';
+		$parts = explode('.', $value);
+		array_walk($parts, function (&$part) { $part = '`' . $part . '`'; });
+		return implode('.', $parts);
 	}
 
 }
