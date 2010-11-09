@@ -29,7 +29,7 @@ class TestUtils_Fixture {
 	/**
 	 * @var array
 	 */
-	private $records = array();
+	protected $records = array();
 
 	/**
 	 * @return TestUtils_Fixture
@@ -63,10 +63,11 @@ class TestUtils_Fixture {
 	 * @param int $index
 	 */
 	public function get($type, $index = 0) {
-		if (!isset($this->records[$type])) {
-			return null;
-		}
-		return isset($this->records[$type][$index]) ? $this->records[$type][$index] : null;
+		return isset($this->records[$index]) ? $this->records[$index] : null;
+	}
+
+	public function last() {
+		return $this->get(null, $this->index - 1);
 	}
 
 	/**
@@ -150,10 +151,7 @@ class TestUtils_Fixture {
 		$record = new $class($data); /** @var ActiveRecord $record */
 		$record->save();
 
-		if (!isset($this->records[$type])) {
-			$this->records[$type] = array();
-		}
-		$this->records[$type][$index] = $record;
+		$this->records[$index] = $record;
 		return $record;
 	}
 
