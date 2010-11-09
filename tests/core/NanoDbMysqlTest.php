@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class NanoDbMysqlTest extends TestUtils_TestCase {
 
 	public function testQuoteName() {
