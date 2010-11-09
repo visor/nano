@@ -89,6 +89,14 @@ class TestUtils_Fixture {
 		return $this->get($type, $this->index - 1);
 	}
 
+	/**
+	 * @return TestUtils_Fixture
+	 */
+	public function resetIndex() {
+		$this->index = 0;
+		return $this;
+	}
+
 	protected function load($type, $count = 1) {
 		$method = self::FIXTURE_METHOD . $this->typeToName($type);
 		if (!method_exists($this, $method)) {
