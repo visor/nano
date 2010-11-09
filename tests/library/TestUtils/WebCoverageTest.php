@@ -2,6 +2,7 @@
 
 /**
  * @group test-utils
+ * @group framework
  */
 class TestUtils_WebCoverageTest extends TestUtils_WebTest {
 

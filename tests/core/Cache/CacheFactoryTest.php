@@ -2,6 +2,7 @@
 
 /**
  * @group cache
+ * @group framework
  */
 class CacheTest extends TestUtils_TestCase {
 

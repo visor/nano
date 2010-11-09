@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordSearchTest extends TestUtils_TestCase {
 

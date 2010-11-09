@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group settings
+ */
 class Settings_SettingCategiryTest extends TestUtils_TestCase {
 
 	protected $names = array(

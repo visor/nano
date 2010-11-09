@@ -2,6 +2,7 @@
 
 /**
  * @group articles
+ * @group framework
  */
 class Article_ControllerTest extends TestUtils_ControllerTestCase {
 

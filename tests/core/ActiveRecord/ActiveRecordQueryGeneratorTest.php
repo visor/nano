@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 

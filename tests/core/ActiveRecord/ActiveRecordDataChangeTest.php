@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordDataChangeTest extends TestUtils_TestCase {
 

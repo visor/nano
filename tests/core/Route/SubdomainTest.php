@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class Nano_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainOnly() {

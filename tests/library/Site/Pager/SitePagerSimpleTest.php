@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class SitePagerSimpleTest extends TestUtils_TestCase {
 
 	public function testGenerateEmptyList() {

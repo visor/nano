@@ -2,6 +2,7 @@
 
 /**
  * @group cache
+ * @group framework
  */
 class CacheApiFileTest extends TestUtils_TestCase {
 

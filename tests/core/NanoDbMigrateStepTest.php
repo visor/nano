@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class Nano_Migrate_StepTest extends PHPUnit_Framework_TestCase {
 
 	public function testEmptyFolder() {

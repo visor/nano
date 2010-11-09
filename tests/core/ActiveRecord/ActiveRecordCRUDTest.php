@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordCRUDTest extends TestUtils_TestCase {
 

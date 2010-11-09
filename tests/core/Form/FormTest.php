@@ -2,6 +2,7 @@
 
 /**
  * @group nano
+ * @group framework
  */
 class Form_FormTest extends TestUtils_TestCase {
 

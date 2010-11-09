@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class SitePagerAbstractTest extends TestUtils_TestCase {
 
 	public function testInvalidCurrentPage() {

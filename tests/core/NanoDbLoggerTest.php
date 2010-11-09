@@ -3,6 +3,7 @@
 /**
  * @group log
  * @group database
+ * @group framework
  */
 class NanoDbLoggerTest extends TestUtils_TestCase {
 
