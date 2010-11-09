@@ -13,7 +13,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
-		$this->fixture()->forTest()->resetIndex();
+		$this->fixture()->resetAll();
 		Nano::db()->beginTransaction();
 	}
 
@@ -78,7 +78,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		Nano::db()->rollBack();
-		$this->fixture()->forTest()->resetIndex();
+		$this->fixture()->resetAll();
 	}
 
 	public static function tearDownAfterClass() {
