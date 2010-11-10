@@ -25,7 +25,7 @@ class ActiveRecordChild extends ActiveRecordBasic {
 
 	public static function createTable() {
 		Nano::db()->exec(
-			'create table ' . self::TABLE_NAME . '(id int(11) not null auto_increment primary key, parent_id int(11) not null, text varchar(100)) AUTO_INCREMENT=1'
+			'create table ' . self::TABLE_NAME . '(id int(11) not null auto_increment primary key, parent_id int(11) not null, text varchar(100)) engine=innodb AUTO_INCREMENT=1'
 		);
 	}
 
