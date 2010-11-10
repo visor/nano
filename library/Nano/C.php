@@ -177,18 +177,20 @@ abstract class Nano_C {
 
 	/**
 	 * @return void
+	 * @param string $message
 	 * @throws Nano_Exception
 	 */
-	protected function pageNotFound() {
-		throw new Nano_Exception(Nano_Dispatcher::ERROR_NOT_FOUND, Nano_Dispatcher::ERROR_NOT_FOUND);
+	protected function pageNotFound($message = null) {
+		throw new Nano_Exception(null === $message ? Nano_Dispatcher::ERROR_NOT_FOUND : $message, Nano_Dispatcher::ERROR_NOT_FOUND);
 	}
 
 	/**
 	 * @return void
+	 * @param string $message
 	 * @throws Nano_Exception
 	 */
-	protected function internalError() {
-		throw new Nano_Exception(Nano_Dispatcher::ERROR_INTERNAL, Nano_Dispatcher::ERROR_INTERNAL);
+	protected function internalError($message = null) {
+		throw new Nano_Exception(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message, Nano_Dispatcher::ERROR_INTERNAL);
 	}
 
 }
