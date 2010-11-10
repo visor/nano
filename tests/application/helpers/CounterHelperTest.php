@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group helpers
+ */
 class CounterHelperTest extends TestUtils_TestCase {
 
 	/**

@@ -2,6 +2,7 @@
 
 /**
  * @group cache
+ * @group framework
  */
 class CacheApiMongoDbTest extends TestUtils_TestCase {
 

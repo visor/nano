@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class Nano_MigrateTest extends PHPUnit_Framework_TestCase {
 
 	/**

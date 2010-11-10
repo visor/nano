@@ -15,6 +15,9 @@ class Assets_Abstract_Test extends Assets_Abstract {
 
 }
 
+/**
+ * @group framework
+ */
 class Assets_AbstractTest extends TestUtils_TestCase {
 
 	/**

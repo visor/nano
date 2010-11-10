@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class RenderTest extends PHPUnit_Framework_TestCase {
 
 	/**

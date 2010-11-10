@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class NanoLoaderTest extends TestUtils_TestCase {
 
 	public function testIsModule() {

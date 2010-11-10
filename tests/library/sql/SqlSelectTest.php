@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class SqlSelectTest extends PHPUnit_Framework_TestCase {
 
 	public function testEmpty() {

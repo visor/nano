@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class Assets_ScriptTest extends TestUtils_TestCase {
 
 	/**

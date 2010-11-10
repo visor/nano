@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordPrototypeTest extends TestUtils_TestCase {
 

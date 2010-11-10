@@ -2,6 +2,7 @@
 
 /**
  * @group test-utils
+ * @group framework
  */
 class TestUtils_FixtureTest extends TestUtils_TestCase {
 
@@ -74,6 +75,14 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		self::assertSame($record, TestUtils_Fixture::instance()->forTest()->get('default', 0));
 
 		self::assertEquals(1, $this->getObjectProperty(TestUtils_Fixture::instance()->forTest(), 'index'));
+	}
+
+	public function testLastShouldReturnLastRecord() {
+		TestUtils_Fixture::instance()->forTest()->getCustom('default', array('text' => 'first record'));
+		TestUtils_Fixture::instance()->forTest()->getCustom('default', array('text' => 'second record'));
+		self::assertEquals(2, $this->getObjectProperty(TestUtils_Fixture::instance()->forTest(), 'index'));
+		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->last());
+		self::assertEquals('second record', TestUtils_Fixture::instance()->forTest()->last()->text);
 	}
 
 	protected function tearDown() {

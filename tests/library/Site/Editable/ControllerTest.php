@@ -2,6 +2,7 @@
 
 /**
  * @group editable
+ * @group framework
  */
 class Editable_ControllerTest extends TestUtils_ControllerTestCase {
 

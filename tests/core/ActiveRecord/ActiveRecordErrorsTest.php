@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordErrorsTest extends TestUtils_TestCase {
 

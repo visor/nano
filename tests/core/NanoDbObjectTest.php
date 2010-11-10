@@ -3,14 +3,15 @@
 require_once dirName(__FILE__) . '/classes/TestDbTable1.php';
 require_once dirName(__FILE__) . '/classes/TestDbTable2.php';
 
+/**
+ * @group framework
+ */
 class Nano_DbObjectTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @var Nano_Db
 	 */
 	protected $db;
-
-	protected $backupGlobals = false;
 
 	protected function setUp() {
 		Nano_Db::clean();

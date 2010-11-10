@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class SqlExprTest extends PHPUnit_Framework_TestCase {
 
 	public function testSingleOperation() {

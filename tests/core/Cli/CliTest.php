@@ -3,6 +3,7 @@
 /**
  * @outputBuffering enabled
  * @group cli
+ * @group framework
  */
 class CliTest extends TestUtils_TestCase {
 

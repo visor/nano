@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class NanoValidatorErrorTest extends TestUtils_TestCase {
 
 	protected function setUp() {

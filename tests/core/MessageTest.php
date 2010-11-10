@@ -2,6 +2,7 @@
 
 /**
  * @group nano
+ * @group framework
  */
 class Nano_MessageTest extends TestUtils_TestCase {
 

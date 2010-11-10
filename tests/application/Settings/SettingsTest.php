@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group settings
+ */
 class Settings_SettingsTest extends TestUtils_TestCase {
 
 	protected function setUp() {

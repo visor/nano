@@ -2,6 +2,7 @@
 
 /**
  * @group nano
+ * @group framework
  */
 class CustomDispatcherTest extends TestUtils_TestCase {
 

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @group framework
+ */
 class DispatcherTest extends PHPUnit_Framework_TestCase {
 
 	protected $backupGlobals = false;
