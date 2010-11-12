@@ -3,6 +3,10 @@
 /**
  * @property int $id
  * @property string $text
+ *
+ * @static ActiveRecordBasic instance()
+ * @static ActiveRecordBasic prototype()
+ * @static ActiveRecordBasic findOne()
  */
 class ActiveRecordBasic extends ActiveRecord {
 

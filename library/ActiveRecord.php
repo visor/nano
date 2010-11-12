@@ -124,13 +124,16 @@ abstract class ActiveRecord {
 	 * @return void
 	 */
 	public function save() {
+		if (!empty($this->relations)) {
+			$this->saveRelations();
+		}
 		if ($this->isNew()) {
 			$this->insert();
-			$this->updateOriginalData();
-			return;
+		} else {
+			$this->update();
 		}
-		$this->update();
 		$this->updateOriginalData();
+		ActiveRecord_Relation::updateRelation($this);
 	}
 
 	/**
@@ -283,7 +286,7 @@ abstract class ActiveRecord {
 			return $this->data[$field];
 		}
 		if ($this->relationExists($field) && self::ONE === $this->relations[$field][self::REL_TYPE]) {
-			return ActiveRecord_Storage::getRelatedRecord($this, $field);
+			return ActiveRecord_Relation::getRecord($this, $field);
 		}
 		throw new ActiveRecord_Exception_UnknownField($field, $this);
 	}
@@ -294,15 +297,17 @@ abstract class ActiveRecord {
 				return;
 			}
 			$this->data[$field] = $value;
+			if (in_array($field, $this->primaryKey)) {
+				ActiveRecord_Relation::updateRelation($this);
+			}
 			return;
 		}
 		if ($this->relationExists($field) && self::ONE === $this->relations[$field][self::REL_TYPE]) {
 			$className = $this->relations[$field][self::REL_CLASS];
 			if ($value instanceof $className) {
-				ActiveRecord_Storage::getRelatedRecord($this, $field);
-				$relation = $value;
+				ActiveRecord_Relation::setRecord($this, $field, $value);
+				return;
 			}
-			return;
 		}
 		throw new ActiveRecord_Exception_UnknownField($field, $this);
 	}
@@ -570,4 +575,12 @@ abstract class ActiveRecord {
 		$this->originalData = $this->data;
 	}
 
+	/**
+	 * @return void
+	 */
+	private function saveRelations() {
+		foreach ($this->getOneRelations() as $relation => $info) {
+			$this->__get($relation)->save();
+		}
+	}
 }

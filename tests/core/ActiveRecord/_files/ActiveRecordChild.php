@@ -6,6 +6,10 @@
  * @property string $text
  *
  * @property ActiveRecordBasic $parent
+ *
+ * @method ActiveRecordChild instance()
+ * @method ActiveRecordChild prototype()
+ * @method ActiveRecordChild findOne() static
  */
 class ActiveRecordChild extends ActiveRecordBasic {
 
