@@ -2,6 +2,7 @@
 
 /**
  * @group active-record
+ * @group framework
  */
 class ActiveRecordRelationsTest extends TestUtils_TestCase {
 
