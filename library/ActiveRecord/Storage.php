@@ -13,24 +13,13 @@ class ActiveRecord_Storage {
 		return $db->query($query->toString($db), PDO::FETCH_CLASS, $className, array(null, true));
 	}
 
+	/**
+	 * @return sql_select
+	 * @param ActiveRecord $record
+	 */
 	public static function getSelectQuery(ActiveRecord $record) {
 		$table  = Nano::db()->quoteName($record->getTableName());
-		$result = sql::select($table. '.' . sql::ALL)->from($table);
-//		foreach ($record->getOneRelations() as $name => $relation) {
-//			extract($relation);
-//			/**
-//			 * @var string $class
-//			 * @var string $type
-//			 * @var array $expr
-//			 * @var string $field
-//			 * @var string $ref
-//			 */
-//			$parentTable = Nano::db()->quoteName(constant($class . '::TABLE_NAME'));
-//			$condition   = $table . '.' . $field . ' = ' . $parentTable . '.' . $ref;
-//			$columns     = self::buildSelectFields($parentTable, $class::prototype()->getFields(), $name);
-//			$result->leftJoin($parentTable, $condition, $columns);
-//		}
-		return $result;
+		return sql::select($table. '.' . sql::ALL)->from($table);
 	}
 
 	/**
