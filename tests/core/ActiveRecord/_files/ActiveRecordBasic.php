@@ -4,9 +4,9 @@
  * @property int $id
  * @property string $text
  *
- * @static ActiveRecordBasic instance()
- * @static ActiveRecordBasic prototype()
- * @static ActiveRecordBasic findOne()
+ * @method ActiveRecordBasic instance()
+ * @method ActiveRecordBasic prototype()
+ * @method ActiveRecordBasic findOne()
  */
 class ActiveRecordBasic extends ActiveRecord {
 
