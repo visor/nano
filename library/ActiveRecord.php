@@ -2,6 +2,14 @@
 
 abstract class ActiveRecord {
 
+	const REL_CLASS = 'class';
+	const REL_TYPE  = 'type';
+	const REL_FIELD = 'field';
+	const REL_REF   = 'ref';
+
+	const ONE       = 'one';
+	const MANY      = 'many';
+
 	/**
 	 * @var array
 	 */
@@ -26,6 +34,11 @@ abstract class ActiveRecord {
 	 * @var array
 	 */
 	protected $fields = null;
+
+	/**
+	 * @var array[string]
+	 */
+	protected $relations = array();
 
 	/**
 	 * @var array
@@ -73,7 +86,7 @@ abstract class ActiveRecord {
 		if (isset(self::$prototypes[$name])) {
 			return self::$prototypes[$name];
 		}
-		self::$prototypes[$name] = new static(null);
+		self::$prototypes[$name] = new static(null, false);
 		return self::$prototypes[$name];
 	}
 
@@ -111,13 +124,16 @@ abstract class ActiveRecord {
 	 * @return void
 	 */
 	public function save() {
+		if (!empty($this->relations)) {
+			$this->saveRelations();
+		}
 		if ($this->isNew()) {
 			$this->insert();
-			$this->updateOriginalData();
-			return;
+		} else {
+			$this->update();
 		}
-		$this->update();
 		$this->updateOriginalData();
+		ActiveRecord_Relation::updateRelation($this);
 	}
 
 	/**
@@ -132,14 +148,19 @@ abstract class ActiveRecord {
 
 	/**
 	 * @return ActiveRecord
-	 * @param mixed $primaryKey
+	 * @param mixed $params
 	 */
-	public function findOne($primaryKey = null) {
+	public function findOne($params = null) {
+		try {
 		$result = ActiveRecord_Storage::load(
 			  $this
-			, $this->getSelectQuery($this->buildSelectCriteria($primaryKey))->limit(1, 0)
+			, $this->getSelectQuery($this->buildSelectCriteria($params))->limit(1, 0)
 		);
 		return $result->fetch();
+		} catch (Exception $e) {
+			echo $e;
+			throw $e;
+		}
 	}
 
 	/**
@@ -183,6 +204,20 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getTableName() {
+		return $this->tableName;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getFields() {
+		return $this->fields;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function changed() {
@@ -198,6 +233,44 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return boolean
+	 * @param string $name
+	 */
+	public function relationExists($name) {
+		return array_key_exists(strToLower($name), $this->relations);
+	}
+
+	/**
+	 * @param string $name
+	 * @return array
+	 */
+	public function getRelation($name) {
+		if ($this->relationExists($name)) {
+			return $this->relations[$name];
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRelations() {
+		return $this->relations;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getOneRelations() {
+		$result = array();
+		foreach ($this->relations as $name => $relation) {
+			if (self::ONE === $relation[self::REL_TYPE]) {
+				$result[$name] = $relation;
+			}
+		}
+		return $result;
+	}
+
+	/**
 	 * @return ActiveRecord
 	 * @param int $limit
 	 * @param int $offset
@@ -209,23 +282,34 @@ abstract class ActiveRecord {
 	}
 
 	public function __get($field) {
-		if (!$this->fieldExists($field)) {
-			throw new ActiveRecord_Exception_UnknownField($field, $this);
-		}
-		if ($this->__isset($field)) {
+		if ($this->fieldExists($field)) {
 			return $this->data[$field];
 		}
-		return null;
+		if ($this->relationExists($field) && self::ONE === $this->relations[$field][self::REL_TYPE]) {
+			return ActiveRecord_Relation::getRecord($this, $field);
+		}
+		throw new ActiveRecord_Exception_UnknownField($field, $this);
 	}
 
 	public function __set($field, $value) {
-		if (!$this->fieldExists($field)) {
-			throw new ActiveRecord_Exception_UnknownField($field, $this);
-		}
-		if ($this->__get($field) === $value) {
+		if ($this->fieldExists($field)) {
+			if ($this->__isset($field) && $this->data[$field] === $value) {
+				return;
+			}
+			$this->data[$field] = $value;
+			if (in_array($field, $this->primaryKey)) {
+				ActiveRecord_Relation::updateRelation($this);
+			}
 			return;
 		}
-		$this->data[$field] = $value;
+		if ($this->relationExists($field) && self::ONE === $this->relations[$field][self::REL_TYPE]) {
+			$className = $this->relations[$field][self::REL_CLASS];
+			if ($value instanceof $className) {
+				ActiveRecord_Relation::setRecord($this, $field, $value);
+				return;
+			}
+		}
+		throw new ActiveRecord_Exception_UnknownField($field, $this);
 	}
 
 	public function __isset($field) {
@@ -270,8 +354,7 @@ abstract class ActiveRecord {
 	 * @return sql_select
 	 */
 	protected function getSelectQuery(sql_expr $expr = null) {
-		$tableName = Nano::db()->quoteName($this->tableName);
-		$result    = sql::select($tableName . '.' . sql::ALL)->from($tableName);
+		$result = ActiveRecord_Storage::getSelectQuery($this);
 		if (null !== $expr && !$expr->isEmpty()) {
 			$result->where($expr);
 		}
@@ -394,11 +477,7 @@ abstract class ActiveRecord {
 	 * @return array
 	 */
 	protected function buildUpdateFields() {
-		$result = $this->getChangedData();
-		foreach ($this->getPrimaryKey(true) as $field => $value) {
-			unset($result[$field]);
-		}
-		return $result;
+		return array_diff($this->getChangedData(), $this->getPrimaryKey(true));
 	}
 
 	/**
@@ -452,7 +531,7 @@ abstract class ActiveRecord {
 		if (null === $this->autoIncrement) {
 			throw new ActiveRecord_Exception_AutoIncrementNotDefined($this);
 		}
-		if (empty($this->fields)) {
+		if (empty($this->fields) || !is_array($this->fields)) {
 			throw new ActiveRecord_Exception_NoFields($this);
 		}
 	}
@@ -467,7 +546,7 @@ abstract class ActiveRecord {
 		if (false === $loaded && null === $data) {
 			$this->new = true;
 			foreach ($this->fields as $name) {
-				$this->originalData[$name] = null;
+				$this->data[$name] = $this->originalData[$name] = null;
 			}
 			return;
 		}
@@ -496,4 +575,12 @@ abstract class ActiveRecord {
 		$this->originalData = $this->data;
 	}
 
+	/**
+	 * @return void
+	 */
+	private function saveRelations() {
+		foreach ($this->getOneRelations() as $relation => $info) {
+			$this->__get($relation)->save();
+		}
+	}
 }
