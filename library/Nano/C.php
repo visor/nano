@@ -76,6 +76,31 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return Nano_Dispatcher
+	 */
+	public function dispatcher() {
+		return $this->dispatcher;
+	}
+
+	/**
+	 * @return string
+	 * @param string $name
+	 * @param scalar $default
+	 */
+	public function p($name, $default = null) {
+		return $this->dispatcher()->param($name, $default);
+	}
+
+	/**
+	 * @param string $to
+	 * @param int $status
+	 */
+	public function redirect($to, $status = 302) {
+		$this->markRendered();
+		header('Location: ' . $to, true, $status);
+	}
+
+	/**
 	 * @return void
 	 */
 	protected function init() {}
@@ -109,31 +134,6 @@ abstract class Nano_C {
 		} else {
 			return Nano_Render::view($this, $controller, $action);
 		}
-	}
-
-	/**
-	 * @return Nano_Dispatcher
-	 */
-	protected function dispatcher() {
-		return $this->dispatcher;
-	}
-
-	/**
-	 * @return string
-	 * @param string $name
-	 * @param scalar $default
-	 */
-	protected function p($name, $default = null) {
-		return $this->dispatcher()->param($name, $default);
-	}
-
-	/**
-	 * @param string $to
-	 * @param int $status
-	 */
-	protected function redirect($to, $status = 302) {
-		$this->markRendered();
-		header('Location: ' . $to, true, $status);
 	}
 
 	protected function addPlugin(Nano_C_Plugin $plugin) {

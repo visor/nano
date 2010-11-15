@@ -477,7 +477,7 @@ abstract class ActiveRecord {
 	 * @return array
 	 */
 	protected function buildUpdateFields() {
-		return array_diff($this->getChangedData(), $this->getPrimaryKey(true));
+		return array_diff_assoc($this->getChangedData(), $this->getPrimaryKey(true));
 	}
 
 	/**
