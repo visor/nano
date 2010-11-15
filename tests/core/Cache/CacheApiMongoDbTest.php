@@ -17,14 +17,7 @@ class CacheApiMongoDbTest extends TestUtils_TestCase {
 		if (!class_exists('Mongo', false) || !extension_loaded('mongo')) {
 			self::markTestSkipped('No mongo extension');
 		}
-
-		$errNo  = null;
-		$errStr = null;
-		$host   = 'localhost';
-		$port   = 27017;
-		if (!@fsockopen('localhost', 27017, $errNo, $errStr, 1)) {
-			$this->markTestSkipped(sprintf('Mondo not running on %s:%d.', $host, $port));
-		}
+		$this->connection->check('localhost', 27017, 'MongoDb not running on %s:%d.');
 
 		$this->api = Cache::getApi('MongoDb');
 		$this->api->configure((object)array(

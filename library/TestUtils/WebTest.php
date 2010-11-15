@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @property TestUtils_Mixin_Connect $connection
+ * @property TestUtils_Mixin_Files $files
+ *
  * @method void addLocationStrategy()
  * @method void addSelection()
  * @method void addSelectionAndWait()
@@ -292,22 +295,6 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 		}
 	}
 
-	protected function runTest() {
-		$this->autoStop = false;
-		try {
-			parent::runTest();
-		} catch (Exception $e) {
-			$this->screenshot(null);
-//			try {
-//				$this->stop();
-//			} catch (RuntimeException $e) {}
-			throw $e;
-		}
-		try {
-			$this->stop();
-		} catch (RuntimeException $e) {}
-	}
-
 	protected function screenshot($suffix = null, $screen = false) {
 		$folder         = TESTS . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR;
 		$screenFileName = $folder . 'screen_' . get_class($this) . '_' . $this->getName(false);
@@ -325,16 +312,14 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	}
 
 	protected function setUp() {
-		$this->coverageScriptUrl = $this->url('/coverage.php');
-		parent::setUp();
 		if (!SELENIUM_ENABLE) {
 			$this->markTestSkipped('Selenium disabled');
 		}
-		$this->checkConnection();
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
+		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
+		$this->checkConnection();
 
-		Nano_Db::clean();
-
+		$this->coverageScriptUrl = $this->url('/coverage.php');
 		$this->setUpData();
 
 		$this->setBrowserUrl($this->url('/'));
@@ -419,12 +404,8 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 		$this->$property = $class->newInstance();
 	}
 
-	private function checkConnection() {
-		$browser = self::$browsers[0];
-		$errNo = $errStr = null;
-		if (!@fsockopen($browser['host'], $browser['port'], $errNo, $errStr, 1)) {
-			$this->markTestSkipped(sprintf('Selenium RC not running on %s:%d.', $browser['host'], $browser['port']));
-		}
+	protected function checkConnection() {
+		$this->connection->check(self::$browsers[0]['host'], self::$browsers[0]['port'], 'Selenium RC not running on %s:%d.');
 	}
 
 }

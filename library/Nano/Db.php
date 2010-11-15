@@ -173,7 +173,7 @@ class Nano_Db extends PDO {
 	}
 
 	/**
-	 * @return PDOStatement
+	 * @return Nano_Db_Statement
 	 * @param  string $statement
 	 */
 	public function query($statement) {

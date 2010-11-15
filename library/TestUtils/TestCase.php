@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @property TestUtils_Mixin_Connect $connection
  * @property TestUtils_Mixin_Files $files
  */
 abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
@@ -8,6 +9,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
+		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
 	}
 
 	public static function getObjectProperty($object, $name) {

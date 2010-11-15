@@ -2,8 +2,6 @@
 
 class ActiveRecord_Storage {
 
-	const RELATION_SEPARATOR = '::';
-
 	/**
 	 * @return PDOStatement
 	 * @param ActiveRecord $record
@@ -16,35 +14,12 @@ class ActiveRecord_Storage {
 	}
 
 	/**
-	 * @return ActiveRecord
+	 * @return sql_select
 	 * @param ActiveRecord $record
-	 * @param string $relation
 	 */
-	public static function getRelatedRecord(ActiveRecord $record, $relationName) {
-		return null;
-	}
-
 	public static function getSelectQuery(ActiveRecord $record) {
 		$table  = Nano::db()->quoteName($record->getTableName());
-		$result = sql::select($table. '.' . sql::ALL)->from($table);
-		foreach ($record->getOneRelations() as $name => $relation) {
-			extract($relation);
-			/**
-			 * @var string $class
-			 * @var string $type
-			 * @var array $expr
-			 * @var string $field
-			 * @var string $ref
-			 */
-			if (null === $record->$field) {
-				continue;
-			}
-			$parentTable = Nano::db()->quoteName(constant($class . '::TABLE_NAME'));
-			$condition   = $table . '.' . $field . ' = ' . $parentTable . '.' . $ref;
-			$columns     = self::buildSelectFields($parentTable, $class::prototype()->getFields(), $name);
-			$result->innerJoin($parentTable, $condition, $columns);
-		}
-		return $result;
+		return sql::select($table. '.' . sql::ALL)->from($table);
 	}
 
 	/**
@@ -57,7 +32,7 @@ class ActiveRecord_Storage {
 	protected static function buildSelectFields($tableName, $fields, $alias) {
 		$result = array();
 		foreach ($fields as $field) {
-			$result[Nano::db()->quoteName($alias . self::RELATION_SEPARATOR . $field)] = $tableName . '.' . $field;
+			$result[Nano::db()->quote($alias . self::RELATION_SEPARATOR . $field)] = $tableName . '.' . $field;
 		}
 		return $result;
 	}
