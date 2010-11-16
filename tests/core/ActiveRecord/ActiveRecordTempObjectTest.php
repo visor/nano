@@ -95,9 +95,10 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 
 		$child = ActiveRecordCustomPk::instance();
 		$child->text = 'two links required';
+		$temp3 = new ActiveRecord_TempObject($child);
 
 		$temp1->addChild($child, 'id1', 'id');
-		$temp2->addChild(new ActiveRecord_TempObject($child), 'id2', 'id');
+		$temp2->addChild($temp3, 'id2', 'id');
 
 		self::assertNoException(function () use ($temp1) {
 			$temp1->save();
@@ -114,6 +115,10 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 		self::assertFalse($child->isNew());
 
 		self::assertEquals(array('id1' => $temp1->record()->id, 'id2' => $temp2->record()->id), $child->getPrimaryKey(true));
+
+		self::assertArrayNotHasKey($temp1->id(), $_SESSION[ActiveRecord_TempObject::STORAGE_NAME][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertArrayNotHasKey($temp2->id(), $_SESSION[ActiveRecord_TempObject::STORAGE_NAME][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertArrayNotHasKey($temp3->id(), $_SESSION[ActiveRecord_TempObject::STORAGE_NAME][ActiveRecord_TempObject::KEY_RECORD]);
 	}
 
 	protected function tearDown() {

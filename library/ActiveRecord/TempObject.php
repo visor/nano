@@ -80,6 +80,7 @@ class ActiveRecord_TempObject {
 	 * @return void
 	 */
 	public function save() {
+		self::storage();
 		$this->record()->save();
 		foreach ($this->childs as $info) {
 			/**
@@ -99,6 +100,8 @@ class ActiveRecord_TempObject {
 				$temp ? $temp->save() : $record->save();
 			}
 		}
+		unset(self::$storage[self::KEY_RECORD][$this->id]);
+		self::updateStorage();
 	}
 
 	/**
