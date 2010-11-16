@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @method ActiveRecordCustomPk instance()
+ * @method ActiveRecordCustomPk prototype()
+ * @method ActiveRecordCustomPk findOne()
+ *
  * @property int $id1
  * @property int $id2
  * @property string $text

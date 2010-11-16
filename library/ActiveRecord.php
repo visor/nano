@@ -98,6 +98,13 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function isAutoincrement() {
+		return $this->autoIncrement;
+	}
+
+	/**
 	 * @return array|scalar
 	 * @param boolean $forceArray
 	 */
@@ -107,8 +114,7 @@ abstract class ActiveRecord {
 			$result[$name] = $this->__get($name);
 		}
 		if (1 == count($result) && false === $forceArray) {
-			reset($this->primaryKey);
-			return current($result);
+			return reset($result);
 		}
 		return $result;
 	}
@@ -121,6 +127,22 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function canInsert() {
+		if ($this->isAutoincrement()) {
+			return true;
+		}
+		$primaryKey = $this->getPrimaryKey(true);
+		foreach ($primaryKey as $value) {
+			if (null === $value) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * @return void
 	 */
 	public function save() {
@@ -128,6 +150,9 @@ abstract class ActiveRecord {
 			$this->saveRelations();
 		}
 		if ($this->isNew()) {
+			if (!$this->canInsert()) {
+				throw new PDOException('Integrity constraint violation');
+			}
 			$this->insert();
 		} else {
 			$this->update();

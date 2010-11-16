@@ -51,6 +51,21 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		self::assertFalse($record->isNew());
 	}
 
+	public function testCanSave() {
+		self::assertTrue(ActiveRecordBasic::instance()->canInsert());
+		self::assertFalse(ActiveRecordCustomPk::instance()->canInsert());
+
+		$record = ActiveRecordCustomPk::instance();
+		$record->id1 = 10;
+		self::assertFalse($record->canInsert());
+
+		$record->id2 = 10;
+		self::assertTrue($record->canInsert());
+
+		$record->id1 = null;
+		self::assertFalse($record->canInsert());
+	}
+
 	public function testUpdate() {
 		$record = new ActiveRecordBasic();
 		$record->text = 'some text';
