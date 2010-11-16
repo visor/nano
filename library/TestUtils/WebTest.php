@@ -376,7 +376,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 * @param string $message
 	 */
 	protected function assertLocation($expected, $message = '') {
-		self::assertEquals('http://' . SITE_URL . $expected, $this->getLocation(), $message = '');
+		self::assertEquals('http://' . Nano::config('web')->domain . $expected, $this->getLocation(), $message = '');
 	}
 
 	/**
