@@ -79,4 +79,14 @@ class ActiveRecordDataChangeTest extends TestUtils_TestCase {
 		self::assertEquals(array('id' => null), $record->getChangedData());
 	}
 
+	public function testPopulating() {
+		$record = new ActiveRecordBasic();
+		$data   = array('id' => 1, 'text' => 'some text');
+		$record->populate($data);
+		self::assertEquals($data, $record->getChangedData());
+		foreach ($data as $name => $value) {
+			self::assertEquals($value, $record->__get($name), $name . ' should be ' . $value);
+		}
+	}
+
 }
