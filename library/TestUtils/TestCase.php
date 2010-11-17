@@ -66,7 +66,10 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		try {
 			$runnable();
 		} catch (Exception $e) {
-			self::fail('Should not throw any exception but ' . get_class($e) . ' with message <' . $e->getMessage() . '>');
+			self::fail(
+				'Should not throw any exception but ' . get_class($e) . ' with message <' . $e->getMessage() . '>'
+				. PHP_EOL . $e->getTraceAsString()
+			);
 		}
 	}
 
