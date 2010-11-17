@@ -66,7 +66,7 @@ class Nano_Form {
 
 	/**
 	 * @return Nano_Form
-	 * @param sting $field
+	 * @param string $field
 	 * @param Nano_Validator_Interface $validator
 	 * @param string $message
 	 */

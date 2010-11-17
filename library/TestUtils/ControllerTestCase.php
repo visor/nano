@@ -41,7 +41,7 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 	 * @param string $url
 	 */
 	public function runJSONP($controller, $action, $pattern = null, $url = null) {
-		return $this->extractJSONP($this->runAction($controller, $action, $pattern = null, $url = null));
+		return $this->extractJSONP($this->runAction($controller, $action, $pattern, $url));
 	}
 
 	/**
