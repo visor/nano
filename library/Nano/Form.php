@@ -75,7 +75,9 @@ class Nano_Form {
 		if (!isset($this->validators[$field])) {
 			$this->validators[$field] = array();
 		}
-		$validator->setMessage($message);
+		if (null !== $message) { //HACK. refactor it
+			$validator->setMessage($message);
+		}
 		$this->validators[$field][] = $validator;
 		return $this;
 	}
