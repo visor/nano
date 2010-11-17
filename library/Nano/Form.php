@@ -121,10 +121,10 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return string[]|null
+	 * @return string[]|string|null
 	 * @param string $field
 	 */
-	public function getFieldErros($field) {
+	public function getFieldError($field) {
 		if (isset($this->errors[$field])) {
 			return $this->errors[$field];
 		}
@@ -209,6 +209,10 @@ class Nano_Form {
 	 * @param string $message
 	 */
 	protected function addError($field, $message) {
+		if (self::MODE_STOP_ON_ERROR == $this->mode) {
+			$this->errors[$field] = $message;
+			return;
+		}
 		if (!isset($this->errors[$field])) {
 			$this->errors[$field] = array();
 		}
