@@ -124,12 +124,7 @@ class Nano_Message {
 	 * @param string $base
 	 */
 	protected function fileName($base) {
-		$result = $base;
-		if ($this->lang) {
-			$result .= '-' . strToLower($this->lang);
-		}
-		$result .= '.php';
-		return $result;
+		return $base . '.php';
 	}
 
 }
