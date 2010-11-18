@@ -54,16 +54,18 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 		$child1->text = 'child for id1';
 		$child2 = ActiveRecordBasic::instance();
 		$child2->text = 'child for id2';
-		$temp->addChild($child1, 'id', 'id1');
-		$temp->addChild($child2, 'id', 'id2');
+		$id1 = $temp->addChild($child1, 'id', 'id1');
+		$id2 = $temp->addChild($child2, 'id', 'id2');
 
 		$stored = $_SESSION[ActiveRecord_TempObject::STORAGE_NAME][ActiveRecord_TempObject::KEY_RECORD][$temp->id()];
 		$childs = self::getObjectProperty($temp, 'childs');
 		self::assertSame($temp, $stored);
 		self::assertEquals($childs, self::getObjectProperty($stored, 'childs'));
 		self::assertEquals(2, count($childs));
-		self::assertSame($childs[0][ActiveRecord_TempObject::KEY_RECORD], $child1);
-		self::assertSame($childs[1][ActiveRecord_TempObject::KEY_RECORD], $child2);
+		self::assertType('ActiveRecord_TempObject', $childs[$id1][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertType('ActiveRecord_TempObject', $childs[$id2][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertSame($childs[$id1][ActiveRecord_TempObject::KEY_RECORD]->record(), $child1);
+		self::assertSame($childs[$id2][ActiveRecord_TempObject::KEY_RECORD]->record(), $child2);
 		return $temp;
 	}
 
@@ -85,7 +87,7 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 	public function testRestoringFromSession() {
 		$temp = $this->testAddingChilds();
 		self::assertEquals($temp, ActiveRecord_TempObject::get($temp->id()));
-		self::assertNull(ActiveRecord_TempObject::get($temp->id() + 1));
+		self::assertNull(ActiveRecord_TempObject::get($temp->id() + 10));
 		self::assertNull(ActiveRecord_TempObject::get('some string'));
 	}
 

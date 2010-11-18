@@ -62,18 +62,34 @@ class ActiveRecord_TempObject {
 	}
 
 	/**
-	 * @return void
+	 * @return int
 	 * @param mixed $object
 	 */
 	public function addChild($object, $childField, $parentField) {
 		if (!(($object instanceof ActiveRecord) || ($object instanceof ActiveRecord_TempObject))) {
 			throw new InvalidArgumentException('Child should be instance of ActiveRecord_TempObject or ActiveRecord');
 		}
-		$this->childs[] = array(
-			  self::KEY_RECORD       => $object
+		if ($object instanceof ActiveRecord_TempObject) {
+			$child = $object;
+		} else {
+			$child = new self($object);
+		}
+		$this->childs[$child->id()] = array(
+			  self::KEY_RECORD       => $child
 			, self::KEY_CHILD_FIELD  => $childField
 			, self::KEY_PARENT_FIELD => $parentField
 		);
+		return $child->id();
+	}
+
+	/**
+	 * @return void
+	 * @param int $id
+	 */
+	public function removeChild($id) {
+		self::storage();
+		unset($this->childs[$id]);
+		self::updateStorage();
 	}
 
 	/**
@@ -91,13 +107,9 @@ class ActiveRecord_TempObject {
 			$record = $info[self::KEY_RECORD];
 			$child  = $info[self::KEY_CHILD_FIELD];
 			$parent = $info[self::KEY_PARENT_FIELD];
-			if ($record instanceof ActiveRecord_TempObject) {
-				$temp   = $record;
-				$record = $record->record();
-			}
-			$record->__set($child, $this->record()->__get($parent));
-			if ($record->isNew() && $record->canInsert() || !$record->isNew()) {
-				$temp ? $temp->save() : $record->save();
+			$record->record()->__set($child, $this->record()->__get($parent));
+			if ($record->record()->isNew() && $record->record()->canInsert() || !$record->record()->isNew()) {
+				$record->save();
 			}
 		}
 		unset(self::$storage[self::KEY_RECORD][$this->id]);
