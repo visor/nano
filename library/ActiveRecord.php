@@ -120,6 +120,19 @@ abstract class ActiveRecord {
 	}
 
 	/**
+	 * @return ActiveRecord
+	 * @param mixed[string] $data
+	 */
+	public function populate(array $data) {
+		foreach ($data as $name => $value) {
+			if ($this->fieldExists($name)) {
+				$this->__set($name, $value);
+			}
+		}
+		return $this;
+	}
+
+	/**
 	 * @return array
 	 */
 	public function getChangedData() {

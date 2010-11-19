@@ -59,16 +59,16 @@ class Form_FormTest extends TestUtils_TestCase {
 
 		$form->validate();
 		self::assertEquals(array(), $form->getErrors());
-		self::assertNull($form->getFieldErros('f1'));
-		self::assertNull($form->getFieldErros('f2'));
-		self::assertNull($form->getFieldErros('f3'));
+		self::assertNull($form->getFieldError('f1'));
+		self::assertNull($form->getFieldError('f2'));
+		self::assertNull($form->getFieldError('f3'));
 
 		$form->addValidator('f2', new Nano_Validator_True());
 		$form->validate();
 		self::assertEquals(array(), $form->getErrors());
-		self::assertNull($form->getFieldErros('f1'));
-		self::assertNull($form->getFieldErros('f2'));
-		self::assertNull($form->getFieldErros('f3'));
+		self::assertNull($form->getFieldError('f1'));
+		self::assertNull($form->getFieldError('f2'));
+		self::assertNull($form->getFieldError('f3'));
 
 		$form->addValidator('f3', new Nano_Validator_False(), 'message 1');
 		$form->addValidator('f3', new Nano_Validator_True(),  'message 2');
@@ -78,10 +78,10 @@ class Form_FormTest extends TestUtils_TestCase {
 		self::assertArrayNotHasKey('f1', $form->getErrors());
 		self::assertArrayNotHasKey('f2', $form->getErrors());
 		self::assertArrayHasKey('f3', $form->getErrors());
-		self::assertNull($form->getFieldErros('f1'));
-		self::assertNull($form->getFieldErros('f2'));
-		self::assertNotNull($form->getFieldErros('f3'));
-		self::assertEquals(array('message 1'), $form->getFieldErros('f3'));
+		self::assertNull($form->getFieldError('f1'));
+		self::assertNull($form->getFieldError('f2'));
+		self::assertNotNull($form->getFieldError('f3'));
+		self::assertEquals('message 1', $form->getFieldError('f3'));
 
 		$form->setMode(Nano_Form::MODE_VALIDATE_ALL);
 		$form->validate();
@@ -89,10 +89,10 @@ class Form_FormTest extends TestUtils_TestCase {
 		self::assertArrayNotHasKey('f1', $form->getErrors());
 		self::assertArrayNotHasKey('f2', $form->getErrors());
 		self::assertArrayHasKey('f3', $form->getErrors());
-		self::assertNull($form->getFieldErros('f1'));
-		self::assertNull($form->getFieldErros('f2'));
-		self::assertNotNull($form->getFieldErros('f3'));
-		self::assertEquals(array('message 1', 'message 3'), $form->getFieldErros('f3'));
+		self::assertNull($form->getFieldError('f1'));
+		self::assertNull($form->getFieldError('f2'));
+		self::assertNotNull($form->getFieldError('f3'));
+		self::assertEquals(array('message 1', 'message 3'), $form->getFieldError('f3'));
 	}
 
 }
