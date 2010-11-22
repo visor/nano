@@ -19,6 +19,17 @@ class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 		self::assertFalse($record->isNew());
 	}
 
+	public function testGeneratingWhereCondition() {
+		$record = ActiveRecordBasic::instance();
+		self::assertEquals("(`id1` > '10')", $record->getSelectCriteria(array('id1' => '>10'))->toString());
+		self::assertEquals("(`id1` < '10')", $record->getSelectCriteria(array('id1' => '<10'))->toString());
+		self::assertEquals("(`id1` != '10')", $record->getSelectCriteria(array('id1' => '!10'))->toString());
+		self::assertEquals("(`id1` like '%10%')", $record->getSelectCriteria(array('id1' => '%%10%'))->toString());
+		self::assertEquals("(`id1` = '10')", $record->getSelectCriteria(array('id1' => '=10'))->toString());
+		self::assertEquals("(`id1` >= '10')", $record->getSelectCriteria(array('id1' => '>=10'))->toString());
+		self::assertEquals("(`id1` <= '10')", $record->getSelectCriteria(array('id1' => '<=10'))->toString());
+	}
+
 	public function testDetecingPrimaryKeyValue() {
 		$record = new ActiveRecordCustomPk();
 		$record->id1 = 1;

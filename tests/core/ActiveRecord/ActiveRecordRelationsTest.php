@@ -178,10 +178,6 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 		self::assertEquals($record->parent->id, $record->parent_id);
 	}
 
-	public function testShouldUpdatePrimaryKeyWhenReferencesFieldChanged() {
-		self::markTestIncomplete('Not implemented yet');
-	}
-
 	protected function tearDown() {
 		Nano::db()->rollBack();
 	}
