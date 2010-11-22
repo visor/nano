@@ -572,6 +572,9 @@ abstract class ActiveRecord {
 	protected function extractOperator($value) {
 		$operator = '=';
 		$operand  = $value;
+		if (0 == strLen($value)) {
+			return array($operator, $operand);
+		}
 		$test     = $value[0];
 		if (isset(self::$operators[$test])) {
 			$operator = self::$operators[$test];

@@ -28,6 +28,7 @@ class ActiveRecordQueryGeneratorTest extends TestUtils_TestCase {
 		self::assertEquals("(`id1` = '10')", $record->getSelectCriteria(array('id1' => '=10'))->toString());
 		self::assertEquals("(`id1` >= '10')", $record->getSelectCriteria(array('id1' => '>=10'))->toString());
 		self::assertEquals("(`id1` <= '10')", $record->getSelectCriteria(array('id1' => '<=10'))->toString());
+		self::assertEquals("(`id1` = '')", $record->getSelectCriteria(array('id1' => ''))->toString());
 	}
 
 	public function testDetecingPrimaryKeyValue() {
