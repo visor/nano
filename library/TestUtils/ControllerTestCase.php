@@ -26,11 +26,9 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 	 */
 	public function runAction($controller, $action, $pattern = null, $url = null) {
 		$this->dispatcher->clean();
-		$route = Nano_Route::create(null === $pattern ? '(?P<controller>.+)/(?P<action>.+)' : $pattern, $controller, $action);
+		$route = Nano_Route::create($pattern, $controller, $action);
 		if (null !== $url) {
 			$this->dispatcher->test($route, $url);
-		} else {
-			$this->dispatcher->test($route, 'test/test');
 		}
 		return $this->dispatcher->run($route);
 	}
