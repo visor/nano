@@ -50,6 +50,16 @@ class ActiveRecord_TempObject {
 		return null;
 	}
 
+	/**
+	 * @return void
+	 * @param int $id
+	 */
+	public static function remove($id) {
+		$storage = self::storage();
+		unset($storage[self::KEY_RECORD][$id]);
+		self::updateStorage();
+	}
+
 	public function id() {
 		return $this->id;
 	}
@@ -88,6 +98,7 @@ class ActiveRecord_TempObject {
 	 */
 	public function removeChild($id) {
 		self::storage();
+		self::remove($id);
 		unset($this->childs[$id]);
 		self::updateStorage();
 	}
