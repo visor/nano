@@ -11,6 +11,19 @@ abstract class ActiveRecord {
 	const MANY      = 'many';
 
 	/**
+	 * @var string[string]
+	 */
+	private static $operators = array(
+		  '='  => '='
+		, '>'  => '>'
+		, '<'  => '<'
+		, '>=' => '>='
+		, '<=' => '<='
+		, '!'  => '!='
+		, '%'  => 'like'
+	);
+
+	/**
 	 * @var array
 	 */
 	private static $prototypes = array();
@@ -463,14 +476,7 @@ abstract class ActiveRecord {
 	 * @param mixed $params
 	 */
 	protected function buildSelectCriteria($params) {
-		$result = sql::expr();
-		foreach ($this->buildWhereFields($params) as $field => $value) {
-			$result->isEmpty()
-				? $result->add($field, '=', $value)
-				: $result->addAnd($field, '=', $value)
-			;
-		}
-		return $result;
+		return $this->buildCriteria($this->buildWhereFields($params));
 	}
 
 	/**
@@ -527,13 +533,7 @@ abstract class ActiveRecord {
 		if (in_array(null, $primaryKey)) {
 			return $result;
 		}
-		foreach ($primaryKey as $field => $value) {
-			$result->isEmpty()
-				? $result->add($field, '=', $value)
-				: $result->addAnd($field, '=', $value)
-			;
-		}
-		return $result;
+		return $this->buildCriteria($primaryKey);
 	}
 
 	/**
@@ -543,16 +543,49 @@ abstract class ActiveRecord {
 		$result     = sql::expr();
 		$primaryKey = $this->getPrimaryKey(true);
 		$fields     = in_array(null, $primaryKey) ? $this->data : $primaryKey;
-		foreach ($fields as $field => $value) {
+		return $this->buildCriteria($fields);
+	}
+
+	/**
+	 * @param array $params
+	 * @return sql_expr
+	 */
+	protected function buildCriteria(array $params) {
+		$result = sql::expr();
+		foreach ($params as $field => $value) {
 			if (null === $value) {
 				continue;
 			}
+			list($operator, $operand) = $this->extractOperator($value);
 			$result->isEmpty()
-				? $result->add($field, '=', $value)
-				: $result->addAnd($field, '=', $value)
+				? $result->add($field, $operator, $operand)
+				: $result->addAnd($field, $operator, $operand)
 			;
 		}
 		return $result;
+	}
+
+	/**
+	 * @return array
+	 * @param string $value
+	 */
+	protected function extractOperator($value) {
+		$operator = '=';
+		$operand  = $value;
+		if (0 == strLen($value)) {
+			return array($operator, $operand);
+		}
+		$test     = $value[0];
+		if (isset(self::$operators[$test])) {
+			$operator = self::$operators[$test];
+			$operand  = subStr($value, 1);
+			$test    .= $operand[0];
+			if (isset(self::$operators[$test])) {
+				$operator = self::$operators[$test];
+				$operand  = subStr($operand, 1);
+			}
+		}
+		return array($operator, $operand);
 	}
 
 	/**
@@ -621,4 +654,5 @@ abstract class ActiveRecord {
 			$this->__get($relation)->save();
 		}
 	}
+
 }
