@@ -177,35 +177,25 @@ class Nano_Db extends PDO {
 	 * @param  string $statement
 	 */
 	public function query($statement) {
-		$numArgs   = func_num_args();
-		$fetchMode = $numArgs > 1 ? func_get_arg(1) : null;
-		$modeParam = $numArgs > 2 ? func_get_arg(2) : null;
-		$params    = $numArgs > 3 ? func_get_arg(3) : null;
+		$exception = null;
 		if (Nano::db()->log()->enabled()) {
-			$now    = microtime(true);
-			if ($numArgs > 3) {
-				$result = parent::query($statement, $fetchMode, $modeParam, $params);
-			} elseif ($numArgs > 2) {
-				$result = parent::query($statement, $fetchMode, $modeParam);
-			} elseif ($numArgs > 1) {
-				$result = parent::query($statement, $fetchMode);
-			} else {
-				$result = parent::query($statement);
+			$now = microtime(true);
+		}
+		try {
+			$result = call_user_func_array(array($this, 'parent::query'), func_get_args());
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+		if (Nano::db()->log()->enabled()) {
+			Nano::db()->log()->append($statement, microtime(true) - $now);
+		}
+		if ($exception) {
+			if (Nano::db()->log()->enabled()) {
+				Nano::db()->log()->append($exception->__toString(), 'ERROR');
 			}
-			$time   = microtime(true) - $now;
-			Nano::db()->log()->append($statement, $time);
-			return $result;
+			throw $e;
 		}
-		if ($numArgs > 3) {
-			return parent::query($statement, $fetchMode, $modeParam, $params);
-		}
-		if ($numArgs > 2) {
-			return parent::query($statement, $fetchMode, $modeParam);
-		}
-		if ($numArgs > 1) {
-			return parent::query($statement, $fetchMode);
-		}
-		return parent::query($statement);
+		return $result;
 	}
 
 	public function exec($statement) {

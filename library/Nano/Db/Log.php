@@ -32,7 +32,7 @@ class Nano_Db_Log {
 	/**
 	 * @return void
 	 * @param string $query
-	 * @param double $time
+	 * @param string|double $time
 	 */
 	public function append($query, $time) {
 		if (!$this->enabled()) {
