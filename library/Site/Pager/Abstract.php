@@ -102,7 +102,7 @@ abstract class Site_Pager_Abstract {
 		if ($page < 1) {
 			return 1;
 		}
-		if ($page > $this->totalPages) {
+		if ($page > $this->totalPages && $page > 1) {
 			return $this->totalPages;
 		}
 		return $page;
