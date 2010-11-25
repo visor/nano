@@ -271,11 +271,12 @@ class Nano_Dispatcher {
 			throw $error;
 		}
 
-		$className = Nano::config('web')->error;
-		if (!$className) {
+		$controllerName = Nano::config('web')->error;
+		if (!$controllerName) {
 			throw $error;
 		}
 
+		$className  = self::formatName($controllerName, true);
 		$controller = new $className($this); /* @var $controller Nano_C */
 		$action     = 'e404';
 		if (self::ERROR_NOT_FOUND == $error->getCode()) {
@@ -284,7 +285,10 @@ class Nano_Dispatcher {
 			$action = 'e500';
 			header('500 Internal Server Error', true, 500);
 		}
-		$controller->error = $error;
+		$this->controller         = $controllerName;
+		$this->controllerInstance = $controller;
+		$this->action             = $action;
+		$controller->error        = $error;
 		echo $controller->run($action);
 	}
 

@@ -7,6 +7,6 @@ $config = (object)array(
 
 	, 'domain'         => 'nano.lc'
 
-	, 'error'          => 'ErrorController'
+	, 'error'          => 'error'
 	, 'errorReporting' => true
 );
