@@ -1,6 +1,6 @@
 <?php
 
-require './library/Nano.php';
+require __DIR__ . '/library/Nano.php';
 
 Nano::instance();
 
