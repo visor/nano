@@ -258,12 +258,8 @@ class Nano_Dispatcher {
 	 * @param Nano_Route $route
 	 */
 	protected function setUpController(Nano_Route $route) {
-		if (null === $this->action) {
-			$this->action = $route->action();
-		}
-		if (null === $this->controller) {
-			$this->controller = $route->controller();
-		}
+		$this->action     = $route->action();
+		$this->controller = $route->controller();
 	}
 
 	protected function handleError(Exception $error) {
