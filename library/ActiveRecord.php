@@ -442,6 +442,7 @@ abstract class ActiveRecord {
 	 * @return void
 	 */
 	protected function update() {
+		$this->beforeUpdate();
 		if (!$this->changed()) {
 			return;
 		}
@@ -454,7 +455,6 @@ abstract class ActiveRecord {
 			return;
 		}
 
-		$this->beforeUpdate();
 		Nano::db()->update($this->tableName, $fields, $where->toString(Nano::db()));
 		$this->afterUpdate();
 	}
