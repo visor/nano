@@ -13,6 +13,11 @@ class Nano_HelperBroker {
 	private static $instance = null;
 
 	/**
+	 * @var Nano_Dispatcher
+	 */
+	private $dispatcher;
+
+	/**
 	 * @return Nano_HelperBroker
 	 */
 	public static function instance() {
@@ -50,6 +55,24 @@ class Nano_HelperBroker {
 	}
 
 	/**
+	 * @return void
+	 * @param Nano_Dispatcher $dispatcher
+	 */
+	public function setDispatcher(Nano_Dispatcher $dispatcher = null) {
+		$this->dispatcher = $dispatcher;
+	}
+
+	/**
+	 * @return Nano_Dispatcher
+	 */
+	public function getDispatcher() {
+		if (null === $this->dispatcher) {
+			$this->setDispatcher(Nano::dispatcher());
+		}
+		return $this->dispatcher;
+	}
+
+	/**
 	 * @return Nano_Helper
 	 * @param string $name
 	 * @param boolean $isClass
@@ -63,7 +86,7 @@ class Nano_HelperBroker {
 		if (!class_exists($className)) {
 			return null;
 		}
-		return new $className;
+		return new $className($this->getDispatcher());
 	}
 
 }

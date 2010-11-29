@@ -65,11 +65,13 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 	protected function setUp() {
 		Nano_Db::clean();
 		$this->dispatcher = new Nano_Dispatcher();
+		Nano::helper()->setDispatcher($this->dispatcher);
 	}
 
 	protected function tearDown() {
 		Nano_Db::clean();
 		Nano_Db::close();
+		Nano::helper()->setDispatcher(null);
 	}
 
 }
