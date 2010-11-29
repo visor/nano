@@ -8,6 +8,11 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 	protected $dispatcher;
 
 	/**
+	 * @var boolean
+	 */
+	protected $clearDatabase = false;
+
+	/**
 	 * @return string
 	 * @param string|Nano_C $controller
 	 * @param string $action
@@ -63,14 +68,18 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
-		Nano_Db::clean();
+		if ($this->clearDatabase) {
+			Nano_Db::clean();
+		}
 		$this->dispatcher = new Nano_Dispatcher();
 		Nano::helper()->setDispatcher($this->dispatcher);
 	}
 
 	protected function tearDown() {
-		Nano_Db::clean();
-		Nano_Db::close();
+		if ($this->clearDatabase) {
+			Nano_Db::clean();
+			Nano_Db::close();
+		}
 		Nano::helper()->setDispatcher(null);
 	}
 

@@ -13,10 +13,8 @@ class FlashHelper extends Nano_Helper {
 			$_SESSION['flash']       = $message;
 			$_SESSION['flash_error'] = $error ? 1 : 0;
 		}
-		if (null !== $location && $this->dispatcher()) {
-			$this->dispatcher()->controllerInstance()->markRendered();
-			header('Location: ' . $location);
-			exit();
+		if (null !== $location && $this->dispatcher() && $this->dispatcher()->controllerInstance()) {
+			$this->dispatcher()->controllerInstance()->redirect($location);
 		}
 	}
 
