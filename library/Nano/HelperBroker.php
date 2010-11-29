@@ -42,6 +42,7 @@ class Nano_HelperBroker {
 	public function get($name, $isClass = false) {
 		$key = strToLower($name);
 		if (array_key_exists($key, self::$helpers)) {
+			self::$helpers[$key]->setDispatcher($this->getDispatcher());
 			return self::$helpers[$key];
 		}
 
@@ -50,6 +51,7 @@ class Nano_HelperBroker {
 			throw new RuntimeException('Helper ' . $name . ' not found');
 		}
 
+		$helper->setDispatcher($this->getDispatcher());
 		self::$helpers[$key] = $helper;
 		return self::$helpers[$key];
 	}
@@ -86,7 +88,7 @@ class Nano_HelperBroker {
 		if (!class_exists($className)) {
 			return null;
 		}
-		return new $className($this->getDispatcher());
+		return new $className();
 	}
 
 }

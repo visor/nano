@@ -10,13 +10,6 @@ abstract class Nano_Helper {
 	abstract public function invoke();
 
 	/**
-	 * @param Nano_Dispatcher $dispatcher
-	 */
-	public function __construct(Nano_Dispatcher $dispatcher) {
-		$this->dispatcher = $dispatcher;
-	}
-
-	/**
 	 * @return string
 	 * @param string $folder
 	 * @param string $view
@@ -31,6 +24,14 @@ abstract class Nano_Helper {
 	 */
 	protected function dispatcher() {
 		return $this->dispatcher;
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_Dispatcher $dispatcher
+	 */
+	public function setDispatcher(Nano_Dispatcher $dispatcher = null) {
+		$this->dispatcher = $dispatcher;
 	}
 
 }
