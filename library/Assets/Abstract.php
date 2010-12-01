@@ -353,7 +353,7 @@ abstract class Assets_Abstract {
 				$time = $fileTime;
 			}
 		}
-		return $this->replaceVariables($result);
+		return $this->postProcessing($this->replaceVariables($result));
 	}
 
 	/**
