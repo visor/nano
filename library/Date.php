@@ -67,7 +67,6 @@ class Date extends DateTime {
 			return $fromDate->format('j') . $glue . $fromDate->month() . $glue . $fromDate->format('Y') . $glue . self::YEAR_STRING;
 		}
 
-		echo PHP_EOL;
 		$nowYear    = Date::now()->format('Y');
 		$isOneYear  = $fromDate->format('Y') === $toDate->format('Y');
 		$isOneMonth = $isOneYear && ($fromDate->format('m') === $toDate->format('m'));
