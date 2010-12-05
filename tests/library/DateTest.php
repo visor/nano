@@ -67,4 +67,11 @@ class DateTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+	public function testIntervalTest() {
+		self::assertEquals('11 декабря 2001 года',                          Date::interval('2001-12-11', '2001-12-11', ' ', ' '));
+		self::assertEquals('с 10 по 11 декабря 2001 года',                  Date::interval('2001-12-10', '2001-12-11', ' ', ' '));
+		self::assertEquals('с 11 января по 11 декабря 2001 года',           Date::interval('2001-01-11', '2001-12-11', ' ', ' '));
+		self::assertEquals('с 11 января 2000 года по 11 декабря 2001 года', Date::interval('2000-01-11', '2001-12-11', ' ', ' '));
+	}
+
 }

@@ -2,11 +2,15 @@
 
 class Date extends DateTime {
 
-	const FORMAT_MYSQL = 'Y-m-d H:i:s';
+	const FORMAT_MYSQL  = 'Y-m-d H:i:s';
 	const FORMAT_SQLITE = 'U';
 
 	const ONE_DAY       = 86400; /* 24*60*60 */
 	const ONE_MONTH     = 2592000; /* 30*24*60*60 */
+
+	const FROM_STRING   = 'с';
+	const TO_STRING     = 'по';
+	const YEAR_STRING   = 'года';
 
 	/**
 	 * @var Date
@@ -46,6 +50,49 @@ class Date extends DateTime {
 	 */
 	public static function invalidateNow() {
 		self::$now = null;
+	}
+
+	/**
+	 * @return string
+	 * @param string|Date $from
+	 * @param string|Date $to
+	 * @param string $glue
+	 * @param string $separator
+	 */
+	public static function interval($from, $to, $glue = ' ', $separator = ' ') {
+		$fromDate = self::create($from)->midnight();
+		$toDate   = self::create($to)->midnight();
+
+		if ($fromDate->getTimestamp() === $toDate->getTimestamp()) {
+			return $fromDate->format('j') . $glue . $fromDate->month() . $glue . $fromDate->format('Y') . $glue . self::YEAR_STRING;
+		}
+
+		echo PHP_EOL;
+		$nowYear    = Date::now()->format('Y');
+		$isOneYear  = $fromDate->format('Y') === $toDate->format('Y');
+		$isOneMonth = $isOneYear && ($fromDate->format('m') === $toDate->format('m'));
+		$isOneDay   = $isOneMonth && ($fromDate->format('d') === $toDate->format('d'));
+		$toString   = '';
+		$fromString = '';
+
+		if ($fromDate->format('Y') != $nowYear || !$isOneYear) {
+			$toString .= $toDate->format('Y') . $glue . self::YEAR_STRING;
+			if (!$isOneYear) {
+				$fromString .= $fromDate->format('Y') . $glue . self::YEAR_STRING;
+			}
+		}
+
+		$toString = $toDate->month() . (empty($toString) ? '' : $glue . $toString);
+		if (!$isOneMonth) {
+			$fromString = $fromDate->month() . (empty($fromString) ? '' : $glue . $fromString);
+		}
+
+		$toString   = $toDate->format('j') . (empty($toString) ? '' : $glue . $toString);
+		$fromString = $fromDate->format('j') . (empty($fromString) ? '' : $glue . $fromString);
+
+		$result = self::FROM_STRING . $glue . $fromString . $separator . self::TO_STRING . $glue . $toString;
+		$result = str_replace($glue.$glue, $glue, $result);
+		return $result;
 	}
 
 	public function month() {
