@@ -70,7 +70,6 @@ class Date extends DateTime {
 		$nowYear    = Date::now()->format('Y');
 		$isOneYear  = $fromDate->format('Y') === $toDate->format('Y');
 		$isOneMonth = $isOneYear && ($fromDate->format('m') === $toDate->format('m'));
-		$isOneDay   = $isOneMonth && ($fromDate->format('d') === $toDate->format('d'));
 		$toString   = '';
 		$fromString = '';
 
