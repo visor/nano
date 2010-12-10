@@ -42,6 +42,7 @@ class Nano_MessageTest extends TestUtils_TestCase {
 		self::assertNull(Nano_Message::instance()->f('f1', 1, 's'));
 		Nano_Message::instance()->load('test');
 		self::assertEquals('format 01 s', Nano_Message::instance()->f('f1', 1, 's'));
+		self::assertEquals('format 01 s', Nano_Message::instance()->fa('f1', array(1, 's')));
 	}
 
 	protected function tearDown() {

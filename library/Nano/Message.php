@@ -80,12 +80,20 @@ class Nano_Message {
 	 * @param string $id
 	 */
 	public function f($id) {
+		$args = func_get_args();
+		array_shift($args);
+		return $this->fa($id, $args);
+	}
+
+	/**
+	 * @return string
+	 * @param string $id
+	 */
+	public function fa($id, $args) {
 		$message = $this->m($id);
 		if (null === $message) {
 			return null;
 		}
-		$args = func_get_args();
-		array_shift($args);
 		return vsprintf($message, $args);
 	}
 
