@@ -431,7 +431,7 @@ abstract class ActiveRecord {
 		$this->beforeInsert();
 		Nano::db()->insert($this->tableName, $this->buildInsertFields());
 		if ($this->autoIncrement && 1 == count($this->primaryKey)) {
-			$name = current($this->primaryKey);
+			$name = reset($this->primaryKey);
 			$this->{$name} = Nano::db()->lastInsertId();
 		}
 		$this->new = false;
@@ -493,7 +493,7 @@ abstract class ActiveRecord {
 		if (is_scalar($data)) {
 			if (1 == count($this->primaryKey)) {
 				reset($this->primaryKey);
-				return array(current($this->primaryKey) => $data);
+				return array(reset($this->primaryKey) => $data);
 			} else {
 				return $this->getPrimaryKey(true);
 			}
