@@ -381,6 +381,14 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 
 	/**
 	 * @return void
+	 * @param int $timeout
+	 */
+	protected function waitForJQueryAjax($timeout = 5000) {
+		$this->waitForCondition('selenium.browserbot.getCurrentWindow().jQuery.active == 0;', $timeout);
+	}
+
+	/**
+	 * @return void
 	 * @param string $selector
 	 * @param string $value
 	 */
