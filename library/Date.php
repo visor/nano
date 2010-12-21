@@ -73,11 +73,9 @@ class Date extends DateTime {
 		$toString   = '';
 		$fromString = '';
 
-		if ($fromDate->format('Y') != $nowYear || !$isOneYear) {
-			$toString .= $toDate->format('Y') . $glue . self::YEAR_STRING;
-			if (!$isOneYear) {
-				$fromString .= $fromDate->format('Y') . $glue . self::YEAR_STRING;
-			}
+		$toString .= $toDate->format('Y') . $glue . self::YEAR_STRING;
+		if (!$isOneYear) {
+			$fromString .= $fromDate->format('Y') . $glue . self::YEAR_STRING;
 		}
 
 		$toString = $toDate->month() . (empty($toString) ? '' : $glue . $toString);
