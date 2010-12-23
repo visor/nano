@@ -1,0 +1,13 @@
+<project name="php-object-freezer" default="build" basedir=".">
+	<target name="clean">
+		<delete dir="build"/>
+		<mkdir dir="${basedir}/build/coverage"/>
+		<mkdir dir="${basedir}/build/logs"/>
+	</target>
+
+	<target name="phpunit">
+		<exec executable="/usr/local/bin/phpunit" failonerror="true" />
+	</target>
+
+	<target name="build" depends="clean,phpunit"/>
+</project>

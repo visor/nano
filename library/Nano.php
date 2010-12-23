@@ -83,7 +83,7 @@ final class Nano {
 		}
 		try {
 			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
-			if ('HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
+			if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
 				return;
 			}
 			echo $result;
