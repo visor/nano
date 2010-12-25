@@ -34,7 +34,7 @@ class Nano_Db_Log {
 	 * @param string $query
 	 * @param string|double $time
 	 */
-	public function append($query, $time) {
+	public function append($query, $time, $error = false) {
 		if (!$this->enabled()) {
 			return;
 		}
@@ -44,6 +44,10 @@ class Nano_Db_Log {
 			  'time'  => $this->lastQueryTime
 			, 'query' => $this->lastQuery
 		);
+		if ($error) {
+			error_log('[' . date('Y.m.d H:i:s') . '] ERROR ' . $query . PHP_EOL, 3, $this->getLogFile());
+			return;
+		}
 		error_log('[' . date('Y.m.d H:i:s') . '] ' . sprintf('%03.010f %s', $this->lastQueryTime, $this->lastQuery) . PHP_EOL, 3, $this->getLogFile());
 	}
 

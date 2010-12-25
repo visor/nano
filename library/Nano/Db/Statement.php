@@ -7,25 +7,24 @@ class Nano_Db_Statement extends PDOStatement {
 	 * @return void
 	 */
 	public function execute($parameters = null) {
-		$exception = null;
 		if (Nano::db()->log()->enabled()) {
+			$exception = null;
 			$now = microtime(true);
-		}
-		try {
-			$result = call_user_func(array($this, 'parent::execute'), $parameters);
-		} catch (Exception $e) {
-			$exception = $e;
-		}
-		if (Nano::db()->log()->enabled()) {
-			Nano::db()->log()->append($this->queryString, microtime(true) - $now);
-		}
-		if ($exception) {
-			if (Nano::db()->log()->enabled()) {
-				Nano::db()->log()->append($exception->__toString(), 'ERROR');
+			try {
+				$result = call_user_func_array(array($this, 'parent::execute'), func_get_args());
+			} catch (Exception $e) {
+				$exception = $e;
 			}
-			throw $e;
+			Nano::db()->log()->append($this->queryString, microTime(true) - $now);
+			if ($exception) {
+				if (Nano::db()->log()->enabled()) {
+					Nano::db()->log()->append($exception->__toString(), null, true);
+				}
+				throw $e;
+			}
+			return $result;
 		}
-		return $result;
+		return call_user_func_array(array($this, 'parent::execute'), func_get_args());
 	}
 
 }

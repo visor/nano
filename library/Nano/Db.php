@@ -177,33 +177,42 @@ class Nano_Db extends PDO {
 	 * @param  string $statement
 	 */
 	public function query($statement) {
-		$exception = null;
 		if (Nano::db()->log()->enabled()) {
+			$exception = null;
 			$now = microtime(true);
-		}
-		try {
-			$result = call_user_func_array(array($this, 'parent::query'), func_get_args());
-		} catch (Exception $e) {
-			$exception = $e;
-		}
-		if (Nano::db()->log()->enabled()) {
-			Nano::db()->log()->append($statement, microtime(true) - $now);
-		}
-		if ($exception) {
-			if (Nano::db()->log()->enabled()) {
-				Nano::db()->log()->append($exception->__toString(), 'ERROR');
+			try {
+				$result = call_user_func_array(array($this, 'parent::query'), func_get_args());
+			} catch (Exception $e) {
+				$exception = $e;
 			}
-			throw $e;
+			Nano::db()->log()->append($statement, microTime(true) - $now);
+			if ($exception) {
+				if (Nano::db()->log()->enabled()) {
+					Nano::db()->log()->append($exception->__toString(), null, true);
+				}
+				throw $e;
+			}
+			return $result;
 		}
-		return $result;
+		return call_user_func_array(array($this, 'parent::query'), func_get_args());
 	}
 
 	public function exec($statement) {
 		if (Nano::db()->log()->enabled()) {
-			$now    = microtime(true);
-			$result = parent::exec($statement);
-			$time   = microtime(true) - $now;
-			Nano::db()->log()->append($statement, $time);
+			$exception = null;
+			$now = microtime(true);
+			try {
+				$result = parent::exec($statement);
+			} catch (Exception $e) {
+				$exception = $e;
+			}
+			Nano::db()->log()->append($statement, microTime(true) - $now);
+			if ($exception) {
+				if (Nano::db()->log()->enabled()) {
+					Nano::db()->log()->append($exception->__toString(), null, true);
+				}
+				throw $e;
+			}
 			return $result;
 		}
 		return parent::exec($statement);

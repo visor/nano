@@ -129,6 +129,15 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 			, ''
 		);
 		self::assertEquals(4, Nano::db()->log()->count());
+
+		self::assertException(
+			function() {
+				Nano::db()->exec('invalid query');
+			}
+			, 'PDOException'
+			, ''
+		);
+		self::assertEquals(6, Nano::db()->log()->count());
 	}
 
 	protected function clearLog($remove = true) {
