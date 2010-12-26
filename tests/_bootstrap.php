@@ -4,7 +4,9 @@ error_reporting(E_ALL);
 ini_set('error_log', __DIR__ . '/reports/error.log');
 define('TESTING', true);
 
-require __DIR__ . '/../library/Nano.php';
+if (!defined('APP')) {
+	require __DIR__ . '/../library/Nano.php';
+}
 
 Nano::instance();
 Nano::config('selenium');

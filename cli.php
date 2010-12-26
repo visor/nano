@@ -1,3 +1,4 @@
+#!/bin/env php
 <?php
 
 require __DIR__ . '/library/Nano.php';
@@ -11,6 +12,6 @@ if ($_SERVER['argc'] < 2) {
 
 list($controller, $action) = Nano_C_Cli::extractControllerAction($_SERVER['argv'][1]);
 $args = $_SERVER['argv'];
-array_unshift($args, null);
-array_unshift($args, null);
+array_shift($args);
+array_shift($args);
 Nano_C_Cli::main($controller, $action, $args);

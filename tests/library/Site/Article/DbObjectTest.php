@@ -60,9 +60,6 @@ class Article_DbObjectTest extends TestUtils_TestCase {
 		self::assertNotEquals($modified, $item->modified);
 	}
 
-	/**
-	 * @depends testDefaultValuesAfterCreate
-	 */
 	public function testGetOneItem() {
 		$item   = $this->testDefaultValuesAfterCreate();
 		$loaded = TestArticle::get($item->id());

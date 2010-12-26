@@ -6,7 +6,9 @@
 	</target>
 
 	<target name="phpunit">
-		<exec executable="/usr/local/bin/phpunit" failonerror="true" />
+		<exec executable="${basedir}/cli.php" failonerror="true">
+			<arg line="phpunit --verbose" />
+		</exec>
 	</target>
 
 	<target name="build" depends="clean,phpunit"/>
