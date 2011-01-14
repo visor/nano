@@ -16,9 +16,6 @@ class TestUtils_TextUI_ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 	 * @param float                  $time
 	 */
 	public function addError(PHPUnit_Framework_Test $test, Exception $e, $time) {
-		if (!$this->verbose) {
-			return parent::addError($test, $e, $time);
-		}
 		$this->writeTestStatus(self::STATUS_ERROR);
 		$this->lastTestFailed = true;
 	}
@@ -31,10 +28,6 @@ class TestUtils_TextUI_ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 	 * @param float                                  $time
 	 */
 	public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time) {
-		if (!$this->verbose) {
-			return parent::addFailure($test, $e, $time);
-		}
-
 		$this->writeTestStatus(self::STATUS_FAILURE);
 		$this->lastTestFailed = true;
 	}
