@@ -62,8 +62,8 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 		self::assertSame($temp, $stored);
 		self::assertEquals($childs, self::getObjectProperty($stored, 'childs'));
 		self::assertEquals(2, count($childs));
-		self::assertType('ActiveRecord_TempObject', $childs[$id1][ActiveRecord_TempObject::KEY_RECORD]);
-		self::assertType('ActiveRecord_TempObject', $childs[$id2][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertInstanceOf('ActiveRecord_TempObject', $childs[$id1][ActiveRecord_TempObject::KEY_RECORD]);
+		self::assertInstanceOf('ActiveRecord_TempObject', $childs[$id2][ActiveRecord_TempObject::KEY_RECORD]);
 		self::assertSame($childs[$id1][ActiveRecord_TempObject::KEY_RECORD]->record(), $child1);
 		self::assertSame($childs[$id2][ActiveRecord_TempObject::KEY_RECORD]->record(), $child2);
 		return $temp;

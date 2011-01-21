@@ -17,7 +17,7 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 		} catch (Exception $e) {
 			$exception = $e;
 		}
-		self::assertType('PHPUnit_Framework_AssertionFailedError', $exception);
+		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
 		self::assertEquals('No exception thrown', $exception->getMessage());
 	}
 

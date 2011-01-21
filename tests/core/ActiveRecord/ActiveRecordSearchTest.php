@@ -20,7 +20,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 	}
 
 	public function testActiveRecordFactory() {
-		self::assertType('ActiveRecordBasic', ActiveRecordBasic::instance());
+		self::assertInstanceOf('ActiveRecordBasic', ActiveRecordBasic::instance());
 	}
 
 	public function testPrimaryKeyValue() {
@@ -62,14 +62,14 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		}
 		$record = ActiveRecordBasic::instance()->findOne(array('id' => 1));
 		/** @var $record ActiveRecordBasic */
-		self::assertType('ActiveRecordBasic', $record);
+		self::assertInstanceOf('ActiveRecordBasic', $record);
 		self::assertFalse($record->isNew());
 		self::assertEquals(1, $record->id);
 		self::assertEquals('record #000', $record->text);
 
 		$record = ActiveRecordBasic::instance()->findOne(1);
 		/** @var $record ActiveRecordBasic */
-		self::assertType('ActiveRecordBasic', $record);
+		self::assertInstanceOf('ActiveRecordBasic', $record);
 		self::assertEquals(1, $record->id);
 		self::assertEquals('record #000', $record->text);
 	}
@@ -81,7 +81,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		}
 
 		$records = ActiveRecordBasic::instance()->find(array('text' => 'record #002'));
-		self::assertType('Nano_Db_Statement', $records);
+		self::assertInstanceOf('Nano_Db_Statement', $records);
 		self::assertEquals(4, $records->rowCount());
 
 		$record = $records->fetch();
@@ -92,7 +92,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		/** @var $record ActiveRecordBasic */
 		$record->text = 'record #001';
 		$records = $record->find();
-		self::assertType('Nano_Db_Statement', $records);
+		self::assertInstanceOf('Nano_Db_Statement', $records);
 		self::assertEquals(4, $records->rowCount());
 
 		$record = $records->fetch();
@@ -100,7 +100,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		self::assertEquals('record #001', $record->text);
 
 		$records = $record->find();
-		self::assertType('Nano_Db_Statement', $records);
+		self::assertInstanceOf('Nano_Db_Statement', $records);
 		self::assertEquals(1, $records->rowCount());
 		$found = $records->fetch();
 		/** @var $found ActiveRecordBasic */
@@ -112,7 +112,7 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		$record->setLimit(2, 0);
 		$record->text = 'record #000';
 		$records = $record->find();
-		self::assertType('Nano_Db_Statement', $records);
+		self::assertInstanceOf('Nano_Db_Statement', $records);
 		self::assertEquals(2, $records->rowCount());
 	}
 

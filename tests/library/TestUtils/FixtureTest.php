@@ -19,7 +19,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 	}
 
 	public function testFixtureShouldLoad() {
-		self::assertType('TestFixtureForTest', TestUtils_Fixture::instance()->forTest());
+		self::assertInstanceOf('TestFixtureForTest', TestUtils_Fixture::instance()->forTest());
 	}
 
 	public function testFixtureShouldCreateOneRecord() {
@@ -27,7 +27,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		self::assertEquals(1, ActiveRecordBasic::prototype()->count());
 
 		$record = ActiveRecordBasic::prototype()->findOne();
-		self::assertType('ActiveRecordBasic', $record);
+		self::assertInstanceOf('ActiveRecordBasic', $record);
 		self::assertEquals('example text for record 000', $record->text);
 	}
 
@@ -40,10 +40,10 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		TestUtils_Fixture::instance()->forTest('default', 2);
 		self::assertEquals(2, ActiveRecordBasic::prototype()->count());
 
-		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 0));
+		self::assertInstanceOf('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 0));
 		self::assertEquals('example text for record 000', TestUtils_Fixture::instance()->forTest()->get('default', 0)->text);
 
-		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 1));
+		self::assertInstanceOf('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->get('default', 1));
 		self::assertEquals('example text for record 001', TestUtils_Fixture::instance()->forTest()->get('default', 1)->text);
 	}
 
@@ -60,7 +60,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		self::assertEquals(2, $this->getObjectProperty(TestUtils_Fixture::instance()->forTest(), 'index'));
 
 		$record = TestUtils_Fixture::instance()->forTest()->getNew('default');
-		self::assertType('ActiveRecordBasic', $record);
+		self::assertInstanceOf('ActiveRecordBasic', $record);
 		self::assertEquals('example text for record 002', $record->text);
 		self::assertSame($record, TestUtils_Fixture::instance()->forTest()->get('default', 2));
 
@@ -70,7 +70,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 	public function testGetCustomShouldCreateRecord() {
 		$record = TestUtils_Fixture::instance()->forTest()->getCustom('default', array('text' => 'some custom text'));
 
-		self::assertType('ActiveRecordBasic', $record);
+		self::assertInstanceOf('ActiveRecordBasic', $record);
 		self::assertEquals('some custom text', $record->text);
 		self::assertSame($record, TestUtils_Fixture::instance()->forTest()->get('default', 0));
 
@@ -81,7 +81,7 @@ class TestUtils_FixtureTest extends TestUtils_TestCase {
 		TestUtils_Fixture::instance()->forTest()->getCustom('default', array('text' => 'first record'));
 		TestUtils_Fixture::instance()->forTest()->getCustom('default', array('text' => 'second record'));
 		self::assertEquals(2, $this->getObjectProperty(TestUtils_Fixture::instance()->forTest(), 'index'));
-		self::assertType('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->last());
+		self::assertInstanceOf('ActiveRecordBasic', TestUtils_Fixture::instance()->forTest()->last());
 		self::assertEquals('second record', TestUtils_Fixture::instance()->forTest()->last()->text);
 	}
 

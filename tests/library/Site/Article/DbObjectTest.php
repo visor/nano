@@ -18,7 +18,7 @@ class Article_DbObjectTest extends TestUtils_TestCase {
 
 	public function testCreatedElementClass() {
 		$item = TestArticle::createNew('title', 'body');
-		self::assertType('TestArticle', $item);
+		self::assertInstanceOf('TestArticle', $item);
 	}
 
 	public function testDefaultValuesAfterCreate() {
@@ -63,7 +63,7 @@ class Article_DbObjectTest extends TestUtils_TestCase {
 	public function testGetOneItem() {
 		$item   = $this->testDefaultValuesAfterCreate();
 		$loaded = TestArticle::get($item->id());
-		self::assertType('TestArticle', $loaded);
+		self::assertInstanceOf('TestArticle', $loaded);
 		self::assertEquals($item, $loaded);
 	}
 

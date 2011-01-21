@@ -46,16 +46,16 @@ class DispatcherTest extends PHPUnit_Framework_TestCase {
 		$route1 = $this->dispatcher->getRoute($routes, '/');
 		$route2 = $this->dispatcher->getRoute($routes, '');
 
-		$this->assertType('Nano_Route', $route1);
-		$this->assertType('Nano_Route', $route2);
+		self::assertInstanceOf('Nano_Route', $route1);
+		self::assertInstanceOf('Nano_Route', $route2);
 		$this->assertEquals('index::index() when /^$/', $route1->__toString());
 		$this->assertEquals('index::index() when /^$/', $route2->__toString());
 	}
 
 	public function testGetController() {
 		$c = $this->dispatcher->getController(Nano_Route::create('', 'test', 'test'));
-		$this->assertType('Nano_C', $c);
-		$this->assertType('TestController', $c);
+		self::assertInstanceOf('Nano_C', $c);
+		self::assertInstanceOf('TestController', $c);
 	}
 
 }

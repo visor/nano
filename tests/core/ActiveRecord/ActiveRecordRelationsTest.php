@@ -87,15 +87,15 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 
 	public function testLoadingOne() {
 		$record = ActiveRecordChild::instance();
-		self::assertType('ActiveRecordBasic', $record->parent);
+		self::assertInstanceOf('ActiveRecordBasic', $record->parent);
 		self::assertTrue($record->parent->isNew());
 
 		foreach ($this->childs as $id => $parentId) {
 			$parent = ActiveRecordBasic::instance()->findOne($parentId);
 			$child  = ActiveRecordChild::instance()->findOne($id);
-			self::assertType('ActiveRecordBasic', $parent);
-			self::assertType('ActiveRecordChild', $child);
-			self::assertType('ActiveRecordBasic', $child->parent);
+			self::assertInstanceOf('ActiveRecordBasic', $parent);
+			self::assertInstanceOf('ActiveRecordChild', $child);
+			self::assertInstanceOf('ActiveRecordBasic', $child->parent);
 			self::assertEquals($parentId, $child->parent->id);
 		}
 	}
@@ -103,8 +103,8 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 	public function testGetShouldReturnSameNewParentForOneChild() {
 		$record = ActiveRecordChild::instance();
 		$firstParent = $record->parent;
-		self::assertType('ActiveRecordBasic', $record->parent);
-		self::assertType('ActiveRecordBasic', $firstParent);
+		self::assertInstanceOf('ActiveRecordBasic', $record->parent);
+		self::assertInstanceOf('ActiveRecordBasic', $firstParent);
 		self::assertSame($firstParent, $record->parent);
 	}
 
@@ -118,7 +118,7 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 
 	public function testShouldUpdateReferencesFiledWhenParentSaves() {
 		$record = ActiveRecordChild::instance();
-		self::assertType('ActiveRecordBasic', $record->parent);
+		self::assertInstanceOf('ActiveRecordBasic', $record->parent);
 		self::assertTrue($record->parent->isNew());
 
 		$parent = $record->parent;

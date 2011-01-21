@@ -27,8 +27,8 @@ class CacheTicketTest extends TestUtils_TestCase {
 	}
 
 	public function testChildClassStatics() {
-		self::assertType('ExampleCacheTicket', ExampleCacheTicket::create(array('id' => 1, 'key' => 2)));
-		self::assertType('ExampleCacheTicket', ExampleCacheTicket::load(array('id' => 1, 'key' => 2)));
+		self::assertInstanceOf('ExampleCacheTicket', ExampleCacheTicket::create(array('id' => 1, 'key' => 2)));
+		self::assertInstanceOf('ExampleCacheTicket', ExampleCacheTicket::load(array('id' => 1, 'key' => 2)));
 	}
 
 	public function testLoadingFromCache() {

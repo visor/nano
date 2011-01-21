@@ -34,9 +34,9 @@ class Settings_SettingCategiryTest extends TestUtils_TestCase {
 	 */
 	public function testLoadingCache() {
 		$this->testAppendCategory();
-		self::assertType('Setting_Category', Setting_Category::get('category 01'));
-		self::assertType('Setting_Category', Setting_Category::get('category 02'));
-		self::assertType('Setting_Category', Setting_Category::get('category 03'));
+		self::assertInstanceOf('Setting_Category', Setting_Category::get('category 01'));
+		self::assertInstanceOf('Setting_Category', Setting_Category::get('category 02'));
+		self::assertInstanceOf('Setting_Category', Setting_Category::get('category 03'));
 		self::assertException(function() { Setting_Category::get(''); }, 'Nano_Exception', 'category "" not found');
 		self::assertException(function() { Setting_Category::get('01'); }, 'Nano_Exception', 'category "01" not found');
 	}

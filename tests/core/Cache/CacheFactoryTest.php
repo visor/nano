@@ -24,14 +24,14 @@ class CacheTest extends TestUtils_TestCase {
 	}
 
 	public function testGetApi() {
-		self::assertType('Cache_API_File', Cache::getApi('File'));
-		self::assertType('Cache_API_MongoDb', Cache::getApi('MongoDb'));
+		self::assertInstanceOf('Cache_API_File', Cache::getApi('File'));
+		self::assertInstanceOf('Cache_API_MongoDb', Cache::getApi('MongoDb'));
 		self::assertException(function() { Cache::getApi('SomeOtherApi'); }, 'Cache_Exception', '');
 	}
 
 	public function testConfigure() {
 		$this->setupFakeCache();
-		self::assertType('Cache_API_Fake', Cache::instance());
+		self::assertInstanceOf('Cache_API_Fake', Cache::instance());
 		self::assertEquals('value', Cache::instance()->config->property);
 	}
 

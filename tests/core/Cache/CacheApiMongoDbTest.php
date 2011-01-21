@@ -38,7 +38,7 @@ class CacheApiMongoDbTest extends TestUtils_TestCase {
 		));
 		$value = $this->api->get('someKey');
 		self::assertNotNull($value);
-		self::assertType('stdClass', $value);
+		self::assertInstanceOf('stdClass', $value);
 		self::assertEquals($object, $value);
 	}
 
