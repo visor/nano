@@ -24,7 +24,7 @@ class Nano_Loader {
 			if (self::isModuleClass($className)) {
 				return self::loadModuleClass($className);
 			}
-			if (false === include(self::classToPath($className))) {
+			if (false === @include(self::classToPath($className))) {
 				return false;
 			}
 			return true;
