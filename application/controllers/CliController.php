@@ -51,7 +51,7 @@ class CliController extends Nano_C_Cli {
 			echo "\t\t", 'no parents', PHP_EOL;
 			$parents = array();
 		} else {
-			file_put_contents($new . DS . Nano_Config_Builder::PARENTS_FILE, '<php return ' . var_export($parents));
+			file_put_contents($new . DS . Nano_Config_Builder::PARENTS_FILE, '<php return ' . var_export($parents, true));
 			echo "\t\t", Nano_Config_Builder::PARENTS_FILE, PHP_EOL;
 		}
 
