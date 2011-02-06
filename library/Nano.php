@@ -17,9 +17,6 @@ define('APP_LIB',     APP . DS . 'library');
 define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC_DIR',  ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
-define('ENV',         Nano::config('env'));
-define('WEB_ROOT',    Nano::config('web')->root);
-define('WEB_URL',     Nano::config('web')->url);
 
 require LIB . DS . 'Nano' . DS . 'Loader.php';
 require LIB . DS . 'Nano' . DS . 'Modules.php';
@@ -47,6 +44,11 @@ final class Nano {
 	private $routes;
 
 	/**
+	 * @var Nano_Config
+	 */
+	private static $config = null;
+
+	/**
 	 * @var array
 	 */
 	private static $configs = array();
@@ -67,7 +69,9 @@ final class Nano {
 	 */
 	public static function run($url = null) {
 		self::instance();
-		TestUtils_WebTest::startCoverage();
+		if (SELENIUM_ENABLE) {
+			TestUtils_WebTest::startCoverage();
+		}
 		include SETTINGS . DS . 'routes.php';
 		if (null === $url) {
 			$url = $_SERVER['REQUEST_URI'];
@@ -88,10 +92,14 @@ final class Nano {
 			}
 			echo $result;
 		} catch (Exception $e) {
-			TestUtils_WebTest::stopCoverage();
+			if (SELENIUM_ENABLE) {
+				TestUtils_WebTest::stopCoverage();
+			}
 			throw $e;
 		}
-		TestUtils_WebTest::stopCoverage();
+		if (SELENIUM_ENABLE) {
+			TestUtils_WebTest::stopCoverage();
+		}
 	}
 
 	/**
@@ -131,34 +139,17 @@ final class Nano {
 	}
 
 	/**
-	 * @return mixed
+	 * @return Nano_Config|mixed
 	 * @param string $name
 	 */
-	public static function config($name) {
-		if (!isset(self::$configs[$name])) {
-			$config = null;
-			if (false === include(SETTINGS . DS . $name . '.php')) {
-				return false;
-			}
-			self::setConfig($name, $config);
+	public static function config($name = null) {
+		if (null === self::$config) {
+			self::$config = new Nano_Config(SETTINGS . DS . 'config.php');
 		}
-		return self::$configs[$name];
-	}
-
-	/**
-	 * @return void
-	 * @param string $name
-	 * @param mixed $config
-	 */
-	public static function setConfig($name, $config) {
-		self::$configs[$name] = $config;
-	}
-
-	/**
-	 * @return void
-	 */
-	public static function reloadConfig() {
-		self::$configs[] = array();
+		if (null === $name) {
+			return self::$config;
+		}
+		return self::$config->get($name);
 	}
 
 	/**
@@ -187,15 +178,19 @@ final class Nano {
 		$this->modules = new Nano_Modules();
 
 		Nano_Loader::initLibraries($this->modules);
-		spl_autoload_register('nano_autoload');
 
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
 		$this->setupErrorReporting();
+
+		if (self::config()->exists('web')) {
+			define('WEB_ROOT', Nano::config('web')->root);
+			define('WEB_URL',  Nano::config('web')->url);
+		}
 	}
 
 	private function setupErrorReporting() {
-		if (self::config('web')->errorReporting) {
+		if (self::config()->exists('web') && isset(self::config('web')->errorReporting) && true === self::config('web')->errorReporting) {
 			error_reporting(E_ALL | E_STRICT);
 			ini_set('display_errors', true);
 		} else {
@@ -213,3 +208,5 @@ final class Nano {
 function nano_autoload($className) {
 	return Nano_Loader::load($className);
 }
+
+spl_autoload_register('nano_autoload');

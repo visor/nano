@@ -2,6 +2,8 @@
 
 abstract class Nano_C_Cli extends Nano_C {
 
+	const DEFAULT_ACTION = 'index';
+
 	/**
 	 * @var string[]
 	 */
@@ -13,7 +15,7 @@ abstract class Nano_C_Cli extends Nano_C {
 	 */
 	public static function main($controller, $action, array $args) {
 		if (null === $action) {
-			$action = 'index';
+			$action = self::DEFAULT_ACTION;
 		}
 		$className = Nano_Dispatcher::formatName($controller, true);
 		try {
@@ -47,7 +49,7 @@ abstract class Nano_C_Cli extends Nano_C {
 	public static function extractControllerAction($string) {
 		$result = explode('.', strToLower($string));
 		if (1 == count($result)) {
-			$result[] = 'index';
+			$result[] = self::DEFAULT_ACTION;
 		}
 		return $result;
 	}

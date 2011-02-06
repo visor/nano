@@ -9,6 +9,11 @@ if (!defined('APP')) {
 }
 
 Nano::instance();
-Nano::config('selenium');
 Nano_Db::setDefault('test');
-$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = TESTS . DS . 'reports' . DS . 'coverage';
+
+define('SELENIUM_ENABLE', Nano::config('selenium')->enabled);
+
+if (SELENIUM_ENABLE) {
+	PHPUnit_Extensions_SeleniumTestCase::$browsers = array();
+	$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = TESTS . DS . 'reports' . DS . 'coverage';
+}

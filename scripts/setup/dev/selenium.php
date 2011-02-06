@@ -1,11 +1,6 @@
-<?php
-
-define('SELENIUM_ENABLE', true);
-
-require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
-
-PHPUnit_Extensions_SeleniumTestCase::$browsers = array(
-	array(
+<?php return (object)array(
+	  'enabled' => true
+	, 'browser' => array(
 		  'name'    => 'Firefox'
 		, 'browser' => '*firefox'
 		, 'host'    => 'localhost'

@@ -1,6 +1,4 @@
-<?php
-
-$config = (object)array(
+<?php return (object)array(
 	  'root'           => ROOT . DS . 'public'
 	, 'url'            => ''
 	, 'index'          => 'index.php'

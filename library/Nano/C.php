@@ -41,7 +41,9 @@ abstract class Nano_C {
 		$this->dispatcher = $dispatcher;
 		$this->helper     = Nano::helper();
 		$this->plugins    = new SplObjectStorage();
-		$this->plugins->addAll(Nano::config('plugins'));
+		foreach (Nano::config('plugins') as $class) {
+			$this->plugins->attach(new $class);
+		}
 	}
 
 	/**

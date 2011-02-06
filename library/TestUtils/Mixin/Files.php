@@ -18,6 +18,10 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 		if (false === $fullPath) {
 			$dir = $this->get($test, $dir);
 		}
+		if (!file_exists($dir)) {
+			mkDir($dir, 0755, true);
+			return;
+		}
 		$i = new DirectoryIterator($dir);
 		$result = true;
 		foreach ($i as $file) {

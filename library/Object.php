@@ -16,6 +16,18 @@ class Object {
 
 	/**
 	 * @return stdClass
+	 * @param array[string] $data
+	 */
+	public static function makeUsing(array $data) {
+		$result = new stdClass;
+		foreach ($data as $name => $value) {
+			$result->$name = $value;
+		}
+		return $result;
+	}
+
+	/**
+	 * @return stdClass
 	 * @param mixed[string] $properties
 	 * @param string[] $properties
 	 */

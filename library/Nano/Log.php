@@ -2,7 +2,7 @@
 
 class Nano_Log {
 
-	const EXT = '.log';
+	const NAME = 'app.log';
 
 	/**
 	 * @var string
@@ -49,7 +49,7 @@ class Nano_Log {
 	 * @return string
 	 */
 	public static function getFile() {
-		return APP . DS . ENV . self::EXT;
+		return APP . DS . self::NAME;
 	}
 
 }

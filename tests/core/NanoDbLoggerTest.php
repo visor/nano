@@ -77,7 +77,7 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 	public function testDisabledLog() {
 		$config = Nano::config('db');
 		$config[Nano::db()->getName()]['log'] = false;
-		Nano::setConfig('db', $config);
+		Nano::config()->set('db', $config);
 
 		$sql  = 'insert into nano_log_test(text) values(:value)';
 		$stmt = Nano::db()->prepare($sql);
@@ -160,7 +160,7 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 		if ($this->logBackup) {
 			$config = Nano::config('db');
 			$config[Nano::db()->getName()]['log'] = $this->logBackup;
-			Nano::setConfig('db', $config);
+			Nano::config()->set('db', $config);
 		}
 	}
 

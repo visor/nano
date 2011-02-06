@@ -1,7 +1,3 @@
-<?php
-
-$config = new SplObjectStorage();
-
-$config->attach(new ControlPanelAssets());
-
-return $config;
+<?php return array(
+	'ControlPanelAssets'
+);

@@ -65,7 +65,7 @@ class CacheTest extends TestUtils_TestCase {
 	}
 
 	protected function setupFakeCache() {
-		Nano::setConfig('cache', (object)array(
+		Nano::config()->set('cache', (object)array(
 			  'api' => 'Fake'
 			, 'fake' => (object)array(
 				'property' => 'value'

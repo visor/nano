@@ -20,9 +20,78 @@ class CliController extends Nano_C_Cli {
 			 */
 			$actions = $this->getControllerActions($class);
 			foreach ($actions as $action => $description) {
-				echo sprintf('%s.%s - %s', $controller, $action, $description), PHP_EOL;
+				echo $controller, (self::DEFAULT_ACTION == $action ? '' : '.' . $action), ' - ', $description, PHP_EOL;
 			}
 		}
+	}
+
+	/**
+	 * Creates new configuration based on specified parents
+	 * @return void
+	 */
+	public function createConfigAction() {
+		$usage = 'cli.php cli.create-config name parent1[,parent2]';
+		if (0 == count($this->args)) {
+			echo 'Please pass new configuration name and it\'s parent(s)', PHP_EOL, $usage, PHP_EOL;
+			return;
+		}
+		if (1 == count($this->args)) {
+			echo 'Please pass new configuration parent(s) or string NONE if no parents', PHP_EOL, $usage, PHP_EOL;
+		}
+		$name    = $this->args[0];
+		$parents = $this->args;
+		$new     = ROOT . DS . 'scripts' . DS . 'setup' . DS . $name;
+		array_shift($parents);
+
+		echo 'Creating new setup directory', PHP_EOL;
+		echo "\t", $new, PHP_EOL;
+		mkDir($new, 0755, true);
+
+		if (in_array('NONE', $parents)) {
+			echo "\t\t", 'no parents', PHP_EOL;
+			$parents = array();
+		}
+
+		foreach ($parents as $parent) {
+			$i = new DirectoryIterator(ROOT . DS . 'scripts' . DS . 'setup' . DS . $parent);
+			foreach ($i as /** @var DirectoryIterator $file */$file) {
+				if ($file->isDir() || $file->isDir() || !$file->isReadable()) {
+					continue;
+				}
+				if (Nano_Config_Builder::PARENTS_FILE == $file->getBaseName()) {
+					continue;
+				}
+				if ('php' !== pathInfo($file->getBaseName(), PATHINFO_EXTENSION)) {
+					continue;
+				}
+				$newFile = $new . DS . $file->getBaseName();
+				if (file_exists($newFile)) {
+					continue;
+				}
+
+				file_put_contents($newFile, '<?php return (object)array(' . PHP_EOL . ');');
+				echo "\t\t", $file->getBaseName(), PHP_EOL;
+			}
+		}
+		echo 'Done', PHP_EOL;
+	}
+
+	/**
+	 * Compiles application settings
+	 *
+	 * @return void
+	 */
+	public function setupAction() {
+		$usage = 'cli.php cli.setup name';
+		if (0 == count($this->args)) {
+			echo 'Please pass configuration name to setup', PHP_EOL, $usage, PHP_EOL;
+			return;
+		}
+
+		$builder = new Nano_Config_Builder();
+		$builder->setSource(ROOT . DS . 'scripts' . DS . 'setup');
+		$builder->setDestination(SETTINGS . DS . 'config.php');
+		$builder->build($this->args[0]);
 	}
 
 	/**
@@ -54,6 +123,7 @@ class CliController extends Nano_C_Cli {
 				$result[$controller] = $class;
 			}
 		}
+		ksort($result);
 		return $result;
 	}
 
@@ -66,10 +136,7 @@ class CliController extends Nano_C_Cli {
 			/**
 			 * @var ReflectionMethod $method
 			 */
-			if (!$method->isPublic()) {
-				continue;
-			}
-			if ($method->isStatic()) {
+			if (!$method->isPublic() || $method->isStatic()) {
 				continue;
 			}
 			if (0 === preg_match('/Action$/', $method->getName())) {
@@ -78,6 +145,7 @@ class CliController extends Nano_C_Cli {
 			$action = $this->convert(subStr($method->getName(), 0, -6));
 			$result[$action] = $this->extractDescription($method->getDocComment());
 		}
+		ksort($result);
 		return $result;
 	}
 

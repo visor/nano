@@ -1,6 +1,4 @@
-<?php
-
-$config = (object)array(
-	  'path' => WEB_ROOT . DS . 'assets'
-	, 'url'  => WEB_URL . '/assets'
+<?php return (object)array(
+	  'path' => PUBLIC_DIR . DS . 'assets'
+	, 'url'  => '/assets'
 );

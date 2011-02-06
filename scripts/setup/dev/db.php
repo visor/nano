@@ -1,6 +1,4 @@
-<?php
-
-$config = array(
+<?php return array(
 	'default' => array(
 		  'type'     => 'mysql'
 		, 'dsn'      => 'host=localhost;dbname=nano'
