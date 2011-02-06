@@ -34,7 +34,7 @@ class Nano_Config_Builder {
 	public function build($name) {
 		$settings = $this->createSettings($name);
 		$source   = var_export(json_decode(json_encode($settings)), true);
-		$source   = str_replace('stdClass::__set_state(', 'Object::makeUsing(', $source);
+		$source   = str_replace('stdClass::__set_state(', '(object)(', $source);
 		file_put_contents($this->destination, '<?php return (object)' . $source . ';');
 	}
 
