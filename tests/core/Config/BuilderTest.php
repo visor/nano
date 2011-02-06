@@ -74,6 +74,24 @@ class Config_BuilderTest extends TestUtils_TestCase {
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}
 
+	public function testLoadingConfigurationWithChildOfChild() {
+		$path = $this->files->get($this, '/settings/config.php');
+		$this->builder->setSource($this->files->get($this, '/parents'));
+		$this->builder->setDestination($path);
+		$this->builder->build('child-of-child');
+
+		self::assertFileExists($path);
+		$config   = new Nano_Config($path);
+		$expected = (object)array(
+			  'file1' => (object)array('file1-param1' => 'new', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
+			, 'file2' => (object)array('file2-param1' => 'value2', 'file2-param2' => 'value2', 'file2-param100' => '100')
+		);
+
+		self::assertTrue($config->exists('file1'));
+		self::assertTrue($config->exists('file2'));
+		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
+	}
+
 	public function testLoadingConfigurationWithStdClasses() {
 		$path = $this->files->get($this, '/settings/config.php');
 		$this->builder->setSource($this->files->get($this, '/no-parents'));
@@ -87,6 +105,40 @@ class Config_BuilderTest extends TestUtils_TestCase {
 				'hostname' => 'localhost', 'username' => 'user', 'password' => 'p4ssw0rd', 'database' => 'db1'
 			)
 		);
+		self::assertTrue($config->exists('db'));
+		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
+	}
+
+	public function testDatabaseConfigurationBugFixed() {
+		$path = $this->files->get($this, '/settings/config.php');
+		$this->builder->setSource($this->files->get($this, '/database'));
+		$this->builder->setDestination($path);
+		$this->builder->build('child-of-child');
+		self::assertFileExists($path);
+
+		$config   = new Nano_Config($path);
+		$expected = (object)array('db' => (object)array(
+			'default' => (object)array(
+				  'type'     => 'mysql'
+				, 'dsn'      => 'host=localhost;dbname=bonus_hudson'
+				, 'username' => 'user'
+				, 'password' => ''
+				, 'options'  => (object)array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+				)
+				, 'log'      => APP . DS . 'sql.log'
+			)
+			, 'test' => (object)array(
+				  'type'     => 'mysql'
+				, 'dsn'      => 'host=localhost;dbname=bonus_hudson_test'
+				, 'username' => 'user'
+				, 'password' => ''
+				, 'options'  => (object)array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+				)
+				, 'log'      => APP . DS . 'test-sql.log'
+			)
+		));
 		self::assertTrue($config->exists('db'));
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}

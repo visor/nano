@@ -54,7 +54,7 @@ class Nano_Config_Builder {
 		$settings = array();
 		$i        = new DirectoryIterator($this->getFilePath($name, null));
 		foreach ($parents as $parent) {
-			$settings = array_merge($settings, $this->createSettings($parent));
+			$settings = $this->mergeSections($settings, $this->createSettings($parent));
 		}
 		foreach ($i as /** @var DirectoryIterator $file */$file) {
 			if ($file->isDir() || $file->isDir() || !$file->isReadable()) {
@@ -68,7 +68,7 @@ class Nano_Config_Builder {
 			}
 			$section = $file->getBaseName('.php');
 			if (isSet($settings[$section])) {
-				$settings[$section] = array_merge(
+				$settings[$section] = $this->mergeSections(
 					$settings[$section]
 					, $this->buildSingleFile($parents, $file->getPathName())
 				);
@@ -92,9 +92,7 @@ class Nano_Config_Builder {
 	 * @param string $file
 	 */
 	protected function buildSingleFile($parents, $file) {
-		$result = array();
 		return include($file);
-//		return $result;
 	}
 
 	/**
@@ -118,6 +116,23 @@ class Nano_Config_Builder {
 	 */
 	protected function getFilePath($name, $file) {
 		return $this->source . DS . $name . DS . $file;
+	}
+
+	/**
+	 * @return array
+	 * @param array $one
+	 * @param array $two
+	 */
+	protected function mergeSections($one, $two) {
+		$result = $one;
+		foreach ($two as $key => $value) {
+			if (is_array($value) && isSet($result[$key]) && is_array($result[$key])) {
+				$result[$key] = $this->mergeSections($result[$key], $value);
+			} else {
+				$result[$key] = $value;
+			}
+		}
+		return $result;
 	}
 
 }
