@@ -94,8 +94,8 @@ class Nano_Db_Log {
 	protected function getLogFile() {
 		if (null === $this->logFile) {
 			$config = Nano_Db::getConfig(Nano::db()->getName());
-			if (isset($config['log']) && false !== $config['log']) {
-				$this->logFile = $config['log'];
+			if (isSet($config->log) && false !== $config->log) {
+				$this->logFile = $config->log;
 			} else {
 				$this->logFile = false;
 			}

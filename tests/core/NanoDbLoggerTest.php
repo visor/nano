@@ -16,8 +16,8 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 		);
 		$this->clearLog();
 		$config = Nano_Db::getConfig(Nano::db()->getName());
-		if (isset($config['log'])) {
-			$this->logBackup = $config['log'];
+		if (isSet($config->log)) {
+			$this->logBackup = $config->log;
 		}
 	}
 
@@ -76,7 +76,7 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 
 	public function testDisabledLog() {
 		$config = Nano::config('db');
-		$config[Nano::db()->getName()]['log'] = false;
+		$config->{Nano::db()->getName()}->log = false;
 		Nano::config()->set('db', $config);
 
 		$sql  = 'insert into nano_log_test(text) values(:value)';
@@ -144,8 +144,8 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 		Nano::db()->log()->clean();
 		self::setObjectProperty(Nano::db()->log(), 'logFile', null);
 		$config = Nano_Db::getConfig(Nano::db()->getName());
-		if ($remove && file_exists($config['log'])) {
-			unlink($config['log']);
+		if ($remove && file_exists($config->log)) {
+			unlink($config->log);
 		}
 
 		self::assertEquals(0, Nano::db()->log()->count());
@@ -159,7 +159,7 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 		$this->clearLog(false);
 		if ($this->logBackup) {
 			$config = Nano::config('db');
-			$config[Nano::db()->getName()]['log'] = $this->logBackup;
+			$config->{Nano::db()->getName()}->log = $this->logBackup;
 			Nano::config()->set('db', $config);
 		}
 	}

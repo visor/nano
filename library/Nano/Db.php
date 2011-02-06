@@ -32,8 +32,8 @@ class Nano_Db extends PDO {
 		}
 		if (!array_key_exists($name, self::$instances)) {
 			$config = self::getConfig($name);
-			$dns    = $config['type'] . ':' . $config['dsn'];
-			self::$instances[$name] = new self($dns, $config['username'], $config['password'], $config['options'], $name);
+			$dns    = $config->type . ':' . $config->dsn;
+			self::$instances[$name] = new self($dns, $config->username, $config->password, $config->options, $name);
 			self::$instances[$name]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			self::$instances[$name]->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 			self::$instances[$name]->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('Nano_Db_Statement'));
@@ -69,10 +69,10 @@ class Nano_Db extends PDO {
 
 	public static function getConfig($name) {
 		$config = Nano::config('db');
-		if (!array_key_exists($name, $config)) {
-			throw new RuntimeException('Unknow database ' . $name);
+		if (isset($config->$name)) {
+			return $config->$name;
 		}
-		return $config[$name];
+		throw new RuntimeException('Unknow database ' . $name);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class Nano_Db extends PDO {
 	 * @param array $options [optional]
 	 */
 	public function __construct($dsn, $username = null, $password = null, $options = null, $name = null) {
-		parent::__construct($dsn, $username, $password, $options);
+		parent::__construct($dsn, $username, $password, (array)$options);
 		$this->name = $name;
 	}
 
