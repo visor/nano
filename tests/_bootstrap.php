@@ -14,6 +14,6 @@ Nano_Db::setDefault('test');
 define('SELENIUM_ENABLE', Nano::config('selenium')->enabled);
 
 if (SELENIUM_ENABLE) {
-	PHPUnit_Extensions_SeleniumTestCase::$browsers = array();
+	PHPUnit_Extensions_SeleniumTestCase::$browsers = array((array)(Nano::config('selenium')->browser));
 	$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = TESTS . DS . 'reports' . DS . 'coverage';
 }
