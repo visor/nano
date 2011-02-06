@@ -184,6 +184,7 @@ final class Nano {
 		$this->modules = new Nano_Modules();
 
 		Nano_Loader::initLibraries($this->modules);
+		Nano_Config_Builder::createStub(SETTINGS . DS . 'config.php');
 
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();

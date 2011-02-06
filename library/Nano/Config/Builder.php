@@ -10,6 +10,15 @@ class Nano_Config_Builder {
 	protected $source = null, $destination = null;
 
 	/**
+	 * @return void
+	 */
+	public static function createStub($path) {
+		if (!file_exists($path)) {
+			file_put_contents($path, '<?php return (object)array();');
+		}
+	}
+
+	/**
 	 * @return Nano_Config_Builder
 	 * @param string $value
 	 */
