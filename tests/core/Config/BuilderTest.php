@@ -29,8 +29,8 @@ class Config_BuilderTest extends TestUtils_TestCase {
 
 		$config   = new Nano_Config($path);
 		$expected = (object)array(
-			  'file1' => array('file1-param1' => 'value1')
-			, 'file2' => array('file2-param1' => 'value1')
+			  'file1' => (object)array('file1-param1' => 'value1')
+			, 'file2' => (object)array('file2-param1' => 'value1')
 		);
 
 		self::assertTrue($config->exists('file1'));
@@ -47,8 +47,8 @@ class Config_BuilderTest extends TestUtils_TestCase {
 		self::assertFileExists($path);
 		$config   = new Nano_Config($path);
 		$expected = (object)array(
-			  'file1' => array('file1-param1' => 'value1', 'param2' => array('param2.1' => 'new-value2.1'))
-			, 'file2' => array('file2-param1' => 'new-value', 'file2-param2' => 'value2')
+			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'new-value2.1'))
+			, 'file2' => (object)array('file2-param1' => 'new-value', 'file2-param2' => 'value2')
 		);
 
 		self::assertTrue($config->exists('file1'));
@@ -65,8 +65,8 @@ class Config_BuilderTest extends TestUtils_TestCase {
 		self::assertFileExists($path);
 		$config   = new Nano_Config($path);
 		$expected = (object)array(
-			  'file1' => array('file1-param1' => 'value1', 'param2' => array('param2.1' => 'even-new-value2.1'))
-			, 'file2' => array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
+			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
+			, 'file2' => (object)array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
 		);
 
 		self::assertTrue($config->exists('file1'));
