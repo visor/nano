@@ -30,7 +30,7 @@ class CliController extends Nano_C_Cli {
 	 * @return void
 	 */
 	public function createConfigAction() {
-		$usage = 'cli.php cli.create-config name parent1[,parent2]';
+		$usage = 'cli.php cli.create-config name parent1[ parent2[ parent3]]';
 		if (0 == count($this->args)) {
 			echo 'Please pass new configuration name and it\'s parent(s)', PHP_EOL, $usage, PHP_EOL;
 			return;
@@ -50,6 +50,9 @@ class CliController extends Nano_C_Cli {
 		if (in_array('NONE', $parents)) {
 			echo "\t\t", 'no parents', PHP_EOL;
 			$parents = array();
+		} else {
+			file_put_contents($new . DS . Nano_Config_Builder::PARENTS_FILE, '<php return ' . var_export($parents));
+			echo "\t\t", Nano_Config_Builder::PARENTS_FILE, PHP_EOL;
 		}
 
 		foreach ($parents as $parent) {
