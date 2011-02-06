@@ -69,10 +69,16 @@ final class Nano {
 	 */
 	public static function run($url = null) {
 		self::instance();
-		if (SELENIUM_ENABLE) {
-			TestUtils_WebTest::startCoverage();
+		if (!defined('SELENIUM_ENABLE')) {
+			define(
+				'SELENIUM_ENABLE'
+				, self::config()->exists('selenium') && isSet(self::config('selenium')->enabled) && true === self::config('selenium')->enabled
+			);
+			if (SELENIUM_ENABLE) {
+				TestUtils_WebTest::startCoverage();
+			}
 		}
-		include SETTINGS . DS . 'routes.php';
+		include(SETTINGS . DS . 'routes.php');
 		if (null === $url) {
 			$url = $_SERVER['REQUEST_URI'];
 			if (false !== strPos($url, '?')) {
