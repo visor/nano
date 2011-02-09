@@ -1,4 +1,4 @@
-<?php return (object)array(
+<?php return array(
 	  'root'           => ROOT . DS . 'public'
 	, 'url'            => ''
 	, 'index'          => 'index.php'

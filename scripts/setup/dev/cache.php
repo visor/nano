@@ -1,4 +1,4 @@
-<?php return (object)array(
+<?php return array(
 	  'path' => ROOT . DS . 'cache'
 	, 'api'  => 'File'
 );

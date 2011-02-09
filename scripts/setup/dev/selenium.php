@@ -1,4 +1,4 @@
-<?php return (object)array(
+<?php return array(
 	  'enabled' => true
 	, 'browser' => array(
 		  'name'    => 'Firefox'
