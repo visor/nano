@@ -72,7 +72,7 @@ class CliController extends Nano_C_Cli {
 					continue;
 				}
 
-				file_put_contents($newFile, '<?php return (object)array(' . PHP_EOL . ');');
+				file_put_contents($newFile, '<?php return array(' . PHP_EOL . ');');
 				echo "\t\t", $file->getBaseName(), PHP_EOL;
 			}
 		}
