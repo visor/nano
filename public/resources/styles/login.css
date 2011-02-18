@@ -1,5 +1,5 @@
 body {
-	background: url('<?=$images?>/bg.gif') repeat-x left top #d4d3d3;
+	background: url('<?=$cdn?>/resources/images/bg.png') repeat-x left top #d4d3d3;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	font-size: 13px;
 	color: #333;
@@ -29,7 +29,7 @@ h1 {
 #login {
 	margin: 10px 0px 0px 0px;
 	border: 1px solid #666;
-	background: url('<?=$images?>/bg_login.gif') repeat-x left top #f6f5f5;
+	background: url('<?=$cdn?>/resources/images/bg_login.png') repeat-x left top #f6f5f5;
 	padding: 20px;
 }
 
@@ -42,7 +42,7 @@ h1 {
 p.tip {
 	padding-left: 20px;
 	display: block;
-	background-image: url('<?=$images?>/icons/lightbulb.gif');
+	background-image: url('<?=$cdn?>/resources/images/icons/lightbulb.png');
 	background-repeat: no-repeat;
 	background-position: 0 0;
 }
@@ -50,7 +50,7 @@ p.tip {
 p.error {
 	padding-left: 20px;
 	display: block;
-	background-image: url('<?=$images?>/icons/exclamation.gif');
+	background-image: url('<?=$cdn?>/resources/images/icons/exclamation.png');
 	background-repeat: no-repeat;
 	background-position: 0 0;
 	color: #900;
@@ -60,7 +60,7 @@ p.error {
 	margin: 0px;
 	padding: 0px !important;
 	border: 0px;
-	background: transparent url('<?=$images?>/but_login_span.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/but_login_span.png') no-repeat scroll top right;
 	color: #fff;
 	display: block;
 	float: right;
@@ -78,7 +78,7 @@ p.error {
 }
 
 .black_button span {
-	background: url('<?=$images?>/but_login_left.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_login_left.png') no-repeat left top;
 	display: block;
 	line-height: 30px;
 	padding: 0px 0px 0px 12px;
@@ -101,7 +101,7 @@ p.error {
 	margin: 0px;
 	padding: 0px !important;
 	border: 0px;
-	background: transparent url('<?=$images?>/forgot_bg_span.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/forgot_bg_span.gif') no-repeat scroll top right;
 	color: #888 !important;
 	display: block;
 	float: left;
@@ -121,7 +121,7 @@ p.error {
 }
 
 .forgotlink span {
-	background: url('<?=$images?>/forgot_bg_left.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/forgot_bg_left.gif') no-repeat left top;
 	display: block;
 	line-height: 25px;
 	padding: 0px 0px 0px 15px;

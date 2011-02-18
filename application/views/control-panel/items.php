@@ -1,7 +1,7 @@
 <?php $actions = array('publish' => 'Publish', 'unpublish' => 'Unpublish', 'edit' => 'Edit', 'delete' => array('Delete', 'Are you sure?')); ?>
 <div class="grid_15 textcontent">
 <?php echo ($pager = $helper->pager()->show('simple', '?page=%d', $page, 131)); ?>
-<?php echo $helper->ui()->blockStart('Item list example', 'exclamation.gif', 'fixed', 'nopadding'); ?>
+<?php echo $helper->ui()->blockStart('Item list example', 'exclamation.png', 'fixed', 'nopadding'); ?>
 <table width="100%" cellpadding="0" cellspacing="0" class="box-table-a list">
 	<thead>
 		<tr>

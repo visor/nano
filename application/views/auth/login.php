@@ -9,7 +9,7 @@
 <body>
 <div class="container_16">
 	<div class="grid_6 prefix_5 suffix_5">
-		<h1><a href="http://nicetheme.net" target="_blank" style="color: #FFFFFF"><?php echo Nano::message()->m('cp-title'); ?> - <?php echo $pageTitle; ?></a></h1>
+		<h1><a href="/cp" target="_blank" style="color: #FFFFFF"><?php echo Nano::message()->m('cp-title'); ?> - <?php echo $pageTitle; ?></a></h1>
 		<div id="login">
 			<p class="tip">You just need to hit the button and you're in!</p>
 <?php /*

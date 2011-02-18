@@ -100,7 +100,7 @@ class Assets_Styles extends Assets_Abstract {
 		$result = $string;
 		$result = preg_replace('/(\/\*[^\*]*\*\/)/', '', $result);
 		$result = preg_replace('/(\r?\n|\r)+/', "\n", $result);
-		$result = preg_replace('/(\/\/[^\n]*\n)/', '', $result);
+//		$result = preg_replace('/(\/\/[^\n]*\n)/', '', $result);
 		$result = preg_replace('/\s+/', ' ', $result);
 		$result = str_replace(' { ', '{', $result);
 		$result = str_replace(' } ', '}', $result);
@@ -108,7 +108,6 @@ class Assets_Styles extends Assets_Abstract {
 		$result = str_replace(': ', ':', $result);
 		$result = str_replace('; ', ';', $result);
 		$result = str_replace(', ', ',', $result);
-
 		return $result;
 	}
 

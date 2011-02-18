@@ -317,7 +317,9 @@ abstract class Assets_Abstract {
 	 * @param string $group
 	 */
 	protected function getGroupUrl($base, $group) {
-		return Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group);
+		return Nano::helper()->resource()->cdn(
+			Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group)
+		);
 	}
 
 	/**
@@ -361,7 +363,10 @@ abstract class Assets_Abstract {
 	 * @param string $string
 	 */
 	protected function replaceVariables($string) {
-		$result = $string;
+		$result   = $string;
+		$search   = preg_quote('<?=$cdn?>');
+		$callback = function() { return Nano::helper()->resource()->cdn(''); };
+		$result = preg_replace_callback('/' . $search .'/i', $callback, $result);
 		foreach ($this->variables as $name => $value) {
 			$result = str_replace('<?=$' . $name . '?>', $value, $result);
 		}

@@ -1,5 +1,5 @@
 body {
-	background: url(<?=$images?>/bg.gif) repeat-x left top #d4d3d3;
+	background: url(<?=$cdn?>/resources/images/bg.png) repeat-x left top #d4d3d3;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 	font-size: 13px;
 	color: #333;
@@ -26,7 +26,7 @@ a:hover {
 }
 
 #content {
-	background: url('<?=$images?>/bg_content.gif') left top repeat-x #fff;
+	background: url('<?=$cdn?>/resources/images/bg_content.gif') left top repeat-x #fff;
 	width: 938px !important;
 	border-left: 1px solid #9c9c9c;
 	border-right: 1px solid #9c9c9c;
@@ -40,7 +40,7 @@ a:hover {
 
 #wrapper {
 	padding-bottom: 10px !important;
-	background: url(<?=$images?>/bg_content_bottom.gif) center bottom no-repeat;
+	background: url(<?=$cdn?>/resources/images/bg_content_bottom.png) center bottom no-repeat;
 }
 
 #footer {
@@ -75,35 +75,35 @@ a:hover {
 }
 
 a.edit_icon {
-	background: url(<?=$images?>/icons/edit.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/edit.gif) no-repeat left top;
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 }
 
 a.delete_icon {
-	background: url(<?=$images?>/icons/action_delete.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_delete.gif) no-repeat left top;
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 }
 
 a.approve_icon {
-	background: url(<?=$images?>/icons/action_check.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_check.gif) no-repeat left top;
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 }
 
 a.reject_icon {
-	background: url(<?=$images?>/icons/action_remove.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_remove.gif) no-repeat left top;
 	display: inline-block;
 	width: 16px;
 	height: 16px;
 }
 
 a.edit_inline {
-	background: url(<?=$images?>/icons/edit.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/edit.gif) no-repeat left top;
 	display: inline-block;
 	line-height: 16px;
 	color: #069 !important;
@@ -113,7 +113,7 @@ a.edit_inline {
 }
 
 a.delete_inline {
-	background: url(<?=$images?>/icons/action_delete.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_delete.gif) no-repeat left top;
 	display: inline-block;
 	line-height: 16px;
 	color: #d23333 !important;
@@ -123,7 +123,7 @@ a.delete_inline {
 }
 
 a.reject_inline {
-	background: url(<?=$images?>/icons/action_remove.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_remove.gif) no-repeat left top;
 	display: inline-block;
 	line-height: 16px;
 	color: #d23333 !important;
@@ -133,7 +133,7 @@ a.reject_inline {
 }
 
 a.approve_inline {
-	background: url(<?=$images?>/icons/action_check.gif) no-repeat left top;
+	background: url(<?=$cdn?>/resources/images/icons/action_check.gif) no-repeat left top;
 	display: inline-block;
 	line-height: 16px;
 	color: #5a801b !important;
@@ -153,12 +153,12 @@ h1 {
 }
 
 h1.dashboard {
-	background: url('<?=$images?>/icon_dashboard_small.gif') left 3px no-repeat;
+	background: url('<?=$cdn?>/resources/images/icon_dashboard_small.gif') left 3px no-repeat;
 	padding-left: 35px;
 }
 
 h1.content_edit {
-	background: url('<?=$images?>/icon_content_small.gif') left 3px no-repeat;
+	background: url('<?=$cdn?>/resources/images/icon_content_small.gif') left 3px no-repeat;
 	padding-left: 35px;
 }
 
@@ -181,12 +181,12 @@ h3 {
 
 a.inline_calendar {
 	padding-left: 21px;
-	background: url('<?=$images?>/icons/calendar.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icons/calendar.gif') no-repeat left top;
 }
 
 a.inline_tip {
 	padding-left: 21px;
-	background: url('<?=$images?>/icons/lightbulb_off.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icons/lightbulb_off.gif') no-repeat left top;
 }
 
 .hidden_calendar {
@@ -207,14 +207,14 @@ a.inline_tip {
 }
 
 #user_tools {
-	background: url('<?=$images?>/bg_usertools_right.gif') right top no-repeat;
+	background: url('<?=$cdn?>/resources/images/bg_usertools_right.gif') right top no-repeat;
 	height: 34px;
 	padding-right: 9px;
 	float: right;
 }
 
 #user_tools span {
-	background: url('<?=$images?>/bg_usertools_left.gif') left top no-repeat #000;
+	background: url('<?=$cdn?>/resources/images/bg_usertools_left.gif') left top no-repeat #000;
 	height: 34px;
 	padding-left: 9px;
 	line-height: 34px;
@@ -234,7 +234,7 @@ a.inline_tip {
 }
 
 #user_tools a.mail {
-	background: url('<?=$images?>/icon_mail_small.gif') left 2px no-repeat;
+	background: url('<?=$cdn?>/resources/images/icon_mail_small.gif') left 2px no-repeat;
 	padding-left: 17px;
 	margin-right: 5px;
 }
@@ -244,7 +244,7 @@ a.inline_tip {
 }
 
 .dropdown {
-	background: url('<?=$images?>/arrow_mini_down.gif') no-repeat right 3px;
+	background: url('<?=$cdn?>/resources/images/arrow_mini_down.gif') no-repeat right 3px;
 	padding-right: 13px;
 }
 
@@ -331,42 +331,42 @@ a.inline_tip {
 }
 
 #menu .dashboard {
-	background-image: url('<?=$images?>/icon_dashboard.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_dashboard.png');
 	background-repeat: no-repeat;
 }
 
 #menu .content {
-	background-image: url('<?=$images?>/icon_edit.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_edit.png');
 	background-repeat: no-repeat;
 }
 
 #menu .reports {
-	background-image: url('<?=$images?>/icon_reports.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_reports.png');
 	background-repeat: no-repeat;
 }
 
 #menu .users {
-	background-image: url('<?=$images?>/icon_users.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_users.png');
 	background-repeat: no-repeat;
 }
 
 #menu .media_library {
-	background-image: url('<?=$images?>/icon_media.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_media.png');
 	background-repeat: no-repeat;
 }
 
 #menu .event_manager {
-	background-image: url('<?=$images?>/icon_clock.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_clock.png');
 	background-repeat: no-repeat;
 }
 
 #menu .newsletter {
-	background-image: url('<?=$images?>/icon_news.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_news.png');
 	background-repeat: no-repeat;
 }
 
 #menu .settings {
-	background-image: url('<?=$images?>/icon_settings.png');
+	background-image: url('<?=$cdn?>/resources/images/icon_settings.png');
 	background-repeat: no-repeat;
 }
 
@@ -545,7 +545,7 @@ a.inline_tip {
 
 .info {
 	display: block;
-	background: url('<?=$images?>/informationbar_right.gif') no-repeat right top;
+	background: url('<?=$cdn?>/resources/images/informationbar_right.png') no-repeat right top;
 	height: 30px;
 	overflow: hidden;
 	margin-top: 5px;
@@ -566,25 +566,25 @@ a.inline_tip {
 
 .info .info_inner {
 	color: #4985b2;
-	background: url('<?=$images?>/icon_info.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icon_info.png') no-repeat left top;
 	border: 0px;
 }
 
 .success .info_inner {
 	color: #5a801b;
-	background: url('<?=$images?>/icon_success.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icon_success.png') no-repeat left top;
 	border: 0px;
 }
 
 .warning .info_inner {
 	color: #e89326;
-	background: url('<?=$images?>/icon_warning.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icon_warning.png') no-repeat left top;
 	border: 0px;
 }
 
 .error .info_inner {
 	color: #c00;
-	background: url('<?=$images?>/icon_error.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/icon_error.png') no-repeat left top;
 	border: 0px;
 }
 
@@ -775,7 +775,7 @@ form .full {
 	margin: 0px;
 	padding: 0px !important;
 	border: 0px;
-	background: transparent url('<?=$images?>/but_right_grey.gif') no-repeat scroll top right; color : #555;
+	background: transparent url('<?=$cdn?>/resources/images/but_right_grey.gif') no-repeat scroll top right; color : #555;
 	display: block;
 	float: left;
 	height: 30px;
@@ -792,7 +792,7 @@ form .full {
 }
 
 .button_grey span {
-	background: url('<?=$images?>/but_left_grey.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_left_grey.gif') no-repeat left top;
 	display: block;
 	line-height: 30px;
 	padding: 0px 0px 0px 12px;
@@ -885,7 +885,7 @@ form .full {
 	margin: 0px;
 	padding: 0px !important;
 	border: 0px;
-	background: transparent url('<?=$images?>/but_round_span_grey.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_grey.gif') no-repeat scroll top right;
 	color: #555;
 	display: block;
 	float: left;
@@ -902,7 +902,7 @@ form .full {
 }
 
 .button_grey_round span {
-	background: url('<?=$images?>/but_round_left_grey.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_round_left_grey.gif') no-repeat left top;
 	display: block;
 	line-height: 30px;
 	padding: 0px 0px 0px 12px;

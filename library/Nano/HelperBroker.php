@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @method ResourceHelper resource()
+ */
 class Nano_HelperBroker {
 
 	/**

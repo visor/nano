@@ -8,17 +8,17 @@ a.action-icon {
 }
 
 .action-edit {
-	background-image: url(<?=$images?>/actions/edit.png);
+	background-image: url(<?=$cdn?>/resources/images/actions/edit.png);
 }
 
 .action-delete {
-	background-image: url(<?=$images?>/actions/delete.png);
+	background-image: url(<?=$cdn?>/resources/images/actions/delete.png);
 }
 
 .action-publish {
-	background-image: url(<?=$images?>/actions/publish.png);
+	background-image: url(<?=$cdn?>/resources/images/actions/publish.png);
 }
 
 .action-unpublish {
-	background-image: url(<?=$images?>/actions/unpublish.png);
+	background-image: url(<?=$cdn?>/resources/images/actions/unpublish.png);
 }

@@ -7,7 +7,7 @@ a:hover {
 }
 
 #header {
-	background: url('<?=$images?>/bg_header_green.gif') left top no-repeat;
+	background: url('<?=$cdn?>/resources/images/bg_header_green.gif') left top no-repeat;
 }
 
 h1 {
@@ -15,15 +15,15 @@ h1 {
 }
 
 #menu ul.group li a {
-	background: url('<?=$images?>/navigation_background_green.gif') repeat-x top left;
+	background: url('<?=$cdn?>/resources/images/navigation_background_green.gif') repeat-x top left;
 }
 
 #menu ul.group li.first a {
-	background: url('<?=$images?>/navigation_first_green.gif') no-repeat top left;
+	background: url('<?=$cdn?>/resources/images/navigation_first_green.gif') no-repeat top left;
 }
 
 #menu ul.group li.last a {
-	background: url('<?=$images?>/navigation_last_green.gif') no-repeat top right;
+	background: url('<?=$cdn?>/resources/images/navigation_last_green.gif') no-repeat top right;
 }
 
 #menu ul.group li a span.inner {
@@ -53,20 +53,20 @@ h1 {
 }
 
 #tabs ul li a {
-	background: url('<?=$images?>/tabs_left_green.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/tabs_left_green.gif') no-repeat left top;
 }
 
 #tabs ul li a span {
-	background: url('<?=$images?>/tabs_right_green.gif') no-repeat right top;
+	background: url('<?=$cdn?>/resources/images/tabs_right_green.gif') no-repeat right top;
 }
 
 .button {
-	background: transparent url('<?=$images?>/but_right_green.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/but_right_green.gif') no-repeat scroll top right;
 	color: #344704;
 }
 
 .button span {
-	background: url('<?=$images?>/but_left_green.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_left_green.gif') no-repeat left top;
 }
 
 .button:hover span {
@@ -74,12 +74,12 @@ h1 {
 }
 
 .button_ok {
-	background: transparent url('<?=$images?>/but_round_span_green.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_green.gif') no-repeat scroll top right;
 	color: #344704;
 }
 
 .button_ok span {
-	background: url('<?=$images?>/but_round_ok_green.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_round_ok_green.gif') no-repeat left top;
 }
 
 .button_ok:hover span {
@@ -87,12 +87,12 @@ h1 {
 }
 
 .button_notok {
-	background: transparent url('<?=$images?>/but_round_span_green.gif') no-repeat scroll top right;
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_green.gif') no-repeat scroll top right;
 	color: #344704;
 }
 
 .button_notok span {
-	background: url('<?=$images?>/but_round_del_green.gif') no-repeat left top;
+	background: url('<?=$cdn?>/resources/images/but_round_del_green.gif') no-repeat left top;
 }
 
 .button_notok:hover span {
