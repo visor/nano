@@ -162,13 +162,13 @@ class Nano_Db extends PDO {
 		foreach ($values as $field => $value) {
 			$sqlValues[] = $this->quoteName($field) . ' = ' . (null === $value ? 'null' : $this->quote($value));
 		}
-		$whereClause = null === $where ? '' : ' where ' . $this->buildWhere($where);
+		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'update ' . $this->quoteName($table) . ' set ' . implode(', ', $sqlValues) . $whereClause;
 		return $this->exec($query);
 	}
 
-	public function delete($table, $where = array()) {
-		$whereClause = null === $where ? '' : ' where ' . $this->buildWhere($where);
+	public function delete($table, $where = null) {
+		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'delete from ' . $this->quoteName($table) . $whereClause;
 		return $this->exec($query);
 	}

@@ -202,16 +202,11 @@ abstract class ActiveRecord {
 	 * @param mixed $params
 	 */
 	public function findOne($params = null) {
-		try {
 		$result = ActiveRecord_Storage::load(
 			  $this
 			, $this->getSelectQuery($this->buildSelectCriteria($params))->limit(1, 0)
 		);
 		return $result->fetch();
-		} catch (Exception $e) {
-			echo $e;
-			throw $e;
-		}
 	}
 
 	/**
@@ -222,13 +217,7 @@ abstract class ActiveRecord {
 		if (null === $params) {
 			$params = $this->getChangedData();
 		}
-		$expr  = sql::expr();
-		foreach ($params as $param => $value) {
-			$expr->isEmpty()
-				? $expr->add($param, '=', $value)
-				: $expr->addAnd($param, '=', $value)
-			;
-		}
+		$expr  = $this->buildCriteria($params);
 		$query = sql::select('count(*)')->from(Nano::db()->quoteName($this->tableName));
 		if (!$expr->isEmpty()) {
 			$query->where($expr);
@@ -244,14 +233,7 @@ abstract class ActiveRecord {
 		if (null === $params) {
 			$params = $this->getNotNullFields();
 		}
-		$expr = sql::expr();
-		foreach ($params as $param => $value) {
-			$expr->isEmpty()
-				? $expr->add($param, '=', $value)
-				: $expr->addAnd($param, '=', $value)
-			;
-		}
-		return $this->select($expr);
+		return $this->select($this->buildCriteria($params));
 	}
 
 	/**
@@ -540,15 +522,14 @@ abstract class ActiveRecord {
 	 * @return sql_expr
 	 */
 	protected function buildDeleteCriteria() {
-		$result     = sql::expr();
 		$primaryKey = $this->getPrimaryKey(true);
 		$fields     = in_array(null, $primaryKey) ? $this->data : $primaryKey;
 		return $this->buildCriteria($fields);
 	}
 
 	/**
-	 * @param array $params
 	 * @return sql_expr
+	 * @param array $params
 	 */
 	protected function buildCriteria(array $params) {
 		$result = sql::expr();

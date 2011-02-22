@@ -17,3 +17,5 @@ if (SELENIUM_ENABLE) {
 	PHPUnit_Extensions_SeleniumTestCase::$browsers = array((array)(Nano::config('selenium')->browser));
 	$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = TESTS . DS . 'reports' . DS . 'coverage';
 }
+
+Nano::config()->set('cdn', (object)array('servers' => array()));
