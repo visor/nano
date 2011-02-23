@@ -202,9 +202,8 @@ abstract class ActiveRecord {
 	 * @param mixed $params
 	 */
 	public function findOne($params = null) {
-		$result = ActiveRecord_Storage::load(
-			  $this
-			, $this->getSelectQuery($this->buildSelectCriteria($params))->limit(1, 0)
+		$result = static::load(
+			$this->getSelectQuery($this->buildSelectCriteria($params))->limit(1, 0)
 		);
 		return $result->fetch();
 	}
@@ -403,7 +402,7 @@ abstract class ActiveRecord {
 		if ($this->selectLimit) {
 			$query->limit($this->selectLimit, $this->selectOffset);
 		}
-		return ActiveRecord_Storage::load($this, $query);
+		return static::load($query);
 	}
 
 	/**
@@ -439,6 +438,14 @@ abstract class ActiveRecord {
 
 		Nano::db()->update($this->tableName, $fields, $where->toString(Nano::db()));
 		$this->afterUpdate();
+	}
+
+	/**
+	 * @return mixed
+	 * @param sql_select|string $query
+	 */
+	protected static function load($query) {
+		return ActiveRecord_Storage::load(static::prototype(), $query);
 	}
 
 	/**
