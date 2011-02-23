@@ -3,14 +3,17 @@
 class ActiveRecord_Storage {
 
 	/**
-	 * @return PDOStatement
+	 * @return mixed
 	 * @param ActiveRecord $record
-	 * @param sql_select $query
+	 * @param string|sql_select $query
 	 */
-	public static function load(ActiveRecord $record, sql_select $query) {
+	public static function load(ActiveRecord $record, $query, $single = false) {
 		$className = get_class($record);
-		$db        = Nano::db();
-		return $db->query($query->toString($db), PDO::FETCH_CLASS, $className, array(null, true));
+		$sqlQuery  = $query instanceof sql_select ? $query->toString(Nano::db()) : $query;
+		if (true === $single) {
+			return self::loadSingleRecord($sqlQuery, $className);
+		}
+		return self::loadRecordSet($sqlQuery, $className);
 	}
 
 	/**
@@ -35,6 +38,24 @@ class ActiveRecord_Storage {
 			$result[Nano::db()->quote($alias . self::RELATION_SEPARATOR . $field)] = $tableName . '.' . $field;
 		}
 		return $result;
+	}
+
+	/**
+	 * @return ActiveRecord
+	 * @param string $query
+	 * @param string $className
+	 */
+	protected static function loadSingleRecord($query, $className) {
+		return Nano::db()->query($query, PDO::FETCH_CLASS, $className, array(null, true))->fetch();
+	}
+
+	/**
+	 * @return ActiveRecord
+	 * @param string $query
+	 * @param string $className
+	 */
+	protected static function loadRecordSet($query, $className) {
+		return Nano::db()->query($query, PDO::FETCH_CLASS, $className, array(null, true))->fetchAll();
 	}
 
 }

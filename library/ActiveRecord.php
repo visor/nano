@@ -202,10 +202,10 @@ abstract class ActiveRecord {
 	 * @param mixed $params
 	 */
 	public function findOne($params = null) {
-		$result = static::load(
+		return static::load(
 			$this->getSelectQuery($this->buildSelectCriteria($params))->limit(1, 0)
+			, true
 		);
-		return $result->fetch();
 	}
 
 	/**
@@ -443,9 +443,10 @@ abstract class ActiveRecord {
 	/**
 	 * @return mixed
 	 * @param sql_select|string $query
+	 * @param boolean $single
 	 */
-	protected static function load($query) {
-		return ActiveRecord_Storage::load(static::prototype(), $query);
+	protected static function load($query, $single = false) {
+		return ActiveRecord_Storage::load(static::prototype(), $query, $single);
 	}
 
 	/**

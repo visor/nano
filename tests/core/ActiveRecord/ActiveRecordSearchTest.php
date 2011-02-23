@@ -81,10 +81,10 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		}
 
 		$records = ActiveRecordBasic::instance()->find(array('text' => 'record #002'));
-		self::assertInstanceOf('Nano_Db_Statement', $records);
-		self::assertEquals(4, $records->rowCount());
+		self::assertInternalType('array', $records);
+		self::assertEquals(4, count($records));
 
-		$record = $records->fetch();
+		$record = $records[0];
 		/** @var $record ActiveRecordBasic */
 		self::assertEquals('record #002', $record->text);
 
@@ -92,17 +92,17 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		/** @var $record ActiveRecordBasic */
 		$record->text = 'record #001';
 		$records = $record->find();
-		self::assertInstanceOf('Nano_Db_Statement', $records);
-		self::assertEquals(4, $records->rowCount());
+		self::assertInternalType('array', $records);
+		self::assertEquals(4, count($records));
 
-		$record = $records->fetch();
+		$record = $records[0];
 		/** @var $record ActiveRecordBasic */
 		self::assertEquals('record #001', $record->text);
 
 		$records = $record->find();
-		self::assertInstanceOf('Nano_Db_Statement', $records);
-		self::assertEquals(1, $records->rowCount());
-		$found = $records->fetch();
+		self::assertInternalType('array', $records);
+		self::assertEquals(1, count($records));
+		$found = $records[0];
 		/** @var $found ActiveRecordBasic */
 		self::assertEquals($record->id, $found->id);
 		self::assertEquals($record->text, $found->text);
@@ -112,8 +112,8 @@ class ActiveRecordSearchTest extends TestUtils_TestCase {
 		$record->setLimit(2, 0);
 		$record->text = 'record #000';
 		$records = $record->find();
-		self::assertInstanceOf('Nano_Db_Statement', $records);
-		self::assertEquals(2, $records->rowCount());
+		self::assertInternalType('array', $records);
+		self::assertEquals(2, count($records));
 	}
 
 	public function testCounting() {
