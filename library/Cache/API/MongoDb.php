@@ -102,7 +102,11 @@ class Cache_API_MongoDb implements Cache_Interface {
 	 * @return bool
 	 * @param string $key
 	 */
-	public function clear($key) {
+	public function clear($key = null) {
+		if (null === $key) {
+			$this->collection()->drop();
+			return;
+		}
 		$this->collection()->remove(array('key' => $key));
 	}
 

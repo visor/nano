@@ -14,10 +14,16 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 	public static function setUpBeforeClass() {
 		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
 		require_once __DIR__ . '/_files/ActiveRecordChild.php';
+		require_once __DIR__ . '/_files/ActiveRecordSimple.php';
+		require_once __DIR__ . '/_files/ActiveRecordExtendedChild.php';
 		ActiveRecordBasic::deleteTable();
 		ActiveRecordChild::deleteTable();
 		ActiveRecordBasic::createTable();
 		ActiveRecordChild::createTable();
+		ActiveRecordSimple::deleteTable();
+		ActiveRecordSimple::createTable();
+		ActiveRecordExtendedChild::deleteTable();
+		ActiveRecordExtendedChild::createTable();
 		Nano_Log::clear();
 	}
 
@@ -45,22 +51,9 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 	}
 
 	public function testRelationQuery() {
-		$record     = ActiveRecordChild::instance();
-		$simple     = 'select `active_record_child`.* from `active_record_child`';
-//		$withParent =
-//			'select'
-//				. ' `active_record_child`.*'
-//				. ', `active_record_test`.id as ' . Nano::db()->quote('parent::id')
-//				. ', `active_record_test`.text as ' . Nano::db()->quote('parent::text')
-//			. ' from'
-//				. ' `active_record_child`'
-//				. ' inner join `active_record_test` on (`active_record_child`.parent_id = `active_record_test`.id)'
-//		;
-
+		$record = ActiveRecordChild::instance();
+		$simple = 'select `active_record_child`.* from `active_record_child`';
 		self::assertEquals($simple, ActiveRecord_Storage::getSelectQuery($record)->toString());
-
-//		$record->parent_id = 1;
-//		self::assertEquals($withParent, ActiveRecord_Storage::getSelectQuery($record)->toString());
 	}
 
 	public function testShouldThrowExceptionForUnknownRelation() {
@@ -178,6 +171,27 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 		self::assertEquals($record->parent->id, $record->parent_id);
 	}
 
+	public function testSeveralOneToManyRelations() {
+		$parent1 = ActiveRecordBasic::instance()->populate(array('text' => 'parent1'));
+		$parent1->save();
+		$parent2 = ActiveRecordSimple::instance()->populate(array('text' => 'parent2'));
+		$parent2->save();
+		$child   = ActiveRecordExtendedChild::instance()->populate(array(
+			  'parent_id1' => $parent1->id
+			, 'parent_id2' => $parent2->id
+			, 'text'       => 'child record'
+		));
+		$child->save();
+
+		self::assertInstanceOf('ActiveRecordBasic', $child->parent1);
+		self::assertInstanceOf('ActiveRecordSimple', $child->parent2);
+
+		$loaded = ActiveRecordExtendedChild::prototype()->findOne($child->id);
+		self::assertInstanceOf('ActiveRecordBasic', $loaded->parent1);
+		self::assertInstanceOf('ActiveRecordSimple', $loaded->parent2);
+		self::assertEquals($child->parent2, $loaded->parent2);
+	}
+
 	protected function tearDown() {
 		Nano::db()->rollBack();
 	}
@@ -185,6 +199,8 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 	public static function tearDownAfterClass() {
 		ActiveRecordChild::deleteTable();
 		ActiveRecordBasic::deleteTable();
+		ActiveRecordSimple::deleteTable();
+		ActiveRecordExtendedChild::deleteTable();
 	}
 
 }

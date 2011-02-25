@@ -2,6 +2,9 @@
 
 class Cache {
 
+	/**
+	 * @var Cache_Interface
+	 */
 	private static $instance = null;
 
 	/**
@@ -12,11 +15,18 @@ class Cache {
 			self::$instance = self::getApi(Nano::config('cache')->api);
 
 			$config = strToLower(Nano::config('cache')->api);
-			if (isset(Nano::config('cache')->{$config})) {
+			if (isSet(Nano::config('cache')->{$config})) {
 				self::$instance->configure(Nano::config('cache')->{$config});
 			}
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * @return void
+	 */
+	public static function invalidateInstance() {
+		self::$instance = null;
 	}
 
 	/**
@@ -59,7 +69,7 @@ class Cache {
 	 * @return bool
 	 * @param string $key
 	 */
-	public static function clear($key) {
+	public static function clear($key = null) {
 		return self::instance()->clear($key);
 	}
 

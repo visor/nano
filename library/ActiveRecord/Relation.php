@@ -41,11 +41,11 @@ class ActiveRecord_Relation {
 			throw new ActiveRecord_Exception_UnknownRelation($relationName, $record);
 		}
 		$hash = spl_object_hash($record);
-		if (!isset(self::$objects[$hash])) {
+		if (!isSet(self::$objects[$hash])) {
 			self::$objects[$hash] = $record;
 		}
-		if (isset(self::$relations[$hash])) {
-			$parentHash = self::$relations[$hash];
+		if (isSet(self::$relations[$hash][$relationName])) {
+			$parentHash = self::$relations[$hash][$relationName];
 			return self::$objects[$parentHash];
 		}
 
@@ -90,7 +90,7 @@ class ActiveRecord_Relation {
 	public static function updateRelation(ActiveRecord $record) {
 		$hash = spl_object_hash($record);
 		self::$objects[$hash] = $record;
-		if (isset(self::$childs[$hash])) {
+		if (isSet(self::$childs[$hash])) {
 			foreach (self::$childs[$hash] as $childHash => $null) {
 				$child = self::$objects[$childHash];
 				foreach (self::$related[$hash][$childHash] as $relationName => $null) {
@@ -109,16 +109,17 @@ class ActiveRecord_Relation {
 	 */
 	protected static function storeRelatedRecord(ActiveRecord $parent, $hash, $relationName) {
 		$parentHash = spl_object_hash($parent);
-		self::$objects[$parentHash] = $parent;
-		self::$relations[$hash] = $parentHash;
-		if (!isset(self::$parents[$hash])) {
+		self::$objects[$parentHash]            = $parent;
+		self::$relations[$hash][$relationName] = $parentHash;
+
+		if (!isSet(self::$parents[$hash])) {
 			self::$parents[$hash] = array();
 		}
-		if (!isset(self::$childs[$parentHash])) {
+		if (!isSet(self::$childs[$parentHash])) {
 			self::$childs[$parentHash]  = array();
 			self::$related[$parentHash] = array();
 		}
-		if (!isset(self::$related[$parentHash][$hash])) {
+		if (!isSet(self::$related[$parentHash][$hash])) {
 			self::$related[$parentHash][$hash] = array();
 		}
 		self::$parents[$hash][$relationName] = $parentHash;
@@ -132,7 +133,7 @@ class ActiveRecord_Relation {
 	 * @param string $relationName
 	 */
 	protected static function findParentHashFor($childHash, $relationName) {
-		if (!isset(self::$parents[$childHash][$relationName])) {
+		if (!isSet(self::$parents[$childHash][$relationName])) {
 			return null;
 		}
 		return self::$parents[$childHash][$relationName];
@@ -145,10 +146,10 @@ class ActiveRecord_Relation {
 	 * @param string $relationName
 	 */
 	protected static function clearRelatedInfo($parentHash, $hash, $relationName) {
-		unset(self::$childs[$parentHash][$hash]);
-		unset(self::$parents[$hash][$parentHash]);
-		unset(self::$related[$parentHash][$hash][$relationName]);
-		unset(self::$relations[$hash]);
+		unSet(self::$childs[$parentHash][$hash]);
+		unSet(self::$parents[$hash][$parentHash]);
+		unSet(self::$related[$parentHash][$hash][$relationName]);
+		unSet(self::$relations[$hash][$relationName]);
 	}
 
 }

@@ -2,6 +2,18 @@
 
 class ActiveRecord_Storage {
 
+	const CACHE_PREFIX = 'active-record-';
+
+	/**
+	 * @return boolean
+	 */
+	public static function cacheEnabled() {
+		if (!isSet(Nano::config('cache')->database)) {
+			return false;
+		}
+		return (boolean)Nano::config('cache')->database;
+	}
+
 	/**
 	 * @return mixed
 	 * @param ActiveRecord $record
@@ -11,9 +23,9 @@ class ActiveRecord_Storage {
 		$className = get_class($record);
 		$sqlQuery  = $query instanceof sql_select ? $query->toString(Nano::db()) : $query;
 		if (true === $single) {
-			return self::loadSingleRecord($sqlQuery, $className);
+			return self::loadSingleRecord($sqlQuery, $className, self::getQueryTables($query));
 		}
-		return self::loadRecordSet($sqlQuery, $className);
+		return self::loadRecordSet($sqlQuery, $className, self::getQueryTables($query));
 	}
 
 	/**
@@ -44,18 +56,53 @@ class ActiveRecord_Storage {
 	 * @return ActiveRecord
 	 * @param string $query
 	 * @param string $className
+	 * @param string[] $tags
 	 */
-	protected static function loadSingleRecord($query, $className) {
-		return Nano::db()->query($query, PDO::FETCH_CLASS, $className, array(null, true))->fetch();
+	protected static function loadSingleRecord($query, $className, $tags) {
+		if (self::cacheEnabled()) {
+			$key    = self::getCacheKey($query);
+			$result = Cache::get($key);
+			if (null === $result) {
+				$result = self::fetch($query, $className)->fetch();
+				Cache::set($key, $result, Date::ONE_DAY, $tags);
+			}
+			return $result;
+		}
+		return self::fetch($query, $className)->fetch();
 	}
 
 	/**
-	 * @return ActiveRecord
+	 * @return ActiveRecord[]
+	 * @param string $query
+	 * @param string $className
+	 * @param string[] $tags
+	 */
+	protected static function loadRecordSet($query, $className, $tags) {
+		return self::fetch($query, $className)->fetchAll();
+	}
+
+	/**
+	 * @return Nano_Db_Statement
 	 * @param string $query
 	 * @param string $className
 	 */
-	protected static function loadRecordSet($query, $className) {
-		return Nano::db()->query($query, PDO::FETCH_CLASS, $className, array(null, true))->fetchAll();
+	protected static function fetch($query, $className) {
+		return Nano::db()->query($query, PDO::FETCH_CLASS, $className, array(null, true));
+	}
+
+	/**
+	 * @return string[]
+	 * @param string|sql_select $query
+	 */
+	protected static function getQueryTables($query) {
+		if ($query instanceof sql_select) {
+			return $query->getTableNames();
+		}
+		return array();
+	}
+
+	protected static function getCacheKey($sql) {
+		//
 	}
 
 }

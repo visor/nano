@@ -220,6 +220,17 @@ class sql_select {
 	}
 
 	/**
+	 * @return string[]
+	 */
+	public function getTableNames() {
+		$result = array();
+		foreach ($this->from as $from) {
+			$result[] = is_array($from['table']) ? current($from['table']) : $from['table'];
+		}
+		return $result;
+	}
+
+	/**
 	 * @return PDOStatement
 	 * @param Nano_Db $db
 	 */

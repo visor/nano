@@ -27,7 +27,7 @@ class Cache_API_File implements Cache_Interface {
 	 * @return bool
 	 * @param string $key
 	 */
-	public function clear($key) {}
+	public function clear($key = null) {}
 
 	/**
 	 * @return bool
