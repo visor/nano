@@ -46,12 +46,43 @@ class ActiveRecordCacheTest extends TestUtils_TestCase {
 		self::assertEquals(1, Nano::db()->log()->count());
 	}
 
+	public function testInvalidatingCacheAfterUpdatingTable() {
+		$record = ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+		self::assertEquals(1, Nano::db()->log()->count());
+		ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+		self::assertEquals(1, Nano::db()->log()->count());
+
+		$record->text = 'changed';
+		$record->save();
+
+		ActiveRecordBasic::prototype()->findOne(array('text' => 'changed'));
+		ActiveRecordBasic::prototype()->findOne(array('text' => 'changed'));
+		self::assertEquals(3, Nano::db()->log()->count());
+	}
+
+	public function testInvalidatingCacheAfterNewRecord() {
+		$first  = ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+		ActiveRecordBasic::instance()->populate(array('text' => 'new'))->save();
+		$second = ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+
+		self::assertEquals(3, Nano::db()->log()->count());
+		self::assertEquals($first, $second);
+	}
+
+	public function testInvalidatingCacheAfterRemoveRecord() {
+		$first  = ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+		ActiveRecordBasic::instance()->populate(array('text' => 'record #02'))->delete();
+		$second = ActiveRecordBasic::prototype()->findOne(array('text' => 'record #01'));
+
+		self::assertEquals(3, Nano::db()->log()->count());
+		self::assertEquals($first, $second);
+	}
+
 	protected function tearDown() {
 		ActiveRecordBasic::deleteTable();
 		Cache::clear();
 		Nano::config()->set('cache', $this->defaultConfig);
 		Cache::invalidateInstance();
 	}
-
 
 }

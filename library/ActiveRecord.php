@@ -184,6 +184,7 @@ abstract class ActiveRecord {
 			$this->update();
 		}
 		$this->updateOriginalData();
+		ActiveRecord_Storage::invalidateCache($this);
 		ActiveRecord_Relation::updateRelation($this);
 	}
 
@@ -195,6 +196,7 @@ abstract class ActiveRecord {
 		$this->beforeDelete();
 		Nano::db()->delete($this->tableName, $where->toString(Nano::db()));
 		$this->afterDelete();
+		ActiveRecord_Storage::invalidateCache($this);
 	}
 
 	/**

@@ -154,6 +154,7 @@ class Nano_Db extends PDO {
 			$sqlValues[] = null === $value ? 'null' : $this->quote($value);
 		}
 		$query = 'insert into ' . $this->quoteName($table) . '(' . implode(', ', $sqlFields) . ') values (' . implode(', ', $sqlValues) . ')';
+		ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 
@@ -164,12 +165,14 @@ class Nano_Db extends PDO {
 		}
 		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'update ' . $this->quoteName($table) . ' set ' . implode(', ', $sqlValues) . $whereClause;
+		ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 
 	public function delete($table, $where = null) {
 		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'delete from ' . $this->quoteName($table) . $whereClause;
+		ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 

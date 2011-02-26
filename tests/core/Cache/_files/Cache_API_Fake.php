@@ -43,7 +43,7 @@ class Cache_API_Fake implements Cache_Interface {
 	 * @return bool
 	 * @param string $key
 	 */
-	public function clear($key) {
+	public function clear($key = null) {
 		$this->lastClear = $key;
 	}
 

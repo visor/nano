@@ -23,7 +23,7 @@ class CacheApiMongoDbTest extends TestUtils_TestCase {
 		$this->api->configure((object)array(
 			'server' => 'mongodb://localhost:27017/' . self::DATABASE_NAME
 		));
-		$this->api->collection()->remove(array());
+		$this->api->clear();
 	}
 
 	public function testGetting() {
@@ -159,7 +159,7 @@ class CacheApiMongoDbTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		if ($this->api) {
-			$this->api->collection()->remove(array());
+			$this->api->clear();
 			$this->api = null;
 		}
 	}

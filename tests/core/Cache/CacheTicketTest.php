@@ -13,6 +13,7 @@ class CacheTicketTest extends TestUtils_TestCase {
 
 	public static function setUpBeforeClass() {
 		require_once __DIR__ . '/_files/ExampleCacheTicket.php';
+		require_once __DIR__ . '/CacheApiMongoDbTest.php';
 	}
 
 	protected function setUp() {
@@ -23,7 +24,7 @@ class CacheTicketTest extends TestUtils_TestCase {
 
 		$this->cache = Cache::getApi('MongoDb');
 		$this->cache->configure((object)array('server'  => 'mongodb://localhost:27017/' . CacheApiMongoDbTest::DATABASE_NAME));
-		$this->cache->collection()->remove(array());
+		$this->cache->clear();
 	}
 
 	public function testChildClassStatics() {
@@ -59,7 +60,7 @@ class CacheTicketTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		if ($this->cache) {
-			$this->cache->collection()->remove(array());
+			$this->cache->clear();
 			$this->cache = null;
 		}
 	}

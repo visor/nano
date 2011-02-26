@@ -29,6 +29,24 @@ class ActiveRecord_Storage {
 	}
 
 	/**
+	 * @return void
+	 * @param ActiveRecord|string $record
+	 */
+	public static function invalidateCache($record) {
+		Cache::clearTag(array(self::getRecordTag($record)));
+	}
+
+	/**
+	 * @return string
+	 * @param ActiveRecord|string $record
+	 */
+	public static function getRecordTag($record) {
+		$result = self::CACHE_PREFIX . ($record instanceof ActiveRecord ? $record->getTableName() : $record);
+		$result = str_replace(array('`', '"', '\''), '', $result);
+		return $result;
+	}
+
+	/**
 	 * @return sql_select
 	 * @param ActiveRecord $record
 	 */
@@ -78,6 +96,15 @@ class ActiveRecord_Storage {
 	 * @param string[] $tags
 	 */
 	protected static function loadRecordSet($query, $className, $tags) {
+		if (self::cacheEnabled()) {
+			$key    = self::getCacheKey($query);
+			$result = Cache::get($key);
+			if (null === $result) {
+				$result = self::fetch($query, $className)->fetchAll();
+				Cache::set($key, $result, Date::ONE_DAY, $tags);
+			}
+			return $result;
+		}
 		return self::fetch($query, $className)->fetchAll();
 	}
 
@@ -96,7 +123,11 @@ class ActiveRecord_Storage {
 	 */
 	protected static function getQueryTables($query) {
 		if ($query instanceof sql_select) {
-			return $query->getTableNames();
+			$result = array();
+			foreach ($query->getTableNames() as $name) {
+				$result[] = self::getRecordTag($name);
+			}
+			return $result;
 		}
 		return array();
 	}
