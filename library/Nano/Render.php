@@ -2,6 +2,8 @@
 
 class Nano_Render {
 
+	const VIEW_DIR = 'views';
+
 	/**
 	 * @return string
 	 * @param Nano_C $object
@@ -9,11 +11,12 @@ class Nano_Render {
 	 * @param string $action
 	 */
 	public static function layout(Nano_C $object, $controller, $action) {
+		$module    = $object->getModule();
 		$variables = get_object_vars($object);
 		$content   = self::view($object, $controller, $action);
 		$head      =
-			  self::file(self::getFileName($controller, 'controller.head', $object->context), $variables, false)
-			. self::file(self::getFileName($controller, $action . '.head', $object->context), $variables, false)
+			  self::file(self::getFileName($controller, 'controller.head', $object->context, $module), $variables, false)
+			. self::file(self::getFileName($controller, $action . '.head', $object->context, $module), $variables, false)
 		;
 		$fileName  = self::addContext(LAYOUTS . DS . $object->layout, $object->context) . '.php';
 
@@ -31,7 +34,8 @@ class Nano_Render {
 	 * @param string $action
 	 */
 	public static function view(Nano_C $object, $controller, $action) {
-		$fileName  = self::getFileName($controller, $action, $object->context);
+		$module    = $object->getModule();
+		$fileName  = self::getFileName($controller, $action, $object->context, $module);
 		$variables = get_object_vars($object);
 
 		$variables['controller'] = $controller;
@@ -73,9 +77,14 @@ class Nano_Render {
 	 * @return string
 	 * @param string $controller
 	 * @param string $action
+	 * @param string $context
+	 * @param string $module
 	 */
-	public static function getFileName($controller, $action, $context = null) {
-		return self::addContext(VIEWS . DS . $controller . DS . $action, $context) . '.php';
+	public static function getFileName($controller, $action, $context = null, $module = null) {
+		if (null === $module) {
+			return self::addContext(VIEWS . DS . $controller . DS . $action, $context) . '.php';
+		}
+		return self::addContext(Nano::modules()->getPath($module, self::VIEW_DIR . DS . $controller . DS . $action), $context) . '.php';
 	}
 
 	/**

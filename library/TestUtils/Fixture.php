@@ -168,7 +168,7 @@ class TestUtils_Fixture {
 	 * @param  $type
 	 */
 	protected function typeToName($type) {
-		return Strings::typeToClassName($type);
+		return Strings::typeToName($type);
 	}
 
 }

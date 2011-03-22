@@ -5,7 +5,7 @@
  */
 class NanoLoaderTest extends TestUtils_TestCase {
 
-	public function testIsModule() {
+	public function testIsModuleClass() {
 		self::assertFalse(Nano_Loader::isModuleClass(__CLASS__));
 		self::assertFalse(Nano_Loader::isModuleClass('M_ClassName'));
 		self::assertFalse(Nano_Loader::isModuleClass('M_ModuleName_'));
@@ -24,6 +24,12 @@ class NanoLoaderTest extends TestUtils_TestCase {
 		self::assertEquals(array('test-module', 'Controller', 'Class'), Nano_Loader::extractModuleClassParts('M_TestModule_Controller_Class'));
 		self::assertEquals(array('test-module', 'Model', 'Class'),      Nano_Loader::extractModuleClassParts('M_TestModule_Model_Class'));
 		self::assertEquals(array('test-module', 'Plugin', 'Class'),     Nano_Loader::extractModuleClassParts('M_TestModule_Plugin_Class'));
+	}
+
+	public function testFormatModuleName() {
+		self::assertEquals('M_TestModule_Library_Class', Nano_Loader::formatModuleClassName('test-module', 'library', 'class'));
+		self::assertEquals('M_TestModule_Controller_Class', Nano_Loader::formatModuleClassName('test-module', 'controller', 'class'));
+		self::assertEquals('M_TestModule_Controller_SomeClass', Nano_Loader::formatModuleClassName('test-module', 'controller', 'some-class'));
 	}
 
 	public function testLoadingModuleClass() {

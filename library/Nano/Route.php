@@ -3,14 +3,16 @@
 class Nano_Route {
 
 	protected $pattern    = null;
+	protected $module     = null;
 	protected $controller = null;
 	protected $action     = null;
 	protected $matches    = null;
 
-	public function __construct($pattern, $controller = 'index', $action = 'index') {
+	public function __construct($pattern, $controller = 'index', $action = 'index', $module = null) {
 		if (null !== $pattern) {
 			$this->pattern = '/^' . str_replace('/','\/', $pattern) . '$/';
 		}
+		$this->module     = $module;
 		$this->controller = $controller;
 		$this->action     = $action;
 	}
@@ -21,8 +23,8 @@ class Nano_Route {
 	 * @param string $controller
 	 * @param string $action
 	 */
-	public static function create($pattern, $controller = 'index', $action = 'index') {
-		return new self($pattern, $controller, $action);
+	public static function create($pattern, $controller = 'index', $action = 'index', $module = null) {
+		return new self($pattern, $controller, $action, $module);
 	}
 
 	/**
@@ -32,11 +34,25 @@ class Nano_Route {
 		return $this->pattern;
 	}
 
+	public function module() {
+		return $this->module;
+	}
+
 	/**
 	 * @return string
 	 */
 	public function controller() {
 		return $this->controller;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function controllerClass() {
+		if (null === $this->module) {
+			return Nano_Dispatcher::formatName($this->controller, true);
+		}
+		return Nano_Loader::formatModuleClassName($this->module, 'controller', $this->controller);
 	}
 
 	/**

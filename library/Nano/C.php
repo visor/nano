@@ -47,6 +47,17 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return string|null
+	 */
+	public function getModule() {
+		if (false === Nano_Loader::isModuleClass(get_class($this))) {
+			return null;
+		}
+		list($module, , ) = Nano_Loader::extractModuleClassParts(get_class($this));
+		return $module;
+	}
+
+	/**
 	 * @return string
 	 * @param string $action
 	 */

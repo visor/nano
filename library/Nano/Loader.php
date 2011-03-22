@@ -21,6 +21,9 @@ class Nano_Loader {
 	 */
 	public static function load($className) {
 		try {
+			if (class_exists($className, false)) {
+				return true;
+			}
 			if (self::isModuleClass($className)) {
 				return self::loadModuleClass($className);
 			}
@@ -31,6 +34,21 @@ class Nano_Loader {
 		} catch (Exception $e) {
 			return false;
 		}
+	}
+
+	/**
+	 * @return string
+	 * @param string $module
+	 * @param string $controller
+	 */
+	public static function formatModuleClassName($module, $type, $class) {
+		$typePart = ucFirst($type);
+		if (!isSet(self::$types[$typePart])) {
+			throw new Nano_Exception('No such type: ' . $type);
+		}
+		$modulePart = Strings::typeToName($module);
+		$classPart  = Strings::typeToName($class);
+		return self::MODULE_PREFIX . $modulePart . self::NAME_SEPARATOR . $typePart . self::NAME_SEPARATOR . $classPart;
 	}
 
 	public static function loadModuleClass($className) {

@@ -32,7 +32,7 @@ class Strings {
 	 * @return void
 	 * @param string $string
 	 */
-	public static function typeToClassName($string) {
+	public static function typeToName($string) {
 		$result = strToLower($string);
 		$result = str_replace('-', ' ', $result);
 		$result = ucWords($result);

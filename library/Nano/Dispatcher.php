@@ -46,6 +46,9 @@ class Nano_Dispatcher {
 	protected $throw              = false;
 
 	public static function formatName($name, $controller = true) {
+		if (true === $controller && Nano_Loader::isModuleClass($name)) {
+			return $name;
+		}
 		$result = strToLower($name);
 		$result = str_replace('-', ' ', $result);
 		$result = ucWords($result);
@@ -156,7 +159,7 @@ class Nano_Dispatcher {
 	 */
 	public function getController(Nano_Route $route) {
 		$this->setUpController($route);
-		$className = self::formatName($this->controller(), true);
+		$className = $route->controllerClass();
 		if (!class_exists($className)) {
 			throw new Exception('404');
 		}
@@ -266,12 +269,15 @@ class Nano_Dispatcher {
 	}
 
 	protected function handleError(Exception $error) {
+		throw $error;
 		if ($this->throw) {
+			header('Content-Type: text/plain', true);
 			throw $error;
 		}
 
 		$controllerName = Nano::config('web')->error;
 		if (!$controllerName) {
+			header('Content-Type: text/plain', true);
 			throw $error;
 		}
 
