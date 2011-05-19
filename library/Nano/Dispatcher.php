@@ -268,8 +268,12 @@ class Nano_Dispatcher {
 		$this->controller = $route->controller();
 	}
 
+	/**
+	 * @return void
+	 * @param Exception $error
+	 * @throws Exception
+	 */
 	protected function handleError(Exception $error) {
-		throw $error;
 		if ($this->throw) {
 			header('Content-Type: text/plain', true);
 			throw $error;
