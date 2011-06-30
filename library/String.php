@@ -75,7 +75,6 @@ class String {
 	 */
 	public function wrap($width = 80, $break = PHP_EOL) {
 		$this->value = preg_replace('#(\S{' . $width . ',})#e', "chunk_split('$1', " . $width . ", '" . $break . "')", $this->value);
-		Nano_Log::message(var_export($this->value, true));
 		return $this;
 	}
 

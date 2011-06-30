@@ -21,3 +21,4 @@ cache
 tests/library/Assets/_files/output/*
 !tests/library/Assets/_files/output/empty
 build
+scripts/setup/dev-visor/*

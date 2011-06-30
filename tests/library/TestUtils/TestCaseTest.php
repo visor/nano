@@ -22,7 +22,7 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 	}
 
 	public function testAssertExceptionWrongExceptionClass() {
-		$this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Failed asserting that <Exception> is an instance of class "RuntimeException"');
+		$this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Failed asserting that "Exception" is an instance of class "RuntimeException"');
 		self::assertException(function () { throw new Exception(); }, 'RuntimeException', '');
 	}
 

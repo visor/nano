@@ -2,10 +2,15 @@
 
 /**
  * @group framework
+ * @group routes
+ * @group dispatcher
  */
-class DispatcherTest extends PHPUnit_Framework_TestCase {
+class DispatcherTest extends TestUtils_TestCase {
 
-	protected $backupGlobals = false;
+	/**
+	 * @var boolean
+	 */
+	protected $backupGlobals = true;
 
 	/**
 	 * @var Nano_Dispatcher
@@ -26,30 +31,17 @@ class DispatcherTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('another_testAction',     Nano_Dispatcher::formatName('another_test', false));
 	}
 
-	public function testTestEmptyUrl() {
-		$this->assertTrue($this->dispatcher->test(Nano_Route::create('', 'index', 'index'), ''));
-	}
-
-	public function testTestUrlWithParameters() {
-		$route = Nano_Route::create('show/(?P<page>[-\w]+)', 'index', 'index');
-		$this->assertFalse($this->dispatcher->test($route, 'show/some-page!'));
-		$this->assertTrue($this->dispatcher->test($route, 'show/some-page'));
-
-		$this->assertArrayHasKey('page', $this->dispatcher->params());
-		$this->assertEquals('some-page', $this->dispatcher->param('page', null));
-	}
-
 	public function testRouteFindingForEmptyUrl() {
+		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$routes = new Nano_Routes();
-		$routes->add('', 'index', 'index');
+		$routes->add('get', '', 'index', 'index');
 
-		$route1 = $this->dispatcher->getRoute($routes, '/');
-		$route2 = $this->dispatcher->getRoute($routes, '');
-
-		self::assertInstanceOf('Nano_Route', $route1);
-		self::assertInstanceOf('Nano_Route', $route2);
-		$this->assertEquals('index::index() when /^$/', $route1->__toString());
-		$this->assertEquals('index::index() when /^$/', $route2->__toString());
+		$urls = array('', '/', '//');
+		foreach ($urls as $url) {
+			$route = $this->dispatcher->getRoute($routes, $url);
+			self::assertInstanceOf('Nano_Route', $route, 'for url: [' . $url . ']');
+			$this->assertEquals('index::index() when location matches []', $route->__toString());
+		}
 	}
 
 	public function testGetController() {

@@ -49,16 +49,13 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 			if ($e instanceof $class) {
 				if ($message) {
 					$messageConstraint = new PHPUnit_Framework_Constraint_StringContains($message, true);
-					if (!$messageConstraint->evaluate($e->getMessage())) {
-						throw $messageConstraint->fail($e->getMessage(), PHP_EOL . $e->getTraceAsString());
-					}
-					self::assertTrue(true); // update assertion counter
+					$messageConstraint->evaluate($e->getMessage(), $e->getMessage(), PHP_EOL . $e->getTraceAsString());
 				}
-				self::assertTrue(true); // update assertion counter
-			} else {
-				$constraint = new PHPUnit_Framework_Constraint_IsInstanceOf($class);
-				throw $constraint->fail($e, 'Expected ' . $class . ' but ' . get_class($e) . ' with message "' . $e->getMessage() . '"' . PHP_EOL . $e->getTraceAsString());
+				return;
 			}
+
+			$constraint = new PHPUnit_Framework_Constraint_IsInstanceOf($class);
+			$constraint->evaluate(get_class($e), 'Expected ' . $class . ' but ' . get_class($e) . ' with message "' . $e->getMessage() . '"' . PHP_EOL . $e->getTraceAsString());
 		}
 	}
 

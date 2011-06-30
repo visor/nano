@@ -1,12 +1,15 @@
 <?php
 
-class Nano_Route_Subdomain extends Nano_Route {
+class Nano_Route_Subdomain extends Nano_Route_RegExp {
 
+	/**
+	 * @var string
+	 */
 	protected $domainPattern;
 
-	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index') {
+	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index', $module = null) {
 		$this->domainPattern = '/^' . str_replace('/','\/', $domainPattern) . '$/';
-		parent::__construct($urlPattern, $controller, $action);
+		parent::__construct($urlPattern, $controller, $action, $module);
 	}
 
 	/**
@@ -19,7 +22,7 @@ class Nano_Route_Subdomain extends Nano_Route {
 		if (1 !== preg_match($this->domainPattern, $domain, $matches)) {
 			return false;
 		}
-		if (null == $this->pattern) {
+		if (null == $this->location) {
 			$this->matches = $matches;
 			return true;
 		}

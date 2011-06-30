@@ -2,8 +2,9 @@
 
 /**
  * @group framework
+ * @group routes
  */
-class Nano_Route_SubdomainTest extends TestUtils_TestCase {
+class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainOnly() {
 		$_SERVER['HTTP_HOST'] = Nano::config('web')->domain;

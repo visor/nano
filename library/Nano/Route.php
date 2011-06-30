@@ -1,17 +1,15 @@
 <?php
 
-class Nano_Route {
+abstract class Nano_Route {
 
-	protected $pattern    = null;
+	protected $location    = null;
 	protected $module     = null;
 	protected $controller = null;
 	protected $action     = null;
 	protected $matches    = null;
 
-	public function __construct($pattern, $controller = 'index', $action = 'index', $module = null) {
-		if (null !== $pattern) {
-			$this->pattern = '/^' . str_replace('/','\/', $pattern) . '$/';
-		}
+	public function __construct($location, $controller = 'index', $action = 'index', $module = null) {
+		$this->location   = $location;
 		$this->module     = $module;
 		$this->controller = $controller;
 		$this->action     = $action;
@@ -19,19 +17,26 @@ class Nano_Route {
 
 	/**
 	 * @return Nano_Route
-	 * @param string $pattern
+	 * @param string $location
 	 * @param string $controller
 	 * @param string $action
+	 * @param string $module
 	 */
-	public static function create($pattern, $controller = 'index', $action = 'index', $module = null) {
-		return new self($pattern, $controller, $action, $module);
+	public static function create($location, $controller = 'index', $action = 'index', $module = null) {
+		if ('' === $location || null === $location) {
+			return new Nano_Route_Static($location, $controller, $action, $module);
+		}
+		if ('~' == $location[0]) {
+			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module);
+		}
+		return new Nano_Route_Static($location, $controller, $action, $module);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function pattern() {
-		return $this->pattern;
+	public function location() {
+		return $this->location;
 	}
 
 	public function module() {
@@ -64,18 +69,12 @@ class Nano_Route {
 
 	/**
 	 * @return boolean
-	 * @param string $url
+	 * @param string $location
 	 */
-	public function match($url) {
-		$this->matches = array();
-		if (null === $this->pattern) {
-			return true;
-		}
-		return (1 == preg_match($this->pattern, $url, $this->matches));
-	}
+	abstract public function match($location);
 
 	/**
-	 * @return string[string|int]
+	 * @return string[]
 	 */
 	public function matches() {
 		return $this->matches;
@@ -85,7 +84,7 @@ class Nano_Route {
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->controller() . '::' . $this->action() . '() when ' . $this->pattern();
+		return $this->controller() . '::' . $this->action() . '() when location matches [' . $this->location() . ']';
 	}
 
 }

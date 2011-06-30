@@ -642,7 +642,13 @@ abstract class ActiveRecord {
 	 */
 	private function saveRelations() {
 		foreach ($this->getOneRelations() as $relation => $info) {
-			$this->__get($relation)->save();
+			if (!$this->__get($relation)->isNew()) {
+				$this->__get($relation)->save();
+				continue;
+			}
+			if ($this->__get($relation)->changed()) {
+				$this->__get($relation)->save();
+			}
 		}
 	}
 

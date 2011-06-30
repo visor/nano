@@ -69,10 +69,10 @@ class Nano_Dispatcher {
 	 * @return Nano_Dispatcher
 	 */
 	public function clean() {
-		$this->controller        = null;
-		$this->action            = null;
-		$this->params            = array();
-		$this->controllerInstace = null;
+		$this->controller         = null;
+		$this->action             = null;
+		$this->params             = array();
+		$this->controllerInstance = null;
 		return $this;
 	}
 
@@ -140,7 +140,7 @@ class Nano_Dispatcher {
 	 */
 	public function run(Nano_Route $route) {
 		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD']) && Nano::isTesting()) {
-			return;
+			return null;
 		}
 		if ($route instanceof Nano_Route_Runnable) { /* @var $route Nano_Route_Runnable */
 			$route->run();
@@ -176,8 +176,9 @@ class Nano_Dispatcher {
 	 * @param string $url
 	 */
 	public function getRoute(Nano_Routes $routes, $url) {
+		$method  = strToLower($_SERVER['REQUEST_METHOD']);
 		$testUrl = trim($url, '/');
-		foreach ($routes as $route) { /** @var $route Nano_Route */
+		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
 				return $route;
 			}

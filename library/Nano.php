@@ -185,10 +185,10 @@ final class Nano {
 
 		Nano_Loader::initLibraries($this->modules);
 		Nano_Config_Builder::createStub(SETTINGS . DS . 'config.php');
+		$this->setupErrorReporting();
 
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
-		$this->setupErrorReporting();
 
 		if (self::config()->exists('web')) {
 			define('WEB_ROOT', Nano::config('web')->root);

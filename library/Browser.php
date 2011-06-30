@@ -160,8 +160,6 @@ class Browser {
 	public function __construct() {
 		$this->reset();
 		$this->determine();
-		Nano_Log::message(var_export($this, true));
-		Nano_Log::message(var_export($_SERVER, true));
 	}
 	/**
 	 * Reset all properties
@@ -867,4 +865,3 @@ class Browser {
 	}
 
 }
-?>
