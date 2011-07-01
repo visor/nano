@@ -2,6 +2,8 @@
 
 abstract class Nano_Route {
 
+	const PREFIX_REGEXP = '~';
+
 	protected $location    = null;
 	protected $module     = null;
 	protected $controller = null;
@@ -26,7 +28,7 @@ abstract class Nano_Route {
 		if ('' === $location || null === $location) {
 			return new Nano_Route_Static($location, $controller, $action, $module);
 		}
-		if ('~' == $location[0]) {
+		if (self::PREFIX_REGEXP == $location[0]) {
 			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module);
 		}
 		return new Nano_Route_Static($location, $controller, $action, $module);

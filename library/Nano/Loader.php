@@ -13,6 +13,7 @@ class Nano_Loader {
 		, 'Controller' => 'controllers'
 		, 'Model'      => 'models'
 		, 'Plugin'     => 'plugins'
+		, 'Helper'     => 'helpers'
 	);
 
 	/**
@@ -39,7 +40,8 @@ class Nano_Loader {
 	/**
 	 * @return string
 	 * @param string $module
-	 * @param string $controller
+	 * @param string $type
+	 * @param string $class
 	 */
 	public static function formatModuleClassName($module, $type, $class) {
 		$typePart = ucFirst($type);

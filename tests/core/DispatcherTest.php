@@ -50,4 +50,19 @@ class DispatcherTest extends TestUtils_TestCase {
 		self::assertInstanceOf('TestController', $c);
 	}
 
+	public function testDetectingContextBySuffix() {
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		$routes = new Nano_Routes();
+		$routes
+			->suffix('~(\.(?P<context>xml|rss))?')
+				->get('index', 'test', 'index')
+		;
+
+		$this->dispatcher->run($this->dispatcher->getRoute($routes, 'index.xml'));
+		self::assertEquals('xml', $this->dispatcher->controllerInstance()->context);
+
+		$this->dispatcher->run($this->dispatcher->getRoute($routes, 'index.rss'));
+		self::assertEquals('rss', $this->dispatcher->controllerInstance()->context);
+	}
+
 }

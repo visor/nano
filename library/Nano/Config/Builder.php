@@ -11,6 +11,7 @@ class Nano_Config_Builder {
 
 	/**
 	 * @return void
+	 * @param string $path
 	 */
 	public static function createStub($path) {
 		if (!file_exists($path)) {

@@ -13,6 +13,15 @@ class Nano_Modules extends ArrayObject {
 	}
 
 	/**
+	 * @return Nano_Modules
+	 * @param string $name
+	 */
+	public function remove($name) {
+		$this->offsetUnset($name);
+		return $this;
+	}
+
+	/**
 	 * @return boolean
 	 * @param string $name
 	 */

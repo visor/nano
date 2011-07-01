@@ -98,6 +98,49 @@ class CliController extends Nano_C_Cli {
 	}
 
 	/**
+	 * Creates a new module with default structure
+	 * @return void
+	 */
+	public function moduleAction() {
+		$usage = 'cli.php module-name [module-path]';
+		if (0 === count($this->args)) {
+			echo $usage, PHP_EOL;
+			return;
+		}
+
+		$moduleName = $this->args[0];
+		$modulePath = isSet($this->args[1]) ? $this->args[1] : MODULES;
+		$rootFolder = MODULES . DS . $moduleName;
+
+		if (!file_exists($rootFolder)) {
+			if (false === mkDir($rootFolder, 0755, true)) {
+				echo 'ERROR: Cannot create module folder', PHP_EOL;
+				return;
+			}
+		}
+		$folders    = array(
+			$rootFolder . DS . 'controllers'
+			, $rootFolder . DS . 'helpers'
+			, $rootFolder . DS . 'library'
+			, $rootFolder . DS . 'models'
+			, $rootFolder . DS . 'plugins'
+			, $rootFolder . DS . 'views'
+		);
+		foreach ($folders as $folder) {
+			if (file_exists($folder)) {
+				continue;
+			}
+			echo 'Creating ', $moduleName, DS, baseName($folder), ' ';
+			if (false === mkDir($folder, 0755, true)) {
+				echo 'fails';
+			} else {
+				echo 'done';
+			}
+			echo PHP_EOL;
+		}
+	}
+
+	/**
 	 * @return array
 	 */
 	protected function getCliControllers() {

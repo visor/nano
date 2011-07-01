@@ -129,6 +129,20 @@ abstract class Nano_C {
 	protected function after() {}
 
 	/**
+	 * @return void
+	 */
+	protected function runContextAction() {
+		if (!$this->context) {
+			return;
+		}
+		$method = Nano_Dispatcher::formatName($this->dispatcher()->action() . '-' . $this->context, false);
+		if (!method_exists($this, $method)) {
+			return;
+		}
+		$this->$method();
+	}
+
+	/**
 	 * @return string
 	 * @param string $controller
 	 * @param string $action

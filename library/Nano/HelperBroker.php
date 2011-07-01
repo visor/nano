@@ -83,15 +83,19 @@ class Nano_HelperBroker {
 	 * @param boolean $isClass
 	 */
 	protected function search($name, $isClass) {
-		if ($isClass) {
-			$className = $name;
-		} else {
-			$className = ucFirst($name) . 'Helper';
+		$className = $isClass ? $name : ucFirst($name) . 'Helper';
+		if (class_exists($className)) {
+			return new $className();
 		}
-		if (!class_exists($className)) {
-			return null;
+
+		$className = $isClass ? $name : ucFirst($name);
+		foreach (Nano::modules() as $module => $path) {
+			$fullClassName = Nano_Loader::formatModuleClassName($module, 'helper', $className);
+			if (class_exists($fullClassName)) {
+				return new $fullClassName();
+			}
 		}
-		return new $className();
+		return null;
 	}
 
 }

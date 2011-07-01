@@ -12,7 +12,7 @@ class Core_Route_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testTestParametersParsing() {
-		$route = Nano_Route::create('~show/(?P<page>[-\w]+)', 'index', 'index');
+		$route = Nano_Route::create('~show\/(?P<page>[-\w]+)', 'index', 'index');
 
 		self::assertFalse($route->match('show/some-page!'));
 		self::assertTrue($route->match('show/some-page'));

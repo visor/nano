@@ -8,13 +8,13 @@ class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainOnly() {
 		$_SERVER['HTTP_HOST'] = Nano::config('web')->domain;
-		$route = new Nano_Route_Subdomain('.*', null);
-		self::assertTrue($route->match('some-url'));
+		$route = new Nano_Route_Subdomain('.+', '.*');
+		self::assertFalse($route->match('some-url'));
 
 		$_SERVER['HTTP_HOST'] = 'some.' . Nano::config('web')->domain;
 		self::assertTrue($route->match('some-url'));
 
-		$route = new Nano_Route_Subdomain('some', null);
+		$route = new Nano_Route_Subdomain('some', '.*');
 		self::assertTrue($route->match('some-url'));
 
 		$_SERVER['HTTP_HOST'] = 'some2.' . Nano::config('web')->domain;

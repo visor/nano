@@ -37,6 +37,46 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 		self::assertArrayHasKey('users.html', $routes['get']->getArrayCopy());
 	}
 
+	public function testRegexpLocationWithSuffix() {
+		$key  = '~show/(?P<page>[-\w]+)';
+		$data = array(
+			  '.html'                      => '/^show\/(?P<page>[-\w]+)\.html$/'
+			, '~(?P<context>\.(xml|rss))?' => '/^show\/(?P<page>[-\w]+)(?P<context>\.(xml|rss))?$/'
+		);
+		foreach ($data as $suffix => $location) {
+			$this->routes->suffix($suffix)->get($key, 'index', 'index');
+			$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
+			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
+			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+		}
+	}
+
+	public function testRegexpLocationWithPrefix() {
+		$key  = '~show/(?P<page>[-\w]+)';
+		$data = array(
+			  'admin/'              => '/^admin\/show\/(?P<page>[-\w]+)$/'
+			, '~(?P<lang>(ru|en))/' => '/^(?P<lang>(ru|en))\/show\/(?P<page>[-\w]+)$/'
+		);
+		foreach ($data as $prefix => $location) {
+			$this->routes->prefix($prefix)->get($key, 'index', 'index');
+			$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
+			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
+			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+		}
+	}
+
+	public function testNoRegexInLocationParts() {
+		$this->routes->prefix('admin')->suffix('.html')->get('', 'index', 'index');
+		$this->routes->prefix('admin')->suffix('.html')->get('/index', 'index', 'index');
+
+		$keys   = array('admin.html', 'admin/index.html');
+		$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
+		foreach ($keys as $location) {
+			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
+			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+		}
+	}
+
 	public function testRoutesShouldBeSeparatedByRequestMethod() {
 		$methods = array('get', 'post', 'head', 'put', 'delete');
 		foreach ($methods as $index => $method) {

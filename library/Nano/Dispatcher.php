@@ -105,7 +105,7 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return string
-	 * @param Routes $routes
+	 * @param Nano_Routes $routes
 	 * @param string $url
 	 */
 	public function dispatch(Nano_Routes $routes, $url) {
@@ -132,6 +132,7 @@ class Nano_Dispatcher {
 		} catch (Exception $e) {
 			$this->handleError($e);
 		}
+		return null;
 	}
 
 	/**
@@ -147,7 +148,9 @@ class Nano_Dispatcher {
 			return null;
 		}
 		$this->controllerInstance = $this->getController($route);
-		if ($this->context) {
+		if ($this->param('context')) {
+			$this->controllerInstance->context = $this->param('context');
+		} elseif ($this->context) {
 			$this->controllerInstance->context = $this->context->get();
 		}
 		return $this->controllerInstance->run($this->action());
@@ -270,7 +273,6 @@ class Nano_Dispatcher {
 	}
 
 	protected function handleError(Exception $error) {
-		throw $error;
 		if ($this->throw) {
 			header('Content-Type: text/plain', true);
 			throw $error;

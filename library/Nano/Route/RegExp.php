@@ -3,7 +3,7 @@
 class Nano_Route_RegExp extends Nano_Route {
 
 	public function __construct($location, $controller, $action, $module) {
-		$location = '/^' . str_replace('/','\/', $location) . '$/';
+		$location = '/^' . $location . '$/';
 		parent::__construct($location, $controller, $action, $module);
 	}
 
