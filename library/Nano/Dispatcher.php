@@ -23,6 +23,11 @@ class Nano_Dispatcher {
 	/**
 	 * @var string
 	 */
+	protected $module             = null;
+
+	/**
+	 * @var string
+	 */
 	protected $controller         = null;
 
 	/**
@@ -209,6 +214,10 @@ class Nano_Dispatcher {
 		return $this->controllerInstance;
 	}
 
+	public function module() {
+		return $this->module;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -249,6 +258,10 @@ class Nano_Dispatcher {
 	protected function buildParams($data) {
 		$this->params = array();
 		foreach ($data as $name => $value) {
+			if ('module' === $name) {
+				$this->module = $value;
+				continue;
+			}
 			if ('controller' === $name) {
 				$this->controller = $value;
 				continue;
@@ -270,6 +283,7 @@ class Nano_Dispatcher {
 	protected function setUpController(Nano_Route $route) {
 		$this->action     = $route->action();
 		$this->controller = $route->controller();
+		$this->module     = $route->module();
 	}
 
 	protected function handleError(Exception $error) {
