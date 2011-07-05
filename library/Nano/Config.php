@@ -62,6 +62,10 @@ class Nano_Config {
 		$this->config->$name = $value;
 	}
 
+	/**
+	 * @return void
+	 * @throws Nano_Exception
+	 */
 	protected function load() {
 		if (null === $this->config) {
 			if (!file_exists($this->path)) {
