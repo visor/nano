@@ -90,6 +90,7 @@ final class Nano {
 			if (self::config('web')->index) {
 				$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
 			}
+			$url = rawUrlDecode($url);
 		}
 		try {
 			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
