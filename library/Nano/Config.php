@@ -3,6 +3,11 @@
 class Nano_Config {
 
 	/**
+	 * @var Nano_Config_Format
+	 */
+	private static $format = null;
+
+	/**
 	 * @var string
 	 */
 	protected $path;
@@ -14,6 +19,24 @@ class Nano_Config {
 
 	public function __construct($path) {
 		$this->setPath($path);
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_Config_Format $value
+	 */
+	public static function setFormat(Nano_Config_Format $value) {
+		self::$format = $value;
+	}
+
+	/**
+	 * @return Nano_Config_Format
+	 */
+	public static function getFormat() {
+		if (null === self::$format) {
+			self::setFormat(new Nano_Config_Format_Php());
+		}
+		return self::$format;
 	}
 
 	/**

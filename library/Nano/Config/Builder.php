@@ -10,6 +10,15 @@ class Nano_Config_Builder {
 	protected $source = null, $destination = null;
 
 	/**
+	 * @var Nano_Config_Format[]
+	 */
+	protected $formats;
+
+	public function __construct() {
+		$this->formats = new SplObjectStorage();
+	}
+
+	/**
 	 * @return void
 	 * @param string $path
 	 */
@@ -17,6 +26,17 @@ class Nano_Config_Builder {
 		if (!file_exists($path)) {
 			file_put_contents($path, '<?php return (object)array();');
 		}
+	}
+
+	/**
+	 * @return Nano_Config_Builder
+	 * @param Nano_Config_Format $format
+	 */
+	public function addFormat(Nano_Config_Format $format) {
+		if (!$this->formats->contains($format)) {
+			$this->formats->attach($format);
+		}
+		return $this;
 	}
 
 	/**
@@ -35,6 +55,16 @@ class Nano_Config_Builder {
 	public function setDestination($value) {
 		$this->destination = $value;
 		return $this;
+	}
+
+	/**
+	 * @return Nano_Config_Format
+	 */
+	public function detectFormat() {
+		if (0 === $this->formats->count()) {
+			return null;
+		}
+		return $this->formats[0];
 	}
 
 	/**

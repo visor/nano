@@ -12,6 +12,13 @@ class Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder = new Nano_Config_Builder();
 	}
 
+	public function testDetectingFormatToSave() {
+		self::assertNull($this->builder->detectFormat());
+
+		$this->builder->addFormat(new Nano_Config_Format_Php());
+		self::assertInstanceOf('Nano_Config_Format_Php', $this->builder->detectFormat());
+	}
+
 	public function testLoadingOnlyPhpFiles() {
 		$this->builder->setSource($this->files->get($this, '/no-parents'));
 		$this->builder->setDestination($this->files->get($this, '/settings/config.php'));

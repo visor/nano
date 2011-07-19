@@ -4,7 +4,18 @@
  * @group framework
  * @group config
  */
-class Nano_ConfigTest extends TestUtils_TestCase {
+class Nano_Core_ConfigTest extends TestUtils_TestCase {
+
+	private $format;
+
+	protected function setUp() {
+		$this->format = Nano_Config::getFormat();
+	}
+
+	public function testGetDefaultFormatInstance() {
+		self::assertInstanceOf('Nano_Config_Format', Nano_Config::getFormat());
+		self::assertInstanceOf('Nano_Config_Format_Php', Nano_Config::getFormat());
+	}
 
 	public function testAfterCreatingConfigShouldBeEmpty() {
 		$config = new Nano_Config($this->files->get($this, '/configs/default.php'));
@@ -112,7 +123,9 @@ class Nano_ConfigTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		parent::tearDown();
+		if (null !== $this->format) {
+			Nano_Config::setFormat($this->format);
+		}
 	}
 
 }
