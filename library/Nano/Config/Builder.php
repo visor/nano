@@ -10,12 +10,12 @@ class Nano_Config_Builder {
 	protected $source = null, $destination = null;
 
 	/**
-	 * @var Nano_Config_Format[]
+	 * @var Nano_Config_Format[]|SplStack
 	 */
 	protected $formats;
 
 	public function __construct() {
-		$this->formats = new SplObjectStorage();
+		$this->formats = new SplStack();
 	}
 
 	/**
@@ -33,9 +33,7 @@ class Nano_Config_Builder {
 	 * @param Nano_Config_Format $format
 	 */
 	public function addFormat(Nano_Config_Format $format) {
-		if (!$this->formats->contains($format)) {
-			$this->formats->attach($format);
-		}
+		$this->formats->push($format);
 		return $this;
 	}
 
@@ -62,9 +60,15 @@ class Nano_Config_Builder {
 	 */
 	public function detectFormat() {
 		if (0 === $this->formats->count()) {
-			return null;
+			return new Nano_Config_Format_Php();
 		}
-		return $this->formats[0];
+		$this->formats->rewind();
+		foreach ($this->formats as $format) {
+			if ($format->available()) {
+				return $format;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -72,12 +76,7 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	public function build($name) {
-		$settings = $this->createSettings($name);
-		$source   = var_export(json_decode(json_encode($settings)), true);
-		$source   = str_replace('stdClass::__set_state(', '(object)(', $source);
-		$source   = preg_replace('/=>[\s\t\r\n]+\(object\)/', '=> (object)', $source);
-		$source   = preg_replace('/=>[\s\t\r\n]+array/', '=> array', $source);
-		file_put_contents($this->destination, '<?php return ' . $source . ';');
+		$this->detectFormat()->write($this->createSettings($name), $this->destination);
 	}
 
 	protected function createSettings($name) {
@@ -112,6 +111,7 @@ class Nano_Config_Builder {
 
 	/**
 	 * @return string[]
+	 * @param string $name
 	 */
 	protected function getParents($name) {
 		return $this->getFile($name, self::PARENTS_FILE, array());
@@ -119,10 +119,9 @@ class Nano_Config_Builder {
 
 	/**
 	 * @return array
-	 * @param string[] $parents
 	 * @param string $file
 	 */
-	protected function buildSingleFile($parents, $file) {
+	protected function buildSingleFile($file) {
 		return include($file);
 	}
 

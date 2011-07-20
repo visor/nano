@@ -3,7 +3,12 @@
 interface Nano_Config_Format {
 
 	/**
-	 * @return array
+	 * @return boolean
+	 */
+	public function available();
+
+	/**
+	 * @return stdClass
 	 * @param string $fileName
 	 */
 	public function read($fileName);

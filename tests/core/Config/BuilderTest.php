@@ -1,6 +1,10 @@
 <?php
 
-class Config_BuilderTest extends TestUtils_TestCase {
+/**
+ * @group framework
+ * @group config
+ */
+class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 	/**
 	 * @var Nano_Config_Builder
@@ -13,10 +17,23 @@ class Config_BuilderTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingFormatToSave() {
-		self::assertNull($this->builder->detectFormat());
+		self::assertInstanceOf('Nano_Config_Format_Php', $this->builder->detectFormat());
 
 		$this->builder->addFormat(new Nano_Config_Format_Php());
 		self::assertInstanceOf('Nano_Config_Format_Php', $this->builder->detectFormat());
+
+		$this->builder->addFormat(new Nano_Config_Format_Serialize());
+		self::assertInstanceOf('Nano_Config_Format_Serialize', $this->builder->detectFormat());
+
+		if (function_exists('json_encode')) {
+			$this->builder->addFormat(new Nano_Config_Format_Json());
+			self::assertInstanceOf('Nano_Config_Format_Json', $this->builder->detectFormat());
+		}
+
+		if (function_exists('igbinary_unSerialize')) {
+			$this->builder->addFormat(new Nano_Config_Format_Igbinary());
+			self::assertInstanceOf('Nano_Config_Format_Igbinary', $this->builder->detectFormat());
+		}
 	}
 
 	public function testLoadingOnlyPhpFiles() {

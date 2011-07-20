@@ -4,13 +4,7 @@
  * @group framework
  * @group config
  */
-class Nano_Core_ConfigTest extends TestUtils_TestCase {
-
-	private $format;
-
-	protected function setUp() {
-		$this->format = Nano_Config::getFormat();
-	}
+class Core_ConfigTest extends TestUtils_TestCase {
 
 	public function testGetDefaultFormatInstance() {
 		self::assertInstanceOf('Nano_Config_Format', Nano_Config::getFormat());
