@@ -9,7 +9,6 @@ if (!defined('APP')) {
 }
 
 require APP . DS. 'bootstrap.php';
-Nano::instance();
 
 Nano_Db::setDefault('test');
 

@@ -58,11 +58,18 @@ class Nano_Config {
 		$this->config = null;
 	}
 
+	public function fileExists() {
+		return file_exists($this->path);
+	}
+
 	/**
 	 * @return boolean
 	 * @param string $name
 	 */
 	public function exists($name) {
+		if (!$this->fileExists()) {
+			return false;
+		}
 		$this->load();
 		return isSet($this->config->$name);
 	}
@@ -94,7 +101,7 @@ class Nano_Config {
 	 */
 	protected function load() {
 		if (null === $this->config) {
-			if (!file_exists($this->path)) {
+			if (!$this->fileExists()) {
 				throw new Nano_Exception('File "' . $this->path . '" not found');
 			}
 			if (!is_readable($this->path)) {

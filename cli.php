@@ -4,8 +4,6 @@
 require __DIR__ . '/library/Nano.php';
 require APP . DS. 'bootstrap.php';
 
-Nano::instance();
-
 if ($_SERVER['argc'] < 2) {
 	Nano_C_Cli::usage();
 	return;

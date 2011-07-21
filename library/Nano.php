@@ -60,6 +60,14 @@ final class Nano {
 
 	/**
 	 * @return void
+	 * @param Nano_Config $config
+	 */
+	public static function configure(Nano_Config $config) {
+		self::$config = $config;
+	}
+
+	/**
+	 * @return void
 	 * @param string $url
 	 */
 	public static function run($url = null) {
@@ -146,7 +154,7 @@ final class Nano {
 	 */
 	public static function config($name = null) {
 		if (null === self::$config) {
-			self::$config = new Nano_Config(SETTINGS . DS . Nano_Config::CONFIG_FILE_NAME);
+			throw new RuntimeException('Application not configred');
 		}
 		if (null === $name) {
 			return self::$config;
@@ -177,17 +185,17 @@ final class Nano {
 	}
 
 	private function __construct() {
-		self::config();
-		$this->setupErrorReporting();
+		if ($this->config()->fileExists()) {
+			$this->setupErrorReporting();
+			if (self::config()->exists('web')) {
+				define('WEB_ROOT', Nano::config('web')->root);
+				define('WEB_URL',  Nano::config('web')->url);
+			}
+		}
 
 		$this->modules    = new Nano_Modules();
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
-
-		if (self::config()->exists('web')) {
-			define('WEB_ROOT', Nano::config('web')->root);
-			define('WEB_URL',  Nano::config('web')->url);
-		}
 	}
 
 	private function setupErrorReporting() {
