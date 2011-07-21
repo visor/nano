@@ -100,6 +100,7 @@ class Nano_Config {
 			if (!is_readable($this->path)) {
 				throw new Nano_Exception('Cannot read file "' . $this->path . '"');
 			}
+			Nano_Log::message(var_export(self::getFormat()->read($this->path), true));
 			$this->config = self::getFormat()->read($this->path);
 		}
 	}

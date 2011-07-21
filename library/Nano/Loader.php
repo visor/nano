@@ -69,7 +69,10 @@ class Nano_Loader {
 		}
 	}
 
-	public static function initLibraries(Nano_Modules $modules) {
+	/**
+	 * @return void
+	 */
+	public static function initLibraries() {
 		set_include_path(
 			LIB
 			. PS . APP_LIB
@@ -79,18 +82,6 @@ class Nano_Loader {
 			. PS . HELPERS
 			. PS . get_include_path()
 		);
-	}
-
-	public static function initModuleLibraries(Nano_Modules $modules, $name) {
-//		$moduleRoot = $modules->getPath($name);
-//		set_include_path(
-//			$moduleRoot . DS . 'library'
-//			. PS . $moduleRoot . DS . 'models'
-//			. PS . $moduleRoot . DS . 'controllers'
-//			. PS . $moduleRoot . DS . 'plugins'
-//			. PS . $moduleRoot . DS . 'helpers'
-//			. PS . get_include_path()
-//		);
 	}
 
 	/**

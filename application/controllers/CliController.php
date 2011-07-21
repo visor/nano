@@ -92,8 +92,13 @@ class CliController extends Nano_C_Cli {
 		}
 
 		$builder = new Nano_Config_Builder();
+		$builder->addFormat(new Nano_Config_Format_Php());
+		$builder->addFormat(new Nano_Config_Format_Serialize());
+		$builder->addFormat(new Nano_Config_Format_Json());
+		$builder->addFormat(new Nano_Config_Format_Igbinary());
+
 		$builder->setSource(ROOT . DS . 'scripts' . DS . 'setup');
-		$builder->setDestination(SETTINGS . DS . 'config.php');
+		$builder->setDestination(SETTINGS);
 		$builder->build($this->args[0]);
 	}
 

@@ -23,9 +23,13 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	abstract protected function getConfigName();
 
 	protected function setUp() {
+		$this->config       = $this->getConfigInstance();
+		if (!$this->config->available()) {
+			self::markTestSkipped(get_class($this->config) . ' is not available');
+		}
+
 		$this->resultFile   = $this->files->get($this, '/config.result');
 		$this->configFile   = $this->files->get($this, '/config.' . $this->getConfigName());
-		$this->config       = $this->getConfigInstance();
 		if (file_exists($this->resultFile)) {
 			@unlink($this->resultFile);
 		}

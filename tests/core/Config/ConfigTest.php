@@ -6,6 +6,16 @@
  */
 class Core_ConfigTest extends TestUtils_TestCase {
 
+	/**
+	 * @var Nano_Config_Format
+	 */
+	private $format = null;
+
+	protected function setUp() {
+		$this->format = Nano_Config::getFormat();
+		Nano_Config::setFormat(new Nano_Config_Format_Php());
+	}
+
 	public function testGetDefaultFormatInstance() {
 		self::assertInstanceOf('Nano_Config_Format', Nano_Config::getFormat());
 		self::assertInstanceOf('Nano_Config_Format_Php', Nano_Config::getFormat());

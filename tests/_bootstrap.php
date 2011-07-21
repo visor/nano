@@ -8,11 +8,9 @@ if (!defined('APP')) {
 	require __DIR__ . '/../library/Nano.php';
 }
 
-//Nano::instance()
-//	->configure()
-//;
-
+Nano_Config::setFormat(new Nano_Config_Format_Json());
 Nano::instance();
+
 Nano_Db::setDefault('test');
 
 define('SELENIUM_ENABLE', Nano::config('selenium')->enabled);

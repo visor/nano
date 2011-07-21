@@ -49,11 +49,6 @@ final class Nano {
 	private static $config = null;
 
 	/**
-	 * @var array
-	 */
-	private static $configs = array();
-
-	/**
 	 * @return Nano
 	 */
 	public static function instance() {
@@ -151,7 +146,7 @@ final class Nano {
 	 */
 	public static function config($name = null) {
 		if (null === self::$config) {
-			self::$config = new Nano_Config(SETTINGS . DS . 'config.php');
+			self::$config = new Nano_Config(SETTINGS . DS . Nano_Config::CONFIG_FILE_NAME);
 		}
 		if (null === $name) {
 			return self::$config;
@@ -182,12 +177,10 @@ final class Nano {
 	}
 
 	private function __construct() {
-		$this->modules = new Nano_Modules();
-
-		Nano_Loader::initLibraries($this->modules);
-		Nano_Config_Builder::createStub(SETTINGS . DS . 'config.php');
+		self::config();
 		$this->setupErrorReporting();
 
+		$this->modules    = new Nano_Modules();
 		$this->dispatcher = new Nano_Dispatcher();
 		$this->routes     = new Nano_Routes();
 
@@ -217,4 +210,5 @@ function nano_autoload($className) {
 	return Nano_Loader::load($className);
 }
 
+Nano_Loader::initLibraries();
 spl_autoload_register('nano_autoload');

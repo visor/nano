@@ -11,9 +11,16 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	 */
 	protected $builder;
 
+	/**
+	 * @var Nano_Config_Format
+	 */
+	private $format = null;
+
 	protected function setUp() {
 		$this->files->clean($this, '/settings');
 		$this->builder = new Nano_Config_Builder();
+		$this->format = Nano_Config::getFormat();
+		Nano_Config::setFormat(new Nano_Config_Format_Php());
 	}
 
 	public function testDetectingFormatToSave() {
@@ -34,6 +41,10 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 			$this->builder->addFormat(new Nano_Config_Format_Igbinary());
 			self::assertInstanceOf('Nano_Config_Format_Igbinary', $this->builder->detectFormat());
 		}
+	}
+
+	public function testSavingRoutes() {
+//		Nano_Log::message(var_export(Nano::routes(), true));
 	}
 
 	public function testLoadingOnlyPhpFiles() {
@@ -142,6 +153,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('child-of-child');
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
+		Nano_Log::message(__FUNCTION__);
 		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
 		$expected = (object)array('db' => (object)array(
 			'default' => (object)array(
@@ -166,12 +178,16 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 			)
 		));
 		self::assertTrue($config->exists('db'));
+		Nano_Log::message(__FUNCTION__);
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}
 
 	protected function tearDown() {
 		$this->files->clean($this, '/settings');
 		$this->builder = null;
+		if (null !== $this->format) {
+			Nano_Config::setFormat($this->format);
+		}
 	}
 
 }
