@@ -59,16 +59,13 @@ class Nano_Config_Builder {
 	 * @return Nano_Config_Format
 	 */
 	public function detectFormat() {
-		if (0 === $this->formats->count()) {
-			return new Nano_Config_Format_Php();
-		}
 		$this->formats->rewind();
 		foreach ($this->formats as $format) {
 			if ($format->available()) {
 				return $format;
 			}
 		}
-		return null;
+		return new Nano_Config_Format_Php();
 	}
 
 	/**
@@ -76,7 +73,7 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	public function build($name) {
-		$this->detectFormat()->write($this->createSettings($name), $this->destination);
+		$this->detectFormat()->write($this->createSettings($name), $this->destination . DS . Nano_Config::CONFIG_FILE_NAME);
 	}
 
 	protected function createSettings($name) {
@@ -100,10 +97,10 @@ class Nano_Config_Builder {
 			if (isSet($settings[$section])) {
 				$settings[$section] = $this->mergeSections(
 					$settings[$section]
-					, $this->buildSingleFile($parents, $file->getPathName())
+					, $this->buildSingleFile($file->getPathName())
 				);
 			} else {
-				$settings[$section] = $this->buildSingleFile($parents, $file->getPathName());
+				$settings[$section] = $this->buildSingleFile($file->getPathName());
 			}
 		}
 		return $settings;

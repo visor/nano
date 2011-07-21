@@ -2,6 +2,9 @@
 
 class Nano_Config {
 
+	const CONFIG_FILE_NAME  = 'configuration';
+	const CHANGED_FILE_NAME = 'changed';
+
 	/**
 	 * @var Nano_Config_Format
 	 */

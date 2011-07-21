@@ -8,6 +8,10 @@ if (!defined('APP')) {
 	require __DIR__ . '/../library/Nano.php';
 }
 
+//Nano::instance()
+//	->configure()
+//;
+
 Nano::instance();
 Nano_Db::setDefault('test');
 
