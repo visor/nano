@@ -2,6 +2,7 @@
 <?php
 
 require __DIR__ . '/library/Nano.php';
+require APP . DS. 'bootstrap.php';
 
 Nano::instance();
 

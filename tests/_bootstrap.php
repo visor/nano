@@ -8,7 +8,7 @@ if (!defined('APP')) {
 	require __DIR__ . '/../library/Nano.php';
 }
 
-Nano_Config::setFormat(new Nano_Config_Format_Json());
+require APP . DS. 'bootstrap.php';
 Nano::instance();
 
 Nano_Db::setDefault('test');

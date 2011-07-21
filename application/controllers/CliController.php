@@ -115,7 +115,7 @@ class CliController extends Nano_C_Cli {
 
 		$moduleName = $this->args[0];
 		$modulePath = isSet($this->args[1]) ? $this->args[1] : MODULES;
-		$rootFolder = MODULES . DS . $moduleName;
+		$rootFolder = $modulePath . DS . $moduleName;
 
 		if (!file_exists($rootFolder)) {
 			if (false === mkDir($rootFolder, 0755, true)) {

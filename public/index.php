@@ -1,6 +1,6 @@
 <?php
 
 require './../library/Nano.php';
+require APP . DS. 'bootstrap.php';
 
-Nano_Config::setFormat(new Nano_Config_Format_Json());
 Nano::run();

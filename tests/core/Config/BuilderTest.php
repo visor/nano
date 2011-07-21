@@ -44,7 +44,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	}
 
 	public function testSavingRoutes() {
-//		Nano_Log::message(var_export(Nano::routes(), true));
+		self::markTestIncomplete('');
 	}
 
 	public function testLoadingOnlyPhpFiles() {
@@ -153,7 +153,6 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('child-of-child');
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
-		Nano_Log::message(__FUNCTION__);
 		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
 		$expected = (object)array('db' => (object)array(
 			'default' => (object)array(
@@ -178,7 +177,6 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 			)
 		));
 		self::assertTrue($config->exists('db'));
-		Nano_Log::message(__FUNCTION__);
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}
 
