@@ -62,7 +62,7 @@ class NanoModulesTest extends TestUtils_TestCase {
 		$dispatcher = new Nano_Dispatcher();
 		$route      = Nano_Route::create('some', 'class', 'index', 'test-module');
 
-		$routes->addRoute($route);
+		$routes->addRoute('get', $route);
 
 		self::assertNotNull($dispatcher->getRoute($routes, '/some'));
 		self::assertEquals($route->controller(), $dispatcher->getRoute($routes, '/some')->controller());

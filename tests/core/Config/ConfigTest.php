@@ -70,7 +70,7 @@ class Core_ConfigTest extends TestUtils_TestCase {
 		self::assertException(
 			function() {
 				$config = new Nano_Config(__FILE__ . '.php');
-				$config->get(null);
+				$config->set('test', 'value');
 			}
 			, 'Nano_Exception'
 			, 'File "' . __FILE__ . '.php" not found'

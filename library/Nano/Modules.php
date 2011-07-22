@@ -55,7 +55,6 @@ class Nano_Modules extends ArrayObject {
 			$path = MODULES . DS . $name;
 		}
 		parent::offsetSet($name, $path);
-		Nano_Loader::initModuleLibraries($this, $name);
 	}
 
 }

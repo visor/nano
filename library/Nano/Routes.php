@@ -5,6 +5,11 @@ class Nano_Routes implements IteratorAggregate {
 	/**
 	 * @var ArrayObject
 	 */
+	private static $empty = null;
+
+	/**
+	 * @var ArrayObject
+	 */
 	protected $routes;
 
 	/**
@@ -121,7 +126,7 @@ class Nano_Routes implements IteratorAggregate {
 	public function getRoutes($method) {
 		$key = strToLower($method);
 		if (!$this->routes->offsetExists($key)) {
-			return array();
+			return $this->getEmpty();
 		}
 		return $this->routes->offsetGet($key);
 	}
@@ -144,7 +149,6 @@ class Nano_Routes implements IteratorAggregate {
 				$result .= '	' . $route->__toString() . PHP_EOL;
 			}
 		}
-
 		return $result;
 	}
 
@@ -184,5 +188,13 @@ class Nano_Routes implements IteratorAggregate {
 		return $result;
 	}
 
-
+	/**
+	 * @return ArrayObject
+	 */
+	protected function getEmpty() {
+		if (null === self::$empty) {
+			self::$empty = new ArrayObject();
+		}
+		return self::$empty;
+	}
 }

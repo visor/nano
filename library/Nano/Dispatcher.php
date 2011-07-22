@@ -184,7 +184,7 @@ class Nano_Dispatcher {
 	 * @param string $url
 	 */
 	public function getRoute(Nano_Routes $routes, $url) {
-		$method  = strToLower($_SERVER['REQUEST_METHOD']);
+		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
 		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
@@ -293,13 +293,17 @@ class Nano_Dispatcher {
 	 */
 	protected function handleError(Exception $error) {
 		if ($this->throw) {
-			header('Content-Type: text/plain', true);
+			if (false === Nano::isTesting()) {
+				header('Content-Type: text/plain', true);
+			}
 			throw $error;
 		}
 
 		$controllerName = Nano::config('web')->error;
 		if (!$controllerName) {
-			header('Content-Type: text/plain', true);
+			if (false === Nano::isTesting()) {
+				header('Content-Type: text/plain', true);
+			}
 			throw $error;
 		}
 
@@ -307,10 +311,14 @@ class Nano_Dispatcher {
 		$controller = new $className($this); /* @var $controller Nano_C */
 		$action     = 'e404';
 		if (self::ERROR_NOT_FOUND == $error->getCode()) {
-			header('404 Not Found', true, 404);
+			if (false === Nano::isTesting()) {
+				header('404 Not Found', true, 404);
+			}
 		} else {
 			$action = 'e500';
-			header('500 Internal Server Error', true, 500);
+			if (false === Nano::isTesting()) {
+				header('500 Internal Server Error', true, 500);
+			}
 		}
 		$this->controller         = $controllerName;
 		$this->controllerInstance = $controller;
