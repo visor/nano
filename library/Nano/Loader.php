@@ -60,6 +60,9 @@ class Nano_Loader {
 				return false;
 			}
 			$filePath = Nano::modules()->getPath($module, self::typeToFolder($type) . DS . self::classToPath($name));
+			if (!file_exists($filePath)) {
+				return false;
+			}
 			if (false === include($filePath)) {
 				return false;
 			}
