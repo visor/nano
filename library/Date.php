@@ -27,10 +27,10 @@ class Date extends DateTime {
 	 */
 	public static function create($string = null) {
 		if ($string instanceof DateTime) {
-			return new self($string->format(DateTime::ISO8601));
+			return new self($string->format(self::ISO8601));
 		}
 		if (is_numeric($string)) {
-			return new self(date(DateTime::ISO8601, $string));
+			return self::create(Date::createFromFormat('U', (int)$string));
 		}
 		return new self($string);
 	}

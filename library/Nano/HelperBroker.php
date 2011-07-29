@@ -91,7 +91,7 @@ class Nano_HelperBroker {
 		$className = $isClass ? $name : ucFirst($name);
 		foreach (Nano::modules() as $module => $path) {
 			$fullClassName = Nano_Loader::formatModuleClassName($module, 'helper', $className);
-			if (class_exists($fullClassName)) {
+			if (Nano_Loader::loadModuleClass($fullClassName)) {
 				return new $fullClassName();
 			}
 		}
