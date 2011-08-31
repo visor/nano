@@ -27,10 +27,11 @@ class Date extends DateTime {
 	 */
 	public static function create($string = null) {
 		if ($string instanceof DateTime) {
-			return new self($string->format(self::ISO8601));
+			/** @var DateTime $string */
+			return new self($string->format('Y-m-d\TH:i:s'), $string->getTimezone());
 		}
 		if (is_numeric($string)) {
-			return self::create(Date::createFromFormat('U', (int)$string));
+			return Date::createFromFormat('U', (int)$string);
 		}
 		return new self($string);
 	}
@@ -91,10 +92,27 @@ class Date extends DateTime {
 		return $result;
 	}
 
+	/**
+	 * @return Date
+	 * @param string $format
+	 * @param string $time
+	 * @param DateTimeZone|null $timeZone
+	 */
+	public static function createFromFormat($format, $time, $timeZone = null) {
+		if (null === $timeZone) {
+			$date = parent::createFromFormat($format, $time);
+		} else {
+			$date = parent::createFromFormat($format, $time, $timeZone);
+		}
+		return self::create($date);
+	}
+
+	/**
+	 * @return string
+	 */
 	public function month() {
 		return self::$monthes[$this->format('m') - 1];
 	}
-
 
 	/**
 	 * @return Date

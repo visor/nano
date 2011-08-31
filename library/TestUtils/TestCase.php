@@ -38,36 +38,26 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		return $result;
 	}
 
-	public static function assertException($runnable, $class, $message) {
-		try {
-			$runnable();
-			self::fail('No exception thrown');
-		} catch (Exception $e) {
-			if ($e instanceof PHPUnit_Framework_AssertionFailedError && $e->getMessage() === 'No exception thrown') {
-				throw $e;
-			}
-			if ($e instanceof $class) {
-				if ($message) {
-					$messageConstraint = new PHPUnit_Framework_Constraint_StringContains($message, true);
-					$messageConstraint->evaluate($e->getMessage(), $e->getMessage(), PHP_EOL . $e->getTraceAsString());
-				}
-				return;
-			}
-
-			$constraint = new PHPUnit_Framework_Constraint_IsInstanceOf($class);
-			$constraint->evaluate(get_class($e), 'Expected ' . $class . ' but ' . get_class($e) . ' with message "' . $e->getMessage() . '"' . PHP_EOL . $e->getTraceAsString());
-		}
+	/**
+	 * @return void
+	 * @param Closure $runnable
+	 * @param string $exceptionClass
+	 * @param string|null $exceptionMessage
+	 * @param string|null $message
+	 */
+	public static function assertException(Closure $runnable, $exceptionClass, $exceptionMessage = null, $message = null) {
+		$constraint = new TestUtils_Constraint_Exception($exceptionClass, $exceptionMessage);
+		self::assertThat($runnable, $constraint, $message);
 	}
 
-	public static function assertNoException($runnable) {
-		try {
-			$runnable();
-		} catch (Exception $e) {
-			self::fail(
-				'Should not throw any exception but ' . get_class($e) . ' with message <' . $e->getMessage() . '>'
-				. PHP_EOL . $e->getTraceAsString()
-			);
-		}
+	/**
+	 * @return void
+	 * @param Closure $runnable
+	 * @param string|null $message
+	 */
+	public static function assertNoException(Closure $runnable, $message = null) {
+		$constraint = new TestUtils_Constraint_NoException();
+		self::assertThat($runnable, $constraint, $message);
 	}
 
 	/**

@@ -10,25 +10,95 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 
 	private $private = 'some private value';
 
-	public function testAssertExceptionNoException() {
+	public function testAssertExceptionShouldPassWhenExceptionThrows() {
+		$closure = function() {
+			throw new RuntimeException('Test exception');
+		};
+		try {
+			self::assertException($closure, 'RuntimeException');
+		} catch (Exception $e) {
+			self::fail('No exception should be here ' . PHP_EOL . $e);
+		}
+	}
+
+	public function testAssertExceptionShouldPassWithExceptionStringWhenExceptionThrows() {
+		$closure = function() {
+			throw new RuntimeException('Test exception');
+		};
+		try {
+			self::assertException($closure, 'RuntimeException', 'Test exception');
+		} catch (Exception $e) {
+			self::fail('No exception should be here ' . PHP_EOL . $e);
+		}
+	}
+
+	public function testAssertExceptionShouldFailsWhenNoExceptionThrown() {
 		$exception = null;
 		try {
-			self::assertException(function () {}, 'Exception', '');
+			self::assertException(function () {}, 'Exception');
 		} catch (Exception $e) {
 			$exception = $e;
 		}
 		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
-		self::assertEquals('No exception thrown', $exception->getMessage());
+		self::assertContains('No exception thrown', $exception->getMessage());
+		self::assertContains('exception <Exception> should throw', $exception->getMessage());
 	}
 
-	public function testAssertExceptionWrongExceptionClass() {
-		$this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Failed asserting that "Exception" is an instance of class "RuntimeException"');
-		self::assertException(function () { throw new Exception(); }, 'RuntimeException', '');
+	public function testAssertExceptionShouldFailsWhenMessageDoesNotMatches() {
+		$exception = null;
+		$closure   = function() {
+			throw new RuntimeException('Test exception');
+		};
+		try {
+			self::assertException($closure, 'RuntimeException', 'Another exception');
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+
+		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
+		self::assertContains('Exception message not matches', $exception->getMessage());
+		self::assertContains('exception <RuntimeException> with message \'Another exception\' should throw', $exception->getMessage());
 	}
 
-	public function testAssertExceptionWrongMessage() {
-		$this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Failed asserting that <string:foo> contains "bar"');
-		self::assertException(function () { throw new Exception('foo'); }, 'Exception', 'bar');
+	public function testAssertExceptionShouldFailsWhenExceptionDoesNotMatches() {
+		$exception = null;
+		$closure   = function() {
+			throw new Exception('Test exception');
+		};
+		try {
+			self::assertException($closure, 'RuntimeException');
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+
+		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
+		self::assertContains('Exception class not matches', $exception->getMessage());
+		self::assertContains('exception <RuntimeException> should throw', $exception->getMessage());
+	}
+
+	public function testAssertNoExceptionShouldPassWhenNoExceptionThrown() {
+		$exception = null;
+		try {
+			self::assertNoException(function() {}, 'RuntimeException');
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+		self::assertNull($exception);
+	}
+
+	public function testAssertNoExceptionShouldFailsWhenExceptionThrows() {
+		$exception = null;
+		$closure   = function() {
+			throw new Exception('Test exception');
+		};
+		try {
+			self::assertNoException($closure);
+		} catch (Exception $e) {
+			$exception = $e;
+		}
+
+		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
+		self::assertContains('no exception should throw', $exception->getMessage());
 	}
 
 	public function testNonPublicPropertyGet() {
