@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * @group framework
+ * @group orm
+ */
+class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
+
+	/**
+	 * @var Orm_DataSource_Mongo
+	 */
+	protected $source;
+
+	/**
+	 * @var Orm_Mapper
+	 */
+	protected $mapper;
+
+	protected function setUp() {
+		include_once $this->files->get($this, '/mapper/AddressMongo.php');
+		include_once $this->files->get($this, '/model/AddressMongo.php');
+
+		$this->mapper = new Mapper_Library_Orm_Example_AddressMongo();
+		$this->source = new Orm_DataSource_Mongo(array(
+			'server'     => 'localhost'
+			, 'database' => 'nano_test'
+		));
+		Orm::instance()->addSource('test', $this->source);
+	}
+
+	public function testInsertingSimpleResource() {
+		$data = new stdClass;
+		$data->location = 'Number 4, Privet Drive';
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $data));
+		self::assertEquals(1, $this->source->db()->selectCollection('address')->count());
+		$saved = $this->source->db()->selectCollection('address')->findOne(array('location' => $data->location));
+
+		self::assertInternalType('array', $saved);
+	}
+
+	public function testInsertingShouldIgnoreIdentityFields() {
+		$data           = new stdClass;
+		$identity       = new MongoId('100000000000000000000001');
+		$data->_id      = $identity;
+		$data->location = 'Number 4, Privet Drive';
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $data));
+
+		self::assertEquals(1, $this->source->db()->selectCollection('address')->count());
+		self::assertNull($this->source->db()->selectCollection('address')->findOne(array('_id' => $identity)));
+
+		$saved = $this->source->db()->selectCollection('address')->findOne(array('location' => $data->location));
+		self::assertInternalType('array', $saved);
+		self::assertNotEquals($identity->__toString(), $saved['_id']->__toString());
+		self::assertEquals($data->_id, $saved['_id']->__toString());
+	}
+
+	public function testInsertShouldReturnFalseForEmptyData() {
+		self::assertFalse($this->source->insert($this->mapper->getResource(), new stdClass));
+	}
+
+	public function testInsertShouldFailsWhenException() {
+		$this->source->db()->selectCollection('address')->ensureIndex(array('location' => 1), array('unique' => true));
+
+		$data = new stdClass;
+		$data->location = 'Number 4, Privet Drive';
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $data));
+		self::assertFalse($this->source->insert($this->mapper->getResource(), $data));
+	}
+
+	public function testUpdatingSimpleResource() {
+		$original = array('location' => 'Number 4, Privet Drive');
+		$updated  = (object)array('location' => 'Number 4, Privet Drive, Little Whinging');
+		$this->source->db()->selectCollection('address')->insert($original);
+
+		$identity = $original['_id'];
+		$criteria = Orm::criteria()->equals('_id', $identity);
+
+		self::assertTrue($this->source->update($this->mapper->getResource(), $updated, $criteria));
+		self::assertEquals(1, $this->source->db()->selectCollection('address')->count());
+
+		$stored = $this->source->db()->selectCollection('address')->findOne(array('_id' => $identity));
+		self::assertInternalType('array', $stored);
+		self::assertEquals($updated->location, $stored['location']);
+	}
+
+	public function testUpdateShouldReturnFalseWhenException() {
+		$this->source->db()->selectCollection('address')->ensureIndex(array('location' => 1), array('unique' => true));
+
+		$first     = (object)array('location' => 'Number 4, Privet Drive');
+		$second    = (object)array('location' => 'Game Hut at Hogwarts');
+		$duplicate = (object)array('location' => $second->location);
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+		Nano_Log::message(var_export($first, true));
+		Nano_Log::message(var_export($second, true));
+
+		self::assertFalse($this->source->update($this->mapper->getResource()
+			, $duplicate
+			, Orm::criteria()->equals('_id', $first->_id)
+		));
+	}
+
+	public function testUpdateShouldReturnFalseForEmptyData() {
+		$original = array('location' => 'Number 4, Privet Drive');
+		$this->source->db()->selectCollection('address')->insert($original);
+
+		$criteria = Orm::criteria()->equals('_id', $original['_id']);
+		self::assertFalse($this->source->update($this->mapper->getResource(), new stdClass, $criteria));
+	}
+
+	public function testDeleteShouldRemoveAllRecordsWhenEmptyCriteria() {
+		self::assertTrue($this->source->insert($this->mapper->getResource(), (object)array('location' => 'Number 4, Privet Drive')));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), (object)array('location' => 'Game Hut at Hogwarts')));
+
+		self::assertEquals(2, $this->source->db()->selectCollection('address')->count());
+		self::assertTrue($this->source->delete($this->mapper->getResource()));
+		self::assertEquals(0, $this->source->db()->selectCollection('address')->count());
+	}
+
+	public function testDeleteShouldDeleteUsingCriteria() {
+		$toDelete = (object)array('location' => 'Number 4, Privet Drive');
+		$another  = (object)array('location' => 'Game Hut at Hogwarts');
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $toDelete));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $another));
+		$criteria = Orm::criteria()->equals('_id', $toDelete->_id);
+
+		self::assertEquals(2, $this->source->db()->selectCollection('address')->count());
+		self::assertTrue($this->source->delete($this->mapper->getResource(), $criteria));
+		self::assertEquals(1, $this->source->db()->selectCollection('address')->count());
+		self::assertEquals(0, $this->source->db()->selectCollection('address')->count(array('_id' => new MongoId($toDelete->_id))));
+		self::assertEquals(1, $this->source->db()->selectCollection('address')->count(array('_id' => new MongoId($another->_id))));
+	}
+
+	public function testGettingOneRow() {
+		$first  = (object)array('location' => 'Number 4, Privet Drive');
+		$second = (object)array('location' => 'Game Hut at Hogwarts');
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+
+		self::assertEquals((array)$first, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $first->location)));
+		self::assertEquals((array)$second, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $second->location)));
+		self::assertEquals((array)$first, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $first->_id)));
+		self::assertEquals((array)$second, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $second->_id)));
+	}
+
+	public function testGetShouldReturnFalseWhenNoRecords() {
+		self::assertFalse($this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', 1)));
+	}
+
+	public function testGetShouldReturnFalseWhenException() {
+		self::assertFalse($this->source->get($this->mapper->getResource(), Orm::criteria()->equals('invalid field', 1)));
+	}
+
+
+	public function testFindRows() {
+		$first    = (object)array('location' => 'Number 4, Privet Drive');
+		$second   = (object)array('location' => 'Game Hut at Hogwarts');
+		$criteria = Orm::criteria()->equals('location', $first->location);
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+
+		self::assertCount(1, $this->source->find($this->mapper->getResource(), $criteria));
+		self::assertEquals(array((array)$first), $this->source->find($this->mapper->getResource(), $criteria));
+	}
+
+	public function testFindRowsShouldReturnAllRecordsForEmptyCriteria() {
+		$first    = (object)array('location' => 'Number 4, Privet Drive');
+		$second   = (object)array('location' => 'Game Hut at Hogwarts');
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+
+		self::assertCount(2, $this->source->find($this->mapper->getResource()));
+		self::assertEquals(array((array)$first, (array)$second), $this->source->find($this->mapper->getResource(), null, Orm::findOptions()->orderBy('id')));
+	}
+
+	public function testFindShouldReturnEmptyArrayWhenNoRecords() {
+		self::assertCount(0, $this->source->find($this->mapper->getResource()));
+		self::assertEquals(array(), $this->source->find($this->mapper->getResource()));
+	}
+
+	public function testFindShouldReturnFalseWhenException() {
+		self::assertFalse($this->source->find($this->mapper->getResource(), Orm::criteria()->equals('invalid', 'some')));
+	}
+
+	protected function tearDown() {
+		$this->source->db()->drop();
+		$this->source = null;
+		$this->mapper = null;
+	}
+
+}
