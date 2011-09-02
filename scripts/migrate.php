@@ -1,7 +1,7 @@
 <?php
 
 require dirName(__DIR__) . '/library/Nano.php';
-Nano::instance();
+require APP . DS . 'bootstrap.php';
 
 $db = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : Nano_Db::DEFAULT_NAME;
 

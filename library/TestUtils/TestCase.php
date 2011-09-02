@@ -61,6 +61,52 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Asserts the number of elements of an array, Countable or Iterator.
+	 *
+	 * @param integer $expectedCount
+	 * @param mixed   $haystack
+	 * @param string  $message
+	 */
+	public static function assertCount($expectedCount, $haystack, $message = '') {
+//		if (!is_int($expectedCount)) {
+//			throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'integer');
+//		}
+//
+//		if (!$haystack instanceof Countable &&
+//			!$haystack instanceof Iterator &&
+//			!is_array($haystack)) {
+//			throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'countable');
+//		}
+
+		self::assertThat($haystack, new TestUtils_Constraint_Count($expectedCount), $message);
+	}
+
+	/**
+	 * Asserts the number of elements of an array, Countable or Iterator.
+	 *
+	 * @param integer $expectedCount
+	 * @param mixed   $haystack
+	 * @param string  $message
+	 */
+	public static function assertNotCount($expectedCount, $haystack, $message = '') {
+		if (!is_int($expectedCount)) {
+			throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'integer');
+		}
+
+		if (!$haystack instanceof Countable &&
+			!$haystack instanceof Iterator &&
+			!is_array($haystack)) {
+			throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'countable');
+		}
+
+		$constraint = new PHPUnit_Framework_Constraint_Not(
+		  new TestUtils_Constraint_Count($expectedCount)
+		);
+
+		self::assertThat($haystack, $constraint, $message);
+	}
+
+	/**
 	 * @return TestUtils_Stub_ReturnReal
 	 */
 	public function returnReal() {
