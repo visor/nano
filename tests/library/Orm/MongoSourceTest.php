@@ -138,13 +138,19 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 	public function testGettingOneRow() {
 		$first  = (object)array('location' => 'Number 4, Privet Drive');
 		$second = (object)array('location' => 'Game Hut at Hogwarts');
+
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
 
-		self::assertEquals((array)$first, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $first->location)));
-		self::assertEquals((array)$second, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $second->location)));
-		self::assertEquals((array)$first, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $first->_id)));
-		self::assertEquals((array)$second, $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $second->_id)));
+		self::assertArrayHasKey('_id', $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $first->location)));
+		self::assertArrayHasKey('_id', $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $first->_id)));
+		self::assertArrayHasKey('_id', $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $second->location)));
+		self::assertArrayHasKey('_id', $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('_id', $second->_id)));
+
+		$foundByLocation = $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $first->location));
+		$foundById       = $this->source->get($this->mapper->getResource(), Orm::criteria()->equals('location', $first->location));
+		self::assertEquals($foundById, $foundByLocation);
+		self::assertEquals($first->_id, $foundById['_id']->__toString());
 	}
 
 	public function testGetShouldReturnFalseWhenNoRecords() {
@@ -164,8 +170,18 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
 
-		self::assertCount(1, $this->source->find($this->mapper->getResource(), $criteria));
-		self::assertEquals(array((array)$first), $this->source->find($this->mapper->getResource(), $criteria));
+		$found = $this->source->find($this->mapper->getResource(), $criteria);
+		self::assertInternalType('array', $found);
+		self::assertCount(1, $found);
+		self::assertArrayHasKey('0', $found);
+
+		$firstFound = $found[0];
+		self::assertInternalType('array', $firstFound);
+		self::assertArrayHasKey('_id', $firstFound);
+		self::assertInstanceOf('MongoId', $firstFound['_id']);
+		self::assertArrayHasKey('location', $firstFound);
+		self::assertEquals($first->_id, $firstFound['_id']->__toString());
+		self::assertEquals($first->location, $firstFound['location']);
 	}
 
 	public function testFindRowsShouldReturnAllRecordsForEmptyCriteria() {
@@ -175,8 +191,15 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
 
-		self::assertCount(2, $this->source->find($this->mapper->getResource()));
-		self::assertEquals(array((array)$first, (array)$second), $this->source->find($this->mapper->getResource(), null, Orm::findOptions()->orderBy('id')));
+		$found = $this->source->find($this->mapper->getResource());
+		self::assertCount(2, $found);
+		self::assertArrayHasKey('0', $found);
+		self::assertArrayHasKey('1', $found);
+
+		self::assertEquals($first->_id,      $found[0]['_id']->__toString());
+		self::assertEquals($first->location, $found[0]['location']);
+		self::assertEquals($second->_id,      $found[1]['_id']->__toString());
+		self::assertEquals($second->location, $found[1]['location']);
 	}
 
 	public function testFindShouldReturnEmptyArrayWhenNoRecords() {
