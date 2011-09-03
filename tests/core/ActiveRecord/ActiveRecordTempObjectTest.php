@@ -37,7 +37,6 @@ class ActiveRecordTempObjectTest extends TestUtils_TestCase {
 				$temp->addChild(null, '1', '2');
 			}
 			, 'InvalidArgumentException'
-			, ''
 		);
 		self::assertException(
 			function () use ($temp) {

@@ -90,14 +90,15 @@ class Library_Orm_MongoSourceTypesTest extends TestUtils_TestCase {
 
 	public function testCastingMongoScalarFields() {
 		$values = array(
-			'string'    => 'string value'
-			, 'double'  => 10.01
-			, 'integer' => 10
-			, 'boolean' => true
+			'string'    => array('string value', 'string value')
+			, 'double'  => array(10.01, 10.01)
+			, 'integer' => array(10, 10)
+			, 'boolean' => array(true, 1)
 		);
 		foreach ($values as $type => $value) {
-			self::assertEquals($value, $this->source->type($type)->castToModel($value));
-			self::assertEquals($value, $this->source->type($type)->castToDataSource($value));
+			list($modelValue, $sourceValue) = $value;
+			self::assertEquals($modelValue, $this->source->type($type)->castToModel($sourceValue));
+			self::assertEquals($sourceValue, $this->source->type($type)->castToDataSource($modelValue));
 		}
 	}
 
