@@ -161,7 +161,6 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 		self::assertFalse($this->source->get($this->mapper->getResource(), Orm::criteria()->equals('invalid field', 1)));
 	}
 
-
 	public function testFindRows() {
 		$first    = (object)array('location' => 'Number 4, Privet Drive');
 		$second   = (object)array('location' => 'Game Hut at Hogwarts');
