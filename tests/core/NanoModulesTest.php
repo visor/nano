@@ -2,6 +2,8 @@
 
 /**
  * @group framework
+ * @group modules
+ * @group loader
  */
 class NanoModulesTest extends TestUtils_TestCase {
 

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * todo: rename to application_modules?
+ */
 class Nano_Modules extends ArrayObject {
 
 	/**

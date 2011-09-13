@@ -1,5 +1,6 @@
 <?php
 
+//todo: move defines into application or nano start method
 define('DS',          DIRECTORY_SEPARATOR);
 define('PS',          PATH_SEPARATOR);
 define('LIB',         __DIR__);
@@ -84,17 +85,17 @@ final class Nano {
 		include(SETTINGS . DS . 'routes.php');
 		if (null === $url) {
 			$url = $_SERVER['REQUEST_URI'];
-			if (false !== strPos($url, '?')) {
-				$url = subStr($url, 0, strPos($url, '?'));
-			}
-			if (self::config('web')->url && 0 === strPos($url, self::config('web')->url)) {
-				$url = subStr($url, strLen(self::config('web')->url));
-			}
-			if (self::config('web')->index) {
-				$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
-			}
-			$url = rawUrlDecode($url);
 		}
+		if (false !== strPos($url, '?')) {
+			$url = subStr($url, 0, strPos($url, '?'));
+		}
+		if (self::config('web')->url && 0 === strPos($url, self::config('web')->url)) {
+			$url = subStr($url, strLen(self::config('web')->url));
+		}
+		if (self::config('web')->index) {
+			$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
+		}
+		$url = rawUrlDecode($url);
 		try {
 			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
 			if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {

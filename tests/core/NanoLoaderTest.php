@@ -2,6 +2,7 @@
 
 /**
  * @group framework
+ * @group loader
  */
 class NanoLoaderTest extends TestUtils_TestCase {
 

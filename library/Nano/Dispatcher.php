@@ -292,6 +292,7 @@ class Nano_Dispatcher {
 	 * @throws Exception
 	 */
 	protected function handleError(Exception $error) {
+		//todo: need refactor!
 		if ($this->throw) {
 			if (false === Nano::isTesting()) {
 				header('Content-Type: text/plain', true);

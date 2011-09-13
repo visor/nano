@@ -23,6 +23,7 @@ class Nano_Config_Builder {
 	 * @param string $path
 	 */
 	public static function createStub($path) {
+		//todo: remove this method
 		if (!file_exists($path)) {
 			file_put_contents($path, '<?php return (object)array();');
 		}
@@ -73,6 +74,8 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	public function build($name) {
+		//todo: use configured format instead detect
+		//todo: throw exception if format not available
 		$this->detectFormat()->write($this->createSettings($name), $this->destination . DS . Nano_Config::CONFIG_FILE_NAME);
 	}
 

@@ -25,6 +25,27 @@ class Nano_Config {
 	}
 
 	/**
+	 * @return Nano_Config_Format
+	 * @param string $name
+	 */
+	public static function formatFactory($name) {
+		/** @var Nano_Config_Format $result */
+		$className = __CLASS__ . '_Format_' . ucFirst(strToLower($name));
+		if (false === class_exists($className)) {
+			throw new Nano_Exception_UnsupportedConfigFormat($name);
+		}
+		$class = new ReflectionClass($className);
+		if (!$class->implementsInterface('Nano_Config_Format') || !$class->isInstantiable()) {
+			throw new Nano_Exception_UnsupportedConfigFormat($name);
+		}
+		$result = $class->newInstance();
+		if (!$result->available()) {
+			throw new Nano_Exception_UnsupportedConfigFormat($name);
+		}
+		return $result;
+	}
+
+	/**
 	 * @return void
 	 * @param Nano_Config_Format $value
 	 */
@@ -36,7 +57,9 @@ class Nano_Config {
 	 * @return Nano_Config_Format
 	 */
 	public static function getFormat() {
+		//todo: throw exception if format not available
 		if (null === self::$format) {
+			//todo: throw exception
 			self::setFormat(new Nano_Config_Format_Php());
 		}
 		return self::$format;
