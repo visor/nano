@@ -34,50 +34,10 @@ class Core_Application_ConfigurationTest extends TestUtils_TestCase {
 		self::assertEquals(getCwd(), self::getObjectProperty($this->application, 'rootDir'));
 	}
 
-	public function testWithModuleShouldThrowExceptionWhenNotExistedPathPassed() {
-		$application = $this->application;
-		self::assertException(
-			function() use ($application) {
-				/** @var Application $application */
-				$application->withModule('module1', __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
-			}
-			, 'Application_Exception_PathNotFound'
-			, 'Path not found: ' . __FILE__ . DIRECTORY_SEPARATOR . 'not-exists'
-		);
-	}
-
-	public function testWithModuleShouldThrowExceptionWhenModleNotExistInPathPassed() {
-		$application = $this->application;
-		self::assertException(
-			function() use ($application) {
-				/** @var Application $application */
-				$application->withModule('module1', __DIR__);
-			}
-			, 'Application_Exception_PathNotFound'
-			, 'Path not found: ' . __DIR__ . DIRECTORY_SEPARATOR . 'module1'
-		);
-	}
-
-	public function testDetectingApplicationModulesDir() {
-		$this->application->withRootDir(__DIR__);
-		self::assertNull(self::getObjectProperty($this->application, 'modulesDir'));
-		self::assertEquals(
-			__DIR__ . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME
-			, $this->application->getModulesDir()
-		);
-	}
-
 	public function testDetectingNanoDir() {
 		self::assertNull(self::getObjectProperty($this->application, 'nanoRootDir'));
 		self::assertEquals(getCwd(), $this->application->getNanoRootDir());
 		self::assertEquals(getCwd(), self::getObjectProperty($this->application, 'nanoRootDir'));
-	}
-
-	public function testDetectingSharedModulesDir() {
-		$expected = getCwd() . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME;
-		self::assertNull(self::getObjectProperty($this->application, 'sharedModulesDir'));
-		self::assertEquals($expected, $this->application->getSharedModulesDir());
-		self::assertEquals($expected, self::getObjectProperty($this->application, 'sharedModulesDir'));
 	}
 
 	public function testDetectingPublicDir() {
@@ -106,14 +66,6 @@ class Core_Application_ConfigurationTest extends TestUtils_TestCase {
 	}
 
 	public function testGettingPlugins() {
-		self::markTestIncomplete('Not implemented yet');
-	}
-
-	public function testAddingModules() {
-		self::markTestIncomplete('Not implemented yet');
-	}
-
-	public function testGettingModules() {
 		self::markTestIncomplete('Not implemented yet');
 	}
 
