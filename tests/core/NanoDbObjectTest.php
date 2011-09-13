@@ -14,7 +14,7 @@ class Nano_DbObjectTest extends PHPUnit_Framework_TestCase {
 	protected $db;
 
 	protected function setUp() {
-		Nano_Db::clean();
+		//Nano_Db::clean();
 		TestDbTable1::dropTable();
 		TestDbTable2::dropTable();
 		TestDbTable1::createTable();
@@ -135,7 +135,7 @@ class Nano_DbObjectTest extends PHPUnit_Framework_TestCase {
 	}
 
 	protected function tearDown() {
-		Nano_Db::clean();
+		//Nano_Db::clean();
 		TestDbTable1::dropTable();
 		TestDbTable2::dropTable();
 	}

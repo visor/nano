@@ -65,7 +65,7 @@ class TestUtils_Constraint_Exception extends PHPUnit_Framework_Constraint {
 	 * @return string
 	 */
 	public function toString() {
-		return 'exception <' . $this->exceptionClass . '>'. (null === $this->exceptionMessage ? '' : ' with message ' . PHPUnit_Util_Type::toString($this->exceptionMessage));
+		return 'exception <' . $this->exceptionClass . '>'. (null === $this->exceptionMessage ? '' : ' with message \'' . $this->exceptionMessage . '\'');
 	}
 
 	/**

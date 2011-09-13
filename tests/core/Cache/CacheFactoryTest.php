@@ -26,7 +26,6 @@ class CacheTest extends TestUtils_TestCase {
 	public function testGetApi() {
 		self::assertInstanceOf('Cache_API_File', Cache::getApi('File'));
 		self::assertInstanceOf('Cache_API_MongoDb', Cache::getApi('MongoDb'));
-		self::assertException(function() { Cache::getApi('SomeOtherApi'); }, 'Cache_Exception', '');
 	}
 
 	public function testConfigure() {

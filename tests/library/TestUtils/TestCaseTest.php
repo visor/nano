@@ -47,17 +47,17 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 	public function testAssertExceptionShouldFailsWhenMessageDoesNotMatches() {
 		$exception = null;
 		$closure   = function() {
-			throw new RuntimeException('Test exception');
+			throw new RuntimeException('Test exception message');
 		};
 		try {
-			self::assertException($closure, 'RuntimeException', 'Another exception');
+			self::assertException($closure, 'RuntimeException', 'Another exception message');
 		} catch (Exception $e) {
 			$exception = $e;
 		}
 
 		self::assertInstanceOf('PHPUnit_Framework_AssertionFailedError', $exception);
 		self::assertContains('Exception message not matches', $exception->getMessage());
-		self::assertContains('exception <RuntimeException> with message \'Another exception\' should throw', $exception->getMessage());
+		self::assertContains('exception <RuntimeException> with message \'Another exception message\' should throw', $exception->getMessage());
 	}
 
 	public function testAssertExceptionShouldFailsWhenExceptionDoesNotMatches() {
