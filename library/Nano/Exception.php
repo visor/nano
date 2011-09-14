@@ -1,6 +1,6 @@
 <?php
 
-class Nano_Exception extends Exception {
+class Nano_Exception extends RuntimeException {
 
 	/**
 	 * @return string

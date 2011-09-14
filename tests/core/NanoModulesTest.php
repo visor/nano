@@ -1,11 +1,11 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  * @group modules
  * @group loader
  */
-class NanoModulesTest extends TestUtils_TestCase {
+class Core_NanoModulesTest extends TestUtils_TestCase {
 
 	/**
 	 * @var Nano_Modules
@@ -19,14 +19,14 @@ class NanoModulesTest extends TestUtils_TestCase {
 
 	public function testPathes() {
 		$this->modules
-			->append('default')
-			->append('other', DS . 'tmp')
-			->append('some', DS . 'path2')
+			->append('default', $this->files->get($this, '/test-module'))
+			->append('other', $this->files->get($this, '/test-module-second'))
+			->append('some', $this->files->get($this, '/test-module-third'))
 		;
-		self::assertEquals(DS . 'tmp', $this->modules->getPath('other', null));
-		self::assertEquals(DS . 'path2', $this->modules->getPath('some', null));
-		self::assertEquals(DS . 'path2' . DS .'views', $this->modules->getPath('some', 'views'));
-		self::assertEquals(MODULES . DS  . 'default', $this->modules->getPath('default', null));
+		self::assertEquals($this->files->get($this, '\\test-module-second'),      $this->modules->getPath('other', null));
+		self::assertEquals($this->files->get($this, '/test-module-third'),       $this->modules->getPath('some', null));
+		self::assertEquals($this->files->get($this, '/test-module-third\\views'), $this->modules->getPath('some', 'views'));
+		self::assertEquals($this->files->get($this, '/test-module'),             $this->modules->getPath('default', null));
 	}
 
 	public function testActive() {
@@ -34,17 +34,17 @@ class NanoModulesTest extends TestUtils_TestCase {
 		self::assertFalse($this->modules->active('some'));
 		self::assertFalse($this->modules->active('other'));
 
-		$this->modules->append('default');
+		$this->modules->append('default', $this->files->get($this, '/test-module'));
 		self::assertTrue($this->modules->active('default'));
 		self::assertFalse($this->modules->active('some'));
 		self::assertFalse($this->modules->active('other'));
 
-		$this->modules->append('some', DS . 'path2');
+		$this->modules->append('some', $this->files->get($this, '/test-module-second'));
 		self::assertTrue($this->modules->active('default'));
 		self::assertTrue($this->modules->active('some'));
 		self::assertFalse($this->modules->active('other'));
 
-		$this->modules->append('other', DS . 'tmp');
+		$this->modules->append('other', $this->files->get($this, '/test-module-third'));
 		self::assertTrue($this->modules->active('default'));
 		self::assertTrue($this->modules->active('some'));
 		self::assertTrue($this->modules->active('other'));

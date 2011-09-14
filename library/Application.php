@@ -92,17 +92,14 @@ class Application {
 	 */
 	public function withModule($name, $path = null) {
 		if (null === $path) {
-			//todo: check shared module
-			//todo: check application module
-			//todo: throw exception
+			if (is_dir($this->getSharedModulesDir() . DIRECTORY_SEPARATOR . $name)) {
+				$path = $this->getSharedModulesDir() . DIRECTORY_SEPARATOR . $name;
+			} elseif (is_dir($this->getModulesDir() . DIRECTORY_SEPARATOR . $name)) {
+				$path = $this->getModulesDir() . DIRECTORY_SEPARATOR . $name;
+			} else {
+				throw new Application_Exception_ModuleNotFound($name);
+			}
 		}
-		if (!is_dir($path)) {
-			throw new Application_Exception_PathNotFound($path);
-		}
-		if (!is_dir($path . DIRECTORY_SEPARATOR . $name)) {
-			throw new Application_Exception_PathNotFound($path . DIRECTORY_SEPARATOR . $name);
-		}
-
 		$this->getModules()->append($name, $path);
 		return $this;
 	}

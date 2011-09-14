@@ -1,4 +1,4 @@
 <?php
 
-class Application_Exception extends RuntimeException {
+class Application_Exception extends Nano_Exception {
 }

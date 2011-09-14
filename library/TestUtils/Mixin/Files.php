@@ -6,25 +6,26 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 
 	/**
 	 * @return string
-	 * @param Nano_TestUtils_TestCase $test
+	 * @param TestUtils_TestCase $test
 	 * @param string $name
 	 */
-	public function get(PHPUnit_Framework_TestCase $test, $name) {
+	public function get(TestUtils_TestCase $test, $name) {
 		$class = new ReflectionClass($test);
+		$name  = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $name);
 		return dirName($class->getFileName()) . '/_files' . $name;
 	}
 
-	public function clean(PHPUnit_Framework_TestCase $test, $dir, $fullPath = false) {
+	public function clean(TestUtils_TestCase $test, $dir, $fullPath = false) {
 		if (false === $fullPath) {
 			$dir = $this->get($test, $dir);
 		}
 		if (!file_exists($dir)) {
 			mkDir($dir, 0755, true);
-			return;
+			return true;
 		}
 		$i = new DirectoryIterator($dir);
 		$result = true;
-		foreach ($i as $file) {
+		foreach ($i as $file) { /** @var DirectoryIterator $file */
 			if ($file->isDot()) {
 				continue;
 			}
@@ -38,7 +39,7 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 				}
 				continue;
 			}
-			unlink($file->getPathName());
+			unLink($file->getPathName());
 		}
 		unset($i, $file);
 		return $result;

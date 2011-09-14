@@ -10,7 +10,7 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 * @param string $path
 	 */
-	public function append($name, $path = null) {
+	public function append($name, $path) {
 		$this->offsetSet($name, $path);
 		return $this;
 	}
@@ -53,9 +53,9 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 * @param string $path
 	 */
-	public function offsetSet($name, $path = null) {
-		if (null === $path) {
-			$path = MODULES . DS . $name;
+	public function offsetSet($name, $path) {
+		if (!is_dir($path)) {
+			throw new Application_Exception_PathNotFound($path);
 		}
 		parent::offsetSet($name, $path);
 	}

@@ -62,11 +62,24 @@ class Core_Application_ConfigurationTest extends TestUtils_TestCase {
 	}
 
 	public function testAddingPugins() {
-		self::markTestIncomplete('Not implemented yet');
+		include_once $this->files->get($this, '/FakePlugin.php');
+
+		$plugin = new Core_Application_FakePlugin();
+		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
+		self::assertInstanceOf('Application', $this->application->withPlugin($plugin));
+		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
+
+		/** @var Nano_C_Plugin[]|SplObjectStorage $plugins */
+		$plugins = self::getObjectProperty($this->application, 'plugins');
+
+		self::assertEquals(1, $plugins->count());
+		self::assertTrue($plugins->contains($plugin));
 	}
 
 	public function testGettingPlugins() {
-		self::markTestIncomplete('Not implemented yet');
+		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
+		self::assertInstanceOf('SplObjectStorage', $this->application->getPlugins());
+		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
 	}
 
 	protected function tearDown() {
