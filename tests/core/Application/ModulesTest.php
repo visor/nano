@@ -1,19 +1,39 @@
 <?php
 
+require_once __DIR__ . '/Abstract.php';
+
 /**
  * @group core
  * @group core-application
  */
-class Core_Application_ModulesTest extends TestUtils_TestCase {
+class Core_Application_ModulesTest extends Core_Application_Abstract {
 
-	/**
-	 * @var Application
-	 */
-	protected $application;
+	public function testDetectingModuleName() {
+		self::assertFalse(Nano_Modules::isModuleName(__CLASS__));
+		self::assertFalse(Nano_Modules::isModuleName('M\\ClassName'));
+		self::assertFalse(Nano_Modules::isModuleName('SomeModule_'));
+		self::assertFalse(Nano_Modules::isModuleName('SomeName_Module2'));
 
-	protected function setUp() {
-		self::setObjectProperty('Application', 'current', null);
-		$this->application = new Application();
+		self::assertTrue(Nano_Modules::isModuleName('SomeName_Module'));
+		self::assertTrue(Nano_Modules::isModuleName('A_Module'));
+	}
+
+	public function testConvertingModuleNameToFolder() {
+		self::assertEquals('example',         $this->application->getModules()->nameToFolder('Example_Module'));
+		self::assertEquals('a-example',       $this->application->getModules()->nameToFolder('AExample_Module'));
+		self::assertEquals('an-example',      $this->application->getModules()->nameToFolder('AnExample_Module'));
+		self::assertEquals('other-module',    $this->application->getModules()->nameToFolder('OtherModule_Module'));
+		self::assertEquals('someothermodule', $this->application->getModules()->nameToFolder('Someothermodule_Module'));
+	}
+
+	public function testNameToFolderShouldReturnPassedNameWhenModuleFolderPassed() {
+		$this->application->withModule('some-module', $this->files->get($this, '/test'));
+		self::assertEquals('some-module', $this->application->getModules()->nameToFolder('some-module'));
+	}
+
+	public function testNameToFolderShouldThrowExceptionWhenNotModuleNamespacePassed() {
+		$this->setExpectedException('Application_Exception_InvalidModuleNamespace', 'Given namespace "some module" is not valid module namespace');
+		$this->application->getModules()->nameToFolder('some module');
 	}
 
 	public function testDetectingApplicationModulesDir() {
@@ -108,9 +128,76 @@ class Core_Application_ModulesTest extends TestUtils_TestCase {
 		);
 	}
 
-	protected function tearDown() {
-		self::setObjectProperty('Application', 'current', null);
-		unSet($this->application);
+	public function testPathes() {
+		$this->application->withModule('default', $this->files->get($this, '/test'));
+
+		self::assertEquals($this->files->get($this, '\\test'),       $this->application->getModules()->getPath('default', null));
+		self::assertEquals($this->files->get($this, '/test\\views'), $this->application->getModules()->getPath('default', 'views'));
+		self::assertEquals($this->files->get($this, '/test'),        $this->application->getModules()->getPath('default', null));
+	}
+
+	public function testActive() {
+		self::assertFalse($this->application->getModules()->active('default'));
+		self::assertFalse($this->application->getModules()->active('some'));
+		self::assertFalse($this->application->getModules()->active('other'));
+
+		$this->application->withModule('default', $this->files->get($this, '/test'));
+		self::assertTrue($this->application->getModules()->active('default'));
+		self::assertFalse($this->application->getModules()->active('some'));
+		self::assertFalse($this->application->getModules()->active('other'));
+
+		$this->application->withModule('some', $this->files->get($this, '/application-modules/module1'));
+		self::assertTrue($this->application->getModules()->active('default'));
+		self::assertTrue($this->application->getModules()->active('some'));
+		self::assertFalse($this->application->getModules()->active('other'));
+
+		$this->application->withModule('other', $this->files->get($this, '/application-modules/module2'));
+		self::assertTrue($this->application->getModules()->active('default'));
+		self::assertTrue($this->application->getModules()->active('some'));
+		self::assertTrue($this->application->getModules()->active('other'));
+	}
+
+	public function testClassesAutoloading() {
+		$this->application->withModule('test', $this->files->get($this, '/test'));
+		self::assertEquals('Test_Module\\LibraryClass', Test_Module\LibraryClass::name());
+	}
+
+	public function testDetectingsControllerClass() {
+		$this->application->withModule('test', $this->files->get($this, '/test'));
+		$route = Nano_Route::create('some', 'class', 'index', 'test');
+		self::assertEquals('Test_Module\\ClassController', $route->controllerClass());
+	}
+
+	public function testModuleRoutes() {
+		$this->application->withModule('test', $this->files->get($this, '/test'));
+
+		$routes     = new Nano_Routes();
+		$dispatcher = new Nano_Dispatcher($this->application);
+		$route      = Nano_Route::create('some', 'class', 'index', 'test');
+
+		$routes->addRoute('get', $route);
+
+		self::assertNotNull($dispatcher->getRoute($routes, '/some'));
+		self::assertEquals($route->controller(), $dispatcher->getRoute($routes, '/some')->controller());
+		self::assertEquals($route->action(),     $dispatcher->getRoute($routes, '/some')->action());
+		self::assertInstanceOf('Test_Module\\ClassController', $dispatcher->getController($route));
+
+		$result = $dispatcher->dispatch($routes, '/some');
+		self::assertTrue(class_exists('Test_Module\\ClassController', false));
+		self::assertEquals(Test_Module\ClassController::name(), $result);
+	}
+
+	public function testModuleViews() {
+		$this->application->withModule('test', $this->files->get($this, '/test'));
+		self::assertTrue($this->application->loader()->loadClass('Test_Module\\ClassController'));
+
+		$dispatcher = new Nano_Dispatcher($this->application);
+		self::assertEquals('view action runned', $dispatcher->run(Nano_Route::create('', 'class', 'view', 'test')));
+	}
+
+	public function testGetPathShouldThrowExceptionWhenModuleNotExists() {
+		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'some module\' not found');
+		$this->application->getModules()->getPath('some module');
 	}
 
 }

@@ -19,8 +19,8 @@ define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC_DIR',  ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
 
-require LIB . DS . 'Nano' . DS . 'Loader.php';
-require LIB . DS . 'Nano' . DS . 'Modules.php';
+//require LIB . DS . 'Nano' . DS . 'Loader.php';
+//require LIB . DS . 'Nano' . DS . 'Modules.php';
 
 final class Nano {
 
@@ -185,6 +185,21 @@ final class Nano {
 		return Nano_Message::instance();
 	}
 
+	/**
+	 * Converts given string into CamelCased class name
+	 *
+	 * @return string
+	 * @param string $string
+	 */
+	public static function stringToName($string) {
+		$result = strToLower($string);
+		$result = str_replace('-', ' ', $result);
+		$result = ucWords($result);
+		$result = str_replace(' ', '', $result);
+		$result = trim($result);
+		return $result;
+	}
+
 	private function __construct() {
 		if ($this->config()->fileExists()) {
 			$this->setupErrorReporting();
@@ -215,9 +230,9 @@ final class Nano {
 
 }
 
-function nano_autoload($className) {
-	return Nano_Loader::load($className);
-}
+//function nano_autoload($className) {
+//	return Nano_Loader::load($className);
+//}
 
-Nano_Loader::initLibraries();
-spl_autoload_register('nano_autoload');
+//Nano_Loader::initLibraries();
+//spl_autoload_register('nano_autoload');

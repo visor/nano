@@ -1,6 +1,8 @@
 <?php
 
-class M_TestModule_Model_Class {
+namespace Test_Module;
+
+class Plugin2Class {
 
 	public static function name() {
 		return __CLASS__;

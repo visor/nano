@@ -18,7 +18,8 @@ class DispatcherTest extends TestUtils_TestCase {
 	private $dispatcher;
 
 	protected function setUp() {
-		$this->dispatcher = new Nano_Dispatcher();
+		$application      = new Application();
+		$this->dispatcher = new Nano_Dispatcher($application);
 	}
 
 	public function testFormatting() {
@@ -45,12 +46,15 @@ class DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testGetController() {
+		$this->dispatcher->application()->withRootDir($this->files->get($this, ''));
 		$c = $this->dispatcher->getController(Nano_Route::create('', 'test', 'test'));
 		self::assertInstanceOf('Nano_C', $c);
 		self::assertInstanceOf('TestController', $c);
 	}
 
 	public function testDetectingContextBySuffix() {
+		$this->dispatcher->application()->withRootDir($this->files->get($this, ''));
+
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$routes = new Nano_Routes();
 		$routes

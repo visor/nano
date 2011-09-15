@@ -1,6 +1,8 @@
 <?php
 
-class M_TestModule_Controller_Class extends Nano_C {
+namespace Test_Module;
+
+class Class2Controller extends \Nano_C {
 
 	public static function name() {
 		return __CLASS__;

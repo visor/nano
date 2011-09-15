@@ -69,8 +69,6 @@ class Library_Orm_MysqlSourceTypesTest extends TestUtils_TestCase {
 	}
 
 	public function testCastingMysqlDateField() {
-		Nano_Log::message(__FUNCTION__);
-		Nano_Log::message(var_export($this->source, true));
 		$sourceValue = '2010-01-01';
 		$modelValue  = Date::create($sourceValue);
 		$this->castingFieldType('string', $sourceValue, $modelValue, 'date');
@@ -94,7 +92,6 @@ class Library_Orm_MysqlSourceTypesTest extends TestUtils_TestCase {
 	}
 
 	protected function castingFieldType($typeClass, $sourceValue, $modelValue, $typeName) {
-		Nano_Log::message(var_export($this->source->type($typeName), true));
 		self::assertEquals($modelValue, $this->source->type($typeName)->castToModel($sourceValue), 'Model value should equals');
 		self::assertInternalType($typeClass, $this->source->type($typeName)->castToDataSource($modelValue), 'Internal types should equals');
 		self::assertEquals($sourceValue, $this->source->type($typeName)->castToDataSource($modelValue), 'Source values should equals');

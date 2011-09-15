@@ -11,6 +11,11 @@ class Nano_Dispatcher {
 	const CONTEXT           = 'context';
 
 	/**
+	 * @var Application
+	 */
+	protected $application;
+
+	/**
 	 * @var Nano_Dispatcher_Custom
 	 */
 	protected $custom             = null;
@@ -50,24 +55,39 @@ class Nano_Dispatcher {
 	 */
 	protected $throw              = false;
 
-	public static function formatName($name, $controller = true) {
-		if (true === $controller && Nano_Loader::isModuleClass($name)) {
-			return $name;
-		}
-		$result = strToLower($name);
-		$result = str_replace('-', ' ', $result);
-		$result = ucWords($result);
-		$result = str_replace(' ', '', $result);
-		$result = trim($result);
-
+	/**
+	 * @return string
+	 * @param string $name
+	 * @param boolean $controller
+	 * @param string|null $module
+	 */
+	public static function formatName($name, $controller = true, $module = null) {
+		$result = Nano::stringToName($name);
 		if ($controller) {
 			$result .= self::SUFFIX_CONTROLLER;
+			if (null !== $module) {
+				$result = $module . '\\' . $result;
+			}
 		} else {
 			$result  = strToLower($result[0]) . subStr($result, 1);
 			$result .= self::SUFFIX_ACTION;
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param Application $application
+	 */
+	public function __construct(Application $application) {
+		$this->application = $application;
+	}
+
+	/**
+	 * @return Application
+	 */
+	public function application() {
+		return $this->application;
 	}
 
 	/**
@@ -135,6 +155,7 @@ class Nano_Dispatcher {
 			}
 			throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
 		} catch (Exception $e) {
+			Nano_Log::message($e);
 			$this->handleError($e);
 		}
 		return null;
@@ -148,7 +169,8 @@ class Nano_Dispatcher {
 		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD']) && Nano::isTesting()) {
 			return null;
 		}
-		if ($route instanceof Nano_Route_Runnable) { /* @var $route Nano_Route_Runnable */
+		if ($route instanceof Nano_Route_Runnable) {
+			/* @var $route Nano_Route_Runnable */
 			$route->run();
 			return null;
 		}

@@ -1,20 +1,12 @@
 <?php
 
+require_once __DIR__ . '/Abstract.php';
+
 /**
  * @group core
  * @group core-application
  */
-class Core_Application_ConfigurationTest extends TestUtils_TestCase {
-
-	/**
-	 * @var Application
-	 */
-	protected $application;
-
-	protected function setUp() {
-		self::setObjectProperty('Application', 'current', null);
-		$this->application = new Application();
-	}
+class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 
 	public function testGettingCurrent() {
 		self::assertNull(Application::current());
@@ -35,7 +27,6 @@ class Core_Application_ConfigurationTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingNanoDir() {
-		self::assertNull(self::getObjectProperty($this->application, 'nanoRootDir'));
 		self::assertEquals(getCwd(), $this->application->getNanoRootDir());
 		self::assertEquals(getCwd(), self::getObjectProperty($this->application, 'nanoRootDir'));
 	}
@@ -80,11 +71,6 @@ class Core_Application_ConfigurationTest extends TestUtils_TestCase {
 		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
 		self::assertInstanceOf('SplObjectStorage', $this->application->getPlugins());
 		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
-	}
-
-	protected function tearDown() {
-		self::setObjectProperty('Application', 'current', null);
-		unSet($this->application);
 	}
 
 }

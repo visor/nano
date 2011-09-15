@@ -2,8 +2,12 @@
 
 class Application {
 
-	const MODULES_DIR_NAME = 'modules';
-	const PUBLIC_DIR_NAME  = 'public';
+	const PUBLIC_DIR_NAME     = 'public';
+	const MODULES_DIR_NAME    = 'modules';
+	const CONTROLLER_DIR_NAME = 'controllers';
+	const LIBRARY_DIR_NAME    = 'library';
+	const MODELS_DIR_NAME     = 'models';
+	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
 	 * @var null|Application
@@ -34,6 +38,11 @@ class Application {
 	protected $plugins = null;
 
 	/**
+	 * @var Nano_Loader
+	 */
+	protected $loader = null;
+
+	/**
 	 * @return Nano_Application
 	 */
 	public static function configure() {
@@ -53,8 +62,23 @@ class Application {
 	 * @return Application
 	 * @param string $value
 	 */
+	public function usingConfigurationFormat($value) {
+		$this->configFormat = Nano_Config::formatFactory($value);
+		return $this;
+	}
+
+	/**
+	 * @return Application
+	 * @param string $value
+	 */
 	public function withRootDir($value) {
 		$this->rootDir = $value;
+		$this->loader()
+			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
+			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
+			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
+			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
+		;
 		return $this;
 	}
 
@@ -101,6 +125,12 @@ class Application {
 			}
 		}
 		$this->getModules()->append($name, $path);
+		$this->loader()
+			->useDirectory($path . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
+			->useDirectory($path . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
+			->useDirectory($path . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
+			->useDirectory($path . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
+		;
 		return $this;
 	}
 
@@ -113,18 +143,22 @@ class Application {
 		return $this;
 	}
 
-	/**
-	 * @return Application
-	 * @param string $value
-	 */
-	public function usingConfigurationFormat($value) {
-		$this->configFormat = Nano_Config::formatFactory($value);
-		return $this;
-	}
-
 	public function start() {
 		//todo: include required classes
+		//todo: get application routes
+		//todo: detect request uri
 		//todo: start dispatcher
+		//todo: ??? handle head method
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getConfigurationFormat() {
+		if (null === $this->configFormat) {
+			$this->usingConfigurationFormat('php');
+		}
+		return $this->configFormat;
 	}
 
 	/**
@@ -187,13 +221,6 @@ class Application {
 		return $this->plugins;
 	}
 
-	public function getConfigurationFormat() {
-		if (null === $this->configFormat) {
-			$this->usingConfigurationFormat('php');
-		}
-		return $this->configFormat;
-	}
-
 	/**
 	 * @return string
 	 */
@@ -202,6 +229,18 @@ class Application {
 			$this->nanoRootDir = dirName(__DIR__);
 		}
 		return $this->nanoRootDir;
+	}
+
+	/**
+	 * @return Nano_Loader
+	 */
+	public function loader() {
+		return $this->loader;
+	}
+
+	public function __construct() {
+		$this->loader = new Nano_Loader();
+		$this->loader->register($this);
 	}
 
 }

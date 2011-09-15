@@ -1,0 +1,1 @@
+layout with content {<?php echo $content; ?>} rendered.

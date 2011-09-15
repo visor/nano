@@ -2,75 +2,67 @@
 
 class Nano_Render {
 
-	const VIEW_DIR = 'views';
+	const VIEW_DIR   = 'views';
+	const LAYOUT_DIR = 'layouts';
 
 	/**
-	 * @return string
-	 * @param Nano_C $object
-	 * @param string $controller
-	 * @param string $action
+	 * @var Application
 	 */
-	public static function layout(Nano_C $object, $controller, $action) {
-		$module    = $object->getModule();
-		$variables = get_object_vars($object);
-		$content   = self::view($object, $controller, $action);
-		$head      =
-			  self::file(self::getFileName($controller, 'controller.head', $object->context, $module), $variables, false)
-			. self::file(self::getFileName($controller, $action . '.head', $object->context, $module), $variables, false)
-		;
-		$fileName  = self::addContext(LAYOUTS . DS . $object->layout, $object->context) . '.php';
+	protected $application;
 
-		$variables['content']    = $content;
-		$variables['head']       = $head;
-		$variables['controller'] = $controller;
-		$variables['action']     = $action;
-		return self::file($fileName, $variables);
+	/**
+	 * @var string
+	 */
+	protected $viewsPath, $moduleViewsDirName, $layoutsPath;
+
+	/**
+	 * @param Application $application
+	 */
+	public function __construct(Application $application) {
+		$this->application = $application;
 	}
 
 	/**
 	 * @return string
 	 * @param Nano_C $object
-	 * @param string $controller
-	 * @param string $action
 	 */
-	public static function view(Nano_C $object, $controller, $action) {
+	public function render(Nano_C $object) {
 		$module    = $object->getModule();
-		$fileName  = self::getFileName($controller, $action, $object->context, $module);
+		$viewFile  = $this->getViewFileName($object->controller, $object->template, $object->context, $module);
 		$variables = get_object_vars($object);
+		$content   = self::file($viewFile, $variables);
 
-		$variables['controller'] = $controller;
-		$variables['action']     = $action;
-		return self::file($fileName, $variables, true);
-	}
-
-	/**
-	 * @return string
-	 * @param string $controller
-	 * @param string $action
-	 * @param array $variables
-	 * @param boolean $throw
-	 */
-	public static function script($controller, $action, array $variables = array(), $throw = true) {
-		return self::file(self::getFileName($controller, $action), $variables, $throw);
-	}
-
-	public static function file($fileName, array $variables = array(), $throw = true) {
-		if (!file_exists($fileName)) {
-			if ($throw) {
-				throw new Exception('View ' . $fileName . ' not exists');
-			}
-			return null;
+		if (null === $object->layout) {
+			return $content;
 		}
 
-		extract($variables);
-		$helper = Nano::helper();
+		$variables['content'] = $content;
+		$layoutFile = $this->getLayoutFileName($object->layout, $object->context);
+		return self::file($layoutFile, $variables);
+	}
 
-		ob_start();
-		include($fileName);
-		$result = ob_get_contents();
-		ob_end_clean();
+	/**
+	 * @return void
+	 * @param string $value
+	 */
+	public function setViewsPath($value) {
+		$this->viewsPath = $value;
+	}
 
-		return $result;
+	/**
+	 * @return void
+	 * @param string $value
+	 */
+	public function setModuleViewsDirName($value) {
+		$this->moduleViewsDirName = $value;
+	}
+
+	/**
+	 * @return void
+	 * @param string $value
+	 */
+	public function setLayoutsPath($value) {
+		$this->layoutsPath = $value;
 	}
 
 	/**
@@ -80,11 +72,46 @@ class Nano_Render {
 	 * @param string $context
 	 * @param string $module
 	 */
-	public static function getFileName($controller, $action, $context = null, $module = null) {
+	public function getViewFileName($controller, $action, $context = null, $module = null) {
 		if (null === $module) {
-			return self::addContext(VIEWS . DS . $controller . DS . $action, $context) . '.php';
+			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
-		return self::addContext(Nano::modules()->getPath($module, self::VIEW_DIR . DS . $controller . DS . $action), $context) . '.php';
+		$viewName = $this->application->getModules()->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+		return $this->addContext($viewName, $context) . '.php';
+	}
+
+	/**
+	 * @return string
+	 * @param string $layout
+	 * @param string|null $context
+	 */
+	public function getLayoutFileName($layout, $context = null) {
+		return $this->addContext($this->layoutsPath . DIRECTORY_SEPARATOR . $layout, $context) . '.php';
+	}
+
+	/**
+	 * @return null|string
+	 * @param string $fileName
+	 * @param array $variables
+	 * @throws Nano_Exception
+	 */
+	protected static function file($fileName, array $variables = array()) {
+		if (!file_exists($fileName)) {
+			throw new Nano_Exception('View ' . $fileName . ' not exists');
+		}
+
+		ob_start();
+		try {
+			extract($variables);
+			$helper = Nano::helper();
+			include($fileName);
+			$result = ob_get_contents();
+			ob_end_clean();
+			return $result;
+		} catch (Exception $e) {
+			ob_end_clean();
+			throw $e;
+		}
 	}
 
 	/**
@@ -92,7 +119,7 @@ class Nano_Render {
 	 * @param string $path
 	 * @param string $context
 	 */
-	protected static function addContext($path, $context) {
+	protected function addContext($path, $context) {
 		$result = $path;
 		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT != $context && null !== $context) {
 			$result .= '.' . $context;

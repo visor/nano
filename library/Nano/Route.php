@@ -59,7 +59,7 @@ abstract class Nano_Route {
 		if (null === $this->module) {
 			return Nano_Dispatcher::formatName($this->controller, true);
 		}
-		return Nano_Loader::formatModuleClassName($this->module, 'controller', $this->controller);
+		return Nano_Dispatcher::formatName($this->controller, true, Nano_Modules::nameToNamespace($this->module));
 	}
 
 	/**

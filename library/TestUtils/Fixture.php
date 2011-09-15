@@ -110,7 +110,7 @@ class TestUtils_Fixture {
 	}
 
 	protected function load($type, $count = 1) {
-		$method = self::FIXTURE_METHOD . $this->typeToName($type);
+		$method = self::FIXTURE_METHOD . Nano::stringToName($type);
 		if (!method_exists($this, $method)) {
 			PHPUnit_Framework_Assert::fail('Unknown fixture type: ' . $type);
 		}
@@ -125,7 +125,7 @@ class TestUtils_Fixture {
 	 * @param string $type
 	 */
 	protected function loadFixture($type) {
-		$class = self::FIXTURE_PREFIX . $this->typeToName($type);
+		$class = self::FIXTURE_PREFIX . Nano::stringToName($type);
 		if (class_exists($class, false)) {
 			return new $class();
 		}
@@ -161,14 +161,6 @@ class TestUtils_Fixture {
 	 */
 	protected function getFixtureFileName($type) {
 		return TESTS . DS . self::FIXTURE_DIR . DS . $type . '.php';
-	}
-
-	/**
-	 * @return string
-	 * @param  $type
-	 */
-	protected function typeToName($type) {
-		return Strings::typeToName($type);
 	}
 
 }

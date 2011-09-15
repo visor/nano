@@ -10,12 +10,27 @@ abstract class Nano_C {
 	/**
 	 * @var string
 	 */
-	public $context = Nano_Dispatcher_Context::CONTEXT_DEFAULT;
+	public $controller = null;
+
+	/**
+	 * @var string
+	 */
+	public $action = null;
 
 	/**
 	 * @var string
 	 */
 	public $template = null;
+
+	/**
+	 * @var string
+	 */
+	public $context = Nano_Dispatcher_Context::CONTEXT_DEFAULT;
+
+	/**
+	 * @var string
+	 */
+	protected $module = null;
 
 	/**
 	 * @var Nano_Dispatcher
@@ -28,30 +43,32 @@ abstract class Nano_C {
 	protected $rendered = false;
 
 	/**
+	 * @var Nano_Render
+	 */
+	protected $renderer = null;
+
+	/**
 	 * @var Nano_HelperBroker
 	 */
 	protected $helper;
 
 	/**
-	 * @var Nano_C_Plugin[]
+	 * @param Nano_Dispatcher $dispatcher
 	 */
-	protected $plugins = null;
-
 	final public function __construct(Nano_Dispatcher $dispatcher) {
 		$this->dispatcher = $dispatcher;
 		$this->helper     = Nano::helper();
-		$this->plugins    = new SplObjectStorage();
 	}
 
 	/**
 	 * @return string|null
 	 */
 	public function getModule() {
-		if (false === Nano_Loader::isModuleClass(get_class($this))) {
-			return null;
+		if (null === $this->module && Nano_Loader::isModuleClass($className = get_class($this))) {
+			list($this->module, ) = Nano_Loader::extractModuleClassParts($className);
+			$this->module = $this->dispatcher()->application()->getModules()->nameToFolder($this->module);
 		}
-		list($module, , ) = Nano_Loader::extractModuleClassParts(get_class($this));
-		return $module;
+		return $this->module;
 	}
 
 	/**
@@ -59,10 +76,6 @@ abstract class Nano_C {
 	 * @param string $action
 	 */
 	public function run($action) {
-		foreach (Nano::config('plugins') as $class) {
-			$this->plugins->attach(new $class);
-		}
-
 		$method = Nano_Dispatcher::formatName($action, false);
 		$result = null;
 
@@ -156,25 +169,48 @@ abstract class Nano_C {
 			$action = $this->template ? $this->template : $this->dispatcher()->action();
 		}
 
+		$this->controller = $controller;
+		$this->template   = $action;
+		$this->action     = $action;
 		$this->markRendered();
-		if ($this->layout) {
-			return Nano_Render::layout($this, $controller, $action);
-		} else {
-			return Nano_Render::view($this, $controller, $action);
-		}
+		return $this->renderer()->render($this);
 	}
 
-	protected function addPlugin(Nano_C_Plugin $plugin) {
-		$this->plugins->attach($plugin);
+	/**
+	 * @return Nano_Render
+	 */
+	protected function renderer() {
+		if (null === $this->renderer) {
+			$this->renderer = $this->createRenderer();
+			$this->configureRenderer();
+		}
+		return $this->renderer;
+	}
+
+	/**
+	 * @return Nano_Render
+	 */
+	protected function createRenderer() {
+		return new Nano_Render($this->dispatcher()->application());
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function configureRenderer() {
+		$this->renderer->setLayoutsPath($this->dispatcher()->application()->getRootDir() . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath($this->dispatcher()->application()->getRootDir() . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
+		$this->renderer->setModuleViewsDirName(Nano_Render::VIEW_DIR);
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function runInit() {
-		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-			$plugin->init($this);
-		}
+//		$this->dispatcher()->getApplication()->getPlugins()
+//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+//			$plugin->init($this);
+//		}
 		$this->init();
 	}
 
@@ -182,11 +218,12 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-			if (false === $plugin->before($this)) {
-				return false;
-			}
-		}
+//		$this->dispatcher()->getApplication()->getPlugins()
+//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+//			if (false === $plugin->before($this)) {
+//				return false;
+//			}
+//		}
 		if (false === $this->before()) {
 			return false;
 		}
@@ -197,9 +234,10 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-			$plugin->after($this);
-		}
+//		$this->dispatcher()->getApplication()->getPlugins()
+//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+//			$plugin->after($this);
+//		}
 		$this->after();
 	}
 

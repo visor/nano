@@ -1,6 +1,8 @@
 <?php
 
-class M_TestModule_Plugin_Class {
+namespace Test_Module;
+
+class Library2Class {
 
 	public static function name() {
 		return __CLASS__;

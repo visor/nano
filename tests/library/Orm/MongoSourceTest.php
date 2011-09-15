@@ -95,8 +95,6 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
-		Nano_Log::message(var_export($first, true));
-		Nano_Log::message(var_export($second, true));
 
 		self::assertFalse($this->source->update($this->mapper->getResource()
 			, $duplicate
