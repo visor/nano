@@ -215,7 +215,7 @@ class Nano_Db extends PDO {
 				if (Nano::db()->log()->enabled()) {
 					Nano::db()->log()->append($exception->__toString(), null, true);
 				}
-				throw $e;
+				throw $exception;
 			}
 			return $result;
 		}
@@ -231,6 +231,10 @@ class Nano_Db extends PDO {
 		return $class::quoteName($string);
 	}
 
+	/**
+	 * @return string
+	 * @param string|array $where
+	 */
 	public function buildWhere($where) {
 		if (is_string($where)) {
 			return $where;
@@ -257,10 +261,13 @@ class Nano_Db extends PDO {
 		return self::$log;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected static function getTypeClass() {
 		$result = 'Nano_Db_' . Nano::db()->getType();
 		if (!class_exists($result, false)) {
-			require LIB . '/Nano/Db/' . Nano::db()->getType() . '.php';
+			require('Nano/Db/' . Nano::db()->getType() . '.php');
 		}
 		return $result;
 	}
