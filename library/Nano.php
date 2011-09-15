@@ -164,8 +164,8 @@ final class Nano {
 
 	private function __construct() {}
 
-	private function __clone() { throw new RuntimeException(); }
-	private function __sleep() { throw new RuntimeException(); }
-	private function __wakeUp() { throw new RuntimeException(); }
+	public function __clone() { throw new Nano_Exception('Unexpected call: ' . __FUNCTION__); }
+	public function __sleep() { throw new Nano_Exception('Unexpected call: ' . __FUNCTION__); }
+	public function __wakeUp() { throw new Nano_Exception('Unexpected call: ' . __FUNCTION__); }
 
 }

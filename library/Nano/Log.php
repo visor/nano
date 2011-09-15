@@ -49,7 +49,7 @@ class Nano_Log {
 	 * @return string
 	 */
 	public static function getFile() {
-		return APP . DS . self::NAME;
+		return Application::current()->getRootDir() . DS . self::NAME;
 	}
 
 }

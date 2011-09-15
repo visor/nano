@@ -53,7 +53,7 @@ class Nano_Message {
 	 * @param string $file
 	 */
 	public function load($file) {
-		$path = MESSAGES . DS . $this->fileName($file);
+		$path = Application::current()->getRootDir() . DS . 'messages' . DS . $this->fileName($file);
 		if (!is_file($path)) {
 			throw new Exception('File "' . $path . '" not found');
 		}

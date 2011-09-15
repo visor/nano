@@ -4,7 +4,7 @@
 require_once __DIR__ . '/library/Nano/Loader.php';
 $loader = new Nano_Loader();
 $loader->register();
-$loader->useDirectory(__DIR__ . '/application/controllers');
+$loader->useDirectory(__DIR__ . '/application-example/controllers');
 
 if ($_SERVER['argc'] < 2) {
 	Nano_C_Cli::usage();

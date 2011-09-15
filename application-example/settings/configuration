@@ -1,0 +1,48 @@
+<?php return (object)(array(
+   'cdn' => (object)(array(
+     'servers' => array (
+      0 => 'http://cdn1.nano.lc',
+      1 => 'http://cdn2.nano.lc',
+    ),
+  )),
+   'cache' => (object)(array(
+     'api' => 'MongoDb',
+     'mongodb' => (object)(array(
+       'server' => 'localhost',
+    )),
+     'database' => false,
+  )),
+   'assets' => (object)(array(
+     'path' => '/var/www/hosts/nano.lc/application-example/public/assets',
+     'url' => '/assets',
+  )),
+   'db' => (object)(array(
+     'default' => (object)(array(
+       'type' => 'mysql',
+       'dsn' => 'host=localhost;dbname=nano',
+       'username' => 'user',
+       'password' => '',
+       'options' => (object)(array(
+         '1002' => 'SET NAMES utf8',
+      )),
+       'log' => false,
+    )),
+     'test' => (object)(array(
+       'type' => 'mysql',
+       'dsn' => 'host=localhost;dbname=nano_test',
+       'username' => 'user',
+       'password' => '',
+       'options' => (object)(array(
+         '1002' => 'SET NAMES utf8',
+      )),
+       'log' => '/var/www/hosts/nano.lc/application-example/test-sql.log',
+    )),
+  )),
+   'web' => (object)(array(
+     'domain' => 'nano.lc',
+     'url' => '',
+     'index' => 'index.php',
+     'errorController' => 'error',
+     'errorReporting' => true,
+  )),
+));
