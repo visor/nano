@@ -9,18 +9,9 @@ define('APP',         ROOT . DS . 'application');
 define('MODULES',     APP . DS . 'modules');
 define('SETTINGS',    APP . DS . 'settings');
 define('CONTROLLERS', APP . DS . 'controllers');
-define('MODELS',      APP . DS . 'models');
-define('LAYOUTS',     APP . DS . 'layouts');
-define('VIEWS',       APP . DS . 'views');
-define('HELPERS',     APP . DS . 'helpers');
-define('PLUGINS',     APP . DS . 'plugins');
-define('APP_LIB',     APP . DS . 'library');
 define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC_DIR',  ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
-
-//require LIB . DS . 'Nano' . DS . 'Loader.php';
-//require LIB . DS . 'Nano' . DS . 'Modules.php';
 
 final class Nano {
 
