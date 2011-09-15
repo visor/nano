@@ -1,4 +1,4 @@
 <?php return array(
-	  'path' => WEB_ROOT . DIRECTORY_SEPARATOR . 'assets'
-	, 'url'  => WEB_URL . '/assets'
+	'path'  => WEB_ROOT . DIRECTORY_SEPARATOR . 'assets'
+	, 'url' => '/assets'
 );

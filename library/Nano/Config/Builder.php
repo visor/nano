@@ -28,6 +28,18 @@ class Nano_Config_Builder {
 		return $this;
 	}
 
+	public function clean() {
+		if (null === $this->destination) {
+			return;
+		}
+		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME)) {
+			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME);
+		}
+		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME)) {
+			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME);
+		}
+	}
+
 	/**
 	 * @return void
 	 * @param string $name

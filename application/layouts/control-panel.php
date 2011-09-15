@@ -29,7 +29,7 @@
 				</ul>
 			</div>
 		</div>
-		<?php if (empty($noTabs)): ?><div class="grid_16"><div id="tabs"><div class="container"><ul><?php echo Nano_Render::script($controller, '_tabs', $variables, false); ?></ul></div></div></div><?php endif; ?>
+		<?php if (empty($noTabs)): ?><div class="grid_16"><div id="tabs"><div class="container"><ul><?php include $renderer->getViewFileName(isSet($tabs) ? $tabs : $controller, '_tabs'); ?></ul></div></div></div><?php endif; ?>
 		<div class="grid_16" id="content">
 			<div class="grid_9"><h1 class="<?php echo $pageClass; ?>"><?php echo $pageTitle; ?></h1></div>
 			<div class="clear"></div>

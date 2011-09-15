@@ -38,7 +38,10 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 * @param string $path
 	 */
-	public function append($name, $path) {
+	public function append($name, $path = null) {
+		if (null === $path) {
+			throw new Application_Exception_ModuleNotFound($name);
+		}
 		$this->offsetSet($name, $path);
 		return $this;
 	}

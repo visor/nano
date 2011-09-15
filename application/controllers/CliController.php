@@ -91,14 +91,14 @@ class CliController extends Nano_C_Cli {
 			return;
 		}
 
+		$path    = getCwd();
 		$builder = new Nano_Config_Builder();
-		$builder->addFormat(new Nano_Config_Format_Php());
-		$builder->addFormat(new Nano_Config_Format_Serialize());
-		$builder->addFormat(new Nano_Config_Format_Json());
-		$builder->addFormat(new Nano_Config_Format_Igbinary());
+		$builder->setSource($path . DIRECTORY_SEPARATOR . 'settings');
+		$builder->setDestination($path . DIRECTORY_SEPARATOR . 'settings');
+		$builder->clean();
 
-		$builder->setSource(ROOT . DS . 'scripts' . DS . 'setup');
-		$builder->setDestination(SETTINGS);
+		require $path . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
 		$builder->build($this->args[0]);
 	}
 
@@ -149,31 +149,31 @@ class CliController extends Nano_C_Cli {
 	 * @return array
 	 */
 	protected function getCliControllers() {
-		$result = array();
-		$pathes = array(CONTROLLERS);
-		foreach (Nano::modules() as $path) {
-			$pathes[] = $path;
-		}
-		foreach ($pathes as $path) {
-			foreach (new DirectoryIterator($path) as $item) {
-				/**
-				 * @var DirectoryIterator $item
-				 */
-				if ($item->isDot() || $item->isDir()) {
-					continue;
-				}
-				if (0 === preg_match('/Controller.php$/', $item->getBaseName())) {
-					continue;
-				}
-				$name       = baseName($item->getBaseName('.php'));
-				$controller = $this->convert(subStr($name, 0, -10));
-				$class      = new ReflectionClass($name);
-				if (!$class->isSubclassOf('Nano_C_Cli')) {
-					continue;
-				}
-				$result[$controller] = $class;
-			}
-		}
+		$result = array('cli' => new ReflectionClass(__CLASS__));
+//		$pathes = array(CONTROLLERS);
+//		foreach ($this->dispatcher()->application()->getModules() as $path) {
+//			$pathes[] = $path;
+//		}
+//		foreach ($pathes as $path) {
+//			foreach (new DirectoryIterator($path) as $item) {
+//				/**
+//				 * @var DirectoryIterator $item
+//				 */
+//				if ($item->isDot() || $item->isDir()) {
+//					continue;
+//				}
+//				if (0 === preg_match('/Controller.php$/', $item->getBaseName())) {
+//					continue;
+//				}
+//				$name       = baseName($item->getBaseName('.php'));
+//				$controller = $this->convert(subStr($name, 0, -10));
+//				$class      = new ReflectionClass($name);
+//				if (!$class->isSubclassOf('Nano_C_Cli')) {
+//					continue;
+//				}
+//				$result[$controller] = $class;
+//			}
+//		}
 		ksort($result);
 		return $result;
 	}

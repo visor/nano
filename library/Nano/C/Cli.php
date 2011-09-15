@@ -34,7 +34,7 @@ abstract class Nano_C_Cli extends Nano_C {
 			return;
 		}
 
-		$controller = $class->newInstance(Nano::dispatcher());
+		$controller = $class->newInstance();
 		/**
 		 * @var Nano_C_Cli $controller
 		 */
@@ -60,6 +60,8 @@ abstract class Nano_C_Cli extends Nano_C {
 	public static function usage() {
 		echo baseName($_SERVER['argv'][0]) . ' controller.action [options]', PHP_EOL;
 	}
+
+	public function __construct() {}
 
 	/**
 	 * @return void

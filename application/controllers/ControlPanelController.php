@@ -30,6 +30,7 @@ class ControlPanelController extends Nano_C {
 		$this->variable3 = $_REQUEST;
 		$this->variable4 = $_SERVER;
 		$this->variable5 = '<some>with<xml>example<elements>contents</elements></xml></some>';
+		$this->tabs      = 'control-panel';
 		return $this->render('common', 'variables');
 	}
 

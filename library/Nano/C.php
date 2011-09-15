@@ -55,7 +55,7 @@ abstract class Nano_C {
 	/**
 	 * @param Nano_Dispatcher $dispatcher
 	 */
-	final public function __construct(Nano_Dispatcher $dispatcher) {
+	public function __construct(Nano_Dispatcher $dispatcher) {
 		$this->dispatcher = $dispatcher;
 		$this->helper     = Nano::helper();
 	}
@@ -207,10 +207,9 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runInit() {
-//		$this->dispatcher()->getApplication()->getPlugins()
-//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-//			$plugin->init($this);
-//		}
+		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+			$plugin->init($this);
+		}
 		$this->init();
 	}
 
@@ -218,12 +217,11 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-//		$this->dispatcher()->getApplication()->getPlugins()
-//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-//			if (false === $plugin->before($this)) {
-//				return false;
-//			}
-//		}
+		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+			if (false === $plugin->before($this)) {
+				return false;
+			}
+		}
 		if (false === $this->before()) {
 			return false;
 		}
@@ -234,10 +232,9 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-//		$this->dispatcher()->getApplication()->getPlugins()
-//		foreach ($this->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
-//			$plugin->after($this);
-//		}
+		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+			$plugin->after($this);
+		}
 		$this->after();
 	}
 

@@ -72,7 +72,7 @@ class Nano_HelperBroker {
 	 */
 	public function getDispatcher() {
 		if (null === $this->dispatcher) {
-			$this->setDispatcher(Nano::dispatcher());
+			$this->setDispatcher(Application::current()->getDispatcher());
 		}
 		return $this->dispatcher;
 	}

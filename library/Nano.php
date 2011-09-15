@@ -21,21 +21,6 @@ final class Nano {
 	private static $instance = null;
 
 	/**
-	 * @var Nano_Dispatcher
-	 */
-	private $dispatcher;
-
-	/**
-	 * @var Nano_Modules
-	 */
-	private $modules;
-
-	/**
-	 * @var Nano_Routes
-	 */
-	private $routes;
-
-	/**
 	 * @var Nano_Config
 	 */
 	private static $config = null;
@@ -63,74 +48,52 @@ final class Nano {
 	 * @param string $url
 	 */
 	public static function run($url = null) {
-		self::instance();
-		if (!defined('SELENIUM_ENABLE')) {
-			define(
-				'SELENIUM_ENABLE'
-				, self::config()->exists('selenium') && isSet(self::config('selenium')->enabled) && true === self::config('selenium')->enabled
-			);
-			if (SELENIUM_ENABLE) {
-				TestUtils_WebTest::startCoverage();
-			}
-		}
-		include(SETTINGS . DS . 'routes.php');
-		if (null === $url) {
-			$url = $_SERVER['REQUEST_URI'];
-		}
-		if (false !== strPos($url, '?')) {
-			$url = subStr($url, 0, strPos($url, '?'));
-		}
-		if (self::config('web')->url && 0 === strPos($url, self::config('web')->url)) {
-			$url = subStr($url, strLen(self::config('web')->url));
-		}
-		if (self::config('web')->index) {
-			$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
-		}
-		$url = rawUrlDecode($url);
-		try {
-			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
-			if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
-				return;
-			}
-			echo $result;
-		} catch (Exception $e) {
-			if (SELENIUM_ENABLE) {
-				TestUtils_WebTest::stopCoverage();
-			}
-			throw $e;
-		}
-		if (SELENIUM_ENABLE) {
-			TestUtils_WebTest::stopCoverage();
-		}
-	}
-
-	/**
-	 * @return string
-	 * @param Nano_Route $route
-	 */
-	public static function runRoute(Nano_Route $route) {
-		return self::instance()->dispatcher->run($route);
+//		self::instance();
+//		if (!defined('SELENIUM_ENABLE')) {
+//			define(
+//				'SELENIUM_ENABLE'
+//				, self::config()->exists('selenium') && isSet(self::config('selenium')->enabled) && true === self::config('selenium')->enabled
+//			);
+//			if (SELENIUM_ENABLE) {
+//				TestUtils_WebTest::startCoverage();
+//			}
+//		}
+//		include(SETTINGS . DS . 'routes.php');
+//		if (null === $url) {
+//			$url = $_SERVER['REQUEST_URI'];
+//		}
+//		if (false !== strPos($url, '?')) {
+//			$url = subStr($url, 0, strPos($url, '?'));
+//		}
+//		if (self::config('web')->url && 0 === strPos($url, self::config('web')->url)) {
+//			$url = subStr($url, strLen(self::config('web')->url));
+//		}
+//		if (self::config('web')->index) {
+//			$url = preg_replace('/' . preg_quote(self::config('web')->index) . '$/', '', $url);
+//		}
+//		$url = rawUrlDecode($url);
+//		try {
+//			$result = self::instance()->dispatcher->dispatch(self::instance()->routes, $url);
+//			if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
+//				return;
+//			}
+//			echo $result;
+//		} catch (Exception $e) {
+//			if (SELENIUM_ENABLE) {
+//				TestUtils_WebTest::stopCoverage();
+//			}
+//			throw $e;
+//		}
+//		if (SELENIUM_ENABLE) {
+//			TestUtils_WebTest::stopCoverage();
+//		}
 	}
 
 	/**
 	 * @return Nano_Routes
 	 */
 	public static function routes() {
-		return self::instance()->routes;
-	}
-
-	/**
-	 * @return Nano_Modules
-	 */
-	public static function modules() {
-		return self::instance()->modules;
-	}
-
-	/**
-	 * @return Nano_Dispatcher
-	 */
-	public static function dispatcher() {
-		return self::instance()->dispatcher;
+		return self::config()->routes();
 	}
 
 	/**
@@ -191,39 +154,10 @@ final class Nano {
 		return $result;
 	}
 
-	private function __construct() {
-		if ($this->config()->fileExists()) {
-			$this->setupErrorReporting();
-			if (self::config()->exists('web')) {
-				define('WEB_ROOT', Nano::config('web')->root);
-				define('WEB_URL',  Nano::config('web')->url);
-			}
-		}
-
-		$this->modules    = new Nano_Modules();
-		$this->dispatcher = new Nano_Dispatcher();
-		$this->routes     = new Nano_Routes();
-	}
-
-	private function setupErrorReporting() {
-		if (self::config()->exists('web') && isset(self::config('web')->errorReporting) && true === self::config('web')->errorReporting) {
-			error_reporting(E_ALL | E_STRICT);
-			ini_set('display_errors', true);
-		} else {
-			error_reporting(0);
-			ini_set('display_errors', false);
-		}
-	}
+	private function __construct() {}
 
 	private function __clone() { throw new RuntimeException(); }
 	private function __sleep() { throw new RuntimeException(); }
 	private function __wakeUp() { throw new RuntimeException(); }
 
 }
-
-//function nano_autoload($className) {
-//	return Nano_Loader::load($className);
-//}
-
-//Nano_Loader::initLibraries();
-//spl_autoload_register('nano_autoload');

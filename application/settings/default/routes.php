@@ -1,6 +1,8 @@
 <?php
-
-Nano::routes()
+/**
+ * @var Nano_Routes $routes
+ */
+$routes
 	->get('', 'index', 'index')
 
 	->prefix('cp')

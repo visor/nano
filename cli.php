@@ -1,8 +1,10 @@
 #!/bin/env php
 <?php
 
-require __DIR__ . '/library/Nano.php';
-require APP . DS. 'bootstrap.php';
+require_once __DIR__ . '/library/Nano/Loader.php';
+$loader = new Nano_Loader();
+$loader->register();
+$loader->useDirectory(__DIR__ . '/application/controllers');
 
 if ($_SERVER['argc'] < 2) {
 	Nano_C_Cli::usage();

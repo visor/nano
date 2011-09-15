@@ -7,6 +7,7 @@ class Application {
 	const CONTROLLER_DIR_NAME = 'controllers';
 	const LIBRARY_DIR_NAME    = 'library';
 	const MODELS_DIR_NAME     = 'models';
+	const HELPERS_DIR_NAME    = 'helpers';
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
@@ -46,7 +47,12 @@ class Application {
 	protected $loader = null;
 
 	/**
-	 * @return Nano_Application
+	 * @var Nano_Dispatcher
+	 */
+	protected $dispatcher;
+
+	/**
+	 * @return Application
 	 */
 	public static function create() {
 		$result        = new self();
@@ -80,6 +86,7 @@ class Application {
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
+			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::HELPERS_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
 		;
 		return $this;
@@ -132,6 +139,7 @@ class Application {
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
+			->useDirectory($path . DIRECTORY_SEPARATOR . self::HELPERS_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
 		;
 		return $this;
@@ -152,6 +160,10 @@ class Application {
 	public function configure() {
 		Nano_Config::setFormat($this->getConfigurationFormat());
 		Nano::configure(new Nano_Config($this->getRootDir() . DIRECTORY_SEPARATOR . 'settings'));
+		$this->setupErrorReporting();
+
+		define('APP_ROOT', Application::current()->getRootDir());
+		define('WEB_ROOT', Application::current()->getPublicDir());
 		return $this;
 	}
 
@@ -159,6 +171,23 @@ class Application {
 		//todo: detect request uri
 		//todo: start dispatcher
 		//todo: ??? handle head method
+		$urlPrefix = Nano::config('web')->url;
+		$url       = $_SERVER['REQUEST_URI'];
+		if (false !== strPos($url, '?')) {
+			$url = subStr($url, 0, strPos($url, '?'));
+		}
+		if ($urlPrefix && 0 === strPos($url, $urlPrefix)) {
+			$url = subStr($url, strLen($urlPrefix));
+		}
+		if (Nano::config('web')->index) {
+			$url = preg_replace('/' . preg_quote(Nano::config('web')->index) . '$/', '', $url);
+		}
+		$url = rawUrlDecode($url);
+		$result = $this->dispatcher->dispatch(Nano::routes(), $url);
+		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
+			return;
+		}
+		echo $result;
 	}
 
 	/**
@@ -241,6 +270,10 @@ class Application {
 		return $this->nanoRootDir;
 	}
 
+	public function getDispatcher() {
+		return $this->dispatcher;
+	}
+
 	/**
 	 * @return Nano_Loader
 	 */
@@ -249,8 +282,20 @@ class Application {
 	}
 
 	public function __construct() {
+		require_once __DIR__ . DIRECTORY_SEPARATOR . 'Nano' . DIRECTORY_SEPARATOR . 'Loader.php';
 		$this->loader = new Nano_Loader();
 		$this->loader->register($this);
+
+		$this->dispatcher = new Nano_Dispatcher($this);
 	}
 
+	protected function setupErrorReporting() {
+		if (Nano::config()->exists('web') && isSet(Nano::config('web')->errorReporting) && true === Nano::config('web')->errorReporting) {
+			error_reporting(E_ALL | E_STRICT);
+			ini_set('display_errors', true);
+		} else {
+			error_reporting(0);
+			ini_set('display_errors', false);
+		}
+	}
 }

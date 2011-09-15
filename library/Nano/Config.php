@@ -76,6 +76,13 @@ class Nano_Config {
 	}
 
 	/**
+	 * @return Nano_Routes
+	 */
+	public function routes() {
+		return $this->routes;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getPath() {

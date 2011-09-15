@@ -24,7 +24,9 @@ class Nano_Config_Format_Igbinary implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function readRoutes($fileName) {
-		return $this->read($fileName);
+		$result = file_get_contents($fileName);
+		$result = unSerialize($result);
+		return $result;
 	}
 
 	/**
@@ -44,7 +46,7 @@ class Nano_Config_Format_Igbinary implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function writeRoutes(Nano_Routes $routes, $fileName) {
-		$source = igbinary_serialize($routes);
+		$source = serialize($routes);
 		file_put_contents($fileName, $source);
 		return true;
 	}

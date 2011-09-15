@@ -1,5 +1,10 @@
 <?php
 
-Nano_Config::setFormat(new Nano_Config_Format_Igbinary());
-Nano::configure(new Nano_Config(SETTINGS . DS . Nano_Config::CONFIG_FILE_NAME));
-Nano::instance();
+require_once __DIR__ . '/../library/Application.php';
+
+Application::create()
+	->usingConfigurationFormat('php')
+	->withRootDir(__DIR__)
+	->withPlugin(new ControlPanelAssets())
+	->configure()
+;

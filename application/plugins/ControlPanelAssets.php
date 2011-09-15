@@ -10,10 +10,11 @@ class ControlPanelAssets implements Nano_C_Plugin {
 		if ('control-panel' !== $controller->layout) {
 			return;
 		}
+
 		session_start();
 		Nano::message()->load('control-panel');
 		Assets::style()
-			->variable('images', WEB_URL . '/resources/images')
+			->variable('images', '/resources/images')
 			->append(WEB_ROOT . '/resources/styles/960.css')
 			->append(WEB_ROOT . '/resources/styles/reset.css')
 			->append(WEB_ROOT . '/resources/styles/text.css')
@@ -24,6 +25,8 @@ class ControlPanelAssets implements Nano_C_Plugin {
 			->append(WEB_ROOT . '/resources/styles/smoothness-ui.css')
 			->append(WEB_ROOT . '/resources/styles/actions.css')
 		;
+		Nano_Log::message(var_export(Assets::style(), true));
+
 		Assets::script()
 			->append(WEB_ROOT . '/resources/scripts/jquery.min.js')
 			->append(WEB_ROOT . '/resources/scripts/jquery.blend.js')
