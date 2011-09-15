@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @group nano
+ * @group core
  * @group framework
  */
-class CustomDispatcherTest extends TestUtils_TestCase {
+class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	/**
 	 * @var Nano_Dispatcher
@@ -13,7 +13,7 @@ class CustomDispatcherTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		require_once $this->getTestFile('/Test_Dispatcher.php');
-		$this->dispatcher = new Nano_Dispatcher();
+		$this->dispatcher = new Nano_Dispatcher(new Application());
 		$this->dispatcher->setCustom(new Test_Dispatcher());
 		$this->dispatcher->throwExceptions(true);
 	}

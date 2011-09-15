@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group nano
+ * @group core
  * @group framework
  */
 class Nano_MessageTest extends TestUtils_TestCase {

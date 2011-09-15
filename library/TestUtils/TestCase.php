@@ -6,6 +6,11 @@
  */
 abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 
+	/**
+	 * @var Application|null
+	 */
+	private static $application = null;
+
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
@@ -104,6 +109,17 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		);
 
 		self::assertThat($haystack, $constraint, $message);
+	}
+
+	protected static function backupCurrentApplication() {
+		self::$application = self::getObjectProperty('Application', 'current');
+		self::setObjectProperty('Application', 'current', null);
+	}
+
+	protected static function restoreCurrentApplication() {
+		if (null !== self::$application) {
+			self::setObjectProperty('Application', 'current', self::$application);
+		}
 	}
 
 	/**

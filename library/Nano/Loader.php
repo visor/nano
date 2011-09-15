@@ -57,6 +57,7 @@ class Nano_Loader {
 		if (!class_exists('Nano', false)) {
 			$this->loadCommonClass('Nano');
 			$this->loadCommonClass('Nano_Modules');
+			$this->loadCommonClass('Nano_Log');
 		}
 	}
 

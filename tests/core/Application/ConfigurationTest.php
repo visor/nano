@@ -8,6 +8,10 @@ require_once __DIR__ . '/Abstract.php';
  */
 class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 
+	public static function setUpBeforeClass() {
+		self::backupCurrentApplication();
+	}
+
 	public function testGettingCurrent() {
 		self::assertNull(Application::current());
 		$this->application = Application::create();
@@ -71,6 +75,10 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
 		self::assertInstanceOf('SplObjectStorage', $this->application->getPlugins());
 		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
+	}
+
+	public static function tearDownAfterClass() {
+		self::restoreCurrentApplication();
 	}
 
 }

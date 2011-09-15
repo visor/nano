@@ -1,6 +1,8 @@
 <?php
 
-class M_Example_Helper_Example extends Nano_Helper {
+namespace Example_Module;
+
+class ExampleHelper extends \Nano_Helper {
 
 	/**
 	 * @return string

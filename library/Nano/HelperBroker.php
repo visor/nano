@@ -20,16 +20,6 @@ class Nano_HelperBroker {
 	 */
 	private $dispatcher;
 
-	/**
-	 * @return Nano_HelperBroker
-	 */
-	public static function instance() {
-		if (null == self::$instance) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
 	public function __call($method, array $arguments) {
 		return call_user_func_array(
 			  array($this->get($method), 'invoke')
@@ -63,7 +53,7 @@ class Nano_HelperBroker {
 	 * @return void
 	 * @param Nano_Dispatcher $dispatcher
 	 */
-	public function setDispatcher(Nano_Dispatcher $dispatcher = null) {
+	public function setDispatcher(Nano_Dispatcher $dispatcher) {
 		$this->dispatcher = $dispatcher;
 	}
 
@@ -84,16 +74,17 @@ class Nano_HelperBroker {
 	 */
 	protected function search($name, $isClass) {
 		$className = $isClass ? $name : ucFirst($name) . 'Helper';
-		if (class_exists($className)) {
-			return new $className();
-		}
-
-		$className = $isClass ? $name : ucFirst($name);
-		foreach (Nano::modules() as $module => $path) {
-			$fullClassName = Nano_Loader::formatModuleClassName($module, 'helper', $className);
-			if (Nano_Loader::loadModuleClass($fullClassName)) {
+		foreach ($this->getDispatcher()->application()->getModules() as $module => $path) {
+			$fullClassName =
+				$this->getDispatcher()->application()->getModules()->nameToNamespace($module)
+				. '\\' . $className
+			;
+			if ($this->getDispatcher()->application()->loader()->loadClass($fullClassName)) {
 				return new $fullClassName();
 			}
+		}
+		if ($this->getDispatcher()->application()->loader()->loadClass($className)) {
+			return new $className();
 		}
 		return null;
 	}

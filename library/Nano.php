@@ -26,6 +26,11 @@ final class Nano {
 	private static $config = null;
 
 	/**
+	 * @var Nano_HelperBroker
+	 */
+	private static $helper = null;
+
+	/**
 	 * @return Nano
 	 */
 	public static function instance() {
@@ -47,7 +52,7 @@ final class Nano {
 	 * @return void
 	 * @param string $url
 	 */
-	public static function run($url = null) {
+//	public static function run($url = null) {
 //		self::instance();
 //		if (!defined('SELENIUM_ENABLE')) {
 //			define(
@@ -87,7 +92,7 @@ final class Nano {
 //		if (SELENIUM_ENABLE) {
 //			TestUtils_WebTest::stopCoverage();
 //		}
-	}
+//	}
 
 	/**
 	 * @return Nano_Routes
@@ -100,7 +105,10 @@ final class Nano {
 	 * @return Nano_HelperBroker
 	 */
 	public static function helper() {
-		return Nano_HelperBroker::instance();
+		if (null === self::$helper) {
+			self::$helper = new Nano_HelperBroker(Application::current());
+		}
+		return self::$helper;
 	}
 
 	/**

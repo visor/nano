@@ -31,6 +31,8 @@ class Assets_AbstractTest extends TestUtils_TestCase {
 	private $class = null;
 
 	public function setUp() {
+		Nano::helper()->setDispatcher(Application::current()->getDispatcher());
+
 		$this->asset = $this->getMock('Assets_Abstract_Test', array('write'));
 		$this->files->clean($this, DS . 'output');
 	}

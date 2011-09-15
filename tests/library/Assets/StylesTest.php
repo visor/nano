@@ -11,6 +11,8 @@ class Assets_StylesTest extends TestUtils_TestCase {
 	private $styles = null;
 
 	public function setUp() {
+		Nano::config()->set('cdn', (object)array('servers' => array()));
+
 		$this->styles = new Assets_Styles();
 
 		$this->styles->setOutput($this->files->get($this, DS . 'output'));

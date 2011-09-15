@@ -6,18 +6,27 @@
  */
 class Core_HelperBrokerTest extends TestUtils_TestCase {
 
+	/**
+	 * @var Nano_HelperBroker
+	 */
+	protected $helper;
+
 	protected function setUp() {
-		Nano::modules()->append('example');
+		$this->helper = new Nano_HelperBroker();
+		$application = new Application();
+		$dispatcher  = new Nano_Dispatcher($application);
+		$application->withModule('example', $this->files->get($this, '/example'));
+
+		$this->helper->setDispatcher($dispatcher);
 	}
 
 	public function testSearchingModuleClasses() {
-		$helper = Nano::helper()->get('example');
-
-		self::assertInstanceOf('M_Example_Helper_Example', $helper);
+		$helper = $this->helper->get('example');
+		self::assertInstanceOf('Example_Module\\ExampleHelper', $helper);
 	}
 
 	protected function tearDown() {
-		Nano::modules()->remove('example');
+		unSet($this->helper);
 	}
 
 }

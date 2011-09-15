@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group nano
+ * @group core
  * @group framework
  */
 class Form_FormTest extends TestUtils_TestCase {
