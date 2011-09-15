@@ -12,7 +12,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 	private $dispatcher;
 
 	protected function setUp() {
-		require_once $this->getTestFile('/Test_Dispatcher.php');
+		require_once $this->files->get($this, '/Test_Dispatcher.php');
 		$this->dispatcher = new Nano_Dispatcher(new Application());
 		$this->dispatcher->setCustom(new Test_Dispatcher());
 		$this->dispatcher->throwExceptions(true);
@@ -25,7 +25,13 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	public function testNotAcceptCustom() {
 		$dispatcher = $this->dispatcher;
-		self::assertException(function() use ($dispatcher) { $dispatcher->throwExceptions(true)->dispatch(new Nano_Routes(), ''); }, 'Exception', '404');
+		self::assertException(
+			function() use ($dispatcher) {
+				$dispatcher->throwExceptions(true)->dispatch(new Nano_Routes(), '');
+			}
+			, 'Exception'
+			, '404'
+		);
 	}
 
 	protected function tearDown() {

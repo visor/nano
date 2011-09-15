@@ -129,11 +129,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		return new TestUtils_Stub_ReturnReal();
 	}
 
-	protected function getTestFile($path) {
-		$class = new ReflectionClass($this);
-		return dirName($class->getFileName()) . '/_files' . $path;
-	}
-
 	protected function addMixin($property, $className) {
 		if (isset($this->$property)) {
 			throw new InvalidArgumentException('$property');
