@@ -3,40 +3,12 @@
 class Nano_Config_Builder {
 
 	const PARENTS_FILE = '.parent.php';
+	const ROUTES_FILE  = 'routes.php';
 
 	/**
 	 * @var string
 	 */
 	protected $source = null, $destination = null;
-
-	/**
-	 * @var Nano_Config_Format[]|SplStack
-	 */
-	protected $formats;
-
-	public function __construct() {
-		$this->formats = new SplStack();
-	}
-
-	/**
-	 * @return void
-	 * @param string $path
-	 */
-	public static function createStub($path) {
-		//todo: remove this method
-		if (!file_exists($path)) {
-			file_put_contents($path, '<?php return (object)array();');
-		}
-	}
-
-	/**
-	 * @return Nano_Config_Builder
-	 * @param Nano_Config_Format $format
-	 */
-	public function addFormat(Nano_Config_Format $format) {
-		$this->formats->push($format);
-		return $this;
-	}
 
 	/**
 	 * @return Nano_Config_Builder
@@ -57,26 +29,43 @@ class Nano_Config_Builder {
 	}
 
 	/**
-	 * @return Nano_Config_Format
+	 * @return void
+	 * @param string $name
 	 */
-	public function detectFormat() {
-		$this->formats->rewind();
-		foreach ($this->formats as $format) {
-			if ($format->available()) {
-				return $format;
-			}
-		}
-		return new Nano_Config_Format_Php();
+	public function build($name) {
+		$this->buildConfiguration($name);
+		$this->buildRoutes($name);
 	}
 
 	/**
 	 * @return void
 	 * @param string $name
 	 */
-	public function build($name) {
-		//todo: use configured format instead detect
-		//todo: throw exception if format not available
-		$this->detectFormat()->write($this->createSettings($name), $this->destination . DS . Nano_Config::CONFIG_FILE_NAME);
+	protected function buildConfiguration($name) {
+		Nano_Config::getFormat()->write(
+			$this->createSettings($name)
+			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
+		);
+	}
+
+	/**
+	 * @return void
+	 * @param string $name
+	 */
+	protected function buildRoutes($name) {
+		$routes    = new Nano_Routes();
+		$parents   = $this->getParents($name);
+		$parents[] = $name;
+		foreach ($parents as $name) {
+			Nano_Log::message($this->getFilePath($name, self::ROUTES_FILE));
+			$x = include($this->getFilePath($name, self::ROUTES_FILE));
+			Nano_Log::message(var_export($x, true));
+		}
+
+		Nano_Config::getFormat()->writeRoutes(
+			$routes
+			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME
+		);
 	}
 
 	protected function createSettings($name) {
@@ -91,6 +80,9 @@ class Nano_Config_Builder {
 				continue;
 			}
 			if (self::PARENTS_FILE == $file->getBaseName()) {
+				continue;
+			}
+			if (self::ROUTES_FILE == $file->getBaseName()) {
 				continue;
 			}
 			if ('php' !== pathInfo($file->getBaseName(), PATHINFO_EXTENSION)) {
@@ -145,7 +137,7 @@ class Nano_Config_Builder {
 	 * @param string $file
 	 */
 	protected function getFilePath($name, $file) {
-		return $this->source . DS . $name . DS . $file;
+		return $this->source . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . $file;
 	}
 
 	/**
@@ -159,6 +151,7 @@ class Nano_Config_Builder {
 			if (is_array($value) && isSet($result[$key]) && is_array($result[$key])) {
 				$result[$key] = $this->mergeSections($result[$key], $value);
 			} else {
+				//todo: check if key is numeric and use $result[] instead $result[$key]
 				$result[$key] = $value;
 			}
 		}

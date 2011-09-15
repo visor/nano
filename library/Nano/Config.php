@@ -3,6 +3,7 @@
 class Nano_Config {
 
 	const CONFIG_FILE_NAME  = 'configuration';
+	const ROUTES_FILE_NAME  = 'routes';
 	const CHANGED_FILE_NAME = 'changed';
 
 	/**
@@ -20,6 +21,14 @@ class Nano_Config {
 	 */
 	protected $config = null;
 
+	/**
+	 * @var Nano_Routes
+	 */
+	protected $routes = null;
+
+	/**
+	 * @param string $path
+	 */
 	public function __construct($path) {
 		$this->setPath($path);
 	}
@@ -57,10 +66,11 @@ class Nano_Config {
 	 * @return Nano_Config_Format
 	 */
 	public static function getFormat() {
-		//todo: throw exception if format not available
 		if (null === self::$format) {
-			//todo: throw exception
-			self::setFormat(new Nano_Config_Format_Php());
+			throw new Nano_Config_Exception('No configuration format specified');
+		}
+		if (false === self::$format->available()) {
+			throw new Nano_Config_Exception('Specified configuration format not available');
 		}
 		return self::$format;
 	}
@@ -82,7 +92,10 @@ class Nano_Config {
 	}
 
 	public function fileExists() {
-		return file_exists($this->path);
+		return
+			file_exists($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME)
+			&& file_exists($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME)
+		;
 	}
 
 	/**
@@ -123,15 +136,14 @@ class Nano_Config {
 	 * @throws Nano_Exception
 	 */
 	protected function load() {
-		if (null === $this->config) {
-			if (!$this->fileExists()) {
-				throw new Nano_Exception('File "' . $this->path . '" not found');
-			}
-			if (!is_readable($this->path)) {
-				throw new Nano_Exception('Cannot read file "' . $this->path . '"');
-			}
-			$this->config = self::getFormat()->read($this->path);
+		if (null !== $this->config) {
+			return;
 		}
+		if (!$this->fileExists()) {
+			throw new Nano_Config_Exception('Configuration files not exists at ' . $this->path);
+		}
+		$this->config = self::getFormat()->read($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
+		$this->routes = self::getFormat()->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 	}
 
 }

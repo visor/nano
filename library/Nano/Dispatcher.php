@@ -322,7 +322,7 @@ class Nano_Dispatcher {
 			throw $error;
 		}
 
-		$controllerName = Nano::config('web')->error;
+		$controllerName = Nano::config('web')->errorController;
 		if (!$controllerName) {
 			if (false === Nano::isTesting()) {
 				header('Content-Type: text/plain', true);

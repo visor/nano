@@ -12,8 +12,22 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	private $format = null;
 
 	protected function setUp() {
-		$this->format = Nano_Config::getFormat();
+		$this->format = self::getObjectProperty('Nano_Config', 'format');
 		Nano_Config::setFormat(new Nano_Config_Format_Php());
+	}
+
+	public function testGetFormatShouldThrowExceptionWhenFormatNotSpecified() {
+		self::setObjectProperty('Nano_Config', 'format', null);
+		$this->setExpectedException('Nano_Config_Exception', 'Configuration: No configuration format specified');
+		Nano_Config::getFormat();
+	}
+
+	public function testGetFormatThrowExceptionWhenFormatNotAvailable() {
+		include_once $this->files->get($this, '/classes/Unsupported.php', '/Format');
+
+		Nano_Config::setFormat(new Nano_Config_Format_Unsupported());
+		$this->setExpectedException('Nano_Config_Exception', 'Configuration: Specified configuration format not available');
+		Nano_Config::getFormat();
 	}
 
 	public function testGetDefaultFormatInstance() {
@@ -22,37 +36,37 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	}
 
 	public function testAfterCreatingConfigShouldBeEmpty() {
-		$config = new Nano_Config($this->files->get($this, '/configs/default.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/default'));
 		self::assertNull(self::getObjectProperty($config, 'config'));
 	}
 
 	public function testAfterSettingPathConfigShouldBeEmpty() {
-		$config = new Nano_Config($this->files->get($this, '/configs/default.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/default'));
 		$config->setPath($this->files->get($this, '/configs/empty.php'));
 		self::assertNull(self::getObjectProperty($config, 'config'));
 	}
 
 	public function testGetPathShouldReturnPathPassedToConstructor() {
-		$path   = $this->files->get($this, '/configs/default.php');
+		$path   = $this->files->get($this, '/configs/default');
 		$config = new Nano_Config($path);
 		self::assertEquals($path, $config->getPath());
 	}
 
 	public function testGetPathShouldReturnPathPassedToSetPath() {
-		$path   = $this->files->get($this, '/configs/default.php');
+		$path   = $this->files->get($this, '/configs/default');
 		$config = new Nano_Config('');
 		$config->setPath($path);
 		self::assertEquals($path, $config->getPath());
 	}
 
 	public function testExistsShouldReturnTrueForExistedProperties() {
-		$config = new Nano_Config($this->files->get($this, '/configs/file1.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/file1'));
 		self::assertTrue($config->exists('param1'));
 		self::assertTrue($config->exists('param2'));
 	}
 
 	public function testExistsShouldReturnFalseForNotExistedProperties() {
-		$config = new Nano_Config($this->files->get($this, '/configs/file1.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/file1'));
 		$names  = array(
 			'param1-not-exists'
 			, 'param2-not-exists'
@@ -69,32 +83,16 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	public function testShouldTrowExceptionWhenNotExistedFileLoading() {
 		self::assertException(
 			function() {
-				$config = new Nano_Config(__FILE__ . '.php');
+				$config = new Nano_Config(__FILE__);
 				$config->set('test', 'value');
 			}
-			, 'Nano_Exception'
-			, 'File "' . __FILE__ . '.php" not found'
-		);
-	}
-
-	public function testShouldTrowExceptionWhenNotReadableFileLoading() {
-		$file = $this->files->get($this, '/configs/not-readable.php');
-		if (!file_exists($file)) {
-			self::markTestSkipped('Notreadable file not exists');
-		}
-		chMod($file, 0);
-		self::assertException(
-			function() use ($file) {
-				$config = new Nano_Config($file);
-				$config->get(null);
-			}
-			, 'Nano_Exception'
-			, 'Cannot read file "' . $file . '"'
+			, 'Nano_Config_Exception'
+			, 'Configuration files not exists at ' . __FILE__
 		);
 	}
 
 	public function testGettingNotExistedPropertyShouldReturnNull() {
-		$config = new Nano_Config($this->files->get($this, '/configs/file1.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/file1'));
 		$names  = array(
 			'param1-not-exists'
 			, 'param2-not-exists'
@@ -109,7 +107,7 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	}
 
 	public function testGettingWholeFile() {
-		$config   = new Nano_Config($this->files->get($this, '/configs/default.php'));
+		$config   = new Nano_Config($this->files->get($this, '/configs/default'));
 		$data     = $config->get('file1');
 		$expected = (object)array('file1' => (object)array('param1' => 'value1'));
 		$actual   = self::getObjectProperty($config, 'config');
@@ -118,7 +116,7 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	}
 
 	public function testSettingConfigValueInRuntime() {
-		$config = new Nano_Config($this->files->get($this, '/configs/default.php'));
+		$config = new Nano_Config($this->files->get($this, '/configs/default'));
 		self::assertFalse($config->exists('section'));
 
 		$config->set('section', 'value');
@@ -128,7 +126,7 @@ class Core_ConfigTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		if (null !== $this->format) {
-			Nano_Config::setFormat($this->format);
+			self::setObjectProperty('Nano_Config', 'format', $this->format);
 		}
 	}
 

@@ -23,9 +23,12 @@ class Application {
 		, $modulesDir       = null
 		, $sharedModulesDir = null
 		, $nanoRootDir      = null
-
-		, $configFormat     = null
 	;
+
+	/**
+	 * @var Nano_Config_Format
+	 */
+	protected $configFormat = null;
 
 	/**
 	 * @var Nano_Modules|null
@@ -45,7 +48,7 @@ class Application {
 	/**
 	 * @return Nano_Application
 	 */
-	public static function configure() {
+	public static function create() {
 		$result        = new self();
 		self::$current = $result;
 		return $result;
@@ -143,16 +146,23 @@ class Application {
 		return $this;
 	}
 
+	/**
+	 * @return Application
+	 */
+	public function configure() {
+		Nano_Config::setFormat($this->getConfigurationFormat());
+		Nano::configure(new Nano_Config($this->getRootDir() . DIRECTORY_SEPARATOR . 'settings'));
+		return $this;
+	}
+
 	public function start() {
-		//todo: include required classes
-		//todo: get application routes
 		//todo: detect request uri
 		//todo: start dispatcher
 		//todo: ??? handle head method
 	}
 
 	/**
-	 * @return string
+	 * @return Nano_Config_Format
 	 */
 	public function getConfigurationFormat() {
 		if (null === $this->configFormat) {

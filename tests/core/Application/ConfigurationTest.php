@@ -10,7 +10,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 
 	public function testGettingCurrent() {
 		self::assertNull(Application::current());
-		$this->application = Application::configure();
+		$this->application = Application::create();
 		self::assertInstanceOf('Application', Application::current());
 		self::assertSame($this->application, Application::current());
 	}

@@ -5,14 +5,12 @@
 pmip
 cache
 build
-logs/*
+logs/access.log
+logs/error.log
 application/*.log
 application/settings/configuration
 application/settings/routes
-application/public/assets/scripts/*
-application/public/assets/styles/*
 tests/library/Assets/_files/output/*
+
 !logs/empty
-!tests/coverage/empty
-!cache/empty
 !tests/library/Assets/_files/output/empty

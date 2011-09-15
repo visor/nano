@@ -19,32 +19,67 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$this->files->clean($this, '/settings');
 		$this->builder = new Nano_Config_Builder();
-		$this->format = Nano_Config::getFormat();
+		$this->format  = self::getObjectProperty('Nano_Config', 'format');
 		Nano_Config::setFormat(new Nano_Config_Format_Php());
 	}
 
-	public function testDetectingFormatToSave() {
-		self::assertInstanceOf('Nano_Config_Format_Php', $this->builder->detectFormat());
+	public function testSavingRoutes() {
+		$routes = new Nano_Routes();
+		include $this->files->get($this, '/parents/default/routes.php');
+		include $this->files->get($this, '/parents/basic-child/routes.php');
+		$expectedRoutes = $routes;
+		unset($routes);
 
-		$this->builder->addFormat(new Nano_Config_Format_Php());
-		self::assertInstanceOf('Nano_Config_Format_Php', $this->builder->detectFormat());
+		$this->builder->setSource($this->files->get($this, '/parents'));
+		$this->builder->setDestination($this->files->get($this, '/settings'));
+		$this->builder->build('basic-child');
 
-		$this->builder->addFormat(new Nano_Config_Format_Serialize());
-		self::assertInstanceOf('Nano_Config_Format_Serialize', $this->builder->detectFormat());
-
-		if (function_exists('json_encode')) {
-			$this->builder->addFormat(new Nano_Config_Format_Json());
-			self::assertInstanceOf('Nano_Config_Format_Json', $this->builder->detectFormat());
-		}
-
-		if (function_exists('igbinary_unSerialize')) {
-			$this->builder->addFormat(new Nano_Config_Format_Igbinary());
-			self::assertInstanceOf('Nano_Config_Format_Igbinary', $this->builder->detectFormat());
-		}
+		self::assertFileExists($this->files->get($this, '/settings/routes'));
+		$data = file_get_contents($this->files->get($this, '/settings/routes'));
+		/** @var Nano_Routes $actualRoutes */
+		$actualRoutes = unSerialize($data);
+		self::assertEquals($expectedRoutes, $actualRoutes);
+		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
 	}
 
-	public function testSavingRoutes() {
-		self::markTestIncomplete('');
+	public function testAddingRoutesIntoChildConfigurations() {
+		$routes = new Nano_Routes();
+		include $this->files->get($this, '/parents/default/routes.php');
+		include $this->files->get($this, '/parents/basic-child/routes.php');
+		$expectedRoutes = $routes;
+		unset($routes);
+
+		$this->builder->setSource($this->files->get($this, '/parents'));
+		$this->builder->setDestination($this->files->get($this, '/settings'));
+		$this->builder->build('basic-child');
+
+		self::assertFileExists($this->files->get($this, '/settings/routes'));
+		$data = file_get_contents($this->files->get($this, '/settings/routes'));
+		/** @var Nano_Routes $actualRoutes */
+		$actualRoutes = unSerialize($data);
+		self::assertEquals($expectedRoutes, $actualRoutes);
+		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
+	}
+
+	public function testOverrideRoutesIntoChildConfigurations() {
+		$routes = new Nano_Routes();
+		include $this->files->get($this, '/parents/default/routes.php');
+		include $this->files->get($this, '/parents/basic-child/routes.php');
+		include $this->files->get($this, '/parents/ext-child/routes.php');
+		$expectedRoutes = $routes;
+		unset($routes);
+
+		$this->builder->setSource($this->files->get($this, '/parents'));
+		$this->builder->setDestination($this->files->get($this, '/settings'));
+		$this->builder->build('ext-child');
+
+		self::assertFileExists($this->files->get($this, '/settings/routes'));
+		$data = file_get_contents($this->files->get($this, '/settings/routes'));
+		/** @var Nano_Routes $actualRoutes */
+		$actualRoutes = unSerialize($data);
+		self::assertEquals($expectedRoutes, $actualRoutes);
+		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
+		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists(''));
 	}
 
 	public function testLoadingOnlyPhpFiles() {
@@ -62,7 +97,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$expected = (object)array(
 			  'file1' => (object)array('file1-param1' => 'value1')
 			, 'file2' => (object)array('file2-param1' => 'value1')
@@ -81,7 +116,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$config->get('file1');
 		$expected = (object)array(
 			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'new-value2.1'))
@@ -100,7 +135,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('ext-child');
 
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$expected = (object)array(
 			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
 			, 'file2' => (object)array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
@@ -118,7 +153,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('child-of-child');
 
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$expected = (object)array(
 			  'file1' => (object)array('file1-param1' => 'new', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
 			, 'file2' => (object)array('file2-param1' => 'value2', 'file2-param2' => 'value2', 'file2-param100' => '100')
@@ -136,7 +171,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('objects');
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$expected = (object)array(
 			'db' => (object)array(
 				'hostname' => 'localhost', 'username' => 'user', 'password' => 'p4ssw0rd', 'database' => 'db1'
@@ -153,7 +188,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->build('child-of-child');
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		$config   = new Nano_Config($path);
 		$expected = (object)array('db' => (object)array(
 			'default' => (object)array(
 				  'type'     => 'mysql'
@@ -184,7 +219,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->files->clean($this, '/settings');
 		$this->builder = null;
 		if (null !== $this->format) {
-			Nano_Config::setFormat($this->format);
+			self::setObjectProperty('Nano_Config', 'format', $this->format);
 		}
 	}
 

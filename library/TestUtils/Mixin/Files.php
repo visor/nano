@@ -8,11 +8,16 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 	 * @return string
 	 * @param TestUtils_TestCase $test
 	 * @param string $name
+	 * @param string|null $anotherDir
 	 */
-	public function get(TestUtils_TestCase $test, $name) {
-		$class = new ReflectionClass($test);
-		$name  = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $name);
-		return dirName($class->getFileName()) . '/_files' . $name;
+	public function get(TestUtils_TestCase $test, $name, $anotherDir = null) {
+		$class  = new ReflectionClass($test);
+		$name   = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $name);
+		$result = dirName($class->getFileName());
+		if (null !== $anotherDir) {
+			$result .= $anotherDir;
+		}
+		return  $result . '/_files' . $name;
 	}
 
 	public function clean(TestUtils_TestCase $test, $dir, $fullPath = false) {
