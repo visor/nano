@@ -4,14 +4,18 @@
  * @group core
  * @group framework
  */
-class Nano_MessageTest extends TestUtils_TestCase {
+class Core_MessageTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		Nano_Message::instance(true)->lang('');
 	}
 
 	public function testLoadFileNotFound() {
-		self::assertException(function() { Nano_Message::instance()->load('not-exists'); }, 'Exception', 'File "' . MESSAGES . DS . 'not-exists.php" not found');
+		self::assertException(
+			function() { Nano_Message::instance()->load('not-exists'); }
+			, 'Exception'
+			, 'File "' . Application::current()->getRootDir() . DS . 'messages' . DS . 'not-exists.php" not found'
+		);
 	}
 
 	public function testLoadFileNoMessages() {
