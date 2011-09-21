@@ -1,0 +1,96 @@
+a,a:active,a:link,a:visited {
+	color: #069;
+}
+
+a:hover {
+	color: #c00;
+}
+
+#header {
+	background: url('<?=$cdn?>/resources/images/bg_header_blue.png') left top no-repeat;
+}
+
+h1 {
+	color: #1b486a;
+}
+
+#menu ul.group li a {
+	background: url('<?=$cdn?>/resources/images/navigation_background_blue.gif') repeat-x top left;
+}
+
+#menu ul.group li.first a {
+	background: url('<?=$cdn?>/resources/images/navigation_first_blue.png') no-repeat top left;
+}
+
+#menu ul.group li.last a {
+	background: url('<?=$cdn?>/resources/images/navigation_last_blue.png') no-repeat top right;
+}
+
+#menu ul.group li a span.inner {
+	border-right: 1px solid #4985b2;
+}
+
+#menu ul.group li a:hover span.inner {
+	border-right: 1px solid #4985b2;
+}
+
+#tabs .container {
+	border-left: 1px solid #397cae;
+	border-right: 1px solid #397cae;
+	border-bottom: 1px solid #346a92;
+}
+
+#tabs ul li a {
+	color: #1b486a;
+}
+
+#tabs, #tabs .container {
+	background: #639ecb;
+}
+
+#tabs ul li a {
+	background: url('<?=$cdn?>/resources/images/tabs_left.png') no-repeat left top;
+}
+
+#tabs ul li a span {
+	background: url('<?=$cdn?>/resources/images/tabs_right.png') no-repeat right top;
+}
+
+.button {
+	background: transparent url('<?=$cdn?>/resources/images/but_right_blue.png') no-repeat scroll top right;
+	color: #1b486a;
+}
+
+.button span {
+	background: url('<?=$cdn?>/resources/images/but_left_blue.png') no-repeat left top;
+}
+
+.button:hover span {
+	color: #1b486a;
+}
+
+.button_ok {
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_blue.gif') no-repeat scroll top right;
+	color: #1b486a;
+}
+
+.button_ok span {
+	background: url('<?=$cdn?>/resources/images/but_round_ok_blue.gif') no-repeat left top;
+}
+
+.button_ok:hover span {
+	color: #1b486a;
+}
+
+.button_notok {
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_blue.gif') no-repeat scroll top right;
+	color: #1b486a;
+}
+
+.button_notok span {
+	background: url('<?=$cdn?>/resources/images/but_round_del_blue.gif') no-repeat left top;
+}
+
+.button_notok:hover span {
+	color: #1b486a;
+}

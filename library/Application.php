@@ -182,7 +182,7 @@ class Application {
 		if (Nano::config('web')->index) {
 			$url = preg_replace('/' . preg_quote(Nano::config('web')->index) . '$/', '', $url);
 		}
-		$url = rawUrlDecode($url);
+		$url = trim(rawUrlDecode($url), '/');
 		$result = $this->dispatcher->dispatch(Nano::routes(), $url);
 		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD'])) {
 			return;

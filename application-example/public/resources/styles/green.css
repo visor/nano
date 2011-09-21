@@ -1,0 +1,100 @@
+a,a:active,a:link,a:visited {
+	color: #689102;
+}
+
+a:hover {
+	color: #344704;
+}
+
+#header {
+	background: url('<?=$cdn?>/resources/images/bg_header_green.gif') left top no-repeat;
+}
+
+h1 {
+	color: #689102;
+}
+
+#menu ul.group li a {
+	background: url('<?=$cdn?>/resources/images/navigation_background_green.gif') repeat-x top left;
+}
+
+#menu ul.group li.first a {
+	background: url('<?=$cdn?>/resources/images/navigation_first_green.gif') no-repeat top left;
+}
+
+#menu ul.group li.last a {
+	background: url('<?=$cdn?>/resources/images/navigation_last_green.gif') no-repeat top right;
+}
+
+#menu ul.group li a span.inner {
+	border-right: 1px solid #4c6b00;
+}
+
+#menu ul.group li a:hover span.inner {
+	border-right: 1px solid #4c6b00;
+}
+
+#tabs .container {
+	border-left: 1px solid #486401;
+	border-right: 1px solid #486401;
+	border-bottom: 1px solid #486401;
+}
+
+#tabs ul li a {
+	color: #344704;
+}
+
+#tabs {
+	background: #689102;
+}
+
+#tabs .container {
+	background: none;
+}
+
+#tabs ul li a {
+	background: url('<?=$cdn?>/resources/images/tabs_left_green.gif') no-repeat left top;
+}
+
+#tabs ul li a span {
+	background: url('<?=$cdn?>/resources/images/tabs_right_green.gif') no-repeat right top;
+}
+
+.button {
+	background: transparent url('<?=$cdn?>/resources/images/but_right_green.gif') no-repeat scroll top right;
+	color: #344704;
+}
+
+.button span {
+	background: url('<?=$cdn?>/resources/images/but_left_green.gif') no-repeat left top;
+}
+
+.button:hover span {
+	color: #344704;
+}
+
+.button_ok {
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_green.gif') no-repeat scroll top right;
+	color: #344704;
+}
+
+.button_ok span {
+	background: url('<?=$cdn?>/resources/images/but_round_ok_green.gif') no-repeat left top;
+}
+
+.button_ok:hover span {
+	color: #344704;
+}
+
+.button_notok {
+	background: transparent url('<?=$cdn?>/resources/images/but_round_span_green.gif') no-repeat scroll top right;
+	color: #344704;
+}
+
+.button_notok span {
+	background: url('<?=$cdn?>/resources/images/but_round_del_green.gif') no-repeat left top;
+}
+
+.button_notok:hover span {
+	color: #344704;
+}

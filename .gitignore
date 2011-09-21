@@ -7,9 +7,9 @@ cache
 build
 logs/access.log
 logs/error.log
-application/*.log
-application/settings/configuration
-application/settings/routes
+application-example/*.log
+application-example/settings/configuration
+application-example/settings/routes
 tests/library/Assets/_files/output/*
 
 !logs/empty
