@@ -1,4 +1,5 @@
 <?php
+return;
 /**
  * Example Nano script. Just prints "Hello" string
  */

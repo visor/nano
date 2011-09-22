@@ -12,6 +12,10 @@ class CliTest extends TestUtils_TestCase {
 		require_once __DIR__ . '/_files/InvalidCliController.php';
 	}
 
+	protected function setUp() {
+		self::markTestSkipped('need refactor');
+	}
+
 	public function testExtractingNames() {
 		self::assertEquals(array('index', 'index'), Nano_C_Cli::extractControllerAction('index'));
 		self::assertEquals(array('c', 'a'), Nano_C_Cli::extractControllerAction('c.a'));

@@ -1,4 +1,5 @@
 <?php
+return;
 
 require dirName(dirName(__FILE__)) . '/library/Nano.php';
 

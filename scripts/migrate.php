@@ -1,4 +1,5 @@
 <?php
+return;
 
 require dirName(__DIR__) . '/library/Nano.php';
 require APP . DS . 'bootstrap.php';
