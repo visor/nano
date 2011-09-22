@@ -18,7 +18,7 @@ class AnExample extends \Nano_Cli_Script {
 		}
 
 		echo 'Application modules:', PHP_EOL;
-		foreach (\Application::current()->getModules()->count() as $name => $path) {
+		foreach (\Application::current()->getModules() as $name => $path) {
 			echo ' - ', $name, '    ', $path, PHP_EOL;
 		}
 	}
