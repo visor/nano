@@ -24,8 +24,10 @@ class MigrateCreate extends \Nano_Cli_Script {
 		}
 
 		$dir  = date('YmdHis-') . $name;
-		$path = APP . DIRECTORY_SEPARATOR . 'migrate' . DIRECTORY_SEPARATOR . $dir;
-		mkDir($path);
+		$path = $this->getApplication()->getRootDir() . DIRECTORY_SEPARATOR . Migrate::DIR_NAME . DIRECTORY_SEPARATOR . $dir;
+		if (!file_exists($path)) {
+			mkDir($path, 0755, true);
+		}
 
 		if ($queries) {
 			$queriesFile = $path . DIRECTORY_SEPARATOR . 'queries.php';

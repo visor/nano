@@ -32,7 +32,7 @@ abstract class Nano_Cli_Script {
 		$this->cli  = $cli;
 	}
 
-/**
+	/**
 	 * @return boolean
 	 */
 	public function needApplication() {
@@ -46,6 +46,9 @@ abstract class Nano_Cli_Script {
 		return Application::current();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function usage() {
 		$result =
 			$this->name . ' - ' . $this->getDescription() . PHP_EOL . PHP_EOL
@@ -75,6 +78,9 @@ abstract class Nano_Cli_Script {
 		return '';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName() {
 		return $this->name;
 	}
@@ -96,6 +102,11 @@ abstract class Nano_Cli_Script {
 		return $this->docTags;
 	}
 
+	/**
+	 * @param string $message
+	 * @param int $code
+	 * @param boolean $usage
+	 */
 	protected function stop($message = null, $code = 0, $usage = true) {
 		if (null !== $message) {
 			echo $message, PHP_EOL;

@@ -24,10 +24,7 @@ class Nano_Migrate {
 	 */
 	protected $db = null;
 
-	public function __construct($path = null) {
-		if (null === $path) {
-			$path = APP . '/migrate';
-		}
+	public function __construct($path) {
 		$this->path = $path;
 		$this->loadSteps();
 	}
