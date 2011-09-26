@@ -3,7 +3,7 @@
 namespace CliScript;
 
 /**
- * @description Installs Nano CLI script
+ * @description Installs Nano CLI script into first writable $PATH directory
  */
 class InstallCli extends \Nano_Cli_Script {
 

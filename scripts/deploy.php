@@ -12,7 +12,7 @@ class Deploy extends \Nano_Cli_Script {
 	 * @return void
 	 */
 	public function run(array $args) {
-		echo 'Not implemented yet';
+		$this->stop('Not implemented yet');
 	}
 
 }

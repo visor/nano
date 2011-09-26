@@ -1,10 +1,10 @@
 <?php
-/**
- * Example Nano script. Just prints "Hello" string.
- */
 
 namespace CliScript;
 
+/**
+ * @description Example Nano script. Just prints "Hello" string.
+ */
 class Hello extends \Nano_Cli_Script {
 
 	/**
