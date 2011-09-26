@@ -22,7 +22,7 @@ class InstallCli extends \Nano_Cli_Script {
 	 */
 	public function run(array $args) {
 		$this->createScriptFile(
-			$this->getInstallPath(isSet($args[1]) ? true : false)
+			$this->getInstallPath(/*isSet($args[1]) ? true : false*/true)
 		);
 		$this->cli->help();
 	}
@@ -32,9 +32,15 @@ class InstallCli extends \Nano_Cli_Script {
 	 * @param boolean $useDefault
 	 */
 	protected function getInstallPath($useDefault) {
-		$pathes = explode(PATH_SEPARATOR, $_ENV['PATH']);
+		$pathes = explode(PATH_SEPARATOR, $_SERVER['PATH']);
 		if ($useDefault) {
-			return $pathes[0];
+			foreach ($pathes as $path) {
+				if (is_dir($path) && is_writable($path)) {
+					return $path;
+				}
+			}
+			echo 'Cannot write into $PATH directories', PHP_EOL;
+			exit(1);
 		}
 		return $pathes[0];
 	}
