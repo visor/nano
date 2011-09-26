@@ -4,6 +4,9 @@ namespace CliScript;
 
 /**
  * @description Installs Nano CLI script into first writable $PATH directory
+ *
+ * @param optional binaryName Name of binary file to create (default - nano)
+ * @param optional binaryPath Path to directory where to put binary (default - first writable directory in $PATH)
  */
 class InstallCli extends \Nano_Cli_Script {
 
@@ -21,9 +24,10 @@ class InstallCli extends \Nano_Cli_Script {
 	 * @param array $args
 	 */
 	public function run(array $args) {
-		$this->createScriptFile(
-			$this->getInstallPath(/*isSet($args[1]) ? true : false*/true)
-		);
+		$name = isSet($args[0]) ? $args[0] : self::BIN;
+		$path = isSet($args[1]) ? $args[1] : $this->getInstallPath(true);
+
+		$this->createScriptFile($name, $path);
 		$this->cli->help();
 	}
 
@@ -46,15 +50,16 @@ class InstallCli extends \Nano_Cli_Script {
 	}
 
 	/**
-	 * @param string $path
 	 * @return void
+	 * @param string $name
+	 * @param string $path
 	 */
-	protected function createScriptFile($path) {
+	protected function createScriptFile($name, $path) {
 		$source = \Nano_Cli::isWindows()
 			? $this->getWindowsScriptSource()
 			: $this->getUnixScriptSource()
 		;
-		$fileName = $path . DIRECTORY_SEPARATOR . self::BIN;
+		$fileName = $path . DIRECTORY_SEPARATOR . $name;
 		if (\Nano_Cli::isWindows()) {
 			$fileName .= '.bat';
 		}
