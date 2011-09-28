@@ -1,10 +1,10 @@
 <?php
-/**
- * @description Update current GIT branch, run setup and clean assets
- */
 
 namespace CliScript;
 
+/**
+ * @description Update current GIT branch, run setupand clean assets
+ */
 class Deploy extends \Nano_Cli_Script {
 
 	/**

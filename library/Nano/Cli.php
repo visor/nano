@@ -93,7 +93,10 @@ class Nano_Cli {
 		echo self::getPhpBinary() . ' ' . baseName(self::getCliScriptPath()) . ' [script [params]]', PHP_EOL, PHP_EOL;
 		echo 'where script is one of: ', PHP_EOL;
 		foreach ($this->scripts as $name => $script) {
-			echo ' - ', $name, str_repeat(' ', $this->maxLength - strLen($name) + 2), '- ', $this->getScriptToRun($name)->getDescription(), PHP_EOL;
+			echo
+				' - ', $name, str_repeat(' ', $this->maxLength - strLen($name) + 2)
+				, '- ', $this->alignDescription($this->getScriptToRun($name)->getDescription(), $this->maxLength + 7), PHP_EOL
+			;
 		}
 		echo PHP_EOL;
 	}
@@ -207,6 +210,15 @@ class Nano_Cli {
 
 		$result = $this->scripts[$key]->newInstance($key, $this);
 		return $result;
+	}
+
+	/**
+	 * @return string
+	 * @param string $string
+	 * @param int $length
+	 */
+	protected function alignDescription($string, $length) {
+		return preg_replace('/(\r?\n|\r)/', '\\1' . str_repeat(' ', $length), $string);
 	}
 
 }
