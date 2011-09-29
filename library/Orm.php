@@ -113,7 +113,13 @@ class Orm {
 	 * @param stirng $model
 	 */
 	protected static function mapperClass($model) {
-		return self::MAPPER_PREFIX . '_' . $model;
+		$pos = strRPos($model, '\\');
+		if (false === $pos) {
+			return self::MAPPER_PREFIX . '_' . $model;
+		}
+		$namespace = subStr($model, 0, $pos);
+		$class     = subStr($model, $pos + 1);
+		return $namespace . '\\' . self::MAPPER_PREFIX . '_' . $class;
 	}
 
 }
