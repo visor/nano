@@ -7,7 +7,7 @@ class Mapper_Namespaced extends \Orm_Mapper {
 	/**
 	 * @var string
 	 */
-	protected $modelClass = 'Library_Orm_Example_Namespaced';
+	protected $modelClass = 'TestNamespace\\Namespaced';
 
 	/**
 	 * @return array
