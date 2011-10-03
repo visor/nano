@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @depecated
+ */
 class CliController extends Nano_C_Cli {
 
 	/**
