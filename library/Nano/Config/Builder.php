@@ -69,9 +69,10 @@ class Nano_Config_Builder {
 		$parents   = $this->getParents($name);
 		$parents[] = $name;
 		foreach ($parents as $name) {
-			Nano_Log::message($this->getFilePath($name, self::ROUTES_FILE));
-			$x = include($this->getFilePath($name, self::ROUTES_FILE));
-			Nano_Log::message(var_export($x, true));
+			$routesFile = $this->getFilePath($name, self::ROUTES_FILE);
+			if (file_exists($routesFile)) {
+				include($this->getFilePath($name, self::ROUTES_FILE));
+			}
 		}
 
 		Nano_Config::getFormat()->writeRoutes(
