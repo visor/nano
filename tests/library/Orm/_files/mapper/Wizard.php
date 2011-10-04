@@ -3,6 +3,11 @@
 class Mapper_Library_OrmExampleWizard extends Orm_Mapper {
 
 	/**
+	 * @var string
+	 */
+	protected $modelClass = 'Library_OrmExampleWizard';
+
+	/**
 	 * @return array
 	 */
 	protected function getMeta() {
@@ -33,8 +38,13 @@ class Mapper_Library_OrmExampleWizard extends Orm_Mapper {
 			)
 			, 'incremental' => 'id'
 			, 'identity'    => array('id')
-			, 'hasMany'     => array()
-			, 'belongsTo'   => array()
+			, 'relations'   => array(
+				'address' => array(
+					'type'     => self::RELATION_TYPE_BELONGS_TO
+					, 'model'  => 'Mapper_Library_Orm_Example_Address'
+					, 'fields' => array('addressId')
+				)
+			)
 		);
 	}
 

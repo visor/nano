@@ -107,6 +107,9 @@ abstract class Orm_Model {
 		if (property_exists($this->data, $name)) {
 			return $this->data->$name;
 		}
+		if (static::mapper()->getResource()->relationExists($name)) {
+			return static::mapper()->findRelated($name);
+		}
 
 		throw new Orm_Exception_UnknownField(static::mapper()->getResource(), $name);
 	}
