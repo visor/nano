@@ -51,9 +51,9 @@ class Nano_Cli {
 	 * @return string
 	 */
 	public static function getPhpBinary() {
-		//		if (self::isWindows()) {
-		//			return $_ENV['_'];
-		//		}
+//		if (self::isWindows()) {
+//			return $_ENV['_'];
+//		}
 		return trim(`which php`);
 	}
 
@@ -155,6 +155,9 @@ class Nano_Cli {
 
 		include $this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP;
 		if (!Application::current()) {
+			return;
+		}
+		if (!is_dir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR)) {
 			return;
 		}
 
