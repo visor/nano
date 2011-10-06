@@ -2,6 +2,10 @@
 
 abstract class Orm_Mapper {
 
+	const RELATION_TYPE_BELONGS_TO = 'belongsTo';
+	const RELATION_TYPE_HAS_ONE    = 'hasOne';
+	const RELATION_TYPE_HAS_MANY   = 'hasMany';
+
 	/**
 	 * @var string
 	 */
@@ -82,6 +86,48 @@ abstract class Orm_Mapper {
 	}
 
 	/**
+	 * @return Orm_Model|array|boolean
+	 * @param string $relationName
+	 *
+	 * @throws Orm_Exception_IncompletedResource
+	 * @throws Orm_Exception_UnknownRelationType
+	 */
+	public function findRelated($relationName) {
+		$relation = $this->getResource()->getRelation($relationName);
+		if (!isSet($relation['type'])) {
+			throw new Orm_Exception_IncompletedResource($this->getResource());
+		}
+		switch ($relation['type']) {
+			case self::RELATION_TYPE_BELONGS_TO:
+				return $this->findBelongsTo($relationName);
+			case self::RELATION_TYPE_HAS_ONE:
+				return $this->findHasOne($relationName);
+			case self::RELATION_TYPE_HAS_MANY:
+				return $this->findHasMany($relationName);
+			default:
+				throw new Orm_Exception_UnknownRelationType($relationName);
+		}
+	}
+
+	/**
+	 * @return Orm_Model|array|boolean
+	 * @param string $relationName
+	 * @param scalar $relationValue
+	 */
+	public function findUsingRelation($relationName, $relationValue) {
+		return $this->findUsingRelations(array($relationName), array($relationValue));
+	}
+
+	/**
+	 * @return Orm_Model|array|boolean
+	 * @param array $relationsNames
+	 * @param array $relationsValues
+	 */
+	public function findUsingRelations(array $relationsNames, array $relationsValues) {
+		//
+	}
+
+	/**
 	 * @return void
 	 * @param stdClass $modelData
 	 * @param array $sourceData
@@ -149,6 +195,15 @@ abstract class Orm_Mapper {
 			$result->equals($fieldName, $model->__get($fieldName));
 		}
 		return $result;
+	}
+
+	protected function findBelongsTo($relationName) {
+	}
+
+	protected function findHasOne($relationName) {
+	}
+
+	protected function findHasMany($relationName) {
 	}
 
 }

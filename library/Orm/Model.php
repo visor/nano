@@ -55,15 +55,22 @@ abstract class Orm_Model {
 			return true;
 		}
 		if ($this->new) {
+			$this->beforeInsert();
 			if (static::mapper()->insert($this)) {
 				$this->new = false;
 				$this->markUnchanged();
+				$this->afterInsert();
+				$this->afterSave();
 				return true;
 			}
 			return false;
 		}
+
+		$this->beforeUpdate();
 		if (static::mapper()->update($this)) {
 			$this->markUnchanged();
+			$this->afterUpdate();
+			$this->afterSave();
 			return true;
 		}
 		return false;
@@ -100,6 +107,9 @@ abstract class Orm_Model {
 		if (property_exists($this->data, $name)) {
 			return $this->data->$name;
 		}
+		if (static::mapper()->getResource()->relationExists($name)) {
+			return static::mapper()->findRelated($name);
+		}
 
 		throw new Orm_Exception_UnknownField(static::mapper()->getResource(), $name);
 	}
@@ -134,5 +144,15 @@ abstract class Orm_Model {
 		$this->original      = new stdClass();
 		$this->changedFields = array();
 	}
+
+	protected function beforeInsert() {}
+
+	protected function beforeUpdate() {}
+
+	protected function afterInsert() {}
+
+	protected function afterUpdate() {}
+
+	protected function afterSave() {}
 
 }

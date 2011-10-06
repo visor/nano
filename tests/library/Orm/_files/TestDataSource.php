@@ -30,6 +30,7 @@ class Library_Orm_TestDataSource extends Orm_DataSource_Abstract implements Orm_
 	 * @param stdClass $data
 	 */
 	public function insert(Orm_Resource $resource, stdClass $data) {
+		return true;
 	}
 
 	/**
@@ -39,6 +40,7 @@ class Library_Orm_TestDataSource extends Orm_DataSource_Abstract implements Orm_
 	 * @param Orm_Criteria $where
 	 */
 	public function update(Orm_Resource $resource, stdClass $data, Orm_Criteria $where) {
+		return true;
 	}
 
 	/**
@@ -47,6 +49,7 @@ class Library_Orm_TestDataSource extends Orm_DataSource_Abstract implements Orm_
 	 * @param Orm_Criteria|null $where
 	 */
 	public function delete(Orm_Resource $resource, Orm_Criteria $where = null) {
+		return true;
 	}
 
 	/**

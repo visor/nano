@@ -18,6 +18,7 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 
 	protected function setUp() {
 		include_once $this->files->get($this, '/mapper/Address.php');
+		include_once $this->files->get($this, '/model/Address.php');
 
 		$this->mapper = new Mapper_Library_Orm_Example_Address();
 		$this->source = $this->createDataSource();

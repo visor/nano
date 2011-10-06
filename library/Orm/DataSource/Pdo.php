@@ -12,7 +12,11 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 	public function __construct(array $config) {
 		parent::__construct($config);
 		if (isSet($config['dsn'])) {
-			$this->pdo = new PDO($config['dsn']);
+			$userName  = isSet($config['username']) ? $config['username'] : null;
+			$password  = isSet($config['password']) ? $config['password'] : null;
+			$options   = isSet($config['options']) ? (array)$config['options'] : array();
+			$this->pdo = new PDO($config['dsn'], $userName, $password, $options);
+			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 	}
 
@@ -197,7 +201,6 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 		if (null === $findOptions) {
 			return $result;
 		}
-		Nano_Log::message($result . $this->getLimitClause($findOptions) . $this->getOrderClause($findOptions));
 		return $result . $this->getLimitClause($findOptions) . $this->getOrderClause($findOptions);
 	}
 

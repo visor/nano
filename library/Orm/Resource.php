@@ -162,16 +162,24 @@ class Orm_Resource {
 		return $this->meta['identity'];
 	}
 
-	public function hasOne() {
-		return $this->meta['hasOne'];
+	/**
+	 * @return boolean
+	 * @param string $name
+	 */
+	public function relationExists($name) {
+		return isSet($this->meta['relations'][$name]);
 	}
 
-	public function hasMany() {
-		return $this->meta['hasMany'];
-	}
-
-	public function belongsTo() {
-		return $this->meta['belongsTo'];
+	/**
+	 * @return array
+	 * @param string $name
+	 * @throws Orm_Exception_UnknownField
+	 */
+	public function getRelation($name) {
+		if (!$this->relationExists($name)) {
+			throw new Orm_Exception_UnknownField($this, $name);
+		}
+		return $this->meta['relations'][$name];
 	}
 
 }

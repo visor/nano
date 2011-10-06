@@ -12,22 +12,21 @@ class Library_Orm_Model_Test extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/mapper/House.php');
 		include_once $this->files->get($this, '/mapper/Wizard.php');
 		include_once $this->files->get($this, '/mapper/Student.php');
+		include_once $this->files->get($this, '/mapper/Namespaced.php');
 		include_once $this->files->get($this, '/model/Address.php');
 		include_once $this->files->get($this, '/model/House.php');
 		include_once $this->files->get($this, '/model/Wizard.php');
 		include_once $this->files->get($this, '/model/Student.php');
+		include_once $this->files->get($this, '/model/Namespaced.php');
 
 		Orm::instance()->addSource('test', new Library_Orm_TestDataSource(array()));
 	}
 
 	public function testGettingMapper() {
-		$address = new Library_Orm_Example_Address();
-		$house   = new LibraryOrmExampleHouse();
-		$wizard  = new Library_OrmExampleWizard();
-
 		self::assertInstanceOf('Mapper_Library_Orm_Example_Address', Library_Orm_Example_Address::mapper());
 		self::assertInstanceOf('Mapper_LibraryOrmExampleHouse', LibraryOrmExampleHouse::mapper());
 		self::assertInstanceOf('Mapper_Library_OrmExampleWizard', Library_OrmExampleWizard::mapper());
+		self::assertInstanceOf('TestNamespace\Mapper_Namespaced', TestNamespace\Namespaced::mapper());
 	}
 
 	public function testMapperShouldCreatedOnceForOneModelInstances() {
@@ -139,16 +138,41 @@ class Library_Orm_Model_Test extends TestUtils_TestCase {
 	}
 
 	public function testDetectingModelIsNew() {
-		$address = new Library_Orm_Example_Student();
-		self::assertTrue($address->isNew());
+		$student = new Library_Orm_Example_Student();
+		self::assertTrue($student->isNew());
 
-		$address->wizardId = 100;
-		self::assertTrue($address->isNew());
+		$student->wizardId = 100;
+		self::assertTrue($student->isNew());
 
-		$address = new Library_Orm_Example_Student(array('wizardId' => 100));
-		self::assertTrue($address->isNew());
+		$student = new Library_Orm_Example_Student(array('wizardId' => 100));
+		self::assertTrue($student->isNew());
 
 		self::assertFalse(Library_Orm_Example_Address::mapper()->get(1)->isNew());
+	}
+
+	public function testCallingBeforeXxxAndAfterXxxFunctions() {
+		$address = new Library_Orm_Example_Address();
+		self::assertEquals(0, $address->beforeInsert);
+		self::assertEquals(0, $address->beforeUpdate);
+		self::assertEquals(0, $address->afterInsert);
+		self::assertEquals(0, $address->afterUpdate);
+		self::assertEquals(0, $address->afterSave);
+
+		$address->location = 'Number 4, Privet Drive';
+		self::assertTrue($address->save());
+		self::assertEquals(1, $address->beforeInsert);
+		self::assertEquals(0, $address->beforeUpdate);
+		self::assertEquals(1, $address->afterInsert);
+		self::assertEquals(0, $address->afterUpdate);
+		self::assertEquals(1, $address->afterSave);
+
+		$address->location = 'Number 4, Privet Drive, Little Whinging';
+		self::assertTrue($address->save());
+		self::assertEquals(1, $address->beforeInsert);
+		self::assertEquals(1, $address->beforeUpdate);
+		self::assertEquals(1, $address->afterInsert);
+		self::assertEquals(1, $address->afterUpdate);
+		self::assertEquals(1, $address->afterSave);
 	}
 
 }
