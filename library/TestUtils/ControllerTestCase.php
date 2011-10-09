@@ -38,6 +38,15 @@ class TestUtils_ControllerTestCase extends TestUtils_TestCase {
 		return $this->dispatcher->run($route);
 	}
 
+	public function runModuleAction($module, $controller, $action, $pattern = null, $url = null) {
+		$this->dispatcher->clean();
+		$route = Nano_Route::create($pattern, $controller, $action, $module);
+		if (null !== $url) {
+			$this->dispatcher->test($route, $url);
+		}
+		return $this->dispatcher->run($route);
+	}
+
 	/**
 	 * @return stdClass
 	 * @param string $controller
