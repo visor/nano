@@ -21,9 +21,9 @@ abstract class Orm_Model {
 	 * @param array $data
 	 * @param mixed $new;
 	 */
-	public function __construct(array $data = array(), $new = false) {
+	public function __construct(array $data = array(), $new = true) {
 		$this->data = new stdClass();
-		$this->new  = 2 > func_num_args();
+		$this->new  = 0 == func_num_args() || 1 == func_num_args();
 
 		$this->markUnchanged();
 		static::mapper()->mapToModel($this->data, $data);
@@ -106,6 +106,9 @@ abstract class Orm_Model {
 	public function __get($name) {
 		if (property_exists($this->data, $name)) {
 			return $this->data->$name;
+		}
+		if (static::mapper()->getResource()->relationExists($name)) {
+			return static::mapper()->findRelated($name);
 		}
 
 		throw new Orm_Exception_UnknownField(static::mapper()->getResource(), $name);

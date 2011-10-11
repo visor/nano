@@ -7,7 +7,7 @@ class Nano_Migrate {
 	/**
 	 * @var string
 	 */
-	protected $path;
+	protected $path, $title;
 
 	/**
 	 * @var Nano_Migrate_Step[string]
@@ -24,8 +24,9 @@ class Nano_Migrate {
 	 */
 	protected $db = null;
 
-	public function __construct($path) {
-		$this->path = $path;
+	public function __construct($path, $title) {
+		$this->path  = $path;
+		$this->title = $title;
 		$this->loadSteps();
 	}
 
@@ -52,9 +53,9 @@ class Nano_Migrate {
 	 * @param string $onlyVersion
 	 */
 	public function run($onlyVersion = null) {
+		$transaction = false;
 		try {
 			$this->logAllStart();
-			$transaction = false;
 			foreach ($this->getSteps() as $name => $step) { /* @var $step Nano_Migrate_Step */
 				if (Nano_Migrate_Version::exists($this->getDb(), $name)) {
 					continue;
@@ -68,8 +69,8 @@ class Nano_Migrate {
 				$transaction = true;
 				$step->run($this->getDb());
 				$this->getDb()->commit();
-				Nano_Migrate_Version::add($this->getDb(), $name);
 				$transaction = false;
+				Nano_Migrate_Version::add($this->getDb(), $name);
 				$this->logStepDone($name, $step);
 			}
 			$this->logAllDone();
@@ -101,6 +102,9 @@ class Nano_Migrate {
 	}
 
 	protected function loadSteps() {
+		if (!is_dir($this->getPath())) {
+			return;
+		}
 		$i = new DirectoryIterator($this->getPath());
 		foreach ($i as $item) { /* @var $item DirectoryIterator */
 			if (!$item->isDir() || $item->isDot() || '.' == subStr($item->getBaseName(), 0, 1)) {
@@ -116,14 +120,14 @@ class Nano_Migrate {
 		if ($this->silent) {
 			return;
 		}
-		echo 'Starting updates' . PHP_EOL;
+		echo $this->title, PHP_EOL;
 	}
 
 	protected function logStepStart($name, $step) {
 		if ($this->silent) {
 			return;
 		}
-		echo "\t" . 'runing ' . $name . '...';
+		echo "\t", 'runing ', $name, '...';
 	}
 
 	protected function logStepDone($step) {
@@ -137,7 +141,7 @@ class Nano_Migrate {
 		if ($this->silent) {
 			return;
 		}
-		echo 'Done.' . PHP_EOL;
+		echo 'Done.', PHP_EOL;
 	}
 
 }

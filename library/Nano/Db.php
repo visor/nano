@@ -32,7 +32,7 @@ class Nano_Db extends PDO {
 		}
 		if (!array_key_exists($name, self::$instances)) {
 			$config = self::getConfig($name);
-			$dns    = $config->type . ':' . $config->dsn;
+			$dns    = isSet($config->type) ? $config->type . ':' . $config->dsn : $config->dsn;
 			self::$instances[$name] = new self($dns, $config->username, $config->password, $config->options, $name);
 			self::$instances[$name]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			self::$instances[$name]->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
@@ -154,7 +154,7 @@ class Nano_Db extends PDO {
 			$sqlValues[] = null === $value ? 'null' : $this->quote($value);
 		}
 		$query = 'insert into ' . $this->quoteName($table) . '(' . implode(', ', $sqlFields) . ') values (' . implode(', ', $sqlValues) . ')';
-		ActiveRecord_Storage::invalidateCache($table);
+		//ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 
@@ -165,14 +165,14 @@ class Nano_Db extends PDO {
 		}
 		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'update ' . $this->quoteName($table) . ' set ' . implode(', ', $sqlValues) . $whereClause;
-		ActiveRecord_Storage::invalidateCache($table);
+		//ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 
 	public function delete($table, $where = null) {
 		$whereClause = empty($where) ? '' : ' where ' . $this->buildWhere($where);
 		$query       = 'delete from ' . $this->quoteName($table) . $whereClause;
-		ActiveRecord_Storage::invalidateCache($table);
+		//ActiveRecord_Storage::invalidateCache($table);
 		return $this->exec($query);
 	}
 
@@ -194,7 +194,7 @@ class Nano_Db extends PDO {
 				if (Nano::db()->log()->enabled()) {
 					Nano::db()->log()->append($exception->__toString(), null, true);
 				}
-				throw $e;
+				throw $exception;
 			}
 			return $result;
 		}

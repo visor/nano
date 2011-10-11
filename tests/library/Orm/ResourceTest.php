@@ -38,9 +38,6 @@ class Library_Orm_ResourceTest extends TestUtils_TestCase {
 		self::assertEquals($this->testMeta['name'], $this->resource->name());
 		self::assertEquals($this->testMeta['fields'], $this->resource->fields());
 		self::assertEquals($this->testMeta['identity'], $this->resource->identity());
-		self::assertEquals($this->testMeta['hasOne'], $this->resource->hasOne());
-		self::assertEquals($this->testMeta['hasMany'], $this->resource->hasMany());
-		self::assertEquals($this->testMeta['belongsTo'], $this->resource->belongsTo());
 
 		self::assertEquals(array_keys($this->testMeta['fields']), $this->resource->fieldNames());
 		self::assertEquals($this->testMeta['fields']['id'], $this->resource->field('id'));

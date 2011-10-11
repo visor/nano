@@ -19,10 +19,20 @@ class Migrate extends \Nano_Cli_Script {
 		$db = isSet($args[0]) ? $args[0] : \Nano_Db::DEFAULT_NAME;
 		try {
 			\Nano_Db::setDefault($db);
+
 			$migration = new \Nano_Migrate(
 				$this->getApplication()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR_NAME
+				, 'Application migrations'
 			);
 			$migration->run();
+
+			foreach ($this->getApplication()->getModules() as $name => $path) {
+				$migration = new \Nano_Migrate(
+					$path . DIRECTORY_SEPARATOR . self::DIR_NAME
+					, 'Module ' . $name . ' migrations'
+				);
+				$migration->run();
+			}
 		} catch (\Exception $e) {
 			echo $e;
 		}
