@@ -43,7 +43,6 @@ class Orm_DataSource_Expression_Mongo extends Orm_DataSource_Expression {
 					$lastLogical = $logical;
 					$result      = array(self::$logicals[$logical] => $result);
 					$values      = &$result[self::$logicals[$logical]];
-//					Nano_Log::message(var_export($result, true));
 //				}
 			}
 			if ($part instanceof Orm_Criteria_Expression) {
