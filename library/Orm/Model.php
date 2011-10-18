@@ -124,10 +124,10 @@ abstract class Orm_Model {
 			if (static::mapper()->getResource()->isReadOnly($name)) {
 				throw new Orm_Exception_ReadonlyField(static::mapper()->getResource(), $name);
 			}
-			if (isSet($this->original->$name) && $value == $this->original->$name) {
+			if (isSet($this->original->$name) && $value === $this->original->$name) {
 				$this->data->$name = $this->original->$name;
 				unSet($this->changedFields[$name], $this->original->$name);
-			} elseif ($this->data->$name != $value) {
+			} elseif ($this->data->$name !== $value) {
 				if (isSet($this->data->$name) && !isSet($this->original->$name)) {
 					$this->original->$name = $this->data->$name;
 				}
