@@ -73,6 +73,7 @@ class Nano_Message {
 		if (isset($this->strings[$id])) {
 			return $this->strings[$id];
 		}
+		return null;
 	}
 
 	/**
@@ -88,8 +89,9 @@ class Nano_Message {
 	/**
 	 * @return string
 	 * @param string $id
+	 * @param array $args
 	 */
-	public function fa($id, $args) {
+	public function fa($id, array $args) {
 		$message = $this->m($id);
 		if (null === $message) {
 			return null;
@@ -112,6 +114,8 @@ class Nano_Message {
 
 	/**
 	 * @return string
+	 * @param int $number
+	 * @param array $message
 	 */
 	public function plural($number, array $message) {
 		if (!$this->lang) {

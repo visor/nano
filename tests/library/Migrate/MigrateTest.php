@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @group framework
+ * @group migrate
  */
-class Nano_MigrateTest extends PHPUnit_Framework_TestCase {
+class Library_Migrate_MigrateTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @var Nano_Db
@@ -144,7 +144,7 @@ class Nano_MigrateTest extends PHPUnit_Framework_TestCase {
 	 * @param string $path
 	 */
 	protected function createMigrate($path) {
-		$result = new Nano_Migrate(dirName(__FILE__) . '/_files/db-migrate-test/' . $path);
+		$result = new Nano_Migrate(dirName(__FILE__) . '/_files/db-migrate-test/' . $path, 'testing');
 		$result->setDb($this->db);
 		$result->silent(true);
 		return $result;

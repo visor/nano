@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @group framework
+ * @group migrate
  */
-class Nano_Migrate_StepTest extends PHPUnit_Framework_TestCase {
+class Library_Migrate_StepTest extends PHPUnit_Framework_TestCase {
 
 	public function testEmptyFolder() {
 		$step = $this->createStep('01_empty');

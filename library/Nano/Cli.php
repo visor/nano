@@ -153,7 +153,9 @@ class Nano_Cli {
 			return;
 		}
 
-		include $this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP;
+		if (false === include($this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
+			return;
+		}
 		if (!Application::current()) {
 			return;
 		}
