@@ -46,23 +46,24 @@ class App extends \Nano_Cli_Script {
 	}
 
 	protected function createDirectoryStructure() {
-		$this->mkDir('controllers');
-		$this->mkDir('helpers');
-		$this->mkDir('layouts');
+		$this->mkDir(\Application::CONTROLLER_DIR_NAME);
+		$this->mkDir(\Application::HELPERS_DIR_NAME);
+		$this->mkDir(\Nano_Render::LAYOUT_DIR);
+		$this->mkDir(\Application::LIBRARY_DIR_NAME);
 		$this->mkDir('messages');
 		$this->mkDir('migrate');
-		$this->mkDir('models');
-		$this->mkDir('modules');
-		$this->mkDir('plugins');
-		$this->mkDir('public');
-		$this->mkDir('public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'styles');
-		$this->mkDir('public' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'scripts');
-		$this->mkDir('public' . DIRECTORY_SEPARATOR . 'images');
+		$this->mkDir(\Application::MODELS_DIR_NAME);
+		$this->mkDir(\Application::MODULES_DIR_NAME);
+		$this->mkDir(\Application::PLUGINS_DIR_NAME);
+		$this->mkDir(\Application::PUBLIC_DIR_NAME);
+		$this->mkDir(\Application::PUBLIC_DIR_NAME . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'styles');
+		$this->mkDir(\Application::PUBLIC_DIR_NAME . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'scripts');
+		$this->mkDir(\Application::PUBLIC_DIR_NAME . DIRECTORY_SEPARATOR . 'images');
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'scripts');
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'styles');
 		$this->mkDir('scripts');
 		$this->mkDir('settings');
-		$this->mkDir('views');
+		$this->mkDir(\Nano_Render::VIEW_DIR);
 	}
 
 	protected function createBootstrap() {

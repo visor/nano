@@ -183,7 +183,9 @@ class Nano_Cli {
 	protected function addScript($fileName) {
 		$name      = baseName($fileName, '.php');
 		$className = 'CliScript\\' . Nano::stringToName($name);
-		include $fileName;
+		if (!class_exists($className, false)) {
+			include $fileName;
+		}
 		if (!class_exists($className, false)) {
 			return;
 		}
