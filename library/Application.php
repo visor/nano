@@ -52,6 +52,11 @@ class Application {
 	protected $dispatcher;
 
 	/**
+	 * @var Event_Manager
+	 */
+	protected $eventManager = null;
+
+	/**
 	 * @return Application
 	 */
 	public static function create() {
@@ -281,12 +286,18 @@ class Application {
 		return $this->loader;
 	}
 
+	public function eventManager() {
+		return $this->eventManager;
+	}
+
 	public function __construct() {
 		require_once __DIR__ . DIRECTORY_SEPARATOR . 'Nano' . DIRECTORY_SEPARATOR . 'Loader.php';
+
 		$this->loader = new Nano_Loader();
 		$this->loader->register($this);
 
-		$this->dispatcher = new Nano_Dispatcher($this);
+		$this->dispatcher   = new Nano_Dispatcher($this);
+		$this->eventManager = new Event_Manager();
 	}
 
 	protected function setupErrorReporting() {
