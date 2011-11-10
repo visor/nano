@@ -1,26 +1,28 @@
-<phpunit bootstrap="./tests/_bootstrap.php" backupGlobals="false" colors="false" stopOnFailure="false">
+<phpunit bootstrap="tests/_bootstrap.php" backupGlobals="false" colors="false" stopOnFailure="false">
 
 	<testsuite name="All Tests">
-		<directory>./tests/core</directory>
-		<directory>./tests/library</directory>
-		<directory>./tests/application</directory>
-		<directory>./tests/user-stories</directory>
+		<directory>tests/application</directory>
+		<directory>tests/core</directory>
+		<directory>tests/library</directory>
+		<directory>tests/user-stories</directory>
 	</testsuite>
 
 	<filter>
 		<whitelist >
-			<directory suffix=".php"    >./library</directory>
-			<directory suffix=".php"    >./application-example/controllers</directory>
-			<directory suffix=".php"    >./application-example/models</directory>
-			<directory suffix=".php"    >./application-example/helpers</directory>
+			<directory suffix=".php">library</directory>
+			<directory suffix=".php">application-example/controllers</directory>
+			<directory suffix=".php">application-example/library</directory>
+			<directory suffix=".php">application-example/models</directory>
+			<directory suffix=".php">application-example/helpers</directory>
+			<directory suffix=".php">application-example/plugins</directory>
 			<exclude>
-				<directory>./library/vendor</directory>
+				<directory>library/vendor</directory>
 			</exclude>
 		</whitelist>
 	</filter>
 
 	<logging>
-		<log type="coverage-html"   target="build/coverage" title="Nano Framework" charset="UTF-8" yui="true" highlight="false" lowUpperBound="55" highLowerBound="80" />
+		<log type="coverage-html"   target="build/coverage" title="Nano Framework" charset="UTF-8" yui="true" highlight="true" lowUpperBound="55" highLowerBound="80" />
 		<log type="coverage-clover" target="build/logs/clover.xml" />
 		<log type="junit"           target="build/logs/junit.xml" logIncompleteSkipped="false" />
 	</logging>
