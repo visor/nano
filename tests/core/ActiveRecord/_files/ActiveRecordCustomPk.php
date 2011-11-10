@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @method ActiveRecordCustomPk instance()
- * @method ActiveRecordCustomPk prototype()
- * @method ActiveRecordCustomPk findOne()
+ * @method ActiveRecordCustomPk instance() static
+ * @method ActiveRecordCustomPk prototype() static
+ * @method ActiveRecordCustomPk findOne() static
  *
  * @property int $id1
  * @property int $id2
