@@ -272,29 +272,6 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 */
 	protected $clearLogAfterTest = true;
 
-
-	/**
-	 * Enable code coverage for browser tests
-	 *
-	 * @return void
-	 */
-	public static function startCoverage() {
-		if (Nano::isTesting()) {
-			include(PUBLIC_DIR . DS . 'prepend.php');
-		}
-	}
-
-	/**
-	 * Enable code coverage for browser tests
-	 *
-	 * @return void
-	 */
-	public static function stopCoverage() {
-		if (Nano::isTesting()) {
-			include(PUBLIC_DIR . DS . 'append.php');
-		}
-	}
-
 	protected function screenshot($suffix = null, $screen = false) {
 		$folder         = TESTS . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR;
 		$screenFileName = $folder . 'screen_' . get_class($this) . '_' . $this->getName(false);
@@ -315,17 +292,19 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 		if (!SELENIUM_ENABLE) {
 			$this->markTestSkipped('Selenium disabled');
 		}
+
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
 		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
 		$this->checkConnection();
 
-		$this->coverageScriptUrl = $this->url('/coverage.php');
+		$this->coverageScriptUrl = $this->url('/');
 		$this->setUpData();
 
 		$this->setBrowserUrl($this->url('/'));
 		$this->start();
+
 		$this->windowMaximize();
-		$this->openAndWait($this->url('/'));
+		$this->open($this->url('/'));
 		$this->deleteAllVisibleCookies();
 		$this->createCookie('PHPUNIT_SELENIUM_TEST_ID=' . $this->testId, 'path=/');
 		$this->openPage();
@@ -349,7 +328,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 *
 	 */
 	protected function url($path) {
-		return 'http://' . Nano::config('web')->domain . WEB_URL . $path;
+		return 'http://' . Nano::config('web')->domain . Nano::config('web')->url . $path;
 	}
 
 	/**

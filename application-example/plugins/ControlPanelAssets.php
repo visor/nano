@@ -25,7 +25,6 @@ class ControlPanelAssets implements Nano_C_Plugin {
 			->append(WEB_ROOT . '/resources/styles/smoothness-ui.css')
 			->append(WEB_ROOT . '/resources/styles/actions.css')
 		;
-		Nano_Log::message(var_export(Assets::style(), true));
 
 		Assets::script()
 			->append(WEB_ROOT . '/resources/scripts/jquery.min.js')

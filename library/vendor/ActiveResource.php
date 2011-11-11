@@ -96,17 +96,17 @@ class ActiveResource {
 	var $request_method = '';
 
 	/**
-	 * The response code returned from the server.
+	 * The redirect code returned from the server.
 	 */
 	var $response_code = false;
 
 	/**
-	 * The raw response headers sent from the server.
+	 * The raw redirect headers sent from the server.
 	 */
 	var $response_headers = '';
 
 	/**
-	 * The response body sent from the server.
+	 * The redirect body sent from the server.
 	 */
 	var $response_body = '';
 
@@ -226,7 +226,7 @@ class ActiveResource {
 	}
 
 	/**
-	 * Simple recursive function to build an XML response.
+	 * Simple recursive function to build an XML redirect.
 	 */
 	function _build_xml ($k, $v) {
 		if (is_object ($v) && strtolower (get_class ($v)) == 'simplexmlelement') {
@@ -321,7 +321,7 @@ class ActiveResource {
 			return $this;
 		}
 
-		// parse XML response
+		// parse XML redirect
 		$xml = new SimpleXMLElement ($res);
 
 		if ($xml->getName () == $this->element_name) {

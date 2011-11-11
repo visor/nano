@@ -48,6 +48,11 @@ abstract class Nano_C {
 	protected $renderer = null;
 
 	/**
+	 * @var Nano_C_Response
+	 */
+	protected $response = null;
+
+	/**
 	 * @var Nano_HelperBroker
 	 */
 	protected $helper;
@@ -72,17 +77,18 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 * @param string $action
 	 */
 	public function run($action) {
 		$method = Nano_Dispatcher::formatName($action, false);
 		$result = null;
 
+		$this->createResponse();
 		$this->runInit();
 		if (false !== $this->runBefore()) {
 			try {
-				$result = $this->$method();
+				$this->$method();
 			} catch (Exception $e) {
 				throw $e;
 			}
@@ -90,9 +96,11 @@ abstract class Nano_C {
 		$this->runAfter();
 
 		if (false === $this->rendered) {
-			return $this->render(null, null);
+			$this->render(null, null);
+			$this->response()->send();
 		}
-		return $result;
+
+		return;
 	}
 
 	/**
@@ -128,6 +136,20 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return Nano_C_Response
+	 */
+	public function response() {
+		return $this->response;
+	}
+
+	/**
+	 * @param Nano_C_Response $value
+	 */
+	public function setResponse(Nano_C_Response $value) {
+		$this->response = $value;
+	}
+
+	/**
 	 * @return void
 	 */
 	protected function init() {}
@@ -157,7 +179,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 * @param string $controller
 	 * @param string $action
 	 */
@@ -172,8 +194,9 @@ abstract class Nano_C {
 		$this->controller = $controller;
 		$this->template   = $action;
 		$this->action     = $action;
+
+		$this->response()->setBody($this->renderer()->render($this));
 		$this->markRendered();
-		return $this->renderer()->render($this);
 	}
 
 	/**
@@ -254,6 +277,13 @@ abstract class Nano_C {
 	 */
 	protected function internalError($message = null) {
 		throw new Nano_Exception(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message, Nano_Dispatcher::ERROR_INTERNAL);
+	}
+
+	protected function createResponse() {
+		if (null !== $this->response) {
+			return;
+		}
+		$this->response = new Nano_C_Response();
 	}
 
 }

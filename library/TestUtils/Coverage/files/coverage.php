@@ -42,28 +42,42 @@
  * @since      File available since Release 3.2.10
  */
 
-if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
-	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
-	extension_loaded('xdebug')) {
-	$GLOBALS['PHPUNIT_FILTERED_FILES'][] = __FILE__;
+require_once 'File/Iterator/Factory.php';
+require_once 'PHP/CodeCoverage/Filter.php';
 
-	$data = xdebug_get_code_coverage();
-	xdebug_stop_code_coverage();
-
-	foreach ($GLOBALS['PHPUNIT_FILTERED_FILES'] as $file) {
-		unset($data[$file]);
-	}
-
-	if (is_string($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY']) &&
-		is_dir($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'])) {
-		$file = $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] .
-				DIRECTORY_SEPARATOR . md5($_SERVER['SCRIPT_FILENAME']);
-	} else {
-		$file = $_SERVER['SCRIPT_FILENAME'];
-	}
-
-	file_put_contents(
-	  $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . $_COOKIE['PHPUNIT_SELENIUM_TEST_ID'],
-	  serialize($data)
+if (isset($_GET['PHPUNIT_SELENIUM_TEST_ID'])) {
+	$factory = new File_Iterator_Factory();
+	$files = $factory->getFileIterator(
+		$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY']
+		, $_GET['PHPUNIT_SELENIUM_TEST_ID']
 	);
+
+	$filter   = new PHP_CodeCoverage_Filter();
+	$coverage = array();
+
+	foreach ($files as $file) {
+		$filename = $file->getPathName();
+		$data     = unserialize(file_get_contents($filename));
+		@unlink($filename);
+		unset($filename);
+
+		foreach ($data as $filename => $lines) {
+			if ($filter->isFile($filename)) {
+				if (!isset($coverage[$filename])) {
+					$coverage[$filename] = array(
+					  'md5' => md5_file($filename), 'coverage' => $lines
+					);
+				} else {
+					foreach ($lines as $line => $flag) {
+						if (!isset($coverage[$filename]['coverage'][$line]) ||
+							$flag > $coverage[$filename]['coverage'][$line]) {
+							$coverage[$filename]['coverage'][$line] = $flag;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	print serialize($coverage);
 }
