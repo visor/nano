@@ -129,7 +129,7 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 * @param Nano_Routes $routes
 	 * @param string $url
 	 */
@@ -144,7 +144,8 @@ class Nano_Dispatcher {
 			}
 			$route = $this->getRoute($routes, $url);
 			if (null !== $route) {
-				return $this->run($route);
+				$this->run($route);
+				return;
 			}
 			if ($this->custom) {
 				$result = $this->custom->dispatch();
@@ -333,21 +334,15 @@ class Nano_Dispatcher {
 		$className  = self::formatName($controllerName, true);
 		$controller = new $className($this); /* @var $controller Nano_C */
 		$action     = 'e404';
-		if (self::ERROR_NOT_FOUND == $error->getCode()) {
-			if (false === Nano::isTesting()) {
-				header('404 Not Found', true, 404);
-			}
-		} else {
+		if (self::ERROR_INTERNAL == $error->getCode()) {
 			$action = 'e500';
-			if (false === Nano::isTesting()) {
-				header('500 Internal Server Error', true, 500);
-			}
 		}
+
 		$this->controller         = $controllerName;
 		$this->controllerInstance = $controller;
 		$this->action             = $action;
 		$controller->error        = $error;
-		echo $controller->run($action);
+		$controller->run($action);
 	}
 
 }

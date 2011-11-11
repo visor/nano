@@ -42,45 +42,10 @@
  * @since      File available since Release 3.2.10
  */
 
-require_once 'File/Iterator/Factory.php';
-require_once 'PHP/CodeCoverage/Filter.php';
+if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
+	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
+	extension_loaded('xdebug')) {
+	$GLOBALS['PHPUNIT_FILTERED_FILES'] = array(__FILE__);
 
-// Set this to the directory that contains the code coverage files.
-// It defaults to getcwd(). If you have configured a different directory
-// in prepend.php, you need to configure the same directory here.
-$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = dirName(__DIR__) . '/tests/reports/coverage';
-
-if (isset($_GET['PHPUNIT_SELENIUM_TEST_ID'])) {
-	$files = File_Iterator_Factory::getFileIterator(
-	  $GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'],
-	  $_GET['PHPUNIT_SELENIUM_TEST_ID']
-	);
-
-	$coverage = array();
-
-	foreach ($files as $file) {
-		$filename = $file->getPathName();
-		$data     = unserialize(file_get_contents($filename));
-		@unlink($filename);
-		unset($filename);
-
-		foreach ($data as $filename => $lines) {
-			if (PHP_CodeCoverage_Filter::isFile($filename)) {
-				if (!isset($coverage[$filename])) {
-					$coverage[$filename] = array(
-					  'md5' => md5_file($filename), 'coverage' => $lines
-					);
-				} else {
-					foreach ($lines as $line => $flag) {
-						if (!isset($coverage[$filename]['coverage'][$line]) ||
-							$flag > $coverage[$filename]['coverage'][$line]) {
-							$coverage[$filename]['coverage'][$line] = $flag;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	print serialize($coverage);
+	xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
 }

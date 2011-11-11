@@ -77,7 +77,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 * @param string $action
 	 */
 	public function run($action) {
@@ -88,19 +88,19 @@ abstract class Nano_C {
 		$this->runInit();
 		if (false !== $this->runBefore()) {
 			try {
-				$result = $this->$method();
+				$this->$method();
 			} catch (Exception $e) {
 				throw $e;
 			}
 		}
 		$this->runAfter();
 
-		//if null === result then rendered
-
 		if (false === $this->rendered) {
-			return $this->render(null, null);
+			$this->render(null, null);
+			$this->response()->send();
 		}
-		return $result;
+
+		return;
 	}
 
 	/**
@@ -179,7 +179,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return string
+	 * @return void
 	 * @param string $controller
 	 * @param string $action
 	 */
@@ -194,8 +194,9 @@ abstract class Nano_C {
 		$this->controller = $controller;
 		$this->template   = $action;
 		$this->action     = $action;
+
+		$this->response()->setBody($this->renderer()->render($this));
 		$this->markRendered();
-		return $this->renderer()->render($this);
 	}
 
 	/**

@@ -16,4 +16,9 @@ $routes
 		->add('login',  'auth', 'login')
 		->post('auth',   'auth', 'auth')
 		->add('logout', 'auth', 'logout')
+
+	->prefix('response')
+		->get('/set-body',    'response-test', 'set-body')
+		->get('/render-body', 'response-test', 'render-body')
+		->get('/header',      'response-test', 'header')
 ;

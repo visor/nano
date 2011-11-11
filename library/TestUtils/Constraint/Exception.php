@@ -30,7 +30,7 @@ class TestUtils_Constraint_Exception extends PHPUnit_Framework_Constraint {
 	 * @return boolean
 	 * @param Closure $other
 	 */
-	public function evaluate($other) {
+	public function matches($other) {
 		$this->description = null;
 		try {
 			$other();
@@ -68,11 +68,7 @@ class TestUtils_Constraint_Exception extends PHPUnit_Framework_Constraint {
 		return 'exception <' . $this->exceptionClass . '>'. (null === $this->exceptionMessage ? '' : ' with message \'' . $this->exceptionMessage . '\'');
 	}
 
-	/**
-	 * @return string
-	 * @param  mixed $other Evaluated value or object.
-	 */
-	protected function customFailureDescription($other, $description, $not) {
+	protected function failureDescription($other) {
 		return $this->toString() . ' should throw' . (null === $this->description ? '' : PHP_EOL . $this->description);
 	}
 
