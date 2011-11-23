@@ -57,4 +57,13 @@ class Event {
 		return $defaultValue;
 	}
 
+	/**
+	 * @return Event
+	 * @param Event_Manager $manager
+	 */
+	public function trigger(Event_Manager $manager) {
+		$manager->trigger($this);
+		return $this;
+	}
+
 }

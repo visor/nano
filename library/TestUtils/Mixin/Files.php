@@ -50,4 +50,18 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 		return $result;
 	}
 
+	/**
+	 * @return int
+	 * @param TestUtils_TestCase $test
+	 * @param string $dir
+	 */
+	public function countFiles(TestUtils_TestCase $test, $dir) {
+		$iterator = new DirectoryIterator($this->get($test, $dir));
+		$result   = 0;
+		foreach ($iterator as $item) {
+			++$result;
+		}
+		return $result;
+	}
+
 }
