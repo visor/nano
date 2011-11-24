@@ -11,19 +11,17 @@ class Core_MessageTest extends TestUtils_TestCase {
 	}
 
 	public function testLoadFileNotFound() {
-		self::assertException(
-			function() { Nano_Message::instance()->load('not-exists'); }
-			, 'Exception'
-			, 'File "' . Application::current()->getRootDir() . DS . 'messages' . DS . 'not-exists.php" not found'
-		);
+		$this->setExpectedException('Exception', 'File "' . Application::current()->getRootDir() . DS . 'messages' . DS . 'not-exists.php" not found');
+		Nano_Message::instance()->load('not-exists');
 	}
 
 	public function testLoadFileNoMessages() {
-		self::assertException(function() { Nano_Message::instance()->load('empty'); }, 'Exception', 'No strings loaded from file "empty"');
+		$this->setExpectedException('Exception', 'No strings loaded from file "empty"');
+		Nano_Message::instance()->load('empty');
 	}
 
 	public function testLoadMessageFile() {
-		self::assertNoException(function() { Nano_Message::instance()->load('default'); });
+		Nano_Message::instance()->load('default');
 	}
 
 	public function testGetMessages() {
