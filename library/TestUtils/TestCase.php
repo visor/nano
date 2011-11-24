@@ -9,7 +9,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	/**
 	 * @var Application|null
 	 */
-	private static $application = null;
+	private static $backupApplication = null;
 
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
@@ -112,14 +112,41 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	protected static function backupCurrentApplication() {
-		self::$application = self::getObjectProperty('Application', 'current');
+		self::$backupApplication = self::getObjectProperty('Application', 'current');
 		self::setObjectProperty('Application', 'current', null);
 	}
 
 	protected static function restoreCurrentApplication() {
-		if (null !== self::$application) {
-			self::setObjectProperty('Application', 'current', self::$application);
+		if (null !== self::$backupApplication) {
+			self::setObjectProperty('Application', 'current', self::$backupApplication);
 		}
+	}
+
+	/**
+	 * @return Nano_C_Response_Test
+	 * @param Application $application
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $action
+	 * @param array $params
+	 */
+	protected static function runAction(Application $application, $module, $controller, $action, array $params = array()) {
+		/** @var Nano_C $instance */
+		$className = Nano_Dispatcher::formatName($controller, true, null === $module ? null : Nano_Modules::nameToNamespace($module));
+
+		$instance  = new $className($application->getDispatcher());
+		$instance->setResponse(new \Nano_C_Response_Test());
+		$instance->setRenderer(new \Nano_Render($application));
+
+		$params['module']     = $module;
+		$params['controller'] = $controller;
+		$params['action']     = $action;
+		$application->getDispatcher()->setParams($params);
+
+		self::setObjectProperty($application->getDispatcher(), 'controllerInstance', $instance);
+
+		$instance->run($action);
+		return $instance->response();
 	}
 
 	/**
@@ -150,6 +177,20 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	protected function fixture() {
 		return TestUtils_Fixture::instance();
+	}
+
+	/**
+	 * @return Nano_C_Response_Test
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $action
+	 * @param array $params
+	 */
+	protected function runTestAction($module, $controller, $action, array $params = array()) {
+		if (!isSet($this->application)) {
+			self::fail('Configure test application');
+		}
+		return self::runAction($this->application, $module, $controller, $action, $params);
 	}
 
 }

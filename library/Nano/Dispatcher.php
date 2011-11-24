@@ -263,6 +263,14 @@ class Nano_Dispatcher {
 	}
 
 	/**
+	 * @return void
+	 * @param array $value
+	 */
+	public function setParams(array $value) {
+		$this->buildParams($value);
+	}
+
+	/**
 	 * @return string
 	 * @param string $name
 	 * @param mixed $default

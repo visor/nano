@@ -143,10 +143,20 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return void
 	 * @param Nano_C_Response $value
 	 */
 	public function setResponse(Nano_C_Response $value) {
 		$this->response = $value;
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_Render $value
+	 */
+	public function setRenderer(Nano_Render $value) {
+		$this->renderer = $value;
+		$this->configureRenderer();
 	}
 
 	/**
