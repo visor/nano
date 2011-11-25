@@ -82,6 +82,15 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 		self::assertNull($event->getArgument('runs'));
 	}
 
+	public function testTriggeringEventFromItself() {
+		$event = new Event('test-event');
+		$this->manager
+			->attach($event->getType(), 'library_events_handler_f1')
+		;
+		$event->trigger($this->manager);
+		self::assertEquals(1, $event->getArgument('runs'));
+	}
+
 	public function testPassingEventArguments() {
 		$event = Event::create('test-event');
 		$this->manager->attach($event->getType(), 'library_events_handler_f1');
