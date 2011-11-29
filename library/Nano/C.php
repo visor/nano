@@ -53,6 +53,11 @@ abstract class Nano_C {
 	protected $response = null;
 
 	/**
+	 * @var Nano_C_Redirect
+	 */
+	protected $redirect = null;
+
+	/**
 	 * @var Nano_HelperBroker
 	 */
 	protected $helper;
@@ -98,6 +103,8 @@ abstract class Nano_C {
 		if (false === $this->rendered) {
 			$this->render(null, null);
 			$this->response()->send();
+		} elseif ($this->response()->isModified()) {
+			$this->response()->send();
 		}
 
 		return;
@@ -127,12 +134,19 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @param string $to
+	 * @return Nano_C_Redirect
+	 * @param null|string $to
 	 * @param int $status
 	 */
-	public function redirect($to, $status = 302) {
-		$this->markRendered();
-		header('Location: ' . $to, true, $status);
+	public function redirect($to = null, $status = 302) {
+		if (null === $this->redirect) {
+			$this->redirect = new Nano_C_Redirect($this->response());
+		}
+		if (null === $to) {
+			return $this->redirect;
+		}
+		$this->redirect->to($to, $status);
+		return $this->redirect;
 	}
 
 	/**

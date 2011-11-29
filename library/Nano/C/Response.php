@@ -230,4 +230,11 @@ class Nano_C_Response {
 		$this->sendBody();
 	}
 
+	/**
+	 * @return boolean
+	 */
+	public function isModified() {
+		return $this->hasBody() || $this->headers->count() > 0;
+	}
+
 }

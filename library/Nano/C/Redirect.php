@@ -29,10 +29,11 @@ class Nano_C_Redirect {
 	/**
 	 * @return Nano_C_Redirect
 	 * @param string $location
+	 * @param int $status
 	 */
-	public function to($location) {
+	public function to($location, $status = 302) {
 		$this->response->addHeader('Location', $location);
-		$this->response->setStatus(302);
+		$this->response->setStatus($status);
 
 		return $this;
 	}
