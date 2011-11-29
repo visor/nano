@@ -26,9 +26,32 @@ class Mapper_Library_Orm_Example_Address extends Orm_Mapper {
 			)
 			, 'incremental' => 'id'
 			, 'identity'    => array('id')
-			, 'hasMany'     => array()
-			, 'belongsTo'   => array()
 		);
+	}
+
+	protected function beforeInsert(Orm_Model $model) {
+		/** @var Library_Orm_Example_Address $model */
+		$model->beforeInsert = 1;
+	}
+
+	protected function beforeUpdate(Orm_Model $model) {
+		/** @var Library_Orm_Example_Address $model */
+		$model->beforeUpdate = 1;
+	}
+
+	protected function afterInsert(Orm_Model $model) {
+		/** @var Library_Orm_Example_Address $model */
+		$model->afterInsert = 1;
+	}
+
+	protected function afterUpdate(Orm_Model $model) {
+		/** @var Library_Orm_Example_Address $model */
+		$model->afterUpdate = 1;
+	}
+
+	protected function afterSave(Orm_Model $model) {
+		/** @var Library_Orm_Example_Address $model */
+		$model->afterSave = 1;
 	}
 
 }

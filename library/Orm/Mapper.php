@@ -17,6 +17,11 @@ abstract class Orm_Mapper {
 	protected $resource;
 
 	/**
+	 * @var RuntimeCache
+	 */
+	protected $runtimeCache;
+
+	/**
 	 * @return Orm_Resource
 	 */
 	public function getResource() {
@@ -30,11 +35,43 @@ abstract class Orm_Mapper {
 	 * @return boolean
 	 * @param Orm_Model $model
 	 */
+	public function save(Orm_Model $model) {
+		if (!$model->changed()) {
+			return true;
+		}
+		if ($model->isNew()) {
+			$this->beforeInsert($model);
+			if ($this->insert($model)) {
+				$this->afterInsert($model);
+				$this->afterSave($model);
+				return true;
+			}
+			return false;
+		}
+
+		$this->beforeUpdate($model);
+		if ($this->update($model)) {
+			$this->afterUpdate($model);
+			$this->afterSave($model);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return boolean
+	 * @param Orm_Model $model
+	 */
 	public function insert(Orm_Model $model) {
+		//todo: make protected
 		if (false === $model->changed()) {
 			return true;
 		}
-		return $this->dataSource()->insert($this->getResource(), $model->getData());
+		if (false === $this->dataSource()->insert($this->getResource(), $model->getData())) {
+			return false;
+		}
+		$this->runtimeCache()->store($model);
+		return true;
 	}
 
 	/**
@@ -42,6 +79,7 @@ abstract class Orm_Mapper {
 	 * @param Orm_Model $model
 	 */
 	public function update(Orm_Model $model) {
+		//todo: make protected
 		if (false === $model->changed()) {
 			return true;
 		}
@@ -65,11 +103,23 @@ abstract class Orm_Mapper {
 	 */
 	public function get($identity) {
 		$values   = $this->paramsToArray(func_get_args());
-		$criteria = Orm::criteria();
+		$identity = array();
 		foreach ($this->getResource()->identity() as $index => $fieldName) {
-			$criteria->equals($fieldName, $values[$index]);
+			$identity[$fieldName] = $values[$index];
 		}
-		return $this->load($this->dataSource()->get($this->getResource(), $criteria));
+		$result   = $this->runtimeCache()->get($identity);
+		if (null === $result) {
+			$criteria = Orm::criteria();
+			foreach ($identity as $fieldName => $value) {
+				$criteria->equals($fieldName, $value);
+			}
+			$data = $this->dataSource()->get($this->getResource(), $criteria);
+			if (!$data) {
+				return null;
+			}
+			$result = $this->runtimeCache()->store($this->load($data));
+		}
+		return $result;
 	}
 
 	/**
@@ -87,25 +137,26 @@ abstract class Orm_Mapper {
 
 	/**
 	 * @return Orm_Model|array|boolean
+	 * @param Orm_Model $model
 	 * @param string $relationName
 	 *
 	 * @throws Orm_Exception_IncompletedResource
 	 * @throws Orm_Exception_UnknownRelationType
 	 */
-	public function findRelated($relationName) {
+	public function findRelated(Orm_Model $model, $relationName) {
 		$relation = $this->getResource()->getRelation($relationName);
 		if (!isSet($relation['type'])) {
 			throw new Orm_Exception_IncompletedResource($this->getResource());
 		}
 		switch ($relation['type']) {
 			case self::RELATION_TYPE_BELONGS_TO:
-				return $this->findBelongsTo($relationName);
+				return $this->findBelongsTo($model, $relationName);
 			case self::RELATION_TYPE_HAS_ONE:
 				return $this->findHasOne($relationName);
 			case self::RELATION_TYPE_HAS_MANY:
 				return $this->findHasMany($relationName);
 			default:
-				throw new Orm_Exception_UnknownRelationType($relationName);
+				throw new Orm_Exception_UnknownRelationType($relationName, $relation['type']);
 		}
 	}
 
@@ -164,6 +215,16 @@ abstract class Orm_Mapper {
 	}
 
 	/**
+	 * @return Orm_RuntimeCache
+	 */
+	public function runtimeCache() {
+		if (null === $this->runtimeCache) {
+			$this->runtimeCache = new Orm_RuntimeCache();
+		}
+		return $this->runtimeCache;
+	}
+
+	/**
 	 * @return array
 	 */
 	abstract protected function getMeta();
@@ -176,9 +237,6 @@ abstract class Orm_Mapper {
 	}
 
 	protected function paramsToArray(array $parameters) {
-		if (0 === count($parameters)) {
-			return array();
-		}
 		if (isSet($parameters[0]) && is_array($parameters[0])) {
 			return array_values($parameters[0]);
 		}
@@ -197,7 +255,21 @@ abstract class Orm_Mapper {
 		return $result;
 	}
 
-	protected function findBelongsTo($relationName) {
+	/**
+	 * @return Orm_Model|null
+	 * @param Orm_Model $model
+	 * @param string $relationName
+	 */
+	protected function findBelongsTo(Orm_Model $model, $relationName) {
+		$relation = $this->getResource()->getRelation($relationName);
+		$belongs  = $relation['model'];
+		/** @var Orm_mapper $mapper */
+		$mapper   = $belongs::mapper();
+		$identity = array();
+		foreach ($mapper->getResource()->identity() as $index => $fieldName) {
+			$identity[$fieldName] = $model->__get($relation['fields'][$index]);
+		}
+		return $mapper->get($identity);
 	}
 
 	protected function findHasOne($relationName) {
@@ -205,5 +277,15 @@ abstract class Orm_Mapper {
 
 	protected function findHasMany($relationName) {
 	}
+
+	protected function beforeInsert(Orm_Model $model) {}
+
+	protected function beforeUpdate(Orm_Model $model) {}
+
+	protected function afterInsert(Orm_Model $model) {}
+
+	protected function afterUpdate(Orm_Model $model) {}
+
+	protected function afterSave(Orm_Model $model) {}
 
 }

@@ -150,6 +150,11 @@ class Library_Orm_Model_Test extends TestUtils_TestCase {
 		self::assertFalse(Library_Orm_Example_Address::mapper()->get(1)->isNew());
 	}
 
+	public function testDeletingNewModelShouldReturnFalse() {
+		$student = new Library_Orm_Example_Student(array('wizardId' => 100));
+		self::assertFalse($student->delete());
+	}
+
 	public function testCallingBeforeXxxAndAfterXxxFunctions() {
 		$address = new Library_Orm_Example_Address();
 		self::assertEquals(0, $address->beforeInsert);

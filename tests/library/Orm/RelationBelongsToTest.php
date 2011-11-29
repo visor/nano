@@ -62,6 +62,13 @@ class Library_Orm_RelationBelongsToTest extends TestUtils_TestCase {
 		self::assertEquals($harryPotter->addressId, $this->addressOne->id);
 		self::assertInstanceOf('Library_Orm_Example_Address', $harryPotter->address);
 		self::assertEquals($harryPotter->address->id, $this->addressOne->id);
+		self::assertSame($harryPotter->address, $harryPotter->address);
+	}
+
+	public function testRelatedObjectectShouldBeNullWhenWrongIdentyPassed() {
+		$wizard = new Library_OrmExampleWizard();
+		$wizard->addressId = 0;
+		self::assertNull($wizard->address);
 	}
 
 	public function testSetRelationObjectForNewRecord() {
@@ -82,7 +89,7 @@ class Library_Orm_RelationBelongsToTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		$this->source = null;
+		unSet($this->source);
 	}
 
 }

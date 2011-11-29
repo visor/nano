@@ -6,7 +6,7 @@
  */
 class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 
-	/***
+	/**
 	 * @var Orm_DataSource_Pdo
 	 */
 	protected $source;
@@ -14,6 +14,8 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 	protected function setUp() {
 		include_once $this->files->get($this, '/model/Address.php');
 		include_once $this->files->get($this, '/mapper/Address.php');
+		include_once $this->files->get($this, '/model/Wizard.php');
+		include_once $this->files->get($this, '/mapper/Wizard.php');
 
 		$this->source = new Orm_DataSource_Pdo_Mysql(array());
 		$this->source->usePdo(Nano::db());
@@ -64,6 +66,80 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 
 	public function testFindShoudlReturnFalseWhenException() {
 		self::assertFalse(Library_Orm_Example_Address::mapper()->find(Orm::criteria()->equals('invalid', 'some')));
+	}
+
+	public function testDeleteModelShouldReturnFalseForNewModels() {
+		$new = new Library_Orm_Example_Address();
+		self::assertFalse(Library_Orm_Example_Address::mapper()->delete($new));
+	}
+
+	public function testSavingUnchangedModelShouldReturnTrue() {
+		$wizard = new Library_OrmExampleWizard();
+		self::assertFalse($wizard->changed());
+		self::assertTrue(Library_OrmExampleWizard::mapper()->save($wizard));
+	}
+
+	public function testSavingModelWithoutRequiredFieldsShouldReturnFalse() {
+		$wizard = new Library_OrmExampleWizard();
+		$wizard->firstName = 'Harry';
+		self::assertTrue($wizard->changed());
+		self::assertFalse(Library_OrmExampleWizard::mapper()->save($wizard));
+		self::assertFalse($wizard->save());
+
+		$address1 = new Library_Orm_Example_Address();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_Address();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$address1->location = 'The Burrow';
+		self::assertTrue($address1->changed());
+		self::assertFalse(Library_Orm_Example_Address::mapper()->save($address1));
+		self::assertFalse($address1->save());
+	}
+
+	public function testExceptionShouldThrowWhenCollectionIndexMoreThanFound() {
+		$this->setExpectedException('InvalidArgumentException', 'Argument should be between 0 and 1');
+
+		$address1 = new Library_Orm_Example_Address();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_Address();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$collection = Library_Orm_Example_Address::mapper()->find();
+		$collection->seek(3);
+	}
+
+	public function testExceptionShouldThrowWhenCollectionIndexLessThanZero() {
+		$this->setExpectedException('InvalidArgumentException', 'Argument should be between 0 and 1');
+
+		$address1 = new Library_Orm_Example_Address();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_Address();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$collection = Library_Orm_Example_Address::mapper()->find();
+		$collection->seek(-1);
+	}
+
+	public function testCollectionShouldReturnNullWhenResultsSeeksToEnd() {
+		$address1 = new Library_Orm_Example_Address();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_Address();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$collection = Library_Orm_Example_Address::mapper()->find();
+		foreach ($collection as $item) {
+			self::assertInstanceOf('Library_Orm_Example_Address', $item);
+		}
+		self::assertNull($collection->current());
 	}
 
 	protected function tearDown() {

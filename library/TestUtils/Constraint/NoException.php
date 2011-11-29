@@ -6,7 +6,7 @@ class TestUtils_Constraint_NoException extends PHPUnit_Framework_Constraint {
 	 * @return bool
 	 * @param mixed $other Value or object to evaluate.
 	 */
-	public function matches($other) {
+	public function evaluate($other) {
 		try {
 			$other();
 		} catch (Exception $e) {
@@ -22,7 +22,7 @@ class TestUtils_Constraint_NoException extends PHPUnit_Framework_Constraint {
 		return 'no exception should throw';
 	}
 
-	protected function failureDescription($other) {
+	protected function customFailureDescription($other, $description, $not) {
 		return $this->toString();
 	}
 

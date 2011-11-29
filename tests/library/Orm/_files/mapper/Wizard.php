@@ -41,7 +41,16 @@ class Mapper_Library_OrmExampleWizard extends Orm_Mapper {
 			, 'relations'   => array(
 				'address' => array(
 					'type'     => self::RELATION_TYPE_BELONGS_TO
-					, 'model'  => 'Mapper_Library_Orm_Example_Address'
+					, 'model'  => 'Library_Orm_Example_Address'
+					, 'fields' => array('addressId')
+				)
+				, 'addressNoType' => array(
+					'model'    => 'Library_Orm_Example_Address'
+					, 'fields' => array('addressId')
+				)
+				, 'addressUnknownType' => array(
+					'type'     => 'some-relation-type'
+					, 'model'  => 'Library_Orm_Example_Address'
 					, 'fields' => array('addressId')
 				)
 			)

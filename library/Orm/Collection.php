@@ -73,7 +73,14 @@ class Orm_Collection implements SeekableIterator, Countable, ArrayAccess {
 	 */
 	public function current() {
 		if ($this->valid()) {
-			return $this->mapper->load($this->data[$this->current]);
+			$identity = $this->currentIdentity();
+			$result   = $this->mapper->runtimeCache()->get($identity);
+			if (null === $result) {
+				$result = $this->mapper->runtimeCache()->store(
+					$this->mapper->load($this->data[$this->current])
+				);
+			}
+			return $result;
 		}
 		return null;
 	}
@@ -104,6 +111,17 @@ class Orm_Collection implements SeekableIterator, Countable, ArrayAccess {
 	 */
 	public function rewind() {
 		$this->current = 0;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function currentIdentity() {
+		$result = array();
+		foreach ($this->mapper->getResource()->identity() as $field) {
+			$result[$field] = $this->data[$this->current][$field];
+		}
+		return $result;
 	}
 
 }

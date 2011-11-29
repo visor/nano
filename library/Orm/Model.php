@@ -51,26 +51,9 @@ abstract class Orm_Model {
 	}
 
 	public function save() {
-		if (!$this->changed()) {
-			return true;
-		}
-		if ($this->new) {
-			$this->beforeInsert();
-			if (static::mapper()->insert($this)) {
-				$this->new = false;
-				$this->markUnchanged();
-				$this->afterInsert();
-				$this->afterSave();
-				return true;
-			}
-			return false;
-		}
-
-		$this->beforeUpdate();
-		if (static::mapper()->update($this)) {
+		if ($this->mapper()->save($this)) {
+			$this->new = false;
 			$this->markUnchanged();
-			$this->afterUpdate();
-			$this->afterSave();
 			return true;
 		}
 		return false;
@@ -91,6 +74,17 @@ abstract class Orm_Model {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function identity() {
+		$result = array();
+		foreach ($this->mapper()->getResource()->identity() as $field) {
+			$result[$field] = $this->__get($field);
+		}
+		return $result;
+	}
+
+	/**
 	 * @return boolean
 	 * @param string $name
 	 */
@@ -108,7 +102,7 @@ abstract class Orm_Model {
 			return $this->data->$name;
 		}
 		if (static::mapper()->getResource()->relationExists($name)) {
-			return static::mapper()->findRelated($name);
+			return static::mapper()->findRelated($this, $name);
 		}
 
 		throw new Orm_Exception_UnknownField(static::mapper()->getResource(), $name);
@@ -144,15 +138,5 @@ abstract class Orm_Model {
 		$this->original      = new stdClass();
 		$this->changedFields = array();
 	}
-
-	protected function beforeInsert() {}
-
-	protected function beforeUpdate() {}
-
-	protected function afterInsert() {}
-
-	protected function afterUpdate() {}
-
-	protected function afterSave() {}
 
 }

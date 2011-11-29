@@ -25,6 +25,7 @@ class Library_Orm_MapperTest extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/TestDataSource.php');
 		include_once $this->files->get($this, '/mapper/Address.php');
 		include_once $this->files->get($this, '/mapper/Wizard.php');
+		include_once $this->files->get($this, '/model/Wizard.php');
 		include_once $this->files->get($this, '/model/Address.php');
 
 		$this->source        = new Library_Orm_TestDataSource(array());
@@ -158,11 +159,6 @@ class Library_Orm_MapperTest extends TestUtils_TestCase {
 			self::assertInstanceOf('Library_Orm_Example_Address', $address);
 			self::assertEquals($expected[$i], $address->location);
 		}
-	}
-
-	public function testDeleteModelShouldReturnFalseForNewModels() {
-		$new = new Library_Orm_Example_Address();
-		self::assertFalse($this->addressMapper->delete($new));
 	}
 
 	protected function tearDown() {

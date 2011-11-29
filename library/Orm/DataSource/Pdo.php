@@ -46,7 +46,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 				return false;
 			}
 			$toSave     = $this->prepareDataToInsert($resource, $data);
-			if ($this->isEmptyObject($data)) {
+			if (empty($toSave)) {
 				return false;
 			}
 			$saveResult = $this->pdo()->exec($this->insertQuery($resource, $toSave));
