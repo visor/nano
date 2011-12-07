@@ -75,9 +75,8 @@ abstract class Assets_Abstract {
 	/**
 	 * @return Assets_Abstract
 	 * @param boolean $append
-	 * @param boolean $script
+	 * @param boolean $php
 	 * @param string $file
-	 * @param string $group
 	 * @param array $params
 	 */
 	public function addItem($append, $php, $file, array $params = array()) {
@@ -85,11 +84,12 @@ abstract class Assets_Abstract {
 		if (isset($this->items[$key]['files'][$file])) {
 			return $this;
 		}
-		if (!isset($this->items[$key])) {
+		$time = fileMTime($file);
+		if (!isSet($this->items[$key])) {
 			$this->items[$key] = array(
 				  'files'  => array($file => $php)
 				, 'params' => $params
-				, 'time'   => fileMTime($file)
+				, 'time'   => $time
 			);
 			return $this;
 		}
@@ -98,7 +98,6 @@ abstract class Assets_Abstract {
 		} else {
 			$this->items[$key]['files'] = array_merge(array($file => $php), $this->items[$key]['files']);
 		}
-		$time = fileMTime($file);
 		if ($time > $this->items[$key]['time']) {
 			$this->items[$key]['time'] = $time;
 		}
@@ -282,8 +281,7 @@ abstract class Assets_Abstract {
 	 * Builds string key for given group and params array
 	 *
 	 * @return string
-	 * @param string $group
-	 * @param string[string] $params
+	 * @param array $params
 	 */
 	protected function createKey(array $params) {
 		$result = array_values($params);

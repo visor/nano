@@ -2,6 +2,7 @@
 
 /**
  * @group framework
+ * @group assets
  */
 class Assets_StylesTest extends TestUtils_TestCase {
 

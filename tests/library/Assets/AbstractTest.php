@@ -1,22 +1,8 @@
 <?php
 
-class Assets_Abstract_Test extends Assets_Abstract {
-
-	protected $type = 'test';
-	protected $ext  = 'test';
-
-	protected function tag($url, array $params) {
-		return $params[0];
-	}
-
-	public function publicWrite($base, $group) {
-		parent::write($base, $group);
-	}
-
-}
-
 /**
  * @group framework
+ * @group assets
  */
 class Assets_AbstractTest extends TestUtils_TestCase {
 
@@ -197,9 +183,67 @@ class Assets_AbstractTest extends TestUtils_TestCase {
 		self::assertEquals('file4', $this->asset->display('group4', $headers));
 	}
 
+	/**
+	 * @paranoid
+	 */
+	public function testGettingType() {
+		self::assertEquals(self::getObjectProperty($this->asset, 'type'), $this->asset->getType());
+		self::assertEquals('test', $this->asset->getType());
+	}
+
+	public function testAddingSameFileShouldBeIgnored() {
+		$file1 = $this->files->get($this, '/input/file1');
+		$this->asset->addItem(true, false,  $file1, array('group1'));
+		$this->asset->addItem(true, true,   $file1, array('group1'));
+		$this->asset->addItem(false, true,  $file1, array('group1'));
+		$this->asset->addItem(false, false, $file1, array('group1'));
+
+		$items = self::getObjectProperty($this->asset, 'items');
+		self::assertArrayHasKey('group1', $items);
+		self::assertArrayHasKey('files', $items['group1']);
+		self::assertEquals(1, count($items['group1']['files']));
+	}
+
+	public function testGroupTimeShouldBeUpdatedWhenNewestFileAdded() {
+		$file1 = $this->files->get($this, '/input/file1');
+		$file2 = $this->files->get($this, '/input/file2');
+
+		touch($file1, Date::create('-1 day')->format('U'));
+		touch($file2);
+		self::assertNotEquals(fileMTime($file1), fileMTime($file2));
+
+		$this->asset->addItem(true, false,  $file1, array('group1'));
+
+		$items = self::getObjectProperty($this->asset, 'items');
+		self::assertArrayHasKey('group1', $items);
+		self::assertArrayHasKey('time', $items['group1']);
+		self::assertEquals(fileMTime($file1), $items['group1']['time']);
+
+		$this->asset->addItem(true, false,  $file2, array('group1'));
+		$items = self::getObjectProperty($this->asset, 'items');
+		self::assertArrayHasKey('group1', $items);
+		self::assertArrayHasKey('time', $items['group1']);
+		self::assertEquals(fileMTime($file2), $items['group1']['time']);
+	}
+
 	public function tearDown() {
 		unset($this->styles);
 		$this->files->clean($this, DS . 'output');
+	}
+
+}
+
+class Assets_Abstract_Test extends Assets_Abstract {
+
+	protected $type = 'test';
+	protected $ext  = 'test';
+
+	protected function tag($url, array $params) {
+		return $params[0];
+	}
+
+	public function publicWrite($base, $group) {
+		parent::write($base, $group);
 	}
 
 }
