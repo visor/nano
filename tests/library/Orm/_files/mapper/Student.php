@@ -26,8 +26,13 @@ class Mapper_Library_Orm_Example_Student extends Orm_Mapper {
 			)
 			, 'incremental' => false
 			, 'identity'    => array('wizardId')
-			, 'hasMany'     => array()
-			, 'belongsTo'   => array()
+			, 'relations'   => array(
+				'wizard' => array(
+					'type'     => self::RELATION_TYPE_HAS_ONE
+					, 'model'  => 'Library_OrmExampleWizard'
+					, 'fields' => array('wizardId')
+				)
+			)
 		);
 	}
 

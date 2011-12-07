@@ -20,8 +20,13 @@ class Mapper_LibraryOrmExampleHouse extends Orm_Mapper {
 			)
 			, 'incremental' => 'id'
 			, 'identity'    => array('id')
-			, 'hasMany'     => array()
-			, 'belongsTo'   => array()
+			, 'relations'   => array(
+				'wizards' => array(
+					'type'     => self::RELATION_TYPE_HAS_MANY
+					, 'model'  => 'Library_OrmExampleWizard'
+					, 'fields' => array('houseId')
+				)
+			)
 		);
 	}
 
