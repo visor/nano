@@ -6,47 +6,47 @@
 class Nano_HelperBroker {
 
 	/**
-	 * @var Nano_Helper[string]
+	 * @var Nano_Helper[]
 	 */
-	private static $helpers = array();
+	protected $helpers = array();
 
 	/**
-	 * @var Nano_HelperBroker
+	 * @var Nano_HelperBroker_Module[]
 	 */
-	private static $instance = null;
+	protected $modules = array();
 
 	/**
 	 * @var Nano_Dispatcher
 	 */
-	private $dispatcher;
+	protected $dispatcher;
 
-	public function __call($method, array $arguments) {
-		return call_user_func_array(
-			  array($this->get($method), 'invoke')
-			, $arguments
-		);
+	/**
+	 * @return Nano_HelperBroker_Module
+	 * @param $module
+	 *
+	 * @thows Application_Exception_ModuleNotFound
+	 */
+	public function __get($module) {
+		$moduleName = $this->dispatcher->application()->getModules()->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
+		if (!$this->dispatcher->application()->getModules()->active($moduleName)) {
+			throw new Application_Exception_ModuleNotFound($moduleName);
+		}
+
+		if (isSet($this->modules[$moduleName])) {
+			return $this->modules[$moduleName];
+		}
+
+		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->dispatcher->application(), $moduleName);
+		return $this->modules[$moduleName];
 	}
 
 	/**
-	 * @return Nano_Helper
-	 * @param string $name
-	 * @param boolean $isClass
+	 * @return mixed
+	 * @param $method
+	 * @param array $arguments
 	 */
-	public function get($name, $isClass = false) {
-		$key = strToLower($name);
-		if (array_key_exists($key, self::$helpers)) {
-			self::$helpers[$key]->setDispatcher($this->getDispatcher());
-			return self::$helpers[$key];
-		}
-
-		$helper = $this->search($isClass ? $name : $key, $isClass);
-		if (null === $helper) {
-			throw new RuntimeException('Helper ' . $name . ' not found');
-		}
-
-		$helper->setDispatcher($this->getDispatcher());
-		self::$helpers[$key] = $helper;
-		return self::$helpers[$key];
+	public function __call($method, array $arguments) {
+		return $this->get($method, false)->invoke();
 	}
 
 	/**
@@ -72,21 +72,29 @@ class Nano_HelperBroker {
 	 * @param string $name
 	 * @param boolean $isClass
 	 */
+	protected function get($name, $isClass = false) {
+		$key = strToLower($name);
+		if (array_key_exists($key, $this->helpers)) {
+			return $this->helpers[$key];
+		}
+
+		$helper = $this->search($isClass ? $name : $key, $isClass);
+		$helper->setDispatcher($this->getDispatcher());
+		$this->helpers[$key] = $helper;
+		return $this->helpers[$key];
+	}
+
+	/**
+	 * @return Nano_Helper
+	 * @param string $name
+	 * @param boolean $isClass
+	 */
 	protected function search($name, $isClass) {
 		$className = $isClass ? $name : ucFirst($name) . 'Helper';
-		foreach ($this->getDispatcher()->application()->getModules() as $module => $path) {
-			$fullClassName =
-				$this->getDispatcher()->application()->getModules()->nameToNamespace($module)
-				. '\\' . $className
-			;
-			if ($this->getDispatcher()->application()->loader()->loadClass($fullClassName)) {
-				return new $fullClassName();
-			}
-		}
 		if ($this->getDispatcher()->application()->loader()->loadClass($className)) {
 			return new $className();
 		}
-		return null;
+		throw new Nano_Exception('Helper ' . $name . ' not found');
 	}
 
 }

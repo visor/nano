@@ -8,7 +8,7 @@ class CounterHelper extends Nano_Helper {
 	 * @return int
 	 * @param string $name
 	 */
-	public function invoke($name = null) {
+	public function increment($name = null) {
 		if (!array_key_exists($name, self::$counters)) {
 			self::$counters[$name] = 0;
 		}

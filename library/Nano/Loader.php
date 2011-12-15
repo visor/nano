@@ -38,7 +38,7 @@ class Nano_Loader {
 	 * @param string $className
 	 */
 	public static function extractModuleClassParts($className) {
-		return explode('\\', $className, 2);
+		return explode('\\', trim($className, '\\'), 2);
 	}
 
 	/**

@@ -5,18 +5,13 @@ abstract class Nano_Helper {
 	/**
 	 * @var Nano_Dispatcher
 	 */
-	private $dispatcher;
-
-	abstract public function invoke();
+	protected $dispatcher;
 
 	/**
-	 * @return string
-	 * @param string $folder
-	 * @param string $view
-	 * @param array $variables
+	 * @return Nano_Helper
 	 */
-	protected function render($folder, $view, array $variables = array()) {
-		return Nano_Render::script($folder, $view, $variables, true);
+	public function invoke() {
+		return $this;
 	}
 
 	/**
