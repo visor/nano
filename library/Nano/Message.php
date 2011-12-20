@@ -55,12 +55,12 @@ class Nano_Message {
 	public function load($file) {
 		$path = Application::current()->getRootDir() . DS . 'messages' . DS . $this->fileName($file);
 		if (!is_file($path)) {
-			throw new Exception('File "' . $path . '" not found');
+			throw new Nano_Exception('File "' . $path . '" not found');
 		}
 
 		$new = include($path);
 		if (!is_array($new)) {
-			throw new Exception('No strings loaded from file "' . $file . '"');
+			throw new Nano_Exception('No strings loaded from file "' . $file . '"');
 		}
 		$this->strings = array_merge($this->strings, $new);
 	}

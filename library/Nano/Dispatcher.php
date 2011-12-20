@@ -129,7 +129,7 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return void
+	 * @return null|string
 	 * @param Nano_Routes $routes
 	 * @param string $url
 	 */
@@ -145,16 +145,16 @@ class Nano_Dispatcher {
 			$route = $this->getRoute($routes, $url);
 			if (null !== $route) {
 				$this->run($route);
-				return;
+				return null;
 			}
 			if ($this->custom) {
 				$result = $this->custom->dispatch();
 				if (false !== $result) {
-					return;
+					return $result;
 				}
-				throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+				throw new Nano_Exception_NotFound('Custom dispatcher fails', $route);
 			}
-			throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+			throw new Nano_Exception_NotFound('Route not found');
 		} catch (Exception $e) {
 			Nano_Log::message($e);
 			$this->handleError($e);
