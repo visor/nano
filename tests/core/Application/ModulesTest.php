@@ -53,27 +53,13 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotExistedPathPassed() {
-		$application = $this->application;
-		self::assertException(
-			function() use ($application) {
-				/** @var Application $application */
-				$application->withModule('module1', __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
-			}
-			, 'Application_Exception_PathNotFound'
-			, 'Path not found: ' . __FILE__ . DIRECTORY_SEPARATOR . 'not-exists'
-		);
+		$this->setExpectedException('Application_Exception_PathNotFound', 'Path not found: ' . __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
+		$this->application->withModule('module1', __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenModleNotExistInPathPassed() {
-		$application = $this->application;
-		self::assertException(
-			function() use ($application) {
-				/** @var Application $application */
-				$application->withModule('module1', __DIR__ . DIRECTORY_SEPARATOR . 'module1');
-			}
-			, 'Application_Exception_PathNotFound'
-			, 'Path not found: ' . __DIR__ . DIRECTORY_SEPARATOR . 'module1'
-		);
+		$this->setExpectedException('Application_Exception_PathNotFound', 'Path not found: ' . __DIR__ . DIRECTORY_SEPARATOR . 'module1');
+		$this->application->withModule('module1', __DIR__ . DIRECTORY_SEPARATOR . 'module1');
 	}
 
 	public function testWithModuleShouldAddModuleAndPathWhenPassedBoth() {
@@ -114,18 +100,11 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotPathAndNotApplicationAndSharedModule() {
+		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module4\' not found in application and shared modules');
+
 		$this->application->withSharedModulesDir($this->files->get($this, '/shared-modules'));
 		$this->application->withModulesDir($this->files->get($this, '/application-modules'));
-		$application = $this->application;
-
-		self::assertException(
-			function() use ($application) {
-				/** @var Application $application */
-				$application->withModule('module4');
-			}
-			, 'Application_Exception_ModuleNotFound'
-			, 'Module \'module4\' not found in application and shared modules'
-		);
+		$this->application->withModule('module4');
 	}
 
 	public function testPathes() {

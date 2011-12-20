@@ -16,18 +16,25 @@ class Library_Orm_CommonTypesTest extends TestUtils_TestCase {
 		$this->source = new Library_Orm_TestDataSource(array());
 	}
 
-	public function testGettingUnsupportedTypesShouldThrowException() {
-		$types  = self::getObjectProperty($this->source, 'supportedTypes');
-		$source = $this->source;
-		foreach ($types as $type) {
-			self::assertException(
-				function () use ($source, $type) {
-					Orm_Types::getType($source, $type . '-unsupported');
-				}
-				, 'Orm_Exception_UnsupportedType'
-				, 'Unsupported type: "' . $type . '-unsupported"'
-			);
+	/**
+	 * @return array
+	 */
+	public function getSourceTypes() {
+		include_once $this->files->get($this, '/TestDataSource.php');
+		$result = array();
+		foreach (self::getObjectProperty(new Library_Orm_TestDataSource(array()), 'supportedTypes') as $typeName => $className) {
+			$result[] = array($typeName);
 		}
+		return $result;
+	}
+
+	/**
+	 * @dataProvider getSourceTypes()
+	 * @param stirng $type
+	 */
+	public function testGettingUnsupportedTypesShouldThrowException($type) {
+		$this->setExpectedException('Orm_Exception_UnsupportedType', 'Unsupported type: "' . $type . '-unsupported"');
+		Orm_Types::getType($this->source, $type . '-unsupported');
 	}
 
 	public function testCastingBooleanToModel() {

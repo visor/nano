@@ -10,25 +10,10 @@ class ActiveRecordDataChangeTest extends TestUtils_TestCase {
 		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
 	}
 
-	public function testUnknownFields() {
-		$runnable = function() {
-			$test = new ActiveRecordBasic();
-			$test->someField = 123;
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "someField" in class ActiveRecordBasic');
-
-		$runnable = function() {
-			$test = new ActiveRecordBasic();
-			$test->anotherField = 123;
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "anotherField" in class ActiveRecordBasic');
-
-		$runnable = function() {
-			$test = new ActiveRecordBasic();
-			$test->id   = 1;
-			$test->text = '123';
-		};
-		self::assertNoException($runnable);
+	public function testShouldThrowExceptionWhenUnknownFieldAccessed() {
+		$this->setExpectedException('ActiveRecord_Exception_UnknownField', 'Unknown field "someField" in class ActiveRecordBasic');
+		$test = new ActiveRecordBasic();
+		$test->someField = 123;
 	}
 
 	public function testEmptyDataChange() {

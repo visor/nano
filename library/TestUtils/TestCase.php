@@ -43,28 +43,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		return $result;
 	}
 
-	/**
-	 * @return void
-	 * @param Closure $runnable
-	 * @param string $exceptionClass
-	 * @param string|null $exceptionMessage
-	 * @param string|null $message
-	 */
-	public static function assertException(Closure $runnable, $exceptionClass, $exceptionMessage = null, $message = null) {
-		$constraint = new TestUtils_Constraint_Exception($exceptionClass, $exceptionMessage);
-		self::assertThat($runnable, $constraint, $message);
-	}
-
-	/**
-	 * @return void
-	 * @param Closure $runnable
-	 * @param string|null $message
-	 */
-	public static function assertNoException(Closure $runnable, $message = null) {
-		$constraint = new TestUtils_Constraint_NoException();
-		self::assertThat($runnable, $constraint, $message);
-	}
-
 	protected static function backupCurrentApplication() {
 		self::$backupApplication = self::getObjectProperty('Application', 'current');
 		self::setObjectProperty('Application', 'current', null);

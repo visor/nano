@@ -18,9 +18,14 @@ class CacheTest extends TestUtils_TestCase {
 		self::assertSame(Cache::instance(), self::getObjectProperty('Cache', 'instance'));
 	}
 
-	public function testInvalidInstance() {
-		self::assertException(function() { Cache::getApi('NotFound'); }, 'Cache_Exception', 'Cache implementation Cache_API_NotFound not found');
-		self::assertException(function() { Cache::getApi('NotCache'); }, 'Cache_Exception', 'Invalid cache implementation specified: Cache_API_NotCache');
+	public function testShouldThrowExceptionWhenApiNotImplementsInterface() {
+		$this->setExpectedException('Cache_Exception', 'Invalid cache implementation specified: Cache_API_NotCache');
+		Cache::getApi('NotCache');
+	}
+
+	public function testShouldThrowExceptionWhenApiClassNotFound() {
+		$this->setExpectedException('Cache_Exception', 'Cache implementation Cache_API_NotFound not found');
+		Cache::getApi('NotFound');
 	}
 
 	public function testGetApi() {

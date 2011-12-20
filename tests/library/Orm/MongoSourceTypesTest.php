@@ -20,36 +20,48 @@ class Library_Orm_MongoSourceTypesTest extends TestUtils_TestCase {
 		));
 	}
 
-	public function testSupportedTypes() {
-		$types = self::getObjectProperty($this->source, 'supportedTypes');
-		foreach ($types as $typeName => $className) {
-			self::assertTrue($this->source->typeSupported($typeName), $typeName . ' should be supported');
-			self::assertFalse($this->source->typeSupported($typeName . '_fails'), $typeName . '_fails should be not supported');
+	/**
+	 * @return array
+	 */
+	public function getSourceTypes() {
+		include_once $this->files->get($this, '/model/AddressMongo.php');
+		$source =  new Orm_DataSource_Mongo(array(
+			'server'     => 'localhost'
+			, 'database' => 'nano_test'
+		));
+		$result = array();
+		foreach (self::getObjectProperty($source, 'supportedTypes') as $typeName => $className) {
+			$result[] = array($typeName);
 		}
+		return $result;
 	}
 
-	public function testTypeInstanceShouldCreatedOnlyOnce() {
-		$data = self::getObjectProperty($this->source, 'supportedTypes');
-		foreach ($data as $name => $suffix) {
-			$type = $this->source->type($name);
-			self::assertSame($type, $this->source->type($name));
-			self::assertSame($this->source->type($name), $this->source->type($name));
-		}
+	/**
+	 * @dataProvider getSourceTypes()
+	 * @param stirng $type
+	 */
+	public function testSupportedTypes($type) {
+		self::assertTrue($this->source->typeSupported($type), $type . ' should be supported');
+		self::assertFalse($this->source->typeSupported($type . '_fails'), $type . '_fails should be not supported');
 	}
 
-	public function testShouldThrowExceptionWhenRetrievingUnsupportedTypes() {
-		$data = self::getObjectProperty($this->source, 'supportedTypes');
-		foreach ($data as $name => $suffix) {
-			$type   = $name . '-unsupported';
-			$source = $this->source;
-			self::assertException(
-				function() use ($source, $type) {
-					$source->type($type);
-				}
-				, 'Orm_Exception_UnsupportedType'
-				, 'Unsupported type: "' . $type . '"'
-			);
-		}
+	/**
+	 * @dataProvider getSourceTypes()
+	 * @param stirng $type
+	 */
+	public function testTypeInstanceShouldCreatedOnlyOnce($type) {
+		$instance = $this->source->type($type);
+		self::assertSame($instance, $this->source->type($type));
+		self::assertSame($this->source->type($type), $this->source->type($type));
+	}
+
+	/**
+	 * @dataProvider getSourceTypes()
+	 * @param stirng $type
+	 */
+	public function testShouldThrowExceptionWhenRetrievingUnsupportedTypes($type) {
+		$this->setExpectedException('Orm_Exception_UnsupportedType', 'Unsupported type: "' . $type . '-unsupported"');
+		$this->source->type($type . '-unsupported');
 	}
 
 	public function testCastingMongoIdFields() {

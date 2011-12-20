@@ -80,8 +80,8 @@ class Assets_AbstractTest extends TestUtils_TestCase {
 	}
 
 	public function testExceptionWhenNoOutputFolder() {
-		$asset = $this->asset;
-		self::assertException(function () use ($asset) { $asset->import(); }, 'RuntimeException', 'No output folder');
+		$this->setExpectedException('RuntimeException', 'No output folder');
+		$this->asset->import();
 	}
 
 	public function testTagGeneration() {

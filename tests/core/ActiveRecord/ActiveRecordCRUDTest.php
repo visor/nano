@@ -32,16 +32,11 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		self::assertFalse($record->isNew());
 		self::assertFalse($record->changed());
 
-		$record = new ActiveRecordCustomPk();
+		$record = new ActiveRecordCustomPk(); //this record has composite primary key
 		$record->text = 'some text';
-		self::assertException(function () use ($record) { $record->save(); }, 'PDOException', 'Integrity constraint violation');
-		self::assertTrue($record->changed());
-
 		$record->id1 = 10;
-		self::assertException(function () use ($record) { $record->save(); }, 'PDOException', 'Integrity constraint violation');
-		self::assertTrue($record->changed());
-
 		$record->id2 = 20;
+
 		self::assertTrue($record->changed());
 		$record->save();
 		self::assertFalse($record->changed());
@@ -49,6 +44,23 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 		self::assertEquals(2, Nano::db()->log()->count());
 		self::assertEquals("insert into `" . ActiveRecordCustomPk::TABLE_NAME . "`(`id1`, `id2`, `text`) values ('10', '20', 'some text')", Nano::db()->log()->getLastQuery());
 		self::assertFalse($record->isNew());
+	}
+
+	public function testShouldThrowExceptionWhenCompositePkNotSetted() {
+		$this->setExpectedException('PDOException', 'Integrity constraint violation');
+
+		$record = new ActiveRecordCustomPk(); //this record has composite primary key
+		$record->text = 'some text';
+		$record->save();
+	}
+
+	public function testShouldThrowExceptionWhenCompositePkPartialySettedCannotStoreRecord_2() {
+		$this->setExpectedException('PDOException', 'Integrity constraint violation');
+
+		$record = new ActiveRecordCustomPk(); //this record has composite primary key
+		$record->text = 'some text';
+		$record->id1 = 10;
+		$record->save();
 	}
 
 	public function testCanSave() {
@@ -137,6 +149,7 @@ class ActiveRecordCRUDTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
+		Nano::db()->log()->clean();
 		ActiveRecordCustomPk::deleteTable();
 		ActiveRecordBasic::deleteTable();
 	}

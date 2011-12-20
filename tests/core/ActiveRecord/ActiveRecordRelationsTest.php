@@ -57,25 +57,16 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldThrowExceptionForUnknownRelation() {
-		self::assertException(
-			function () {
-				ActiveRecord_Relation::getRecord(ActiveRecordChild::instance(), 'child');
-			}
-			, 'ActiveRecord_Exception_UnknownRelation'
-			, 'Unknown relation "child" in class ActiveRecordChild'
-		);
+		$this->setExpectedException('ActiveRecord_Exception_UnknownRelation', 'Unknown relation "child" in class ActiveRecordChild');
+		ActiveRecord_Relation::getRecord(ActiveRecordChild::instance(), 'child');
 	}
 
 	public function testShouldThrowExceptionForNotExistedRelationTarge() {
-		self::assertException(
-			function () {
-				$child = ActiveRecordChild::instance();
-				$child->parent_id = 'some';
-				ActiveRecord_Relation::getRecord($child, 'parent');
-			}
-			, 'ActiveRecord_Exception_RelationTargetNotFound'
-			, 'Required relation target ActiveRecordBasic not found for ActiveRecordChild'
-		);
+		$this->setExpectedException('ActiveRecord_Exception_RelationTargetNotFound', 'Required relation target ActiveRecordBasic not found for ActiveRecordChild');
+
+		$child = ActiveRecordChild::instance();
+		$child->parent_id = 'some';
+		ActiveRecord_Relation::getRecord($child, 'parent');
 	}
 
 	public function testLoadingOne() {
@@ -167,7 +158,7 @@ class ActiveRecordRelationsTest extends TestUtils_TestCase {
 		$record = ActiveRecordChild::instance();
 		$record->text = 'child';
 		$record->parent->text = 'parent';
-		self::assertNoException(function () use ($record) { $record->save(); });
+		$record->save();
 		self::assertEquals($record->parent->id, $record->parent_id);
 	}
 
