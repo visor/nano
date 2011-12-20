@@ -20,10 +20,11 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/mapper/Address.php');
 		include_once $this->files->get($this, '/model/Address.php');
 
+		Orm::clearSources();
 		$this->mapper = new Mapper_Library_Orm_Example_Address();
 		$this->source = $this->createDataSource();
 		$this->source->pdo()->beginTransaction();
-		Orm::instance()->addSource('test', $this->source);
+		Orm::addSource('test', $this->source);
 	}
 
 	/**
@@ -148,7 +149,6 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 	}
 
 	public function testGetShouldReturnFalseWhenNoRecords() {
-		Nano_Log::message(__FUNCTION__);
 		self::assertFalse($this->source->get($this->mapper->getResource(), Orm::criteria()->equals('id', 1)));
 	}
 
@@ -190,8 +190,8 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		$this->source = null;
-		$this->mapper = null;
+		Orm::clearSources();
+		unSet($this->source, $this->mapper);
 	}
 
 }

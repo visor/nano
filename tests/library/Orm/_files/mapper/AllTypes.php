@@ -8,7 +8,6 @@ class Mapper_Library_Orm_Example_AllTypes extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'        => 'test-type-casting'
-			, 'source'    => 'test'
 			, 'fields'    => array(
 				'integer'  => array(
 					'type'   => 'integer'

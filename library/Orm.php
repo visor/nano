@@ -6,11 +6,6 @@ class Orm {
 	const MODEL_PREFIX  = 'Model';
 
 	/**
-	 * @var Orm
-	 */
-	private static $instance = null;
-
-	/**
 	 * @var Orm_Mapper[]
 	 */
 	private static $mappers = array();
@@ -18,17 +13,17 @@ class Orm {
 	/**
 	 * @var Orm_DataSource[]
 	 */
-	private $dataSources = array();
+	private static $dataSources = array();
 
 	/**
-	 * @return Orm
+	 * @var null|string
 	 */
-	public static function instance() {
-		if (null === self::$instance) {
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
+	private static $defaultSource = null;
+
+	/**
+	 * @var string[]
+	 */
+	private static $resourcesSource = array();
 
 	/**
 	 * @return Orm_Mapper
@@ -60,52 +55,80 @@ class Orm {
 	}
 
 	/**
-	 * @return Orm_DataSource[]
-	 * @static
-	 */
-	public static function backup() {
-		$result = self::instance()->dataSources;
-		self::$instance = null;
-		return $result;
-	}
-
-	/**
-	 * @return boolean
-	 * @param Orm_DataSource[] $dataSources
-	 */
-	public static function restore(array $dataSources) {
-		try {
-			self::$instance = null;
-			foreach ($dataSources as $key => $dataSource) {
-				self::instance()->addSource($key, $dataSource);
-			}
-			return true;
-		} catch (Exception $e) {
-			self::$instance = null;
-			return false;
-		}
-	}
-
-	/**
-	 * @return Orm
+	 * @return void
 	 * @param string $key
 	 * @param Orm_DataSource $source
 	 */
-	public function addSource($key, Orm_DataSource $source) {
-		$this->dataSources[$key] = $source;
-		return $this;
+	public static function addSource($key, Orm_DataSource $source) {
+		self::$dataSources[$key] = $source;
 	}
 
 	/**
 	 * @return Orm_DataSource
 	 * @param string $key
+	 *
 	 * @throws Orm_Exception_InvalidDataSource
 	 */
-	public function source($key) {
-		if (isSet($this->dataSources[$key])) {
-			return $this->dataSources[$key];
+	public static function getSource($key) {
+		if (isSet(self::$dataSources[$key])) {
+			return self::$dataSources[$key];
 		}
 		throw new Orm_Exception_InvalidDataSource($key);
+	}
+
+	/**
+	 * @return void
+	 * @param string $key
+	 *
+	 * @throws Orm_Exception_InvalidDataSource
+	 */
+	public static function setDefaultSource($key) {
+		if (!isSet(self::$dataSources[$key])) {
+			throw new Orm_Exception_InvalidDataSource($key);
+		}
+		self::$defaultSource = $key;
+	}
+
+	/**
+	 * @param array|string $models
+	 * @param null|string $source
+	 */
+	public static function setSourceFor($models, $source = null) {
+		if (is_array($models)) {
+			foreach ($models as $model => $source) {
+				self::$resourcesSource[$model] = $source;
+			}
+			return;
+		}
+
+		self::$resourcesSource[$models] = $source;
+	}
+
+
+	/**
+	 * @return Orm_DataSource
+	 * @param string $modelClass
+	 */
+	public static function getSourceFor($modelClass) {
+		if (isSet(self::$resourcesSource[$modelClass])) {
+			return self::getSource(self::$resourcesSource[$modelClass]);
+		}
+		if (null === self::$defaultSource) {
+			throw new Orm_Exception_NoDefaultDataSource();
+		}
+		return self::getSource(self::$defaultSource);
+	}
+
+	/**
+	 * @return void
+	 */
+	public static function clearSources() {
+		foreach (self::$dataSources as $name => $source) {
+			unSet(self::$dataSources[$name]);
+		}
+		self::$defaultSource   = null;
+		self::$dataSources     = array();
+		self::$resourcesSource = array();
 	}
 
 	/**

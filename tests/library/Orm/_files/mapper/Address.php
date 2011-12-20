@@ -13,7 +13,6 @@ class Mapper_Library_Orm_Example_Address extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'          => 'address'
-			, 'source'      => 'test'
 			, 'fields'      => array(
 				'id'         => array(
 					'type'       => 'integer'

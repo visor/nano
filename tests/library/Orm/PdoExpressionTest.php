@@ -99,7 +99,7 @@ class Library_Orm_PdoExpressionTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		$this->source = null;
+		unSet($this->source, $this->mapper);
 	}
 
 }

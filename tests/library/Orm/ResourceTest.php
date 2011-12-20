@@ -9,7 +9,6 @@ class Library_Orm_ResourceTest extends TestUtils_TestCase {
 
 	private $testMeta = array(
 		'name'        => 'test-resource'
-		, 'source'    => 'test-source'
 		, 'fields'    => array(
 			  'id'    => array('type' => 'int', 'readonly' => true)
 			, 'text'  => array('type' => 'text', 'default' => 'default value')
@@ -26,12 +25,10 @@ class Library_Orm_ResourceTest extends TestUtils_TestCase {
 	 */
 	private $resource;
 
-	private $backup;
-
 	protected function setUp() {
 		require_once $this->files->get($this, '/TestDataSource.php');
+		Orm::clearSources();
 		$this->resource = new Orm_Resource($this->testMeta);
-		$this->backup   = Orm::backup();
 	}
 
 	public function testGettingResourceInformation() {
@@ -66,22 +63,9 @@ class Library_Orm_ResourceTest extends TestUtils_TestCase {
 		$this->resource->defaultValue('field');
 	}
 
-	public function testGettingDataSourceInstance() {
-		$dataSource = new Library_Orm_TestDataSource(array());
-		Orm::instance()->addSource('test-source', $dataSource);
-
-		self::assertInstanceOf('Orm_DataSource', $this->resource->source());
-		self::assertInstanceOf('Library_Orm_TestDataSource', $this->resource->source());
-		self::assertEquals($dataSource, $this->resource->source());
-		self::assertSame($dataSource, $this->resource->source());
-	}
-
 	protected function tearDown() {
 		$this->resource = null;
-		if (null !== $this->backup) {
-			Orm::restore($this->backup);
-			$this->backup = null;
-		}
+		Orm::clearSources();
 	}
 
 }

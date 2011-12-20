@@ -13,7 +13,6 @@ class Mapper_Library_Orm_Example_AddressMongo extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'        => 'address'
-			, 'source'    => 'test'
 			, 'fields'    => array(
 				'_id'         => array(
 					'type'       => 'identify'

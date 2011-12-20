@@ -13,7 +13,6 @@ class Mapper_Library_OrmExampleWizard extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'          => 'wizard'
-			, 'source'      => 'test'
 			, 'fields'      => array(
 				'id'     => array(
 					'type' => 'integer'

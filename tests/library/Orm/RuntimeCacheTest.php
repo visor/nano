@@ -20,9 +20,12 @@ class Library_Orm_RuntimeCacheTest extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/model/Address.php');
 		include_once $this->files->get($this, '/mapper/Address.php');
 
+		Orm::clearSources();
 		$this->source = new Orm_DataSource_Pdo_Mysql(array());
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
+
 		$this->source->usePdo(Nano::db());
-		Orm::instance()->addSource('test', $this->source);
 		$this->source->pdo()->beginTransaction();
 		$this->mapper = Library_Orm_Example_Address::mapper();
 	}
@@ -67,6 +70,7 @@ class Library_Orm_RuntimeCacheTest extends TestUtils_TestCase {
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
 		unSet($this->source, $this->mapper);
+		Orm::clearSources();
 	}
 
 }

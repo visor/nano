@@ -20,10 +20,12 @@ class Library_Orm_RelationExceptionTest extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/mapper/Wizard.php');
 		include_once $this->files->get($this, '/model/Wizard.php');
 
+		Orm::clearSources();
 		$this->source = new Orm_DataSource_Pdo_Mysql(array());
 		$this->source->usePdo(Nano::db());
 		$this->source->pdo()->beginTransaction();
-		Orm::instance()->addSource('test', $this->source);
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 
 		$this->wizard = new Library_OrmExampleWizard();
 	}
@@ -46,6 +48,7 @@ class Library_Orm_RelationExceptionTest extends TestUtils_TestCase {
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
 		unSet($this->source);
+		Orm::clearSources();
 	}
 
 }

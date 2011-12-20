@@ -112,6 +112,13 @@ class Library_Orm_TestDataSource extends Orm_DataSource_Abstract implements Orm_
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function nullValue() {
+		return null;
+	}
+
+	/**
 	 * @return boolean
 	 * @param array $expr
 	 * @param array $data

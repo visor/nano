@@ -32,7 +32,10 @@ class Library_Orm_RelationBelongsToTest extends TestUtils_TestCase {
 		$this->source = new Orm_DataSource_Pdo_Mysql(array());
 		$this->source->usePdo(Nano::db());
 		$this->source->pdo()->beginTransaction();
-		Orm::instance()->addSource('test', $this->source);
+
+		Orm::clearSources();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 
 		$this->addressOne = new Library_Orm_Example_Address();
 		$this->addressOne->location = $this->address1;
@@ -89,7 +92,8 @@ class Library_Orm_RelationBelongsToTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		unSet($this->source);
+		unSet($this->source, $this->addressOne, $this->addressTwo);
+		Orm::clearSources();
 	}
 
 }

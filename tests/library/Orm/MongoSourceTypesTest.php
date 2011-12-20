@@ -102,15 +102,15 @@ class Library_Orm_MongoSourceTypesTest extends TestUtils_TestCase {
 		}
 	}
 
-	protected function tearDown() {
-		$this->source->db()->drop();
-		$this->source = null;
-	}
-
 	protected function castingMondoFieldType($mongoTypeClass, $sourceValue, $modelValue, $typeName) {
 		self::assertEquals($modelValue, $this->source->type($typeName)->castToModel($sourceValue));
 		self::assertInstanceOf($mongoTypeClass, $this->source->type($typeName)->castToDataSource($modelValue));
 		self::assertEquals($sourceValue, $this->source->type($typeName)->castToDataSource($modelValue));
+	}
+
+	protected function tearDown() {
+		$this->source->db()->drop();
+		unSet($this->source);
 	}
 
 }

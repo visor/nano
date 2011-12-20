@@ -25,7 +25,10 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 			'server'     => 'localhost'
 			, 'database' => 'nano_test'
 		));
-		Orm::instance()->addSource('test', $this->source);
+
+		Orm::clearSources();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 	}
 
 	public function testInsertingSimpleResource() {
@@ -210,8 +213,7 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->source->db()->drop();
-		$this->source = null;
-		$this->mapper = null;
+		unSet($this->source, $this->mapper);
 	}
 
 }

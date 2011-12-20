@@ -41,7 +41,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			$result = $this->collection($resource->name())->insert($data, array('safe' => true));
 			if (null === $result['err']) {
 				foreach ($resource->identity() as $name) {
-					$data->$name = $resource->castToModel($name, $data->$name);
+					$data->$name = $this->castToModel($resource, $name, $data->$name);
 				}
 				return true;
 			}
@@ -162,6 +162,13 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 	 */
 	public function quoteName($name) {
 		return $name;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function nullValue() {
+		return null;
 	}
 
 	/**

@@ -20,6 +20,22 @@ interface Orm_DataSource {
 	public function type($typeName);
 
 	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToModel(Orm_Resource $resource, $field, $value);
+
+	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToDataSource(Orm_Resource $resource, $field, $value);
+
+	/**
 	 * @return boolean
 	 * @param Orm_Resource $resource
 	 * @param stdClass $data
@@ -68,5 +84,10 @@ interface Orm_DataSource {
 	 * @param string $name
 	 */
 	public function quoteName($name);
+
+	/**
+	 * @return mixed
+	 */
+	public function nullValue();
 
 }

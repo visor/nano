@@ -186,7 +186,7 @@ abstract class Orm_Mapper {
 	public function mapToModel(stdClass $modelData, array $sourceData) {
 		foreach ($this->getResource()->fields() as $name => $meta) {
 			if (isSet($sourceData[$name])) {
-				$value = $this->getResource()->castToModel($name, $sourceData[$name]);
+				$value = $this->dataSource()->castToModel($this->getResource(), $name, $sourceData[$name]);
 			} else {
 				$value = $this->getResource()->defaultValue($name);
 			}
@@ -201,7 +201,7 @@ abstract class Orm_Mapper {
 	public function mapToDataSource(stdClass $modelData) {
 		$result = array();
 		foreach ($this->getResource()->fields() as $name => $meta) {
-			$result[$name] = $this->getResource()->castToDataSource($name, $modelData->$name);
+			$result[$name] = $this->dataSource()->castToDataSource($this->getResource(), $name, $modelData->$name);
 		}
 		return $result;
 	}
@@ -233,7 +233,7 @@ abstract class Orm_Mapper {
 	 * @return Orm_DataSource
 	 */
 	protected function dataSource() {
-		return Orm::instance()->source($this->getResource()->sourceName());
+		return Orm::getSourceFor($this->modelClass);
 	}
 
 	protected function paramsToArray(array $parameters) {

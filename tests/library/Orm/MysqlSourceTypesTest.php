@@ -86,15 +86,14 @@ class Library_Orm_MysqlSourceTypesTest extends TestUtils_TestCase {
 		$this->castingFieldType('string', $sourceValue, $modelValue, 'timestamp');
 	}
 
-	protected function tearDown() {
-		$this->source = null;
-		$this->mapper = null;
-	}
-
 	protected function castingFieldType($typeClass, $sourceValue, $modelValue, $typeName) {
 		self::assertEquals($modelValue, $this->source->type($typeName)->castToModel($sourceValue), 'Model value should equals');
 		self::assertInternalType($typeClass, $this->source->type($typeName)->castToDataSource($modelValue), 'Internal types should equals');
 		self::assertEquals($sourceValue, $this->source->type($typeName)->castToDataSource($modelValue), 'Source values should equals');
+	}
+
+	protected function tearDown() {
+		unSet($this->source, $this->mapper);
 	}
 
 }

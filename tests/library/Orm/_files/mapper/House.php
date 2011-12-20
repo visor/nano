@@ -8,7 +8,6 @@ class Mapper_LibraryOrmExampleHouse extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'          => 'house'
-			, 'source'      => 'test'
 			, 'fields'      => array(
 				'id'     => array(
 					'type' => 'integer'

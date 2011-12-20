@@ -19,7 +19,10 @@ class Library_Orm_MongoMapperTest extends TestUtils_TestCase {
 			'server'     => 'localhost'
 			, 'database' => 'nano_test'
 		));
-		Orm::instance()->addSource('test', $this->source);
+
+		Orm::clearSources();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 	}
 
 	public function testSavingNewModelIntoDataSource() {
@@ -68,7 +71,8 @@ class Library_Orm_MongoMapperTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->source->db()->drop();
-		$this->source = null;
+		unSet($this->source);
+		Orm::clearSources();
 	}
 
 }
