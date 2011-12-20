@@ -291,7 +291,7 @@ abstract class Nano_C {
 	 * @throws Nano_Exception
 	 */
 	protected function pageNotFound($message = null) {
-		throw new Nano_Exception(null === $message ? Nano_Dispatcher::ERROR_NOT_FOUND : $message, Nano_Dispatcher::ERROR_NOT_FOUND);
+		throw new Nano_Exception_NotFound(null === $message ? Nano_Dispatcher::ERROR_NOT_FOUND : $message);
 	}
 
 	/**
@@ -300,7 +300,7 @@ abstract class Nano_C {
 	 * @throws Nano_Exception
 	 */
 	protected function internalError($message = null) {
-		throw new Nano_Exception(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message, Nano_Dispatcher::ERROR_INTERNAL);
+		throw new Nano_Exception_InternalError(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message);
 	}
 
 	protected function createResponse() {

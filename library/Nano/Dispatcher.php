@@ -150,7 +150,7 @@ class Nano_Dispatcher {
 			if ($this->custom) {
 				$result = $this->custom->dispatch();
 				if (false !== $result) {
-					return $result;
+					return;
 				}
 				throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
 			}
@@ -192,11 +192,11 @@ class Nano_Dispatcher {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
-			throw new Exception('404');
+			throw new Nano_Exception_NotFound('Controller class not found', $route);
 		}
 		$class = new ReflectionClass($className);
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
-			throw new Exception('500');
+			throw new Nano_Exception_InternalError('Not a controller class: ' . $className);
 		}
 		return $class->newInstance($this);
 	}

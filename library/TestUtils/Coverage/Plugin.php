@@ -2,16 +2,11 @@
 
 class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 
+	const DATA_DIR      = 'coverage-data';
+	const FILES_DIR     = 'files';
 	const PREPEND_FILE  = 'prepend.php';
 	const APPEND_FILE   = 'append.php';
 	const COVERAGE_FILE = 'coverage.php';
-	const FILES_DIR     = 'files';
-	const DATA_DIR      = 'coverage-data';
-
-	/**
-	 * @var ReflectionClass
-	 */
-	protected $seleniumDriver;
 
 	/**
 	 * @var string
@@ -27,8 +22,9 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 	 * @param Nano_C $controller
 	 */
 	public function init(Nano_C $controller) {
-		$filesBaseDir           = __DIR__ . DIRECTORY_SEPARATOR . self::FILES_DIR;
 		$this->dataDirName      = $this->rootDir . DIRECTORY_SEPARATOR . self::DATA_DIR;
+
+		$filesBaseDir           = __DIR__ . DIRECTORY_SEPARATOR . self::FILES_DIR;
 		$this->prependFileName  = $filesBaseDir . DIRECTORY_SEPARATOR . self::PREPEND_FILE;
 		$this->appendFileName   = $filesBaseDir . DIRECTORY_SEPARATOR . self::APPEND_FILE;
 		$this->coverageFileName = $filesBaseDir . DIRECTORY_SEPARATOR . self::COVERAGE_FILE;

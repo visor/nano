@@ -88,11 +88,19 @@ class Nano_C_Response {
 	 */
 	protected $body;
 
+	/**
+	 * @var boolean
+	 */
+	protected $headersSent, $bodySent;
+
 	function __construct() {
 		$this->status  = self::STATUS_DEFAULT;
 		$this->version = self::VERSION_10;
 		$this->headers = new ArrayObject();
 		$this->body    = null;
+
+		$this->headersSent = false;
+		$this->bodySent    = false;
 	}
 
 	/**
@@ -168,6 +176,11 @@ class Nano_C_Response {
 	 * @return void
 	 */
 	public function sendHeaders() {
+		if ($this->headersSent) {
+			return;
+		}
+
+		$this->headersSent = true;
 		$status =
 			$this->status
 			. (isSet(self::$messages[$this->status]) ? ' ' . self::$messages[$this->status]: '')
@@ -219,6 +232,11 @@ class Nano_C_Response {
 	 * @return void
 	 */
 	public function sendBody() {
+		if ($this->bodySent) {
+			return;
+		}
+
+		$this->bodySent = true;
 		echo $this->body;
 	}
 

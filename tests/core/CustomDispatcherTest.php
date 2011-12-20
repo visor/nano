@@ -25,13 +25,11 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	public function testNotAcceptCustom() {
 		$dispatcher = $this->dispatcher;
-		self::assertException(
-			function() use ($dispatcher) {
-				$dispatcher->throwExceptions(true)->dispatch(new Nano_Routes(), '');
-			}
-			, 'Exception'
-			, '404'
-		);
+		$this->setExpectedException('Nano_Exception_NotFound', 'Controller class not found (route : ::() when location matches [])');
+		$dispatcher
+			->throwExceptions(true)
+			->dispatch(new Nano_Routes(), '')
+		;
 	}
 
 	protected function tearDown() {
