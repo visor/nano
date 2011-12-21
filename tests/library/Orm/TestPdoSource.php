@@ -188,10 +188,28 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 		self::assertFalse($this->source->find($this->mapper->getResource(), Orm::criteria()->equals('invalid', 'some')));
 	}
 
+	public function testFindCustomRows() {
+		$first    = (object)array('location' => 'Number 4, Privet Drive');
+		$second   = (object)array('location' => 'Game Hut at Hogwarts');
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+		$found = $this->source->findCustom($this->mapper->getResource(), 'select * from address where location like "%t%" order by id desc');
+
+		self::assertCount(2, $found);
+		self::assertArrayHasKey('0', $found);
+		self::assertArrayHasKey('1', $found);
+
+		self::assertEquals($first->id,        $found[1]['id']);
+		self::assertEquals($first->location,  $found[1]['location']);
+		self::assertEquals($second->location, $found[0]['location']);
+		self::assertEquals($second->id,       $found[0]['id']);
+	}
+
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		Orm::clearSources();
 		unSet($this->source, $this->mapper);
+		Orm::clearSources();
 	}
 
 }

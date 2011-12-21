@@ -69,6 +69,10 @@ class Library_Orm_MongoMapperTest extends TestUtils_TestCase {
 		self::assertFalse(Library_Orm_Example_AddressMongo::mapper()->find(Orm::criteria()->equals('invalid', 'some')));
 	}
 
+	public function testFindCustomModels() {
+		self::markTestIncomplete('Not implemented yet');
+	}
+
 	protected function tearDown() {
 		$this->source->db()->drop();
 		unSet($this->source);

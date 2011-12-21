@@ -88,6 +88,15 @@ class Library_Orm_TestDataSource extends Orm_DataSource_Abstract implements Orm_
 	}
 
 	/**
+	 * @return array|false
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query) {
+		throw new Nano_Exception('unsupported');
+	}
+
+	/**
 	 * @return mixed
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria $criteria

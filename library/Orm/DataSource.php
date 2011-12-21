@@ -73,6 +73,13 @@ interface Orm_DataSource {
 	public function find(Orm_Resource $resource, Orm_Criteria $criteria = null, Orm_FindOptions $findOptions = null);
 
 	/**
+	 * @return array|false
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query);
+
+	/**
 	 * @return mixed
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria $criteria

@@ -148,6 +148,20 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 	}
 
 	/**
+	 * @return MongoCursor
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query) {
+		try {
+			return $this->collection($resource->name())->find($query);
+		} catch (Exception $e) {
+			Nano_Log::message($e);
+			return false;
+		}
+	}
+
+	/**
 	 * @return mixed
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria $criteria

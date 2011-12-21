@@ -144,6 +144,10 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 		self::assertNull($collection->current());
 	}
 
+	public function testFindCustomModels() {
+		self::markTestIncomplete('Not implemented yet');
+	}
+
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
 		unSet($this->source);

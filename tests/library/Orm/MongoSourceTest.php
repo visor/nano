@@ -3,6 +3,7 @@
 /**
  * @group framework
  * @group orm
+ * @group orm-source
  */
 class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 
@@ -209,6 +210,24 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 
 	public function testFindShouldReturnFalseWhenException() {
 		self::assertFalse($this->source->find($this->mapper->getResource(), Orm::criteria()->equals('invalid', 'some')));
+	}
+
+	public function testFindCustomRows() {
+		$first    = (object)array('location' => 'Number 4, Privet Drive');
+		$second   = (object)array('location' => 'Game Hut at Hogwarts');
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+		$found = $this->source->findCustom($this->mapper->getResource(), array('location' => array('$regex' => '/.*t.*/i')));
+		self::assertInstanceOf('MongoCursor', $found);
+
+		$found->sort(array('_id' => -1));
+		$expectedData = array($first, $second);
+		foreach ($found as $actual) {
+			$expected = array_shift($expectedData);
+			self::assertEquals($expected->_id,       $actual['_id']->__toString());
+			self::assertEquals($expected->location,  $actual['location']);
+		}
 	}
 
 	protected function tearDown() {

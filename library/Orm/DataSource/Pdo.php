@@ -130,7 +130,21 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 	 */
 	public function find(Orm_Resource $resource, Orm_Criteria $criteria = null, Orm_FindOptions $findOptions = null) {
 		try {
-			return $this->pdo()->query($this->findQuery($resource, $criteria, $findOptions))->fetchAll(PDO::FETCH_ASSOC);
+			return $this->findCustom($resource, $this->findQuery($resource, $criteria, $findOptions));
+		} catch (Exception $e) {
+			Nano_Log::message($e);
+			return false;
+		}
+	}
+
+	/**
+	 * @return array|false
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query) {
+		try {
+			return $this->pdo()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 		} catch (Exception $e) {
 			Nano_Log::message($e);
 			return false;
