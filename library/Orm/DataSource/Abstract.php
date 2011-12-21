@@ -41,6 +41,32 @@ abstract class Orm_DataSource_Abstract implements Orm_DataSource {
 	}
 
 	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToModel(Orm_Resource $resource, $field, $value) {
+		if (null === $value) {
+			return null;
+		}
+		return $this->type($resource->typeOf($field))->castToModel($value);
+	}
+
+	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToDataSource(Orm_Resource $resource, $field, $value) {
+		if (null === $value) {
+			return $this->nullValue();
+		}
+		return $this->type($resource->typeOf($field))->castToDataSource($value);
+	}
+
+	/**
 	 * @param array $config
 	 */
 	public function __construct(array $config) {

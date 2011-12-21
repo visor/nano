@@ -46,7 +46,7 @@ class Orm_DataSource_Expression_Mongo extends Orm_DataSource_Expression {
 //				}
 			}
 			if ($part instanceof Orm_Criteria_Expression) {
-				self::appendExpressionPart($values, $resource, $part);
+				self::appendExpressionPart($values, $dataSource, $resource, $part);
 
 //			} elseif ($part instanceof Orm_Criteria) {
 //				$result .= '(' . self::create($dataSource, $resource, $part) . ')';
@@ -60,31 +60,32 @@ class Orm_DataSource_Expression_Mongo extends Orm_DataSource_Expression {
 	/**
 	 * @return array
 	 * @param array $operations
+	 * @param Orm_DataSource $dataSource
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria_Expression $part
 	 */
-	protected static function appendExpressionPart(array &$operations, Orm_Resource $resource, Orm_Criteria_Expression $part) {
+	protected static function appendExpressionPart(array &$operations, Orm_DataSource $dataSource, Orm_Resource $resource, Orm_Criteria_Expression $part) {
 		$operator = null;
 		if (Orm_Criteria::OP_EQUALS === $part->operation()) {
-			self::addFieldCondition($operations, $part->field(), null, $resource->castToDataSource($part->field(), $part->value()));
+			self::addFieldCondition($operations, $part->field(), null, $dataSource->castToDataSource($resource, $part->field(), $part->value()));
 			return;
 		}
 		if (isSet(self::$operations[$part->operation()])) {
 			$operator = self::$operations[$part->operation()];
 			if (self::isArrayOperator($part->operation())) {
-				self::addFieldCondition($operations, $part->field(), $operator, self::castArray($resource, $part));
+				self::addFieldCondition($operations, $part->field(), $operator, self::castArray($dataSource, $resource, $part));
 				return;
 			}
-			self::addFieldCondition($operations, $part->field(), $operator, $resource->castToDataSource($part->field(), $part->value()));
+			self::addFieldCondition($operations, $part->field(), $operator, $dataSource->castToDataSource($resource, $part->field(), $part->value()));
 			return;
 		}
 		switch ($part->operation()) {
 			case Orm_Criteria::OP_LIKE:
-				self::addFieldCondition($operations, $part->field(), null, '/^' . $resource->castToDataSource($part->field(), $part->value()) . '$/i');
+				self::addFieldCondition($operations, $part->field(), null, '/^' . $dataSource->castToDataSource($resource, $part->field(), $part->value()) . '$/i');
 				return;
 
 			case Orm_Criteria::OP_NOT_LIKE:
-				self::addFieldCondition($operations, $part->field(), '$ne', '/^' . $resource->castToDataSource($part->field(), $part->value()) . '$/i');
+				self::addFieldCondition($operations, $part->field(), '$ne', '/^' . $dataSource->castToDataSource($resource, $part->field(), $part->value()) . '$/i');
 				return;
 
 			case Orm_Criteria::OP_IS_NULL:
@@ -139,15 +140,16 @@ class Orm_DataSource_Expression_Mongo extends Orm_DataSource_Expression {
 
 	/**
 	 * @return array
+	 * @param Orm_DataSource $dataSource
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria_Expression $part
 	 * @throws Orm_Exception_Criteria
 	 */
-	protected static function castArray(Orm_Resource $resource, Orm_Criteria_Expression $part) {
+	protected static function castArray(Orm_DataSource $dataSource, Orm_Resource $resource, Orm_Criteria_Expression $part) {
 		if (is_array($part->value())) {
 			$result = array();
 			foreach ($part->value() as $item) {
-				$result[] = $resource->castToDataSource($part->field(), $item);
+				$result[] = $dataSource->castToDataSource($resource, $part->field(), $item);
 			}
 			return $result;
 		}

@@ -7,53 +7,51 @@
 class ActiveRecordErrorsTest extends TestUtils_TestCase {
 
 	public function testNoName() {
+		$this->setExpectedException('ActiveRecord_Exception_NoTableName', 'Table name is not specified for class ActiveRecordNoName');
 		require __DIR__ . '/_files/ActiveRecordNoName.php';
-		$runnable = function() {
-			new ActiveRecordNoName();
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_NoTableName', 'Table name is not specified for class ActiveRecordNoName');
+		new ActiveRecordNoName();
 	}
 
 	public function testNoPrimaryKey() {
+		$this->setExpectedException('ActiveRecord_Exception_NoPrimaryKey', 'Primary key is not specified for class ActiveRecordNoPrimaryKey');
+
 		require __DIR__ . '/_files/ActiveRecordNoPrimaryKey.php';
-		$runnable = function() {
-			new ActiveRecordNoPrimaryKey();
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_NoPrimaryKey', 'Primary key is not specified for class ActiveRecordNoPrimaryKey');
+		new ActiveRecordNoPrimaryKey();
 	}
 
 	public function testNoAutoIncrement() {
+		$this->setExpectedException('ActiveRecord_Exception_AutoIncrementNotDefined', 'Autoincrement flag not defined for class ActiveRecordNoAutoIncrement');
+
 		require __DIR__ . '/_files/ActiveRecordNoAutoIncrement.php';
-		$runnable = function() {
-			new ActiveRecordNoAutoIncrement();
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_AutoIncrementNotDefined', 'Autoincrement flag not defined for class ActiveRecordNoAutoIncrement');
+		new ActiveRecordNoAutoIncrement();
 	}
 
 	public function testNoFields() {
+		$this->setExpectedException('ActiveRecord_Exception_NoFields', 'No fields defined for class ActiveRecordNoFields');
+
 		require __DIR__ . '/_files/ActiveRecordNoFields.php';
-		$runnable = function() {
-			new ActiveRecordNoFields();
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_NoFields', 'No fields defined for class ActiveRecordNoFields');
+		new ActiveRecordNoFields();
 	}
 
 	public function testInvalidConstructorData() {
+		$this->setExpectedException('InvalidArgumentException', '');
+
 		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
-		self::assertException(function() { new ActiveRecordBasic('some value'); }, 'InvalidArgumentException', null);
+		new ActiveRecordBasic('some value');
 	}
 
-	public function testUnknownFields() {
-		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
-		$runnable = function() {
-			$x = ActiveRecordBasic::prototype()->someField;
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "someField"');
+	public function testReadUnknownFields() {
+		$this->setExpectedException('ActiveRecord_Exception_UnknownField', 'Unknown field "someField"');
 
-		$runnable = function() {
-			ActiveRecordBasic::prototype()->anotherField = 'some value';
-		};
-		self::assertException($runnable, 'ActiveRecord_Exception_UnknownField', 'Unknown field "anotherField"');
+		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
+		$x = ActiveRecordBasic::prototype()->someField;
+	}
+
+	public function testSetUnknownFields() {
+		$this->setExpectedException('ActiveRecord_Exception_UnknownField', 'Unknown field "anotherField"');
+
+		require_once __DIR__ . '/_files/ActiveRecordBasic.php';
+		ActiveRecordBasic::prototype()->anotherField = 'some value';
 	}
 
 }

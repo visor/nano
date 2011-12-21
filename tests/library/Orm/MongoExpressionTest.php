@@ -24,7 +24,10 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 			'server'     => 'localhost'
 			, 'database' => 'nano_test'
 		));
-		Orm::instance()->addSource('test', $this->source);
+
+		Orm::clearSources();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 	}
 
 	public function testBinaryOperationsShouldParsedWithBothOperands() {
@@ -184,7 +187,8 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		$this->source = null;
+		unSet($this->source);
+		Orm::clearSources();
 	}
 
 }

@@ -110,34 +110,22 @@ class NanoDbLoggerTest extends TestUtils_TestCase {
 		self::assertNull(Nano::db()->log()->getLastQuery());
 	}
 
-	public function testLogginWithErrorInQuery() {
-		self::assertException(
-			function() {
-				Nano::db()->query('invalid query');
-			}
-			, 'PDOException'
-			, null
-		);
-		self::assertEquals(2, Nano::db()->log()->count());
+	public function testLogginWithErrorInQueryCallingQuery() {
+		$this->setExpectedException('PDOException', null);
 
-		self::assertException(
-			function() {
-				$statement = Nano::db()->prepare('invalid query');
-				$statement->execute();
-			}
-			, 'PDOException'
-			, null
-		);
-		self::assertEquals(4, Nano::db()->log()->count());
+		Nano::db()->query('invalid query');
+	}
 
-		self::assertException(
-			function() {
-				Nano::db()->exec('invalid query');
-			}
-			, 'PDOException'
-			, null
-		);
-		self::assertEquals(6, Nano::db()->log()->count());
+	public function testLogginWithErrorInQueryCallingPrepare() {
+		$this->setExpectedException('PDOException', null);
+
+		$statement = Nano::db()->prepare('invalid query');
+		$statement->execute();
+	}
+
+	public function testLogginWithErrorInQueryCallingExec() {
+		$this->setExpectedException('PDOException', null);
+		Nano::db()->exec('invalid query');
 	}
 
 	protected function clearLog($remove = true) {

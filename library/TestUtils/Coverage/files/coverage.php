@@ -53,12 +53,18 @@ if (isset($_GET['PHPUNIT_SELENIUM_TEST_ID'])) {
 	);
 
 	$filter   = new PHP_CodeCoverage_Filter();
+	$used     = array();
 	$coverage = array();
 
 	foreach ($files as $file) {
 		$filename = $file->getPathName();
-		$data     = unserialize(file_get_contents($filename));
+		if (isSet($used[$filename])) { //strange bug
+			continue;
+		}
+
+		$data = unserialize(file_get_contents($filename));
 		@unlink($filename);
+		$used[$filename] = true;
 		unset($filename);
 
 		foreach ($data as $filename => $lines) {

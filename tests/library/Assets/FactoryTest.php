@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @group framework
  * @group assets
@@ -41,7 +40,7 @@ class Assets_FactoryTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		$this->clearAssetsFactory();
-		if (ob_get_level()) {
+		if (ob_get_level() > 0 && ob_get_length()) {
 			ob_end_clean();
 		}
 	}

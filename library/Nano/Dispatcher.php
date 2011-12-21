@@ -129,7 +129,7 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return void
+	 * @return null|string
 	 * @param Nano_Routes $routes
 	 * @param string $url
 	 */
@@ -145,16 +145,16 @@ class Nano_Dispatcher {
 			$route = $this->getRoute($routes, $url);
 			if (null !== $route) {
 				$this->run($route);
-				return;
+				return null;
 			}
 			if ($this->custom) {
 				$result = $this->custom->dispatch();
 				if (false !== $result) {
 					return $result;
 				}
-				throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+				throw new Nano_Exception_NotFound('Custom dispatcher fails', $route);
 			}
-			throw new Exception(self::ERROR_NOT_FOUND, self::ERROR_NOT_FOUND);
+			throw new Nano_Exception_NotFound('Route not found');
 		} catch (Exception $e) {
 			Nano_Log::message($e);
 			$this->handleError($e);
@@ -192,11 +192,11 @@ class Nano_Dispatcher {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
-			throw new Exception('404');
+			throw new Nano_Exception_NotFound('Controller class not found', $route);
 		}
 		$class = new ReflectionClass($className);
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
-			throw new Exception('500');
+			throw new Nano_Exception_InternalError('Not a controller class: ' . $className);
 		}
 		return $class->newInstance($this);
 	}

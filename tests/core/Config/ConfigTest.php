@@ -81,14 +81,10 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldTrowExceptionWhenNotExistedFileLoading() {
-		self::assertException(
-			function() {
-				$config = new Nano_Config(__FILE__);
-				$config->set('test', 'value');
-			}
-			, 'Nano_Config_Exception'
-			, 'Configuration files not exists at ' . __FILE__
-		);
+		$this->setExpectedException('Nano_Config_Exception', 'Configuration files not exists at ' . __FILE__);
+
+		$config = new Nano_Config(__FILE__);
+		$config->set('test', 'value');
 	}
 
 	public function testGettingNotExistedPropertyShouldReturnNull() {

@@ -33,7 +33,9 @@ class Library_Orm_MapperTest extends TestUtils_TestCase {
 		$this->addressMapper = new Mapper_Library_Orm_Example_Address();
 		$this->wizardMapper  = new Mapper_Library_OrmExampleWizard();
 
-		Orm::instance()->addSource('test', $this->source);
+		Orm::clearSources();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 	}
 
 	public function testResourceInstanceShouldCreatedOnlyOnce() {
@@ -162,9 +164,8 @@ class Library_Orm_MapperTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		$this->addressMapper = null;
-		$this->wizardMapper  = null;
-		$this->modelData     = null;
+		unSet($this->source, $this->addressMapper, $this->wizardMapper, $this->modelData);
+		Orm::clearSources();
 	}
 
 }

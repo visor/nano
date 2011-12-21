@@ -20,10 +20,11 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/mapper/Address.php');
 		include_once $this->files->get($this, '/model/Address.php');
 
+		Orm::clearSources();
 		$this->mapper = new Mapper_Library_Orm_Example_Address();
 		$this->source = $this->createDataSource();
 		$this->source->pdo()->beginTransaction();
-		Orm::instance()->addSource('test', $this->source);
+		Orm::addSource('test', $this->source);
 	}
 
 	/**
@@ -148,7 +149,6 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 	}
 
 	public function testGetShouldReturnFalseWhenNoRecords() {
-		Nano_Log::message(__FUNCTION__);
 		self::assertFalse($this->source->get($this->mapper->getResource(), Orm::criteria()->equals('id', 1)));
 	}
 
@@ -188,10 +188,28 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 		self::assertFalse($this->source->find($this->mapper->getResource(), Orm::criteria()->equals('invalid', 'some')));
 	}
 
+	public function testFindCustomRows() {
+		$first    = (object)array('location' => 'Number 4, Privet Drive');
+		$second   = (object)array('location' => 'Game Hut at Hogwarts');
+
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
+		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
+		$found = $this->source->findCustom($this->mapper->getResource(), 'select * from address where location like "%t%" order by id desc');
+
+		self::assertCount(2, $found);
+		self::assertArrayHasKey('0', $found);
+		self::assertArrayHasKey('1', $found);
+
+		self::assertEquals($first->id,        $found[1]['id']);
+		self::assertEquals($first->location,  $found[1]['location']);
+		self::assertEquals($second->location, $found[0]['location']);
+		self::assertEquals($second->id,       $found[0]['id']);
+	}
+
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		$this->source = null;
-		$this->mapper = null;
+		unSet($this->source, $this->mapper);
+		Orm::clearSources();
 	}
 
 }

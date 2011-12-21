@@ -55,7 +55,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			if ($resource->isIncremental()) {
 				$id        = $resource->incrementalField();
-				$data->$id = $resource->castToModel($id, $this->pdo()->lastInsertId());
+				$data->$id = $this->castToModel($resource, $id, $this->pdo()->lastInsertId());
 			}
 			return true;
 		} catch (Exception $e) {
@@ -130,7 +130,21 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 	 */
 	public function find(Orm_Resource $resource, Orm_Criteria $criteria = null, Orm_FindOptions $findOptions = null) {
 		try {
-			return $this->pdo()->query($this->findQuery($resource, $criteria, $findOptions))->fetchAll(PDO::FETCH_ASSOC);
+			return $this->findCustom($resource, $this->findQuery($resource, $criteria, $findOptions));
+		} catch (Exception $e) {
+			Nano_Log::message($e);
+			return false;
+		}
+	}
+
+	/**
+	 * @return array|false
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query) {
+		try {
+			return $this->pdo()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 		} catch (Exception $e) {
 			Nano_Log::message($e);
 			return false;
@@ -149,7 +163,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 	/**
 	 * @return string
 	 */
-	protected function nullValue() {
+	public function nullValue() {
 		return self::NULL_VALUE;
 	}
 
@@ -220,7 +234,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			$value              = isSet($data->$field) ? $data->$field : $resource->defaultValue($field);
 			$result['fields'][] = $this->quoteName($field);
-			$result['values'][] = null === $value ? $this->nullValue() : $this->pdo()->quote($resource->castToDataSource($field, $value));
+			$result['values'][] = $this->pdo()->quote($this->castToDataSource($resource, $field, $value));
 		}
 		return $result;
 	}
@@ -238,7 +252,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 
 			$value    = isSet($data->$field) ? $data->$field : $resource->defaultValue($field);
-			$result[] = $this->quoteName($field) . ' = ' . (null === $value ? $this->nullValue() : $this->pdo()->quote($resource->castToDataSource($field, $value)));
+			$result[] = $this->quoteName($field) . ' = ' . $this->pdo()->quote($this->castToDataSource($resource, $field, $value));
 		}
 		return $result;
 	}

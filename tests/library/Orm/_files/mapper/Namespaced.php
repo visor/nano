@@ -15,7 +15,6 @@ class Mapper_Namespaced extends \Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'          => 'address'
-			, 'source'      => 'test'
 			, 'fields'      => array(
 				'id'         => array(
 					'type'       => 'integer'

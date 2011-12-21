@@ -42,20 +42,6 @@ class Orm_Resource {
 	}
 
 	/**
-	 * @return Orm_DataSource
-	 */
-	public function source() {
-		return Orm::instance()->source($this->meta['source']);
-	}
-
-	/**
-	 * @return Orm_DataSource
-	 */
-	public function sourceName() {
-		return $this->meta['source'];
-	}
-
-	/**
 	 * @return array
 	 */
 	public function fields() {
@@ -135,24 +121,6 @@ class Orm_Resource {
 			return null;
 		}
 		throw new Orm_Exception_UnknownField($this, $name);
-	}
-
-	/**
-	 * @return mixed
-	 * @param string $field
-	 * @param mixed $value
-	 */
-	public function castToModel($field, $value) {
-		return $this->source()->type($this->typeOf($field))->castToModel($value);
-	}
-
-	/**
-	 * @return mixed
-	 * @param string $field
-	 * @param mixed $value
-	 */
-	public function castToDataSource($field, $value) {
-		return $this->source()->type($this->typeOf($field))->castToDataSource($value);
 	}
 
 	/**

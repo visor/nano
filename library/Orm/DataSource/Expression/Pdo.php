@@ -37,7 +37,7 @@ class Orm_DataSource_Expression_Pdo extends Orm_DataSource_Expression {
 					$result .= ' ' . self::arrayToOperand($dataSource, $resource, $part);
 					continue;
 				} elseif (self::isBinaryOperator($part->operation())) {
-					$result .= ' ' . $dataSource->pdo()->quote($resource->castToDataSource($part->field(), $part->value()));
+					$result .= ' ' . $dataSource->pdo()->quote($dataSource->castToDataSource($resource, $part->field(), $part->value()));
 				}
 			} elseif ($part instanceof Orm_Criteria) {
 				$result .= '(' . self::create($dataSource, $resource, $part) . ')';
@@ -65,7 +65,7 @@ class Orm_DataSource_Expression_Pdo extends Orm_DataSource_Expression {
 				 * @var Orm_Resource $resource
 				 * @var Orm_Criteria_Expression $expression
 				 */
-				$element = $dataSource->pdo()->quote($resource->castToDataSource($expression->field(), $element));
+				$element = $dataSource->pdo()->quote($dataSource->castToDataSource($resource, $expression->field(), $element));
 			});
 			$data = implode(', ', $data);
 		}

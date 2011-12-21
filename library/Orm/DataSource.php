@@ -20,6 +20,22 @@ interface Orm_DataSource {
 	public function type($typeName);
 
 	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToModel(Orm_Resource $resource, $field, $value);
+
+	/**
+	 * @return mixed
+	 * @param Orm_Resource $resource
+	 * @param string $field
+	 * @param mixed $value
+	 */
+	public function castToDataSource(Orm_Resource $resource, $field, $value);
+
+	/**
 	 * @return boolean
 	 * @param Orm_Resource $resource
 	 * @param stdClass $data
@@ -57,6 +73,13 @@ interface Orm_DataSource {
 	public function find(Orm_Resource $resource, Orm_Criteria $criteria = null, Orm_FindOptions $findOptions = null);
 
 	/**
+	 * @return array|false
+	 * @param Orm_Resource $resource
+	 * @param mixed $query
+	 */
+	public function findCustom(Orm_Resource $resource, $query);
+
+	/**
 	 * @return mixed
 	 * @param Orm_Resource $resource
 	 * @param Orm_Criteria $criteria
@@ -68,5 +91,10 @@ interface Orm_DataSource {
 	 * @param string $name
 	 */
 	public function quoteName($name);
+
+	/**
+	 * @return mixed
+	 */
+	public function nullValue();
 
 }

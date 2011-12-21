@@ -8,7 +8,6 @@ class Mapper_Library_Orm_Example_Student extends Orm_Mapper {
 	protected function getMeta() {
 		return array(
 			'name'          => 'student'
-			, 'source'      => 'test'
 			, 'fields'      => array(
 				'wizardId' => array(
 					'type' => 'integer'

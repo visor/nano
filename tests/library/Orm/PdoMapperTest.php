@@ -17,10 +17,12 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/model/Wizard.php');
 		include_once $this->files->get($this, '/mapper/Wizard.php');
 
+		Orm::clearSources();
 		$this->source = new Orm_DataSource_Pdo_Mysql(array());
 		$this->source->usePdo(Nano::db());
-		Orm::instance()->addSource('test', $this->source);
 		$this->source->pdo()->beginTransaction();
+		Orm::addSource('test', $this->source);
+		Orm::setDefaultSource('test');
 	}
 
 	public function testSavingNewModelIntoDataSource() {
@@ -142,9 +144,14 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 		self::assertNull($collection->current());
 	}
 
+	public function testFindCustomModels() {
+		self::markTestIncomplete('Not implemented yet');
+	}
+
 	protected function tearDown() {
 		$this->source->pdo()->rollBack();
-		$this->source = null;
+		unSet($this->source);
+		Orm::clearSources();
 	}
 
 }

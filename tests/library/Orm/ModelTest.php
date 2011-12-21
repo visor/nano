@@ -19,7 +19,9 @@ class Library_Orm_Model_Test extends TestUtils_TestCase {
 		include_once $this->files->get($this, '/model/Student.php');
 		include_once $this->files->get($this, '/model/Namespaced.php');
 
-		Orm::instance()->addSource('test', new Library_Orm_TestDataSource(array()));
+		Orm::clearSources();
+		Orm::addSource('test', new Library_Orm_TestDataSource(array()));
+		Orm::setDefaultSource('test');
 	}
 
 	public function testGettingMapper() {
@@ -178,6 +180,10 @@ class Library_Orm_Model_Test extends TestUtils_TestCase {
 		self::assertEquals(1, $address->afterInsert);
 		self::assertEquals(1, $address->afterUpdate);
 		self::assertEquals(1, $address->afterSave);
+	}
+
+	protected function tearDown() {
+		Orm::clearSources();
 	}
 
 }

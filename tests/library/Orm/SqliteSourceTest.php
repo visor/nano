@@ -5,6 +5,7 @@ require_once __DIR__ . '/TestPdoSource.php';
 /**
  * @group framework
  * @group orm
+ * @group orm-source
  */
 class Library_Orm_SqliteSourceTest extends Library_Orm_TestPdoSource {
 

@@ -67,46 +67,30 @@ class Core_RenderTest extends TestUtils_TestCase {
 	}
 
 	public function testRenderShouldThrowExceptionWhenViewNotFound() {
+		$this->setExpectedException('Nano_Exception', 'View ' . $this->renderer->getViewFileName('test', 'test2') . ' not exists');
+
 		$this->controller->layout     = null;
 		$this->controller->controller = 'test';
 		$this->controller->template   = 'test2';
-		$renderer   = $this->renderer;
-		$controller = $this->controller;
-		$viewFile   = $this->renderer->getViewFileName('test', 'test2');
+		$this->renderer->render($this->controller);
+	}
 
-		self::assertException(
-			function() use ($renderer, $controller) {
-				$renderer->render($controller);
-			}
-			, 'Nano_Exception'
-			, 'View ' . $viewFile . ' not exists'
-		);
+	public function testRenderShouldThrowExceptionWhenInView() {
+		$this->setExpectedException('Application_Exception', 'Exception from view');
 
-		self::assertException(
-			function() use ($renderer, $controller) {
-				$controller->template = 'exception';
-				$renderer->render($controller);
-			}
-			, 'Application_Exception'
-			, 'Exception from view'
-		);
+		$this->controller->layout     = null;
+		$this->controller->controller = 'test';
+		$this->controller->template   = 'exception';
+		$this->renderer->render($this->controller);
 	}
 
 	public function testRenderShouldThrowExceptionWhenLayoutNotFound() {
+		$this->setExpectedException('Nano_Exception', 'View ' . $this->renderer->getLayoutFileName('test2') . ' not exists');
+
 		$this->controller->layout     = 'test2';
 		$this->controller->controller = 'test';
 		$this->controller->template   = 'test';
-		$renderer   = $this->renderer;
-		$controller = $this->controller;
-		$layoutFile = $this->renderer->getLayoutFileName('test2');
-
-		self::assertException(
-			function() use ($renderer, $controller) {
-				$renderer->render($controller);
-			}
-			, 'Nano_Exception'
-			, 'View ' . $layoutFile . ' not exists'
-		);
+		$this->renderer->render($this->controller);
 	}
 
 	public function testRenderingSimpleView() {
