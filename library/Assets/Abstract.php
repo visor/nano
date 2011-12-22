@@ -315,9 +315,10 @@ abstract class Assets_Abstract {
 	 * @param string $group
 	 */
 	protected function getGroupUrl($base, $group) {
-		return Nano::helper()->resource()->cdn(
-			Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group)
-		);
+//		return Nano::helper()->resource()->cdn(
+//			Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group)
+//		);
+		return Nano::config('assets')->url . '/'. $this->type . '/' . $base . '/' . $group . '.' . $this->ext . '?' . $this->getGroupTime($base, $group);
 	}
 
 	/**

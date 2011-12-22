@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * todo: move into separate module
+ */
 class Assets {
 
 	/**
