@@ -53,8 +53,8 @@ class DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingContextBySuffix() {
-		self::markTestSkipped('Refactor me');
 		$this->dispatcher->application()->withRootDir($this->files->get($this, ''));
+		$this->dispatcher->setResponse(new Nano_C_Response_Test());
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$routes = new Nano_Routes();
@@ -68,6 +68,36 @@ class DispatcherTest extends TestUtils_TestCase {
 
 		$this->dispatcher->run($this->dispatcher->getRoute($routes, 'index.rss'));
 		self::assertEquals('rss', $this->dispatcher->controllerInstance()->context);
+	}
+
+	public function testShouldReturnStatusCodeWhenNotFound() {
+		$this->dispatcher
+			->throwExceptions(true)
+			->setResponse(new Nano_C_Response_Test())
+		;
+		$routes = new Nano_Routes();
+		$routes->get('', 'response-test', 'not-found');
+
+		$this->dispatcher->dispatch($routes, '');
+		self::assertTrue($this->dispatcher->getResponse()->isModified());
+		self::assertEquals(404, $this->dispatcher->getResponse()->getStatus());
+	}
+
+	public function testShouldReturnStatusCodeWhenInternalError() {
+		$this->dispatcher
+			->throwExceptions(true)
+			->setResponse(new Nano_C_Response_Test())
+		;
+		$routes = new Nano_Routes();
+		$routes->get('', 'response-test', 'error');
+
+		$this->dispatcher->dispatch($routes, '');
+		self::assertTrue($this->dispatcher->getResponse()->isModified());
+		self::assertEquals(500, $this->dispatcher->getResponse()->getStatus());
+	}
+
+	protected function tearDown() {
+		unSet($this->dispatcher);
 	}
 
 }

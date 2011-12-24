@@ -56,6 +56,11 @@ class Nano_Dispatcher {
 	protected $throw              = false;
 
 	/**
+	 * @var Nano_C_Response
+	 */
+	protected $response           = null;
+
+	/**
 	 * @return string
 	 * @param string $name
 	 * @param boolean $controller
@@ -176,6 +181,7 @@ class Nano_Dispatcher {
 			return null;
 		}
 		$this->controllerInstance = $this->getController($route);
+		$this->controllerInstance->setResponse($this->getResponse());
 		if ($this->param('context')) {
 			$this->controllerInstance->context = $this->param('context');
 		} elseif ($this->context) {
@@ -283,6 +289,25 @@ class Nano_Dispatcher {
 	}
 
 	/**
+	 * @return Nano_C_Response
+	 */
+	public function getResponse() {
+		if (null === $this->response) {
+			$this->setResponse(new Nano_C_Response());
+		}
+		return $this->response;
+	}
+
+	/**
+	 * @return Nano_Dispatcher
+	 * @param Nano_C_Response $value
+	 */
+	public function setResponse(Nano_C_Response $value) {
+		$this->response = $value;
+		return $this;
+	}
+
+	/**
 	 * @return void
 	 * @param array $data
 	 */
@@ -323,26 +348,27 @@ class Nano_Dispatcher {
 	 * @throws Exception
 	 */
 	protected function handleError(Exception $error) {
-		//todo: need refactor!
-		if ($this->throw) {
-			if (false === Nano::isTesting()) {
-				header('Content-Type: text/plain', true);
+		if ($this->throw || null === Nano::config('web')->errorController) {
+			$this->getResponse()->addHeader('Content-Type', 'text/plain');
+			$this->getResponse()->setBody($error);
+			if ($error instanceof Nano_Exception_NotFound) {
+				$this->getResponse()->setStatus(Nano_C_Response::STATUS_NOT_FOUND);
+			} else {
+				$this->getResponse()->setStatus(Nano_C_Response::STATUS_ERROR);
 			}
-			throw $error;
+			$this->getResponse()->send();
+			return;
 		}
 
 		$controllerName = Nano::config('web')->errorController;
-		if (!$controllerName) {
-			if (false === Nano::isTesting()) {
-				header('Content-Type: text/plain', true);
-			}
-			throw $error;
-		}
+		$className      = self::formatName($controllerName, true);
+		$controller     = new $className($this); /* @var $controller Nano_C */
+		$action         = 'custom';
 
-		$className  = self::formatName($controllerName, true);
-		$controller = new $className($this); /* @var $controller Nano_C */
-		$action     = 'e404';
-		if (self::ERROR_INTERNAL == $error->getCode()) {
+		if ($error instanceof Nano_Exception_NotFound) {
+			$action = 'e404';
+		}
+		if ($error instanceof Nano_Exception_InternalError) {
 			$action = 'e500';
 		}
 
@@ -350,6 +376,8 @@ class Nano_Dispatcher {
 		$this->controllerInstance = $controller;
 		$this->action             = $action;
 		$controller->error        = $error;
+
+		$controller->setResponse($this->getResponse());
 		$controller->run($action);
 	}
 

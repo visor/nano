@@ -20,4 +20,12 @@ class ResponseTestController extends Nano_C {
 		$this->markRendered();
 	}
 
+	public function notFoundAction() {
+		$this->pageNotFound('always');
+	}
+
+	public function errorAction() {
+		$this->internalError('always');
+	}
+
 }
