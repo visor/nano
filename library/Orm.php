@@ -26,32 +26,13 @@ class Orm {
 	private static $resourcesSource = array();
 
 	/**
-	 * @return Orm_Mapper
-	 * @param string $model
+	 * @return void
+	 * @param array $options
 	 */
-	public static function mapper($model) {
-		$key = strToLower($model);
-
-		if (isSet(self::$mappers[$key])) {
-			return self::$mappers[$key];
+	public static function configure(array $options) {
+		foreach ($options as $key => $dataSourceOptions) {
+			self::buildDataSource($key, (array)$dataSourceOptions);
 		}
-
-		$class = self::mapperClass($model);
-		return (self::$mappers[$key] = new $class);
-	}
-
-	/**
-	 * @return Orm_Criteria
-	 */
-	public static function criteria() {
-		return Orm_Criteria::create();
-	}
-
-	/**
-	 * @return Orm_FindOptions
-	 */
-	public static function findOptions() {
-		return Orm_FindOptions::create();
 	}
 
 	/**
@@ -90,6 +71,7 @@ class Orm {
 	}
 
 	/**
+	 * @return void
 	 * @param array|string $models
 	 * @param null|string $source
 	 */
@@ -103,7 +85,6 @@ class Orm {
 
 		self::$resourcesSource[$models] = $source;
 	}
-
 
 	/**
 	 * @return Orm_DataSource
@@ -132,17 +113,87 @@ class Orm {
 	}
 
 	/**
+	 * @return Orm_Mapper
+	 * @param string $model
+	 */
+	public static function mapper($model) {
+		$key = trim(strToLower($model), '\\');
+		if (isSet(self::$mappers[$key])) {
+			return self::$mappers[$key];
+		}
+
+		$class = self::mapperClass($model);
+		return (self::$mappers[$key] = new $class);
+	}
+
+	/**
+	 * @return Orm_Criteria
+	 */
+	public static function criteria() {
+		return Orm_Criteria::create();
+	}
+
+	/**
+	 * @return Orm_FindOptions
+	 */
+	public static function findOptions() {
+		return Orm_FindOptions::create();
+	}
+
+	/**
 	 * @return string
-	 * @param stirng $model
+	 * @param string $model
 	 */
 	protected static function mapperClass($model) {
 		$pos = strRPos($model, '\\');
 		if (false === $pos) {
 			return self::MAPPER_PREFIX . '_' . $model;
 		}
+
 		$namespace = subStr($model, 0, $pos);
 		$class     = subStr($model, $pos + 1);
 		return $namespace . '\\' . self::MAPPER_PREFIX . '_' . $class;
+	}
+
+	/**
+	 * @return void
+	 * @param string $key
+	 * @param array $options
+	 *
+	 * @throws Orm_Exception_InvalidDataSourceConfiguration
+	 * @throws Orm_Exception_UnknownDataSource
+	 */
+	protected static function buildDataSource($key, array $options) {
+		if (!isSet($options['datasource'])) {
+			throw new Orm_Exception_InvalidDataSourceConfiguration($key);
+		}
+		$class   = $options['datasource'];
+		$default = isSet($options['default']) ? true : false;
+		$models  = isSet($options['models']) ? $options['models'] : null;
+
+		if (false === class_exists($class)) {
+			throw new Orm_Exception_UnknownDataSource($class);
+		}
+		unSet(
+			$options['datasource']
+			, $options['default']
+			, $options['models']
+		);
+
+		$source = new $class($options);
+		if (!($source instanceof Orm_DataSource)) {
+			throw new Orm_Exception_UnknownDataSource($class);
+		}
+
+		self::addSource($key, $source);
+		if ($default) {
+			self::setDefaultSource($key);
+		}
+		if ($models) {
+			foreach ($models as $model) {
+				self::setSourceFor($model, $key);
+			}
+		}
 	}
 
 }

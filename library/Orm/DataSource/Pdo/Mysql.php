@@ -17,6 +17,15 @@ class Orm_DataSource_Pdo_Mysql extends Orm_DataSource_Pdo {
 		, 'set'         => 'Pdo_Mysql_Set'
 	);
 
+	public function __construct(array $config) {
+		if (!isSet($config['options'])) {
+			$config['options'] = array();
+		}
+		$config['options'][PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES utf8';
+
+		parent::__construct($config);
+	}
+
 	/**
 	 * @return string
 	 * @param string $value

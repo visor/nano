@@ -9,3 +9,5 @@ Application::create()
 	->withPlugin(new ControlPanelAssets())
 	->configure()
 ;
+
+Orm::configure((array)Nano::config('orm'));

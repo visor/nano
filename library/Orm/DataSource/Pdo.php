@@ -234,7 +234,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			$value              = isSet($data->$field) ? $data->$field : $resource->defaultValue($field);
 			$result['fields'][] = $this->quoteName($field);
-			$result['values'][] = $this->pdo()->quote($this->castToDataSource($resource, $field, $value));
+			$result['values'][] = null === $value ? $this->nullValue() : $this->pdo()->quote($this->castToDataSource($resource, $field, $value));
 		}
 		return $result;
 	}
@@ -252,7 +252,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 
 			$value    = isSet($data->$field) ? $data->$field : $resource->defaultValue($field);
-			$result[] = $this->quoteName($field) . ' = ' . $this->pdo()->quote($this->castToDataSource($resource, $field, $value));
+			$result[] = $this->quoteName($field) . ' = ' . (null === $value ? $this->nullValue() : $this->pdo()->quote($this->castToDataSource($resource, $field, $value)));
 		}
 		return $result;
 	}

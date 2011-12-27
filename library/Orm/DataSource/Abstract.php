@@ -18,6 +18,13 @@ abstract class Orm_DataSource_Abstract implements Orm_DataSource {
 	protected $config;
 
 	/**
+	 * @param array $config
+	 */
+	public function __construct(array $config) {
+		$this->config = $config;
+	}
+
+	/**
 	 * @return boolean
 	 * @param string $typeName
 	 */
@@ -64,13 +71,6 @@ abstract class Orm_DataSource_Abstract implements Orm_DataSource {
 			return $this->nullValue();
 		}
 		return $this->type($resource->typeOf($field))->castToDataSource($value);
-	}
-
-	/**
-	 * @param array $config
-	 */
-	public function __construct(array $config) {
-		$this->config = $config;
 	}
 
 	/**

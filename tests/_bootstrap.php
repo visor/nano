@@ -13,3 +13,4 @@ if (SELENIUM_ENABLE) {
 }
 
 Nano_Db::setDefault('test');
+Orm::setDefaultSource('test');
