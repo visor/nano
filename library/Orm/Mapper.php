@@ -128,11 +128,15 @@ abstract class Orm_Mapper {
 	 * @param null|Orm_FindOptions $findOptions
 	 */
 	public function find(Orm_Criteria $criteria = null, Orm_FindOptions $findOptions = null) {
-		$elements = $this->dataSource()->find($this->getResource(), $criteria, $findOptions);
-		if (false === $elements) {
-			return false;
-		}
-		return new Orm_Collection($this, $elements);
+		return $this->collectionFactory(
+			$this->dataSource()->find($this->getResource(), $criteria, $findOptions)
+		);
+	}
+
+	public function findCustom($query) {
+		return $this->collectionFactory(
+			$this->dataSource()->findCustom($this->getResource(), $query)
+		);
 	}
 
 	/**
@@ -276,6 +280,17 @@ abstract class Orm_Mapper {
 	}
 
 	protected function findHasMany($relationName) {
+	}
+
+	/**
+	 * @return Orm_Collection|boolean
+	 * @param array|boolean $elements
+	 */
+	protected function collectionFactory($elements) {
+		if (false === $elements) {
+			return false;
+		}
+		return new Orm_Collection($this, $elements);
 	}
 
 	protected function beforeInsert(Orm_Model $model) {}

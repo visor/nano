@@ -138,6 +138,7 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 		self::assertTrue($address2->save());
 
 		$collection = Library_Orm_Example_Address::mapper()->find();
+		/** @var Orm_Collection $collection */
 		foreach ($collection as $item) {
 			self::assertInstanceOf('Library_Orm_Example_Address', $item);
 		}
@@ -145,7 +146,22 @@ class Library_Orm_PdoMapperTest extends TestUtils_TestCase {
 	}
 
 	public function testFindCustomModels() {
-		self::markTestIncomplete('Not implemented yet');
+		$address1 = new Library_Orm_Example_Address();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_Address();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$collection = Library_Orm_Example_Address::mapper()->findCustom('select * from address where location like "%t%" order by id desc');
+		/** @var Orm_Collection $collection */
+		self::assertInstanceOf('Orm_Collection', $collection);
+		self::assertEquals(2, $collection->count());
+
+		self::assertInstanceOf('Library_Orm_Example_Address', $collection[0]);
+		self::assertInstanceOf('Library_Orm_Example_Address', $collection[1]);
+		self::assertEquals($collection[0]->location, $address2->location);
+		self::assertEquals($collection[1]->location, $address1->location);
 	}
 
 	protected function tearDown() {

@@ -196,6 +196,7 @@ abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
 		$found = $this->source->findCustom($this->mapper->getResource(), 'select * from address where location like "%t%" order by id desc');
 
+		self::assertInternalType('array', $found);
 		self::assertCount(2, $found);
 		self::assertArrayHasKey('0', $found);
 		self::assertArrayHasKey('1', $found);

@@ -148,13 +148,37 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 	}
 
 	/**
-	 * @return MongoCursor
+	 * @return array|boolean
 	 * @param Orm_Resource $resource
 	 * @param mixed $query
 	 */
 	public function findCustom(Orm_Resource $resource, $query) {
 		try {
-			return $this->collection($resource->name())->find($query);
+			$options = isSet($query['$options']) ? $query['$options'] : null;
+			unSet($query['$options']);
+			$result  = $this->collection($resource->name())->find($query);
+
+			if (null !== $options) {
+				if (isSet($options['hint'])) {
+					$result->hint($options['hint']);
+				}
+				if (isSet($options['limit'])) {
+					$result->limit($options['limit']);
+				}
+				if (isSet($options['skip'])) {
+					$result->skip($options['skip']);
+				}
+				if (isSet($options['sort'])) {
+					$result->sort($options['sort']);
+				}
+			}
+
+			$result = iterator_to_array($result);
+			Nano_Log::message(var_export($result, true));
+			if (null === $result) {
+				return false;
+			}
+			return array_values($result);
 		} catch (Exception $e) {
 			Nano_Log::message($e);
 			return false;

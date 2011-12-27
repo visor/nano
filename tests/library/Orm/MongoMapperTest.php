@@ -70,7 +70,25 @@ class Library_Orm_MongoMapperTest extends TestUtils_TestCase {
 	}
 
 	public function testFindCustomModels() {
-		self::markTestIncomplete('Not implemented yet');
+		$address1 = new Library_Orm_Example_AddressMongo();
+		$address1->location = 'Number 4, Privet Drive';
+		$address2 = new Library_Orm_Example_AddressMongo();
+		$address2->location = 'The Burrow';
+		self::assertTrue($address1->save());
+		self::assertTrue($address2->save());
+
+		$collection = Library_Orm_Example_AddressMongo::mapper()->findCustom(array(
+			'location'   => array('$regex' => '.*t.*', '$options' => 'i')
+			, '$options' => array('sort' => array('location' => 1))
+		));
+		/** @var Orm_Collection $collection */
+		self::assertInstanceOf('Orm_Collection', $collection);
+		self::assertEquals(2, $collection->count());
+
+		self::assertInstanceOf('Library_Orm_Example_AddressMongo', $collection[0]);
+		self::assertInstanceOf('Library_Orm_Example_AddressMongo', $collection[1]);
+		self::assertEquals($collection[0]->location, $address1->location);
+		self::assertEquals($collection[1]->location, $address2->location);
 	}
 
 	protected function tearDown() {

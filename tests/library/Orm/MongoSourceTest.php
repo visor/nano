@@ -215,13 +215,19 @@ class Library_Orm_MongoSourceTest extends TestUtils_TestCase {
 	public function testFindCustomRows() {
 		$first    = (object)array('location' => 'Number 4, Privet Drive');
 		$second   = (object)array('location' => 'Game Hut at Hogwarts');
-
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $first));
 		self::assertTrue($this->source->insert($this->mapper->getResource(), $second));
-		$found = $this->source->findCustom($this->mapper->getResource(), array('location' => array('$regex' => '/.*t.*/i')));
-		self::assertInstanceOf('MongoCursor', $found);
 
-		$found->sort(array('_id' => -1));
+		$found = $this->source->findCustom($this->mapper->getResource(), array(
+			'location'   => array('$regex' => '.*t.*')
+			, '$options' => array('sort' => array('location' => -1))
+		));
+
+		self::assertInternalType('array', $found);
+		self::assertCount(2, $found);
+		self::assertArrayHasKey('0', $found);
+		self::assertArrayHasKey('1', $found);
+
 		$expectedData = array($first, $second);
 		foreach ($found as $actual) {
 			$expected = array_shift($expectedData);
