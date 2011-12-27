@@ -27,8 +27,8 @@ class Nano_HelperBroker {
 	 * @thows Application_Exception_ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = $this->dispatcher->application()->getModules()->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
-		if (!$this->dispatcher->application()->getModules()->active($moduleName)) {
+		$moduleName = $this->getDispatcher()->application()->getModules()->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
+		if (!$this->getDispatcher()->application()->getModules()->active($moduleName)) {
 			throw new Application_Exception_ModuleNotFound($moduleName);
 		}
 
@@ -36,7 +36,7 @@ class Nano_HelperBroker {
 			return $this->modules[$moduleName];
 		}
 
-		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->dispatcher->application(), $moduleName);
+		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->getDispatcher()->application(), $moduleName);
 		return $this->modules[$moduleName];
 	}
 
