@@ -152,18 +152,21 @@ class Nano_Cli {
 		if (null === $this->applicationDir) {
 			return;
 		}
-
 		if (false === include($this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
 			return;
 		}
 		if (!Application::current()) {
 			return;
 		}
-		if (!is_dir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR)) {
-			return;
-		}
 
-		$this->loadScriptsFromDir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR);
+		if (is_dir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR)) {
+			$this->loadScriptsFromDir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR);
+		}
+		foreach (Application::current()->getModules() as $name => $path) {
+			if (is_dir($path . DIRECTORY_SEPARATOR . self::DIR)) {
+				$this->loadScriptsFromDir($path . DIRECTORY_SEPARATOR . self::DIR);
+			}
+		}
 	}
 
 	protected function loadScriptsFromDir($path) {

@@ -45,6 +45,14 @@ class Orm {
 	}
 
 	/**
+	 * @static
+	 * @return string[]
+	 */
+	public static function getSourceNames() {
+		return array_keys(self::$dataSources);
+	}
+
+	/**
 	 * @return Orm_DataSource
 	 * @param string $key
 	 *

@@ -2,6 +2,8 @@
 
 class TestUtils_TextUI_ResultPrinter extends PHPUnit_TextUI_ResultPrinter {
 
+	protected $lastEvent;
+
 	const STATUS_OK         = 'OK';
 	const STATUS_FAILURE    = 'FAILS';
 	const STATUS_ERROR      = 'ERROR';

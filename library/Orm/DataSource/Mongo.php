@@ -174,7 +174,6 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			}
 
 			$result = iterator_to_array($result);
-			Nano_Log::message(var_export($result, true));
 			if (null === $result) {
 				return false;
 			}

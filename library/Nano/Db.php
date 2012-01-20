@@ -52,10 +52,10 @@ class Nano_Db extends PDO {
 		self::$default = $name;
 	}
 
-	public static function clean() {
-		$class = self::getTypeClass();
-		$class::clean(self::instance());
-	}
+//	public static function clean() {
+//		$class = self::getTypeClass();
+//		$class::clean(self::instance());
+//	}
 
 	public static function close($name = null) {
 		if (null === $name) {
@@ -181,7 +181,7 @@ class Nano_Db extends PDO {
 	 * @param  string $statement
 	 */
 	public function query($statement) {
-		if (Nano::db()->log()->enabled()) {
+		if ($this->log()->enabled()) {
 			$exception = null;
 			$now = microtime(true);
 			try {
@@ -189,10 +189,10 @@ class Nano_Db extends PDO {
 			} catch (Exception $e) {
 				$exception = $e;
 			}
-			Nano::db()->log()->append($statement, microTime(true) - $now);
+			$this->log()->append($statement, microTime(true) - $now);
 			if ($exception) {
-				if (Nano::db()->log()->enabled()) {
-					Nano::db()->log()->append($exception->__toString(), null, true);
+				if ($this->log()->enabled()) {
+					$this->log()->append($exception->__toString(), null, true);
 				}
 				throw $exception;
 			}
@@ -202,7 +202,7 @@ class Nano_Db extends PDO {
 	}
 
 	public function exec($statement) {
-		if (Nano::db()->log()->enabled()) {
+		if ($this->log()->enabled()) {
 			$exception = null;
 			$now = microtime(true);
 			try {
@@ -210,10 +210,10 @@ class Nano_Db extends PDO {
 			} catch (Exception $e) {
 				$exception = $e;
 			}
-			Nano::db()->log()->append($statement, microTime(true) - $now);
+			$this->log()->append($statement, microTime(true) - $now);
 			if ($exception) {
-				if (Nano::db()->log()->enabled()) {
-					Nano::db()->log()->append($exception->__toString(), null, true);
+				if ($this->log()->enabled()) {
+					$this->log()->append($exception->__toString(), null, true);
 				}
 				throw $exception;
 			}
@@ -227,7 +227,7 @@ class Nano_Db extends PDO {
 	 * @param string $string
 	 */
 	public function quoteName($string) {
-		$class = self::getTypeClass();
+		$class = $this->getTypeClass();
 		return $class::quoteName($string);
 	}
 
@@ -264,10 +264,10 @@ class Nano_Db extends PDO {
 	/**
 	 * @return string
 	 */
-	protected static function getTypeClass() {
-		$result = 'Nano_Db_' . Nano::db()->getType();
+	protected function getTypeClass() {
+		$result = 'Nano_Db_' . $this->getType();
 		if (!class_exists($result, false)) {
-			require('Nano/Db/' . Nano::db()->getType() . '.php');
+			require('Nano/Db/' . $this->getType() . '.php');
 		}
 		return $result;
 	}
