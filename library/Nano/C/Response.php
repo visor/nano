@@ -198,7 +198,11 @@ class Nano_C_Response {
 	 * @param string $value
 	 */
 	public function setBody($value) {
-		$this->body = $value;
+		if (null === $value) {
+			$this->body = null;
+		} else {
+			$this->body = (string)$value;
+		}
 		return $this;
 	}
 

@@ -182,11 +182,7 @@ class Orm {
 		if (false === class_exists($class)) {
 			throw new Orm_Exception_UnknownDataSource($class);
 		}
-		unSet(
-			$options['datasource']
-			, $options['default']
-			, $options['models']
-		);
+		unSet($options['datasource'], $options['default'], $options['models']);
 
 		$source = new $class($options);
 		if (!($source instanceof Orm_DataSource)) {
