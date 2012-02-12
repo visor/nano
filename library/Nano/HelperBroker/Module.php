@@ -65,9 +65,9 @@ class Nano_HelperBroker_Module {
 	 */
 	protected function search($name) {
 		$className = ucFirst($name) . 'Helper';
-		$classPath = $this->application->getModules()->getPath(
+		$classPath = $this->application->modules->getPath(
 			$this->module
-			, Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . $this->application->loader()->classToPath($className)
+			, Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . $this->application->loader->classToPath($className)
 		);
 
 		if (!file_exists($classPath)) {

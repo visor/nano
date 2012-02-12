@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  * @group config
  */
 class Core_Config_Format_FactoryTest extends TestUtils_TestCase {

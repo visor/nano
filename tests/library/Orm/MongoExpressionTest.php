@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  * @group orm
  */
 class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
@@ -31,7 +31,6 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 	}
 
 	public function testBinaryOperationsShouldParsedWithBothOperands() {
-		Nano_Log::message(__FUNCTION__);
 		$values = array(
 			array(array('location' => 'b'),                        Orm::criteria()->equals('location', 'b'))
 			, array(array('location' => array('$ne' => 'b')),      Orm::criteria()->notEquals('location', 'b'))
@@ -49,7 +48,6 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 	}
 
 	public function testSameOperationValuesShouldBeStoredInSameArray() {
-		Nano_Log::message(__FUNCTION__);
 		$values = array(
 			array(
 				array('$and' => array('location' => array('b', 'a', 'c'))),
@@ -73,7 +71,6 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 	}
 
 	public function testUnaryOperationsShoildParsedWithFirstOperandOnly() {
-		Nano_Log::message(__FUNCTION__);
 		$values = array(
 			array(
 				array('location' => array('$type' => 10))
@@ -93,7 +90,6 @@ class Library_Orm_MongoExpressionTest extends TestUtils_TestCase {
 	}
 
 	public function testArrayOperations() {
-		Nano_Log::message(__FUNCTION__);
 		$values = array(
 			array(array('location' => array('$in' => array('1', '2'))),    Orm::criteria()->in('location', array(1, 2)))
 			, array(array('location' => array('$nin' => array('2', '3'))), Orm::criteria()->notIn('location', array(2, 3)))

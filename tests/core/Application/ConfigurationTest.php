@@ -4,81 +4,73 @@ require_once __DIR__ . '/Abstract.php';
 
 /**
  * @group core
- * @group core-application
  */
 class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 
-	public static function setUpBeforeClass() {
-		self::backupCurrentApplication();
+	public function testFactoryMethod() {
+		self::assertInstanceOf('Application', Application::create());
+		self::assertNotSame(Application::create(), Application::create());
 	}
 
-	public function testGettingCurrent() {
-		self::assertNull(Application::current());
-		$this->application = Application::create();
-		self::assertInstanceOf('Application', Application::current());
-		self::assertSame($this->application, Application::current());
+	public function testConfigureShouldThrowExceptionWhenNoConfigurationFormatSpecified() {
+		$this->setExpectedException('Application_Exception_InvalidConfiguration', 'Configuration format not specified');
+		$this->application->configure();
 	}
 
-	public function testApplicationRootDir() {
+	public function testSettingApplicationRootDir() {
 		self::assertInstanceOf('Application', $this->application->withRootDir('/some/path'));
-		self::assertEquals('/some/path', self::getObjectProperty($this->application, 'rootDir'));
+		self::assertEquals('/some/path', $this->application->rootDir);
 	}
 
 	public function testDetectingDefaultApplicationRootDir() {
-		self::assertNull(self::getObjectProperty($this->application, 'rootDir'));
-		self::assertEquals(getCwd(), $this->application->getRootDir());
-		self::assertEquals(getCwd(), self::getObjectProperty($this->application, 'rootDir'));
+		self::assertFalse($this->application->offsetExists('rootDir'));
+		$this->application
+			->withConfigurationFormat('php')
+			->configure()
+		;
+		self::assertEquals(getCwd(), $this->application->rootDir);
 	}
 
 	public function testDetectingNanoDir() {
-		self::assertEquals(getCwd(), $this->application->getNanoRootDir());
-		self::assertEquals(getCwd(), self::getObjectProperty($this->application, 'nanoRootDir'));
+		self::assertEquals(getCwd(), $this->application->nanoRootDir);
 	}
 
 	public function testDetectingPublicDir() {
 		$expected = __DIR__ . DIRECTORY_SEPARATOR . Application::PUBLIC_DIR_NAME;
-		$this->application->withRootDir(__DIR__);
-		self::assertNull(self::getObjectProperty($this->application, 'publicDir'));
-		self::assertEquals($expected, $this->application->getPublicDir());
-		self::assertEquals($expected, self::getObjectProperty($this->application, 'publicDir'));
+		$this->application
+			->withConfigurationFormat('php')
+			->withRootDir(__DIR__)
+		;
+
+		self::assertFalse($this->application->offsetExists('publicDir'));
+		$this->application->configure();
+		self::assertTrue($this->application->offsetExists('publicDir'));
+		self::assertEquals($expected, $this->application->publicDir);
 	}
 
 	public function testConfigurationFormat() {
 		$expected = 'Nano_Config_Format_Json';
-		self::assertNull(self::getObjectProperty($this->application, 'configFormat'));
-		self::assertInstanceOf('Application', $this->application->usingConfigurationFormat('json'));
-		self::assertInstanceOf($expected, self::getObjectProperty($this->application, 'configFormat'));
-		self::assertInstanceOf($expected, $this->application->getConfigurationFormat());
-
-		$expected = 'Nano_Config_Format_Php';
-		self::setObjectProperty($this->application, 'configFormat', null);
-		self::assertInstanceOf($expected, $this->application->getConfigurationFormat());
-		self::assertInstanceOf($expected, self::getObjectProperty($this->application, 'configFormat'));
+		self::assertFalse($this->application->offsetExists('configFormat'));
+		self::assertInstanceOf('Application', $this->application->withConfigurationFormat('json'));
+		self::assertInstanceOf($expected, $this->application->configFormat);
 	}
 
 	public function testAddingPugins() {
 		include_once $this->files->get($this, '/FakePlugin.php');
 
 		$plugin = new Core_Application_FakePlugin();
-		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
+
+		self::assertTrue($this->application->offsetExists('plugins'));
 		self::assertInstanceOf('Application', $this->application->withPlugin($plugin));
-		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
+		self::assertInstanceOf('SplObjectStorage', $this->application->plugins);
 
-		/** @var Nano_C_Plugin[]|SplObjectStorage $plugins */
-		$plugins = self::getObjectProperty($this->application, 'plugins');
-
-		self::assertEquals(1, $plugins->count());
-		self::assertTrue($plugins->contains($plugin));
+		self::assertEquals(1, $this->application->plugins->count());
+		self::assertTrue($this->application->plugins->contains($plugin));
 	}
 
 	public function testGettingPlugins() {
-		self::assertNull(self::getObjectProperty($this->application, 'plugins'));
-		self::assertInstanceOf('SplObjectStorage', $this->application->getPlugins());
-		self::assertInstanceOf('SplObjectStorage', self::getObjectProperty($this->application, 'plugins'));
-	}
-
-	public static function tearDownAfterClass() {
-		self::restoreCurrentApplication();
+		self::assertTrue($this->application->offsetExists('plugins'));
+		self::assertInstanceOf('SplObjectStorage', $this->application->plugins);
 	}
 
 }

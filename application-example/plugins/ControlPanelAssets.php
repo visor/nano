@@ -12,7 +12,7 @@ class ControlPanelAssets implements Nano_C_Plugin {
 		}
 
 		session_start();
-		Nano::message()->load('control-panel');
+		$controller->dispatcher()->application()->message->load('control-panel');
 		Assets::style()
 			->variable('images', '/resources/images')
 			->append(WEB_ROOT . '/resources/styles/960.css')

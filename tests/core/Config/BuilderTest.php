@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  * @group config
  */
 class Core_Config_BuilderTest extends TestUtils_TestCase {

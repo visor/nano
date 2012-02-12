@@ -52,12 +52,4 @@ class Nano_Config_Format_Php implements Nano_Config_Format {
 		return true;
 	}
 
-	/**
-	 * @return boolean
-	 * @param string $sourceFileName
-	 * @param string $destinationFileName
-	 */
-	public function merge($sourceFileName, $destinationFileName) {
-	}
-
 }

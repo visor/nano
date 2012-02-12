@@ -2,8 +2,6 @@
 
 /**
  * @group core
- * @group framework
- * @group rendering
  */
 class Core_RenderTest extends TestUtils_TestCase {
 
@@ -25,17 +23,20 @@ class Core_RenderTest extends TestUtils_TestCase {
 	protected function setUp() {
 		require_once $this->files->get($this, '/controllers/TestController.php');
 		$this->application = new Application();
-		$this->controller  = new TestController(new Nano_Dispatcher($this->application));
-		$this->renderer    = new Nano_Render($this->application);
 
 		$this->application
+			->withConfigurationFormat('php')
 			->withModule('module1', $this->files->get($this, '/module1'))
 			->withModule('module2', $this->files->get($this, '/module2'))
+			->configure()
 		;
 
+		$this->renderer = new Nano_Render($this->application);
 		$this->renderer->setViewsPath($this->files->get($this, '/views'));
 		$this->renderer->setModuleViewsDirName('views/default');
 		$this->renderer->setLayoutsPath($this->files->get($this, '/layouts'));
+
+		$this->controller = new TestController(new Nano_Dispatcher($this->application));
 	}
 
 	public function testGettingApplicationViewPath() {

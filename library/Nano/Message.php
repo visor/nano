@@ -3,9 +3,9 @@
 class Nano_Message {
 
 	/**
-	 * @var Nano_Message
+	 * @var Application
 	 */
-	private static $instance = null;
+	protected $application = null;
 
 	/**
 	 * @var string
@@ -22,18 +22,11 @@ class Nano_Message {
 	 */
 	protected $plural = null;
 
-	/**
-	 * @return Nano_Message
-	 * @param boolean $reset
-	 */
-	public static function instance($reset = false) {
-		if (null == self::$instance || true === $reset) {
-			self::$instance = new self();
-			if (isset(Nano::config('web')->lang)) {
-				self::$instance->lang(Nano::config('web')->lang);
-			}
+	public function __construct(Application $application) {
+		$this->application = $application;
+		if (isSet($application->config->get('web')->lang)) {
+			$this->lang($application->config->get('web')->lang);
 		}
-		return self::$instance;
 	}
 
 	/**
@@ -53,7 +46,7 @@ class Nano_Message {
 	 * @param string $file
 	 */
 	public function load($file) {
-		$path = Application::current()->getRootDir() . DS . 'messages' . DS . $this->fileName($file);
+		$path = $this->application->rootDir . DS . 'messages' . DS . $this->fileName($file);
 		if (!is_file($path)) {
 			throw new Nano_Exception('File "' . $path . '" not found');
 		}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  * @group orm
  */
 abstract class Library_Orm_TestPdoSource extends TestUtils_TestCase {

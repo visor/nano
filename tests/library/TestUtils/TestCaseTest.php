@@ -2,7 +2,7 @@
 
 /**
  * @group test-utils
- * @group framework
+ * @group library
  */
 class TestUtils_TestCaseTest extends TestUtils_TestCase {
 

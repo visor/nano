@@ -2,7 +2,6 @@
 
 /**
  * @group core
- * @group framework
  */
 class Core_C_ResponseTest extends TestUtils_TestCase {
 
@@ -12,7 +11,12 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 	protected $response;
 
 	protected function setUp() {
-		$this->response = new Nano_C_Response();
+		$application = new Application();
+		$application
+			->withConfigurationFormat('php')
+			->configure()
+		;
+		$this->response = new Nano_C_Response($application);
 	}
 
 	public function testSetMethodsShouldReturnSelfInstance() {

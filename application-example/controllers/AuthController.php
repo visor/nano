@@ -5,9 +5,9 @@ class AuthController extends Nano_C {
 	public $layout = false;
 
 	public function loginAction() {
-		Nano::message()->load('control-panel');
+		$this->dispatcher()->application()->message->load('control-panel');
 
-		$this->pageTitle = Nano::message()->m('cp-login');
+		$this->pageTitle = $this->dispatcher()->application()->message->m('cp-login');
 		Assets::style()
 			->variable('images', WEB_URL . '/resources/images')
 			->append(WEB_ROOT . '/resources/styles/960.css')

@@ -1,36 +1,49 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  */
-class LogTest extends PHPUnit_Framework_TestCase {
+class Core_LogTest extends PHPUnit_Framework_TestCase {
+
+	/**
+	 * @var Application
+	 */
+	protected $application;
+
+	/**
+	 * @var Nano_Log
+	 */
+	protected $log;
 
 	protected function setUp() {
-		Nano_Log::clear();
+		$this->application = new Application();
+		$this->application->withRootDir(__DIR__ . DS . '_files');
+
+		$this->log = new Nano_Log($this->application);
+		$this->log->clear();
 	}
 
 	public function testClear() {
-		Nano_Log::clear();
-		self::assertFileNotExists(Nano_Log::getFile());
+		self::assertFileNotExists($this->log->getFile());
 	}
 
 	public function testLog() {
-		Nano_Log::message('some string');
-		self::assertFileExists(Nano_Log::getFile());
-		self::assertEquals('some string' . PHP_EOL, file_get_contents(Nano_Log::getFile()));
+		$this->log->message('some string');
+		self::assertFileExists($this->log->getFile());
+		self::assertEquals('some string' . PHP_EOL, file_get_contents($this->log->getFile()));
 	}
 
 	public function testGet() {
-		Nano_Log::message('some string');
-		self::assertFileExists(Nano_Log::getFile());
-		self::assertEquals('some string' . PHP_EOL, Nano_Log::get());
+		$this->log->message('some string');
+		self::assertFileExists($this->log->getFile());
+		self::assertEquals('some string' . PHP_EOL, $this->log->get());
 
-		Nano_Log::clear();
-		self::assertEquals('', Nano_Log::get());
+		$this->log->clear();
+		self::assertEquals('', $this->log->get());
 	}
 
 	protected function tearDown() {
-		Nano_Log::clear();
+		$this->log->clear();
 	}
 
 }

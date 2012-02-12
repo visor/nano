@@ -2,7 +2,7 @@
 
 /**
  * @group test-utils
- * @group framework
+ * @group library
  */
 class TestUtils_FixtureTest extends TestUtils_TestCase {
 

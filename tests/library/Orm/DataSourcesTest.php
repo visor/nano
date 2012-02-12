@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  * @group orm
  */
 class Library_Orm_DataSourceTest extends TestUtils_TestCase {

@@ -23,7 +23,7 @@ class Config extends \Nano_Cli_Script {
 
 		$name    = $args[0];
 		$parents = $args;
-		$base    = $this->getApplication()->getRootDir() . DIRECTORY_SEPARATOR . 'settings';
+		$base    = $this->getApplication()->rootDir . DIRECTORY_SEPARATOR . 'settings';
 		$new     = $base . DIRECTORY_SEPARATOR . $name;
 		array_shift($parents);
 

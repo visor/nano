@@ -2,4 +2,5 @@
 
 require './../bootstrap.php';
 
-Application::current()->start();
+/** @var Application $application */
+$application->start();

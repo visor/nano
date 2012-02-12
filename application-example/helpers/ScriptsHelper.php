@@ -12,15 +12,15 @@ class ScriptsHelper extends Nano_Helper {
 	}
 
 	public function captured() {
-		return Nano::helper()->placeholder(self::PLACEHOLDER);
+		return $this->helper()->placeholder(self::PLACEHOLDER);
 	}
 
 	public function captureStart() {
-		Nano::helper()->placeholder()->start(self::PLACEHOLDER);
+		$this->helper()->placeholder()->start(self::PLACEHOLDER);
 	}
 
 	public function captureEnd() {
-		Nano::helper()->placeholder()->stop(self::PLACEHOLDER);
+		$this->helper()->placeholder()->stop(self::PLACEHOLDER);
 	}
 
 }

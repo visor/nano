@@ -32,24 +32,24 @@ class SettingHelper extends Nano_Helper {
 	}
 
 	protected function stringField(Setting $setting, $name, $value) {
-		return Nano::helper()->ui()->textField($name, $setting->title, $value, self::CSS, $setting->description);
+		return $this->helper()->ui()->textField($name, $setting->title, $value, self::CSS, $setting->description);
 	}
 
 	protected function listField(Setting $setting, $name, $value) {
 		$options = unSerialize($setting->values);
-		return Nano::helper()->ui()->selectField($name, $setting->title, $options, $value, self::CSS, $setting->description);
+		return $this->helper()->ui()->selectField($name, $setting->title, $options, $value, self::CSS, $setting->description);
 	}
 
 	protected function textField(Setting $setting, $name, $value) {
-		return Nano::helper()->ui()->textareaField($name, $setting->title, $value, self::CSS, $setting->description);
+		return $this->helper()->ui()->textareaField($name, $setting->title, $value, self::CSS, $setting->description);
 	}
 
 	protected function boolField(Setting $setting, $name, $value) {
-		return Nano::helper()->ui()->boolField($name, $setting->title, $value ? true : false);
+		return $this->helper()->ui()->boolField($name, $setting->title, $value ? true : false);
 	}
 
 	protected function htmlField(Setting $setting, $name, $value) {
-		return Nano::helper()->ui()->textareaField($name, $setting->title, $value, self::CSS, $setting->description);
+		return $this->helper()->ui()->textareaField($name, $setting->title, $value, self::CSS, $setting->description);
 	}
 
 	protected function fieldName(Setting_Category $category, Setting $setting) {

@@ -5,6 +5,9 @@ class Nano_Loader {
 	const LIBRARY_DIR           = 'library';
 	const NAME_SEPARATOR        = '_';
 
+	protected $baseIncludePath   = '';
+	protected $loadedIncludePath = array();
+
 	/**
 	 * @return string
 	 * @param string $name
@@ -41,6 +44,10 @@ class Nano_Loader {
 		return explode('\\', trim($className, '\\'), 2);
 	}
 
+	public function __construct() {
+		$this->baseIncludePath = trim(get_include_path(), PATH_SEPARATOR);
+	}
+
 	/**
 	 * Registers self instance as spl __autoload implementations
 	 *
@@ -50,7 +57,7 @@ class Nano_Loader {
 	public function register(Application $application = null) {
 		spl_autoload_register(array($this, 'loadClass'));
 		$nanoDir =
-			(null === $application ? dirName(dirName(__DIR__)) : $application->getNanoRootDir())
+			(null === $application ? dirName(dirName(__DIR__)) : $application->nanoRootDir)
 			. DIRECTORY_SEPARATOR . self::LIBRARY_DIR
 		;
 		$this->useDirectory($nanoDir);
@@ -68,7 +75,15 @@ class Nano_Loader {
 	 * @param string $path
 	 */
 	public function useDirectory($path) {
-		set_include_path($path . PATH_SEPARATOR . get_include_path());
+		if (isSet($this->loadedIncludePath[$path])) {
+			return $this;
+		}
+
+		$this->loadedIncludePath[$path] = $path;
+		set_include_path(
+			implode(PATH_SEPARATOR, $this->loadedIncludePath)
+			. PATH_SEPARATOR . $this->baseIncludePath
+		);
 		return $this;
 	}
 

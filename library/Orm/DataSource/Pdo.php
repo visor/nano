@@ -59,7 +59,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			return true;
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -85,7 +85,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			return true;
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -103,7 +103,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 			}
 			return true;
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -117,7 +117,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 		try {
 			return $this->pdo()->query($this->findQuery($resource, $criteria, Orm::findOptions()->limit(1)))->fetch(PDO::FETCH_ASSOC);
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -132,7 +132,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 		try {
 			return $this->findCustom($resource, $this->findQuery($resource, $criteria, $findOptions));
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -146,7 +146,7 @@ abstract class Orm_DataSource_Pdo extends Orm_DataSource_Abstract implements Orm
 		try {
 			return $this->pdo()->query($query)->fetchAll(PDO::FETCH_ASSOC);
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}

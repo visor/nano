@@ -258,19 +258,9 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	protected $pageUrl = '';
 
 	/**
-	 * @var Faker
+	 * @var Application
 	 */
-	protected $faker;
-
-	/**
-	 * @var boolean
-	 */
-	protected $clearDbAfterTest = true;
-
-	/**
-	 * @var boolean
-	 */
-	protected $clearLogAfterTest = true;
+	protected $application;
 
 	protected function screenshot($suffix = null, $screen = false) {
 		$folder         = TESTS . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR;
@@ -289,9 +279,14 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	}
 
 	protected function setUp() {
-		if (!SELENIUM_ENABLE) {
+		if (!defined('SELENIUM_ENABLE')) {
 			$this->markTestSkipped('Selenium disabled');
 		}
+		if (!isSet($GLOBALS['application'])) {
+			$this->markTestSkipped('Store tested application instance in $GLOBALS array');
+		}
+
+		$this->application = $GLOBALS['application'];
 
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
 		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
@@ -312,23 +307,13 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 
 	protected function setUpData() {}
 
-	protected function tearDown() {
-		if ($this->clearDbAfterTest) {
-			Nano_Db::clean();
-		}
-		if ($this->clearLogAfterTest) {
-			Nano_Log::clear();
-		}
-		parent::tearDown();
-	}
-
 	/**
 	 * @return string
 	 * @param string $path
 	 *
 	 */
 	protected function url($path) {
-		return 'http://' . Nano::config('web')->domain . Nano::config('web')->url . $path;
+		return 'http://' . $this->application->config->get('web')->domain . $this->application->config->get('web')->url . $path;
 	}
 
 	/**
@@ -355,7 +340,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	 * @param string $message
 	 */
 	protected function assertLocation($expected, $message = '') {
-		self::assertEquals('http://' . Nano::config('web')->domain . $expected, $this->getLocation(), $message = '');
+		self::assertEquals('http://' . $this->application->config->get('web')->domain . $expected, $this->getLocation(), $message = '');
 	}
 
 	/**

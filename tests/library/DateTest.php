@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  */
-class DateTest extends PHPUnit_Framework_TestCase {
+class Library_DateTest extends PHPUnit_Framework_TestCase {
 
 	public function testFromString() {
 		$expected = new Date();

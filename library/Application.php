@@ -1,6 +1,26 @@
 <?php
 
-class Application {
+require_once __DIR__ . '/TypedRegistry.php';
+require_once __DIR__ . '/Nano/Loader.php';
+
+/**
+ * @property string $rootDir
+ * @property string $publicDir
+ * @property string $modulesDir
+ * @property string $sharedModulesDir
+ * @property string $nanoRootDir
+ *
+ * @property Nano_Config_Format $configFormat
+ * @property Nano_Config $config
+ * @property Nano_Loader $loader
+ * @property Nano_Dispatcher $dispatcher
+ * @property Nano_Modules $modules
+ * @property SplObjectStorage $plugins
+ * @property Event_Manager $eventManager
+ * @property Nano_Message $message
+ * @property Nano_HelperBroker $helper
+ */
+class Application extends TypedRegistry {
 
 	const PUBLIC_DIR_NAME     = 'public';
 	const MODULES_DIR_NAME    = 'modules';
@@ -11,73 +31,86 @@ class Application {
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
-	 * @var null|Application
+	 * @return Application
 	 */
-	private static $current = null;
+	public static function create() {
+		return new self();
+	}
 
-	/**
-	 * @var string|null
-	 */
-	protected
-		$rootDir            = null
-		, $publicDir        = null
-		, $modulesDir       = null
-		, $sharedModulesDir = null
-		, $nanoRootDir      = null
-	;
+	public function __construct() {
+		parent::__construct();
+		$this
+			->readOnly('configFormat')
+			->readOnly('nanoRootDir', dirName(__DIR__))
+			->readOnly('loader',  new Nano_Loader())
+			->readOnly('rootDir')
+			->readOnly('publicDir')
+			->readOnly('modulesDir')
+			->readOnly('sharedModulesDir')
 
-	/**
-	 * @var Nano_Config_Format
-	 */
-	protected $configFormat = null;
-
-	/**
-	 * @var Nano_Modules|null
-	 */
-	protected $modules = null;
-
-	/**
-	 * @var SplObjectStorage
-	 */
-	protected $plugins = null;
-
-	/**
-	 * @var Nano_Loader
-	 */
-	protected $loader = null;
-
-	/**
-	 * @var Nano_Dispatcher
-	 */
-	protected $dispatcher;
-
-	/**
-	 * @var Event_Manager
-	 */
-	protected $eventManager = null;
+			->ensure('configFormat', 'Nano_Config_Format')
+			->ensure('config',       'Nano_Config')
+			->ensure('loader',       'Nano_Loader')
+			->ensure('modules',      'Nano_Modules')
+			->ensure('dispatcher',   'Nano_Dispatcher')
+			->ensure('helper',       'Nano_HelperBroker')
+			->ensure('message',      'Nano_Message')
+			->ensure('eventManager', 'Event_Manager')
+			->ensure('plugins',      'SplObjectStorage')
+		;
+		$this->loader->register($this);
+		$this
+			->readOnly('plugins', new SplObjectStorage())
+			->readOnly('modules', new Nano_Modules())
+		;
+	}
 
 	/**
 	 * @return Application
 	 */
-	public static function create() {
-		$result        = new self();
-		self::$current = $result;
-		return $result;
-	}
+	public function configure() {
+		if (!$this->offsetExists('configFormat')) {
+			throw new Application_Exception_InvalidConfiguration('Configuration format not specified');
+		}
+		if (!$this->offsetExists('rootDir')) {
+			$this->withRootDir(getCwd());
+		}
+		if (!$this->offsetExists('publicDir')) {
+			$this->withPublicDir($this->rootDir . DIRECTORY_SEPARATOR . self::PUBLIC_DIR_NAME);
+		}
+		if (!$this->offsetExists('modulesDir')) {
+			$this->withModulesDir($this->rootDir . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
+		}
+		if (!$this->offsetExists('sharedModulesDir')) {
+			$this->withSharedModulesDir($this->nanoRootDir . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
+		}
 
-	/**
-	 * @return Application|null
-	 */
-	public static function current() {
-		return self::$current;
+		Nano_Config::setFormat($this->configFormat);
+		$this
+			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings'))
+			->readOnly('helper',       new Nano_HelperBroker($this))
+			->readOnly('dispatcher',   new Nano_Dispatcher($this))
+			->readOnly('eventManager', new Event_Manager())
+			->readOnly('message',      new Nano_Message($this))
+		;
+
+		$this->setupErrorReporting();
+
+		if (!defined('APP_ROOT')) {
+			//TODO: Remove this
+			define('APP_ROOT', $this->rootDir);
+			define('WEB_ROOT', $this->publicDir);
+		}
+
+		return $this;
 	}
 
 	/**
 	 * @return Application
 	 * @param string $value
 	 */
-	public function usingConfigurationFormat($value) {
-		$this->configFormat = Nano_Config::formatFactory($value);
+	public function withConfigurationFormat($value) {
+		$this->offsetSet('configFormat', Nano_Config::formatFactory($value));
 		return $this;
 	}
 
@@ -86,8 +119,8 @@ class Application {
 	 * @param string $value
 	 */
 	public function withRootDir($value) {
-		$this->rootDir = $value;
-		$this->loader()
+		$this->offsetSet('rootDir', $value);
+		$this->loader
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
@@ -102,7 +135,7 @@ class Application {
 	 * @param string $value
 	 */
 	public function withPublicDir($value) {
-		$this->publicDir = $value;
+		$this->offsetSet('publicDir', $value);
 		return $this;
 	}
 
@@ -111,7 +144,7 @@ class Application {
 	 * @param string $value
 	 */
 	public function withModulesDir($value) {
-		$this->modulesDir = $value;
+		$this->offsetSet('modulesDir', $value);
 		return $this;
 	}
 
@@ -120,7 +153,7 @@ class Application {
 	 * @param string $value
 	 */
 	public function withSharedModulesDir($value) {
-		$this->sharedModulesDir = $value;
+		$this->offsetSet('sharedModulesDir', $value);
 		return $this;
 	}
 
@@ -131,20 +164,20 @@ class Application {
 	 */
 	public function withModule($name, $path = null) {
 		if (null === $path) {
-			if (is_dir($this->getSharedModulesDir() . DIRECTORY_SEPARATOR . $name)) {
-				$path = $this->getSharedModulesDir() . DIRECTORY_SEPARATOR . $name;
-			} elseif (is_dir($this->getModulesDir() . DIRECTORY_SEPARATOR . $name)) {
-				$path = $this->getModulesDir() . DIRECTORY_SEPARATOR . $name;
+			if ($this->offsetExists('sharedModulesDir') && is_dir($this->sharedModulesDir . DIRECTORY_SEPARATOR . $name)) {
+				$path = $this->sharedModulesDir . DIRECTORY_SEPARATOR . $name;
+			} elseif ($this->offsetExists('modulesDir') && is_dir($this->modulesDir . DIRECTORY_SEPARATOR . $name)) {
+				$path = $this->modulesDir . DIRECTORY_SEPARATOR . $name;
 			} else {
 				throw new Application_Exception_ModuleNotFound($name);
 			}
 		}
-		$this->getModules()->append($name, $path);
-		$this->loader()
+
+		$this->modules->append($name, $path);
+		$this->loader
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
-			->useDirectory($path . DIRECTORY_SEPARATOR . self::HELPERS_DIR_NAME)
 			->useDirectory($path . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
 		;
 		return $this;
@@ -155,28 +188,12 @@ class Application {
 	 * @param Nano_C_Plugin $value
 	 */
 	public function withPlugin(Nano_C_Plugin $value) {
-		$this->getPlugins()->attach($value);
-		return $this;
-	}
-
-	/**
-	 * @return Application
-	 */
-	public function configure() {
-		Nano_Config::setFormat($this->getConfigurationFormat());
-		Nano::configure(new Nano_Config($this->getRootDir() . DIRECTORY_SEPARATOR . 'settings'));
-		$this->setupErrorReporting();
-
-		define('APP_ROOT', Application::current()->getRootDir());
-		define('WEB_ROOT', Application::current()->getPublicDir());
+		$this->plugins->attach($value);
 		return $this;
 	}
 
 	public function start() {
-		//todo: detect request uri
-		//todo: start dispatcher
-		//todo: ??? handle head method
-		$urlPrefix = Nano::config('web')->url;
+		$urlPrefix = $this->config->get('web')->url;
 		$url       = $_SERVER['REQUEST_URI'];
 		if (false !== strPos($url, '?')) {
 			$url = subStr($url, 0, strPos($url, '?'));
@@ -184,120 +201,22 @@ class Application {
 		if ($urlPrefix && 0 === strPos($url, $urlPrefix)) {
 			$url = subStr($url, strLen($urlPrefix));
 		}
-		if (Nano::config('web')->index) {
-			$url = preg_replace('/' . preg_quote(Nano::config('web')->index) . '$/', '', $url);
+		if ($this->config->get('web')->index) {
+			$url = preg_replace('/' . preg_quote($this->config->get('web')->index) . '$/', '', $url);
 		}
 		$url = trim(rawUrlDecode($url), '/');
-		$this->dispatcher->dispatch(Nano::routes(), $url);
+		$this->dispatcher->dispatch($this->config->routes(), $url);
 	}
 
 	/**
-	 * @return Nano_Config_Format
+	 * @return Nano_Dispatcher
 	 */
-	public function getConfigurationFormat() {
-		if (null === $this->configFormat) {
-			$this->usingConfigurationFormat('php');
-		}
-		return $this->configFormat;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getRootDir() {
-		if (null === $this->rootDir) {
-			$this->withRootDir(getCwd());
-		}
-		return $this->rootDir;
-	}
-
-	/**
-	 * @return srting
-	 */
-	public function getPublicDir() {
-		if (null === $this->publicDir) {
-			$this->withPublicDir($this->getRootDir() . DIRECTORY_SEPARATOR . self::PUBLIC_DIR_NAME);
-		}
-		return $this->publicDir;
-	}
-
-	/**
-	 * @return srting
-	 */
-	public function getModulesDir() {
-		if (null === $this->modulesDir) {
-			$this->withModulesDir($this->getRootDir() . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
-		}
-		return $this->modulesDir;
-	}
-
-	/**
-	 * @return srting
-	 */
-	public function getSharedModulesDir() {
-		if (null === $this->sharedModulesDir) {
-			$this->withSharedModulesDir($this->getNanoRootDir() . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
-		}
-		return $this->sharedModulesDir;
-	}
-
-	/**
-	 * @return Nano_Modules
-	 */
-	public function getModules() {
-		if (null === $this->modules) {
-			$this->modules = new Nano_Modules();
-		}
-		return $this->modules;
-	}
-
-	/**
-	 * @return Nano_C_Plugin[]|SplObjectStorage
-	 */
-	public function getPlugins() {
-		if (null === $this->plugins) {
-			$this->plugins = new SplObjectStorage();
-		}
-		return $this->plugins;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getNanoRootDir() {
-		if (null === $this->nanoRootDir) {
-			$this->nanoRootDir = dirName(__DIR__);
-		}
-		return $this->nanoRootDir;
-	}
-
 	public function getDispatcher() {
 		return $this->dispatcher;
 	}
 
-	/**
-	 * @return Nano_Loader
-	 */
-	public function loader() {
-		return $this->loader;
-	}
-
-	public function eventManager() {
-		return $this->eventManager;
-	}
-
-	public function __construct() {
-		require_once __DIR__ . DIRECTORY_SEPARATOR . 'Nano' . DIRECTORY_SEPARATOR . 'Loader.php';
-
-		$this->loader = new Nano_Loader();
-		$this->loader->register($this);
-
-		$this->dispatcher   = new Nano_Dispatcher($this);
-		$this->eventManager = new Event_Manager();
-	}
-
 	protected function setupErrorReporting() {
-		if (Nano::config()->exists('web') && isSet(Nano::config('web')->errorReporting) && true === Nano::config('web')->errorReporting) {
+		if ($this->config->exists('web') && isSet($this->config->get('web')->errorReporting) && true === $this->config->get('web')->errorReporting) {
 			error_reporting(E_ALL | E_STRICT);
 			ini_set('display_errors', true);
 		} else {

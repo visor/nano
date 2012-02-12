@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  */
 class SqlExprTest extends PHPUnit_Framework_TestCase {
 

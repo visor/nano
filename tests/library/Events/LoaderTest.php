@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group library
  * @group events
  */
 class Library_Events_LoaderTest extends TestUtils_TestCase {

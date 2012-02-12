@@ -1,42 +1,50 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  * @group routes
  */
 class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainOnly() {
-		$_SERVER['HTTP_HOST'] = Nano::config('web')->domain;
-		$route = new Nano_Route_Subdomain('.+', '.*');
+		$route = new Nano_Route_Subdomain('.+', null);
+		$route->setApplication($GLOBALS['application']);
+
+		$_SERVER['HTTP_HOST'] = $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some-url'));
 
-		$_SERVER['HTTP_HOST'] = 'some.' . Nano::config('web')->domain;
+		$_SERVER['HTTP_HOST'] = 'some.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertTrue($route->match('some-url'));
 
-		$route = new Nano_Route_Subdomain('some', '.*');
+		$route = new Nano_Route_Subdomain('some', null);
+		$route->setApplication($GLOBALS['application']);
+
 		self::assertTrue($route->match('some-url'));
 
-		$_SERVER['HTTP_HOST'] = 'some2.' . Nano::config('web')->domain;
+		$_SERVER['HTTP_HOST'] = 'some2.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some-url'));
 	}
 
 	public function testMatchSubdomainAndUrl() {
-		$_SERVER['HTTP_HOST'] = Nano::config('web')->domain;
 		$route = new Nano_Route_Subdomain('some', 'some');
+		$route->setApplication($GLOBALS['application']);
+
+		$_SERVER['HTTP_HOST'] = $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some'));
 
-		$_SERVER['HTTP_HOST'] = 'some.' . Nano::config('web')->domain;
+		$_SERVER['HTTP_HOST'] = 'some.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertTrue($route->match('some'));
 		self::assertFalse($route->match('some-url'));
 
-		$_SERVER['HTTP_HOST'] = 'some2.' . Nano::config('web')->domain;
+		$_SERVER['HTTP_HOST'] = 'some2.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some'));
 	}
 
 	public function testParameters() {
 		$route = new Nano_Route_Subdomain('(?P<p1>some)', '(?P<p2>some)');
-		$_SERVER['HTTP_HOST'] = 'some.' . Nano::config('web')->domain;
+		$route->setApplication($GLOBALS['application']);
+
+		$_SERVER['HTTP_HOST'] = 'some.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertTrue($route->match('some'));
 		self::assertArrayHasKey('p1', $route->matches());
 		self::assertArrayHasKey('p2', $route->matches());

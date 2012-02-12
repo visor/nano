@@ -33,11 +33,4 @@ interface Nano_Config_Format {
 	 */
 	public function writeRoutes(Nano_Routes $routes, $fileName);
 
-	/**
-	 * @return boolean
-	 * @param string $sourceFileName
-	 * @param string $destinationFileName
-	 */
-	public function merge($sourceFileName, $destinationFileName);
-
 }

@@ -11,7 +11,7 @@ class UiHelper extends Nano_Helper {
 			'<div class="portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">'
 				. '<div class="portlet-header ui-widget-header ui-corner-top' . ($titleClass ? ' ' . $titleClass : '') . '">'
 					. '<span class="ui-icon ui-icon-triangle-1-n"></span>'
-					. ($image ? '<img src="' . Nano::helper()->resource()->cdn('/resources/images/icons/' . $image) . '" width="16" height="16" alt="' . $title .'" title="' . $title .'" />' : '')
+					. ($image ? '<img src="' . $this->helper()->resource()->cdn('/resources/images/icons/' . $image) . '" width="16" height="16" alt="' . $title .'" title="' . $title .'" />' : '')
 					. $title
 				. '</div>'
 				. '<div class="portlet-content' . ($contentClass ? ' ' . $contentClass : '') . '">'

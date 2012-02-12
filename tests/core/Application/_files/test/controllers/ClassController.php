@@ -13,7 +13,7 @@ class ClassController extends \Nano_C {
 	 */
 	public function indexAction() {
 		$this->markRendered();
-		return self::name();
+		$this->response()->setBody(self::name());
 	}
 
 	public function viewAction() {

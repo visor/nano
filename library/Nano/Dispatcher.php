@@ -161,7 +161,6 @@ class Nano_Dispatcher {
 			}
 			throw new Nano_Exception_NotFound('Route not found');
 		} catch (Exception $e) {
-			Nano_Log::message($e);
 			$this->handleError($e);
 		}
 		return null;
@@ -180,13 +179,16 @@ class Nano_Dispatcher {
 			$route->run();
 			return null;
 		}
+
 		$this->controllerInstance = $this->getController($route);
 		$this->controllerInstance->setResponse($this->getResponse());
+
 		if ($this->param('context')) {
 			$this->controllerInstance->context = $this->param('context');
 		} elseif ($this->context) {
 			$this->controllerInstance->context = $this->context->get();
 		}
+
 		return $this->controllerInstance->run($this->action());
 	}
 
@@ -216,6 +218,7 @@ class Nano_Dispatcher {
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
 		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
+			$route->setApplication($this->application);
 			if ($this->test($route, $testUrl)) {
 				return $route;
 			}
@@ -293,7 +296,7 @@ class Nano_Dispatcher {
 	 */
 	public function getResponse() {
 		if (null === $this->response) {
-			$this->setResponse(new Nano_C_Response());
+			$this->setResponse(new Nano_C_Response($this->application));
 		}
 		return $this->response;
 	}
@@ -348,7 +351,8 @@ class Nano_Dispatcher {
 	 * @throws Exception
 	 */
 	protected function handleError(Exception $error) {
-		if ($this->throw || null === Nano::config('web')->errorController) {
+		//todo: log message
+		if ($this->throw || null === $this->application()->config->get('web')->errorController) {
 			$this->getResponse()->addHeader('Content-Type', 'text/plain');
 			$this->getResponse()->setBody($error);
 			if ($error instanceof Nano_Exception_NotFound) {
@@ -360,7 +364,7 @@ class Nano_Dispatcher {
 			return;
 		}
 
-		$controllerName = Nano::config('web')->errorController;
+		$controllerName = $this->application()->config->get('web')->errorController;
 		$className      = self::formatName($controllerName, true);
 		$controller     = new $className($this); /* @var $controller Nano_C */
 		$action         = 'custom';

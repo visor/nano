@@ -4,10 +4,16 @@ require_once __DIR__ . '/Abstract.php';
 
 /**
  * @group core
- * @group core-application
- * @group loader
  */
 class Core_Application_LoaderTest extends Core_Application_Abstract {
+
+	protected $includePath = '';
+
+	protected function setUp() {
+		parent::setUp();
+
+		$this->includePath = get_include_path();
+	}
 
 	public function testFormatingModuleName() {
 		self::assertEquals('Test_Module\\LibraryClass',        Nano_Loader::formatModuleClassName('test', 'library-class'));
@@ -30,12 +36,11 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	}
 
 	public function testLoaderShouldInitializedWhenApplicationCreated() {
-		self::assertInstanceOf('Nano_Loader', self::getObjectProperty($this->application, 'loader'));
-		self::assertInstanceOf('Nano_Loader', $this->application->loader());
+		self::assertInstanceOf('Nano_Loader', $this->application->loader);
 	}
 
 	public function testNanoLibraryDirectoryShouldBeInIncludePahWhenApplicationCreated() {
-		self::assertContains($this->application->getNanoRootDir() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR, get_include_path());
+		self::assertContains($this->application->nanoRootDir . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR, get_include_path());
 	}
 
 	public function testNanoClassShouldBeLoaded() {
@@ -47,18 +52,24 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	}
 
 	public function testApplicationClassesDirectoriesShouldBeInIncludePath() {
-		$app        = $this->files->get($this, '');
-		$appLibrary = $app . DIRECTORY_SEPARATOR . 'library';
-		$appModels  = $app . DIRECTORY_SEPARATOR . 'models';
-		$appPlugins = $app . DIRECTORY_SEPARATOR . 'plugins';
+		$app            = $this->files->get($this, '');
+		$appControllers = $app . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME;
+		$appLibrary     = $app . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME;
+		$appModels      = $app . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME;
+		$appPlugins     = $app . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME;
+		$appHelpers     = $app . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME;
 		$this->application->withRootDir($app);
 
+		self::assertContains($appControllers . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appLibrary . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appModels . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appPlugins . PATH_SEPARATOR, get_include_path());
+		self::assertContains($appHelpers . PATH_SEPARATOR, get_include_path());
 	}
 
 	public function testLoadingApplicationLibraryClass() {
+		$this->application->withRootDir($this->files->get($this, ''));
+
 		$this->assertClassLoaded('TestApplicationClassController');
 		$this->assertClassLoaded('TestApplicationPluginClass');
 		$this->assertClassLoaded('TestApplicationModelClass');
@@ -76,22 +87,36 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 
 	public function testShouldReturnTrueWhenClassAlreadyLoaded() {
 		$this->application->withRootDir($this->files->get($this, ''));
-		self::assertTrue($this->application->loader()->loadClass('DoubleLoaded'));
-		self::assertTrue($this->application->loader()->loadClass('DoubleLoaded'));
+		self::assertTrue($this->application->loader->loadClass('DoubleLoaded'));
+		self::assertTrue($this->application->loader->loadClass('DoubleLoaded'));
 	}
 
 	public function testShouldReturnFalseWhenCannotLoadClass() {
 		$this->application->withRootDir($this->files->get($this, ''));
 		$this->application->withModule('test', $this->files->get($this, '/test'));
 
-		self::assertFalse($this->application->loader()->loadClass('ReturnFalse'));
-		self::assertFalse($this->application->loader()->loadClass('Test_Module\\ReturnFalse'));
+		self::assertFalse($this->application->loader->loadClass('ReturnFalse'));
+		self::assertFalse($this->application->loader->loadClass('Test_Module\\ReturnFalse'));
 	}
 
 	public function testShouldReturnFalseWhenExceptionInLoadedFile() {
 		$this->application->withRootDir($this->files->get($this, ''));
 
-		self::assertFalse($this->application->loader()->loadClass('ThrowsException'));
+		self::assertFalse($this->application->loader->loadClass('ThrowsException'));
+	}
+
+	public function testLoaderShouldPutDirectoryOnlyOnceInIncludePath() {
+		$directory = '/some/test/dir';
+		self::assertNotContains($directory, get_include_path());
+
+		$this->application->loader->useDirectory($directory);
+		$this->application->loader->useDirectory($directory);
+
+		self::assertContains($directory, get_include_path());
+		$actual = explode(PATH_SEPARATOR, get_include_path());
+		$dirs = array_count_values($actual);
+		self::arrayHasKey($directory, $dirs);
+		self::assertEquals($dirs[$directory], 1);
 	}
 
 	/**
@@ -100,8 +125,15 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	 */
 	protected function assertClassLoaded($className) {
 		self::assertFalse(class_exists($className, false), 'Class should not be loaded before test');
-		self::assertTrue($this->application->loader()->loadClass($className), 'Loader should load given class by name');
+		self::assertTrue($this->application->loader->loadClass($className), 'Loader should load given class by name');
 		self::assertTrue(class_exists($className, false), 'Class should be loaded');
+	}
+
+	protected function tearDown() {
+		set_include_path($this->includePath);
+		unSet($this->includePath);
+
+		parent::tearDown();
 	}
 
 }

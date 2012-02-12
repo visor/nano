@@ -3,7 +3,7 @@
 require_once TESTS . '/core/Config/Format/TestAbstract.php';
 
 /**
- * @group framework
+ * @group core
  * @group config
  */
 class Core_Config_Format_IgbinaryTest extends Core_Config_Format_TestAbstract {

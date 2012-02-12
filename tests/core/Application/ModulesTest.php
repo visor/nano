@@ -4,7 +4,6 @@ require_once __DIR__ . '/Abstract.php';
 
 /**
  * @group core
- * @group core-application
  */
 class Core_Application_ModulesTest extends Core_Application_Abstract {
 
@@ -19,37 +18,48 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testConvertingModuleNameToFolder() {
-		self::assertEquals('example',         $this->application->getModules()->nameToFolder('Example_Module'));
-		self::assertEquals('a-example',       $this->application->getModules()->nameToFolder('AExample_Module'));
-		self::assertEquals('an-example',      $this->application->getModules()->nameToFolder('AnExample_Module'));
-		self::assertEquals('other-module',    $this->application->getModules()->nameToFolder('OtherModule_Module'));
-		self::assertEquals('someothermodule', $this->application->getModules()->nameToFolder('Someothermodule_Module'));
+		self::assertEquals('example',         $this->application->modules->nameToFolder('Example_Module'));
+		self::assertEquals('a-example',       $this->application->modules->nameToFolder('AExample_Module'));
+		self::assertEquals('an-example',      $this->application->modules->nameToFolder('AnExample_Module'));
+		self::assertEquals('other-module',    $this->application->modules->nameToFolder('OtherModule_Module'));
+		self::assertEquals('someothermodule', $this->application->modules->nameToFolder('Someothermodule_Module'));
 	}
 
 	public function testNameToFolderShouldReturnPassedNameWhenModuleFolderPassed() {
 		$this->application->withModule('some-module', $this->files->get($this, '/test'));
-		self::assertEquals('some-module', $this->application->getModules()->nameToFolder('some-module'));
+		self::assertEquals('some-module', $this->application->modules->nameToFolder('some-module'));
 	}
 
 	public function testNameToFolderShouldThrowExceptionWhenNotModuleNamespacePassed() {
 		$this->setExpectedException('Application_Exception_InvalidModuleNamespace', 'Given namespace "some module" is not valid module namespace');
-		$this->application->getModules()->nameToFolder('some module');
+		$this->application->modules->nameToFolder('some module');
 	}
 
 	public function testDetectingApplicationModulesDir() {
-		$this->application->withRootDir(__DIR__);
-		self::assertNull(self::getObjectProperty($this->application, 'modulesDir'));
+		$this->application
+			->withConfigurationFormat('php')
+			->withRootDir(__DIR__)
+		;
+		self::assertFalse($this->application->offsetExists('modulesDir'));
+
+		$this->application->configure();
 		self::assertEquals(
 			__DIR__ . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME
-			, $this->application->getModulesDir()
+			, $this->application->modulesDir
 		);
 	}
 
 	public function testDetectingSharedModulesDir() {
-		$expected = getCwd() . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME;
-		self::assertNull(self::getObjectProperty($this->application, 'sharedModulesDir'));
-		self::assertEquals($expected, $this->application->getSharedModulesDir());
-		self::assertEquals($expected, self::getObjectProperty($this->application, 'sharedModulesDir'));
+		$expected = $this->application->nanoRootDir . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME;
+		self::assertFalse($this->application->offsetExists('sharedModulesDir'));
+
+		$this->application
+			->withConfigurationFormat('php')
+			->withRootDir(__DIR__)
+			->configure()
+		;
+
+		self::assertEquals($expected, $this->application->sharedModulesDir);
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotExistedPathPassed() {
@@ -64,76 +74,82 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testWithModuleShouldAddModuleAndPathWhenPassedBoth() {
 		self::assertInstanceOf('Application', $this->application->withModule('test', __DIR__));
-		self::assertInstanceOf('Nano_Modules', self::getObjectProperty($this->application, 'modules'));
-		self::assertEquals(__DIR__, self::getObjectProperty($this->application, 'modules')->offsetGet('test'));
+		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertEquals(__DIR__, $this->application->modules->offsetGet('test'));
 	}
 
 	public function testGettingModules() {
-		$first = $this->application->getModules();
+		$first = $this->application->modules;
 		self::assertInstanceOf('Nano_Modules', $first);
 		$this->application->withModule('test', __DIR__);
-		self::assertSame($first, $this->application->getModules());
+		self::assertSame($first, $this->application->modules);
 	}
 
 	public function testWithModuleShouldAddSharedModuleFirstIfExists() {
-		$this->application->withSharedModulesDir($this->files->get($this, '/shared-modules'));
+		$this->application
+			->withConfigurationFormat('php')
+			->withSharedModulesDir($this->files->get($this, '/shared-modules'))
+			->withModulesDir($this->files->get($this, '/application-modules'))
+		;
 		self::assertInstanceOf('Application', $this->application->withModule('module1'));
 		self::assertInstanceOf('Application', $this->application->withModule('module2'));
 
-		self::assertInstanceOf('Nano_Modules', self::getObjectProperty($this->application, 'modules'));
-		self::assertEquals($this->files->get($this, '/shared-modules/module1'), self::getObjectProperty($this->application, 'modules')->offsetGet('module1'));
-		self::assertEquals($this->files->get($this, '/shared-modules/module2'), self::getObjectProperty($this->application, 'modules')->offsetGet('module2'));
+		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
+		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
 	}
 
 	public function testWithModuleShouldAddApplicationModuleIfSharedNotExists() {
-		$this->application->withSharedModulesDir($this->files->get($this, '/shared-modules'));
-		$this->application->withModulesDir($this->files->get($this, '/application-modules'));
+		$this->application
+			->withSharedModulesDir($this->files->get($this, '/shared-modules'))
+			->withModulesDir($this->files->get($this, '/application-modules'))
+		;
 
 		self::assertInstanceOf('Application', $this->application->withModule('module1'));
 		self::assertInstanceOf('Application', $this->application->withModule('module2'));
 		self::assertInstanceOf('Application', $this->application->withModule('module3'));
 
-		self::assertInstanceOf('Nano_Modules', self::getObjectProperty($this->application, 'modules'));
-		self::assertEquals($this->files->get($this, '/shared-modules/module1'), self::getObjectProperty($this->application, 'modules')->offsetGet('module1'));
-		self::assertEquals($this->files->get($this, '/shared-modules/module2'), self::getObjectProperty($this->application, 'modules')->offsetGet('module2'));
-		self::assertEquals($this->files->get($this, '/application-modules/module3'), self::getObjectProperty($this->application, 'modules')->offsetGet('module3'));
+		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
+		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
+		self::assertEquals($this->files->get($this, '/application-modules/module3'), $this->application->modules->offsetGet('module3'));
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotPathAndNotApplicationAndSharedModule() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module4\' not found in application and shared modules');
+		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module6\' not found in application and shared modules');
 
 		$this->application->withSharedModulesDir($this->files->get($this, '/shared-modules'));
 		$this->application->withModulesDir($this->files->get($this, '/application-modules'));
-		$this->application->withModule('module4');
+		$this->application->withModule('module6');
 	}
 
 	public function testPathes() {
 		$this->application->withModule('default', $this->files->get($this, '/test'));
 
-		self::assertEquals($this->files->get($this, '\\test'),       $this->application->getModules()->getPath('default', null));
-		self::assertEquals($this->files->get($this, '/test\\views'), $this->application->getModules()->getPath('default', 'views'));
-		self::assertEquals($this->files->get($this, '/test'),        $this->application->getModules()->getPath('default', null));
+		self::assertEquals($this->files->get($this, '\\test'),       $this->application->modules->getPath('default', null));
+		self::assertEquals($this->files->get($this, '/test\\views'), $this->application->modules->getPath('default', 'views'));
+		self::assertEquals($this->files->get($this, '/test'),        $this->application->modules->getPath('default', null));
 	}
 
 	public function testActive() {
-		self::assertFalse($this->application->getModules()->active('default'));
-		self::assertFalse($this->application->getModules()->active('some'));
-		self::assertFalse($this->application->getModules()->active('other'));
+		self::assertFalse($this->application->modules->active('default'));
+		self::assertFalse($this->application->modules->active('some'));
+		self::assertFalse($this->application->modules->active('other'));
 
 		$this->application->withModule('default', $this->files->get($this, '/test'));
-		self::assertTrue($this->application->getModules()->active('default'));
-		self::assertFalse($this->application->getModules()->active('some'));
-		self::assertFalse($this->application->getModules()->active('other'));
+		self::assertTrue($this->application->modules->active('default'));
+		self::assertFalse($this->application->modules->active('some'));
+		self::assertFalse($this->application->modules->active('other'));
 
 		$this->application->withModule('some', $this->files->get($this, '/application-modules/module1'));
-		self::assertTrue($this->application->getModules()->active('default'));
-		self::assertTrue($this->application->getModules()->active('some'));
-		self::assertFalse($this->application->getModules()->active('other'));
+		self::assertTrue($this->application->modules->active('default'));
+		self::assertTrue($this->application->modules->active('some'));
+		self::assertFalse($this->application->modules->active('other'));
 
 		$this->application->withModule('other', $this->files->get($this, '/application-modules/module2'));
-		self::assertTrue($this->application->getModules()->active('default'));
-		self::assertTrue($this->application->getModules()->active('some'));
-		self::assertTrue($this->application->getModules()->active('other'));
+		self::assertTrue($this->application->modules->active('default'));
+		self::assertTrue($this->application->modules->active('some'));
+		self::assertTrue($this->application->modules->active('other'));
 	}
 
 	public function testClassesAutoloading() {
@@ -148,13 +164,18 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testModuleRoutes() {
-		self::markTestSkipped('Refactor me');
-		$this->application->withModule('test', $this->files->get($this, '/test'));
+		$this->application
+			->withConfigurationFormat('php')
+			->withModule('test', $this->files->get($this, '/test'))
+			->configure()
+		;
 
 		$routes     = new Nano_Routes();
-		$dispatcher = new Nano_Dispatcher($this->application);
 		$route      = Nano_Route::create('some', 'class', 'index', 'test');
+		$dispatcher = $this->application->getDispatcher();
+		$response   = new Nano_C_Response_Test($this->application);
 
+		$dispatcher->setResponse($response);
 		$routes->addRoute('get', $route);
 
 		self::assertNotNull($dispatcher->getRoute($routes, '/some'));
@@ -162,24 +183,31 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertEquals($route->action(),     $dispatcher->getRoute($routes, '/some')->action());
 		self::assertInstanceOf('Test_Module\\ClassController', $dispatcher->getController($route));
 
-		$result = $dispatcher->dispatch($routes, '/some');
+		$dispatcher->dispatch($routes, '/some');
 		self::assertTrue(class_exists('Test_Module\\ClassController', false));
-		self::assertEquals(Test_Module\ClassController::name(), $result);
+		self::assertEquals(Test_Module\ClassController::name(), $response->getBody());
 	}
 
 	public function testModuleViews() {
-		self::markTestSkipped('Refactor me');
-
-		$this->application->withModule('test', $this->files->get($this, '/test'));
-		self::assertTrue($this->application->loader()->loadClass('Test_Module\\ClassController'));
+		$this->application
+			->withConfigurationFormat('php')
+			->withModule('test', $this->files->get($this, '/test'))
+			->configure()
+		;
+		self::assertTrue($this->application->loader->loadClass('Test_Module\\ClassController'));
 
 		$dispatcher = new Nano_Dispatcher($this->application);
-		self::assertEquals('view action runned', $dispatcher->run(Nano_Route::create('', 'class', 'view', 'test')));
+		$response   = new Nano_C_Response_Test($this->application);
+
+		$dispatcher->setResponse($response);
+		$dispatcher->run(Nano_Route::create('', 'class', 'view', 'test'));
+
+		self::assertEquals('view action runned', $response->getBody());
 	}
 
 	public function testGetPathShouldThrowExceptionWhenModuleNotExists() {
 		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'some module\' not found');
-		$this->application->getModules()->getPath('some module');
+		$this->application->modules->getPath('some module');
 	}
 
 }

@@ -6,4 +6,8 @@ $loader->register();
 
 $args = $_SERVER['argv'];
 array_shift($args);
-Nano_Cli::main($args);
+$result = Nano_Cli::main($args);
+
+if (0 !== $result) {
+	exit($result);
+}

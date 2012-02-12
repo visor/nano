@@ -19,8 +19,8 @@ class Setup extends \Nano_Cli_Script {
 		}
 
 		$builder = new \Nano_Config_Builder();
-		$builder->setSource($this->getApplication()->getRootDir() . DIRECTORY_SEPARATOR . 'settings');
-		$builder->setDestination($this->getApplication()->getRootDir() . DIRECTORY_SEPARATOR . 'settings');
+		$builder->setSource($this->getApplication()->rootDir . DIRECTORY_SEPARATOR . 'settings');
+		$builder->setDestination($this->getApplication()->rootDir . DIRECTORY_SEPARATOR . 'settings');
 		$builder->clean();
 		$builder->build($args[0]);
 	}

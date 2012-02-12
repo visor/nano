@@ -71,9 +71,9 @@ class Nano_C_Redirect {
 	public function withMessage($message, $id = false) {
 		$text = $message;
 		if (true === $id) {
-			$text = Nano::message()->m($message);
+			$text = $this->response->getApplication()->message->m($message);
 		} elseif (is_array($id)) {
-			$text = Nano::message()->fa($message, $id);
+			$text = $this->response->getApplication()->message->fa($message, $id);
 		}
 		$_SESSION[self::PARAM_MESSAGE] = $text;
 		return $this;

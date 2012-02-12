@@ -13,12 +13,12 @@ class FixSpaces extends \Nano_Cli_Script {
 	 * @param string[] $args
 	 */
 	public function run(array $args) {
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator($this->application->getRootDir())
-			, RecursiveIteratorIterator::CHILD_FIRST
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($this->getApplication()->rootDir)
+			, \RecursiveIteratorIterator::CHILD_FIRST
 		);
 
-		foreach ($iterator as $file) { /** @var DirectoryIterator $file */
+		foreach ($iterator as $file) { /** @var \DirectoryIterator $file */
 			if ($file->isDir()) {
 				continue;
 			}

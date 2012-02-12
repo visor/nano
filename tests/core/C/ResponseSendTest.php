@@ -2,7 +2,6 @@
 
 /**
  * @group core
- * @group framework
  */
 class Core_C_ResponseSendTest extends TestUtils_WebTest {
 

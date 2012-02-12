@@ -67,7 +67,7 @@ abstract class Nano_C {
 	 */
 	public function __construct(Nano_Dispatcher $dispatcher) {
 		$this->dispatcher = $dispatcher;
-		$this->helper     = Nano::helper();
+		$this->helper     = $dispatcher->application()->helper;
 	}
 
 	/**
@@ -76,7 +76,7 @@ abstract class Nano_C {
 	public function getModule() {
 		if (null === $this->module && Nano_Loader::isModuleClass($className = get_class($this))) {
 			list($this->module, ) = Nano_Loader::extractModuleClassParts($className);
-			$this->module = $this->dispatcher()->application()->getModules()->nameToFolder($this->module);
+			$this->module = $this->dispatcher()->application()->modules->nameToFolder($this->module);
 		}
 		return $this->module;
 	}
@@ -106,8 +106,6 @@ abstract class Nano_C {
 		} elseif ($this->response()->isModified()) {
 			$this->response()->send();
 		}
-
-		return;
 	}
 
 	/**
@@ -245,8 +243,8 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function configureRenderer() {
-		$this->renderer->setLayoutsPath($this->dispatcher()->application()->getRootDir() . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
-		$this->renderer->setViewsPath($this->dispatcher()->application()->getRootDir() . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
+		$this->renderer->setLayoutsPath($this->dispatcher()->application()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath($this->dispatcher()->application()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
 		$this->renderer->setModuleViewsDirName(Nano_Render::VIEW_DIR);
 	}
 
@@ -254,7 +252,7 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runInit() {
-		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->init($this);
 		}
 		$this->init();
@@ -264,7 +262,7 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			if (false === $plugin->before($this)) {
 				return false;
 			}
@@ -279,7 +277,7 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach ($this->dispatcher()->application()->getPlugins() as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->after($this);
 		}
 		$this->after();
@@ -307,7 +305,7 @@ abstract class Nano_C {
 		if (null !== $this->response) {
 			return;
 		}
-		$this->response = new Nano_C_Response();
+		$this->response = new Nano_C_Response($this->dispatcher()->application());
 	}
 
 }

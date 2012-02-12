@@ -67,6 +67,11 @@ class Nano_C_Response {
 	);
 
 	/**
+	 * @var Application
+	 */
+	protected $application;
+
+	/**
 	 * HTTP version 1.0 or 1.1
 	 *
 	 * @var string
@@ -93,12 +98,12 @@ class Nano_C_Response {
 	 */
 	protected $headersSent, $bodySent;
 
-	function __construct() {
-		$this->status  = self::STATUS_DEFAULT;
-		$this->version = self::VERSION_10;
-		$this->headers = new ArrayObject();
-		$this->body    = null;
-
+	function __construct(Application $application) {
+		$this->application = $application;
+		$this->status      = self::STATUS_DEFAULT;
+		$this->version     = self::VERSION_10;
+		$this->headers     = new ArrayObject();
+		$this->body        = null;
 		$this->headersSent = false;
 		$this->bodySent    = false;
 	}
@@ -257,6 +262,13 @@ class Nano_C_Response {
 	 */
 	public function isModified() {
 		return $this->hasBody() || $this->headers->count() > 0;
+	}
+
+	/**
+	 * @return Application
+	 */
+	public function getApplication() {
+		return $this->application;
 	}
 
 }

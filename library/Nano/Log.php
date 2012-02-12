@@ -5,19 +5,22 @@ class Nano_Log {
 	const NAME = 'app.log';
 
 	/**
-	 * @var string
+	 * @var Application
 	 */
-	private static $file = null;
+	protected $application;
 
 	/**
-	 * Writes message to log file
-	 *
+	 * @param Application $application
+	 */
+	public function __construct(Application $application) {
+		$this->application = $application;
+	}
+
+	/**
 	 * @param string $string Message to write
 	 */
-	public static function message($string) {
-		if (self::getFile()) {
-			error_log($string . PHP_EOL, 3, self::getFile());
-		}
+	public function message($string) {
+		error_log($string . PHP_EOL, 3, self::getFile());
 	}
 
 	/**
@@ -25,7 +28,7 @@ class Nano_Log {
 	 *
 	 * @return string
 	 */
-	public static function get() {
+	public function get() {
 		if (file_exists(self::getFile())) {
 			return file_get_contents(self::getFile());
 		}
@@ -37,9 +40,9 @@ class Nano_Log {
 	 *
 	 * @return void
 	 */
-	public static function clear() {
-		if (self::getFile() && file_exists(self::getFile())) {
-			unlink(self::getFile());
+	public function clear() {
+		if (file_exists(self::getFile())) {
+			unLink(self::getFile());
 		}
 	}
 
@@ -48,8 +51,8 @@ class Nano_Log {
 	 *
 	 * @return string
 	 */
-	public static function getFile() {
-		return Application::current()->getRootDir() . DS . self::NAME;
+	public function getFile() {
+		return $this->application->rootDir . DS . self::NAME;
 	}
 
 }

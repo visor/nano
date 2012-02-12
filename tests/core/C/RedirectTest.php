@@ -2,7 +2,6 @@
 
 /**
  * @group core
- * @group framework
  */
 class Core_C_RedirectTest extends TestUtils_TestCase {
 
@@ -12,8 +11,14 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 	protected $redirect;
 
 	protected function setUp() {
-		$this->redirect = new Nano_C_Redirect(new Nano_C_Response());
-		Nano::message()->load('test');
+		$application = new Application();
+		$application
+			->withConfigurationFormat('php')
+			->withRootDir(dirName(dirName(dirName(__DIR__))) . DS . 'application-example')
+			->configure()
+		;
+		$application->message->load('test');
+		$this->redirect = new Nano_C_Redirect(new Nano_C_Response($application));
 	}
 
 	public function testSettingResponseLocation() {

@@ -18,8 +18,8 @@ abstract class Nano_Cli_Script {
 	protected $cli;
 
 	/**
+	 * @return int
 	 * @param string[] $args
-	 * @return void
 	 */
 	abstract public function run(array $args);
 
@@ -43,7 +43,7 @@ abstract class Nano_Cli_Script {
 	 * @return Application
 	 */
 	public function getApplication() {
-		return Application::current();
+		return $this->cli->getApplication();
 	}
 
 	/**
@@ -114,7 +114,7 @@ abstract class Nano_Cli_Script {
 		if (true === $usage) {
 			echo PHP_EOL, $this->usage();
 		}
-		exit($code);
+		return (int)$code;
 	}
 
 }

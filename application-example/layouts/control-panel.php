@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo Nano::message()->m('cp-title'); ?>: <?php echo $pageTitle; ?></title>
+	<title><?php echo $application->message->m('cp-title'); ?>: <?php echo $pageTitle; ?></title>
 <?php /* <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> */ ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<?php echo Assets::style()->import(), (isset($head) ? $head : ''); ?>
@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="container_16" id="wrapper">
-		<div class="grid_8" id="logo"><a href="/cp" style="color: #fff"><?php echo Nano::message()->m('cp-title'); ?></a></div>
+		<div class="grid_8" id="logo"><a href="/cp" style="color: #fff"><?php echo $application->message->m('cp-title'); ?></a></div>
 		<div class="grid_8">
 			<div id="user_tools"><span>Welcome <a href="#">Admin Username</a> | <a href="/logout">Logout</a></span></div>
 		</div>

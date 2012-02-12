@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @group framework
- * @group helpers
+ * @group core
  */
 class Core_HelperBrokerTest extends TestUtils_TestCase {
 
@@ -12,22 +11,15 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	protected $helper;
 
 	protected function setUp() {
-		$this->helper = new Nano_HelperBroker();
 		$application  = new Application();
-		$dispatcher   = new Nano_Dispatcher($application);
-
 		$application
-			->withRootDir(Application::current()->getRootDir())
+			->withConfigurationFormat('php')
+			->withRootDir($GLOBALS['application']->rootDir)
 			->withModule('example', $this->files->get($this, '/example'))
 			->withModule('another-example', $this->files->get($this, '/another-example'))
+			->configure()
 		;
-
-		$this->helper->setDispatcher($dispatcher);
-	}
-
-	public function testShouldUseCurrentApplicationDispatcherWhenNull() {
-		self::setObjectProperty($this->helper, 'dispatcher', null);
-		self::assertSame(Application::current()->getDispatcher(), $this->helper->getDispatcher());
+		$this->helper = $application->helper;
 	}
 
 	public function testShouldThrowExceptionWhenModuleNotFound() {

@@ -29,4 +29,11 @@ abstract class Nano_Helper {
 		$this->dispatcher = $dispatcher;
 	}
 
+	/**
+	 * @return Nano_HelperBroker
+	 */
+	public function helper() {
+		return $this->dispatcher->application()->helper;
+	}
+
 }

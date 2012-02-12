@@ -22,10 +22,11 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 		if (1 !== preg_match($this->domainPattern, $domain, $matches)) {
 			return false;
 		}
-		if (null == $this->location) {
+		if (null === $this->location) {
 			$this->matches = $matches;
 			return true;
 		}
+
 		$result = parent::match($url);
 		if ($result) {
 			$this->matches = array_merge($matches, $this->matches);
@@ -37,10 +38,10 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 	 * @return string
 	 */
 	protected function getSubDomain() {
-		if (Nano::config('web')->domain === $_SERVER['HTTP_HOST']) {
+		if ($this->application->config->get('web')->domain === $_SERVER['HTTP_HOST']) {
 			return null;
 		}
-		$result = preg_replace('/\.' . preg_quote(Nano::config('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
+		$result = preg_replace('/\.' . preg_quote($this->application->config->get('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
 		$result = strToLower($result);
 		return $result;
 	}

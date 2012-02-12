@@ -47,10 +47,6 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 		self::assertEquals($expected, $config);
 	}
 
-	public function testMergingConfiguration() {
-		self::markTestIncomplete('Not implemented yet');
-	}
-
 	protected function tearDown() {
 		$this->configFile = null;
 		$this->config     = null;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @group framework
+ * @group core
  * @group routes
  */
 class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {

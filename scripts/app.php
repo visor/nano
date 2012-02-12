@@ -72,9 +72,11 @@ class App extends \Nano_Cli_Script {
 
 require_once 'Application.php';
 
-Application::create()
+\$application = new Application;
+\$application
 	->usingConfigurationFormat('php')
 	->withRootDir(__DIR__)
+	// put your configuration here
 	->configure()
 ;
 PHP;
@@ -83,15 +85,16 @@ PHP;
 
 require './../bootstrap.php';
 
-Application::current()->start();
+/** @var Application \$application */
+\$application->start();
 PHP;
 
 		echo '  Creating bootstrap.php';
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'bootstrap.php', $this->path . DIRECTORY_SEPARATOR . 'bootstrap.php');
+		file_put_contents($this->path . DIRECTORY_SEPARATOR . 'bootstrap.php', $bootstrapPhp);
 		echo PHP_EOL;
 
 		echo '  Creating public/index.php';
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'index.php', $this->path . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'index.php');
+		file_put_contents($this->path . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'index.php', $indexPhp);
 		echo PHP_EOL;
 	}
 

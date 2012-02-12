@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Nano_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
+class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 
 	/**
 	 * @var Nano_C
@@ -38,9 +38,15 @@ class Nano_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 
 	protected function setUp() {
 		include_once $this->files->get($this, '/TestController.php');
-		$this->controller = new Core_C_TestController(new Nano_Dispatcher(Application::current()));
+
+		$application = new Application();
+		$application
+			->withConfigurationFormat('php')
+			->withPlugin($this)
+			->configure()
+		;
+		$this->controller = new Core_C_TestController(new Nano_Dispatcher($application));
 		$this->resetWasRun();
-		Application::current()->withPlugin($this);
 	}
 
 	/**
@@ -52,12 +58,11 @@ class Nano_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 		self::assertTrue($this->initWasRun);
 		self::assertTrue($this->beforeWasRun);
 		self::assertTrue($this->afterWasRun);
-		Application::current()->getPlugins()->detach($this);
 	}
 
 	protected function tearDown() {
-		unSet($this->controller);
 		$this->resetWasRun();
+		unSet($this->controller);
 	}
 
 	protected function resetWasRun() {

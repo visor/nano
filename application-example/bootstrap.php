@@ -2,12 +2,14 @@
 
 require_once __DIR__ . '/../library/Application.php';
 
-Application::create()
-	->usingConfigurationFormat('php')
+$application = new Application();
+$application
+	->withConfigurationFormat('php')
 	->withRootDir(__DIR__)
 	->withPlugin(new TestUtils_Coverage_Plugin(__DIR__))
 	->withPlugin(new ControlPanelAssets())
+
 	->configure()
 ;
 
-Orm::configure((array)Nano::config('orm'));
+Orm::configure((array)$application->config->get('orm'));

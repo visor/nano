@@ -6,6 +6,11 @@
 class Nano_HelperBroker {
 
 	/**
+	 * @var Application
+	 */
+	protected $application;
+
+	/**
 	 * @var Nano_Helper[]
 	 */
 	protected $helpers = array();
@@ -15,10 +20,9 @@ class Nano_HelperBroker {
 	 */
 	protected $modules = array();
 
-	/**
-	 * @var Nano_Dispatcher
-	 */
-	protected $dispatcher;
+	public function __construct(Application $application) {
+		$this->application = $application;
+	}
 
 	/**
 	 * @return Nano_HelperBroker_Module
@@ -27,8 +31,8 @@ class Nano_HelperBroker {
 	 * @thows Application_Exception_ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = $this->getDispatcher()->application()->getModules()->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
-		if (!$this->getDispatcher()->application()->getModules()->active($moduleName)) {
+		$moduleName = $this->application->modules->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
+		if (!$this->application->modules->active($moduleName)) {
 			throw new Application_Exception_ModuleNotFound($moduleName);
 		}
 
@@ -36,7 +40,7 @@ class Nano_HelperBroker {
 			return $this->modules[$moduleName];
 		}
 
-		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->getDispatcher()->application(), $moduleName);
+		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->application, $moduleName);
 		return $this->modules[$moduleName];
 	}
 
@@ -47,24 +51,6 @@ class Nano_HelperBroker {
 	 */
 	public function __call($method, array $arguments) {
 		return $this->get($method, false)->invoke();
-	}
-
-	/**
-	 * @return void
-	 * @param Nano_Dispatcher $dispatcher
-	 */
-	public function setDispatcher(Nano_Dispatcher $dispatcher) {
-		$this->dispatcher = $dispatcher;
-	}
-
-	/**
-	 * @return Nano_Dispatcher
-	 */
-	public function getDispatcher() {
-		if (null === $this->dispatcher) {
-			$this->setDispatcher(Application::current()->getDispatcher());
-		}
-		return $this->dispatcher;
 	}
 
 	/**
@@ -79,7 +65,7 @@ class Nano_HelperBroker {
 		}
 
 		$helper = $this->search($isClass ? $name : $key, $isClass);
-		$helper->setDispatcher($this->getDispatcher());
+		$helper->setDispatcher($this->application->dispatcher);
 		$this->helpers[$key] = $helper;
 		return $this->helpers[$key];
 	}
@@ -91,7 +77,7 @@ class Nano_HelperBroker {
 	 */
 	protected function search($name, $isClass) {
 		$className = $isClass ? $name : ucFirst($name) . 'Helper';
-		if ($this->getDispatcher()->application()->loader()->loadClass($className)) {
+		if ($this->application->loader->loadClass($className)) {
 			return new $className();
 		}
 		throw new Nano_Exception('Helper ' . $name . ' not found');

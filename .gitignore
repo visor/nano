@@ -5,12 +5,12 @@
 pmip
 cache
 build
+modules
 logs/access.log
 logs/error.log
 application-example/*.log
 application-example/settings/configuration
 application-example/settings/routes
 tests/library/Assets/_files/output/*
-
 !logs/empty
 !tests/library/Assets/_files/output/empty

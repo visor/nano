@@ -32,12 +32,12 @@ class Nano_Cli {
 	protected $maxLength = 0;
 
 	/**
-	 * @return void
+	 * @return int
 	 * @param string[] $args
 	 */
 	public static function main(array $args) {
 		$cli = new self();
-		$cli->run($args);
+		return $cli->run($args);
 	}
 
 	/**
@@ -65,38 +65,45 @@ class Nano_Cli {
 	}
 
 	public function __construct() {
-		$this->scripts = new ArrayObject();
+		$this->scripts        = new ArrayObject();
 		$this->applicationDir = null;
 	}
 
+	/**
+	 * @return int
+	 * @param array $args
+	 */
 	public function run(array $args) {
 		$this->detectApplicationDirectory();
 		$this->loadScripts();
 
 		if (0 === count($args)) {
 			$this->help();
-			exit(0);
+			return 0;
 		}
 
-		$script = array_shift($args);
-		$script = $this->getScriptToRun($script);
-
-		if ($script->needApplication() && null === Application::current()) {
+		$name   = array_shift($args);
+		$script = $this->getScriptToRun($name);
+		if (null === $script) {
+			echo 'Script ' . $name . ' not found', PHP_EOL;
+			$this->help();
+			return 1;
+		}
+		if ($script->needApplication() && null === $this->application) {
 			echo 'This script should starts in application directory', PHP_EOL;
 			$this->help();
-			exit(0);
+			return 2;
 		}
-		$script->run($args);
+		return $script->run($args);
 	}
 
 	public function help() {
 		echo self::getPhpBinary() . ' ' . baseName(self::getCliScriptPath()) . ' [script [params]]', PHP_EOL, PHP_EOL;
 		echo 'where script is one of: ', PHP_EOL;
 		foreach ($this->scripts as $name => $script) {
-			echo
-				' - ', $name, str_repeat(' ', $this->maxLength - strLen($name) + 2)
-				, '- ', $this->alignDescription($this->getScriptToRun($name)->getDescription(), $this->maxLength + 7), PHP_EOL
-			;
+			$sciptName        = ' - ' . $name . str_repeat(' ', $this->maxLength - strLen($name) + 2);
+			$sciptDescription = $this->alignDescription($this->getScriptToRun($name)->getDescription(), $this->maxLength + 7);
+			echo $sciptName, ' - ', $sciptDescription, PHP_EOL;
 		}
 		echo PHP_EOL;
 	}
@@ -120,10 +127,17 @@ class Nano_Cli {
 	}
 
 	/**
+	 * @return null|Application
+	 */
+	public function getApplication() {
+		return $this->application;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	protected function detectApplicationDirectory() {
-		$dir = getCwd();
+		$dir   = getCwd();
 		$found = false;
 		do {
 			if (file_exists($dir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
@@ -133,6 +147,24 @@ class Nano_Cli {
 				$dir = dirName($dir);
 			}
 		} while (!$found && strLen($dir) > 1);
+		if ($found) {
+			$this->loadApplication();
+		}
+	}
+
+	protected function loadApplication() {
+		$application = null;
+		if (false === include($this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
+			return;
+		}
+		if ($application === null) {
+			return;
+		}
+		if (!($application instanceof Application)) {
+			return;
+		}
+
+		$this->application = $application;
 	}
 
 	protected function loadScripts() {
@@ -149,20 +181,14 @@ class Nano_Cli {
 	}
 
 	protected function loadApplicationScripts() {
-		if (null === $this->applicationDir) {
-			return;
-		}
-		if (false === include($this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
-			return;
-		}
-		if (!Application::current()) {
+		if (null === $this->applicationDir || null === $this->application) {
 			return;
 		}
 
-		if (is_dir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR)) {
-			$this->loadScriptsFromDir(Application::current()->getRootDir() . DIRECTORY_SEPARATOR . self::DIR);
+		if (is_dir($this->application->rootDir . DIRECTORY_SEPARATOR . self::DIR)) {
+			$this->loadScriptsFromDir($this->application->rootDir . DIRECTORY_SEPARATOR . self::DIR);
 		}
-		foreach (Application::current()->getModules() as $name => $path) {
+		foreach ($this->application->modules as $path) {
 			if (is_dir($path . DIRECTORY_SEPARATOR . self::DIR)) {
 				$this->loadScriptsFromDir($path . DIRECTORY_SEPARATOR . self::DIR);
 			}
@@ -180,6 +206,9 @@ class Nano_Cli {
 			if ($ext !== 'php') {
 				continue;
 			}
+			if (1 !== preg_match('/^[a-z\-]+$/', $item->getBaseName('.php'))) {
+				continue;
+			}
 			$this->addScript($item->getPathName());
 		}
 		unSet($item, $iterator);
@@ -189,11 +218,13 @@ class Nano_Cli {
 		$name      = baseName($fileName, '.php');
 		$className = 'CliScript\\' . Nano::stringToName($name);
 		if (!class_exists($className, false)) {
-			include $fileName;
+			include_once $fileName;
+
+			if (!class_exists($className, false)) {
+				return;
+			}
 		}
-		if (!class_exists($className, false)) {
-			return;
-		}
+
 		$script = new ReflectionClass($className);
 		if (!$script->isSubclassOf('Nano_Cli_Script')) {
 			return;
@@ -208,14 +239,13 @@ class Nano_Cli {
 	}
 
 	/**
+	 * @return Nano_Cli_Script|null
 	 * @param $name
-	 * @return Nano_Cli_Script
 	 */
 	protected function getScriptToRun($name) {
 		$key = strToLower($name);
 		if (!$this->scripts->offsetExists($key)) {
-			$this->help('Script ' . $name . ' not found');
-			exit(1);
+			return null;
 		}
 
 		$result = $this->scripts[$key]->newInstance($key, $this);

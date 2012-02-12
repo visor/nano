@@ -76,7 +76,7 @@ class Nano_Render {
 		if (null === $module) {
 			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
-		$viewName = $this->application->getModules()->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+		$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
 		return $this->addContext($viewName, $context) . '.php';
 	}
 
@@ -104,8 +104,11 @@ class Nano_Render {
 		ob_start();
 		try {
 			extract($variables);
-			$helper = Nano::helper();
+
+			$application = $renderer->application;
+			$helper      = $renderer->application->helper;
 			include($fileName);
+
 			$result = ob_get_contents();
 			ob_end_clean();
 			return $result;

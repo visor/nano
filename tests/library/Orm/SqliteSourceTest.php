@@ -3,7 +3,7 @@
 require_once __DIR__ . '/TestPdoSource.php';
 
 /**
- * @group framework
+ * @group library
  * @group orm
  * @group orm-source
  */

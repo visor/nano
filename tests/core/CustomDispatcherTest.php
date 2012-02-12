@@ -2,7 +2,6 @@
 
 /**
  * @group core
- * @group framework
  */
 class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
@@ -25,7 +24,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testNotAcceptCustom() {
-		$response = new Nano_C_Response_Test();
+		$response = new Nano_C_Response_Test($this->dispatcher->application());
 		$this->dispatcher
 			->setResponse($response)
 			->throwExceptions(true)

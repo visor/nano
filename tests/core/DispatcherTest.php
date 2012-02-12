@@ -1,11 +1,9 @@
 <?php
 
 /**
- * @group framework
- * @group routes
- * @group dispatcher
+ * @group core
  */
-class DispatcherTest extends TestUtils_TestCase {
+class Core_DispatcherTest extends TestUtils_TestCase {
 
 	/**
 	 * @var boolean
@@ -54,7 +52,7 @@ class DispatcherTest extends TestUtils_TestCase {
 
 	public function testDetectingContextBySuffix() {
 		$this->dispatcher->application()->withRootDir($this->files->get($this, ''));
-		$this->dispatcher->setResponse(new Nano_C_Response_Test());
+		$this->dispatcher->setResponse(new Nano_C_Response_Test($this->dispatcher->application()));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$routes = new Nano_Routes();
@@ -73,7 +71,7 @@ class DispatcherTest extends TestUtils_TestCase {
 	public function testShouldReturnStatusCodeWhenNotFound() {
 		$this->dispatcher
 			->throwExceptions(true)
-			->setResponse(new Nano_C_Response_Test())
+			->setResponse(new Nano_C_Response_Test($this->dispatcher->application()))
 		;
 		$routes = new Nano_Routes();
 		$routes->get('', 'response-test', 'not-found');
@@ -86,7 +84,7 @@ class DispatcherTest extends TestUtils_TestCase {
 	public function testShouldReturnStatusCodeWhenInternalError() {
 		$this->dispatcher
 			->throwExceptions(true)
-			->setResponse(new Nano_C_Response_Test())
+			->setResponse(new Nano_C_Response_Test($this->dispatcher->application()))
 		;
 		$routes = new Nano_Routes();
 		$routes->get('', 'response-test', 'error');

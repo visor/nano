@@ -43,17 +43,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		return $result;
 	}
 
-	protected static function backupCurrentApplication() {
-		self::$backupApplication = self::getObjectProperty('Application', 'current');
-		self::setObjectProperty('Application', 'current', null);
-	}
-
-	protected static function restoreCurrentApplication() {
-		if (null !== self::$backupApplication) {
-			self::setObjectProperty('Application', 'current', self::$backupApplication);
-		}
-	}
-
 	/**
 	 * @return Nano_C_Response_Test
 	 * @param Application $application
@@ -67,7 +56,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		$className = Nano_Dispatcher::formatName($controller, true, null === $module ? null : Nano_Modules::nameToNamespace($module));
 
 		$instance  = new $className($application->getDispatcher());
-		$instance->setResponse(new \Nano_C_Response_Test());
+		$instance->setResponse(new \Nano_C_Response_Test($application));
 		$instance->setRenderer(new \Nano_Render($application));
 
 		$params['module']     = $module;

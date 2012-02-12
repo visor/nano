@@ -47,7 +47,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			}
 			return false;
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -71,7 +71,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			$result = $this->collection($resource->name())->update($this->criteriaToExpression($resource, $where), $data, array('safe' => true));
 			return null === $result['err'];
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -103,7 +103,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			}
 			return $result;
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -142,7 +142,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			}
 			return array_values($result);
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}
@@ -179,7 +179,7 @@ class Orm_DataSource_Mongo extends Orm_DataSource_Abstract implements Orm_DataSo
 			}
 			return array_values($result);
 		} catch (Exception $e) {
-			Nano_Log::message($e);
+//			Nano_Log::message($e);
 			return false;
 		}
 	}

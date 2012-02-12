@@ -1,5 +1,6 @@
 <?php
 
-include_once 'Application.php';
+include_once __DIR__ . '/../bootstrap.php';
 
-Application::current()->start();
+/** @var Application $application */
+$application->start();
