@@ -13,6 +13,7 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$application = new Application();
 		$application
+			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')
 			->configure()
 		;

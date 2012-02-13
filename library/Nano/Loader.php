@@ -61,11 +61,6 @@ class Nano_Loader {
 			. DIRECTORY_SEPARATOR . self::LIBRARY_DIR
 		;
 		$this->useDirectory($nanoDir);
-		if (!class_exists('Nano', false)) {
-			$this->loadCommonClass('Nano');
-			$this->loadCommonClass('Nano_Modules');
-			$this->loadCommonClass('Nano_Log');
-		}
 	}
 
 	/**
@@ -115,10 +110,29 @@ class Nano_Loader {
 
 	/**
 	 * @return boolean
+	 * @param string $className
+	 * @param string $fileName
+	 */
+	public function loadFileWithClass($className, $fileName) {
+		if (!file_exists($fileName)) {
+			return false;
+		}
+		if (false === include($fileName)) {
+			return false;
+		}
+		if (!class_exists($className, false)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @return boolean
 	 * @param string $name
 	 */
 	protected function loadCommonClass($name) {
-		if (false === include($this->classToPath($name))) {
+		if (false === include(self::classToPath($name))) {
 			return false;
 		}
 		return true;

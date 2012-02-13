@@ -18,7 +18,11 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		$application = new Application();
-		$application->withConfigurationFormat('php')->configure();
+		$application
+			->withRootDir($GLOBALS['application']->rootDir)
+			->withConfigurationFormat('php')
+			->configure()
+		;
 
 		$this->appRoot  = dirName(__DIR__) . '/Application/_files';
 		$this->nanoRoot = $application->nanoRootDir;

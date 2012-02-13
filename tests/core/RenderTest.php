@@ -25,6 +25,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 		$this->application = new Application();
 
 		$this->application
+			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')
 			->withModule('module1', $this->files->get($this, '/module1'))
 			->withModule('module2', $this->files->get($this, '/module2'))

@@ -9,7 +9,7 @@ class Nano_Config {
 	/**
 	 * @var Nano_Config_Format
 	 */
-	private static $format = null;
+	protected  $format = null;
 
 	/**
 	 * @var string
@@ -27,52 +27,44 @@ class Nano_Config {
 	protected $routes = null;
 
 	/**
-	 * @param string $path
-	 */
-	public function __construct($path) {
-		$this->setPath($path);
-	}
-
-	/**
 	 * @return Nano_Config_Format
 	 * @param string $name
 	 */
-	public static function formatFactory($name) {
+	public static function format($name) {
 		/** @var Nano_Config_Format $result */
 		$className = __CLASS__ . '_Format_' . ucFirst(strToLower($name));
 		if (false === class_exists($className)) {
 			throw new Nano_Exception_UnsupportedConfigFormat($name);
 		}
+
 		$class = new ReflectionClass($className);
 		if (!$class->implementsInterface('Nano_Config_Format') || !$class->isInstantiable()) {
 			throw new Nano_Exception_UnsupportedConfigFormat($name);
 		}
+
 		$result = $class->newInstance();
 		if (!$result->available()) {
 			throw new Nano_Exception_UnsupportedConfigFormat($name);
 		}
+
 		return $result;
 	}
 
 	/**
-	 * @return void
-	 * @param Nano_Config_Format $value
+	 * @param string $path
+	 * @param Nano_Config_Format $format
+	 *
+	 * @throws Nano_Exception_UnsupportedConfigFormat
 	 */
-	public static function setFormat(Nano_Config_Format $value) {
-		self::$format = $value;
-	}
+	public function __construct($path, Nano_Config_Format $format) {
+		if (false === $format->available()) {
+			throw new Nano_Exception_UnsupportedConfigFormat(get_class($format));
+		}
 
-	/**
-	 * @return Nano_Config_Format
-	 */
-	public static function getFormat() {
-		if (null === self::$format) {
-			throw new Nano_Config_Exception('No configuration format specified');
-		}
-		if (false === self::$format->available()) {
-			throw new Nano_Config_Exception('Specified configuration format not available');
-		}
-		return self::$format;
+		$this->format = $format;
+		$this->path   = $path;
+
+		$this->load();
 	}
 
 	/**
@@ -87,15 +79,6 @@ class Nano_Config {
 	 */
 	public function getPath() {
 		return $this->path;
-	}
-
-	/**
-	 * @return void
-	 * @param string $value
-	 */
-	public function setPath($value) {
-		$this->path   = $value;
-		$this->config = null;
 	}
 
 	public function fileExists() {
@@ -113,7 +96,6 @@ class Nano_Config {
 		if (!$this->fileExists()) {
 			return false;
 		}
-		$this->load();
 		return isSet($this->config->$name);
 	}
 
@@ -134,7 +116,6 @@ class Nano_Config {
 	 * @param mixed $value
 	 */
 	public function set($name, $value) {
-		$this->load();
 		$this->config->$name = $value;
 	}
 
@@ -143,14 +124,11 @@ class Nano_Config {
 	 * @throws Nano_Exception
 	 */
 	protected function load() {
-		if (null !== $this->config) {
-			return;
-		}
 		if (!$this->fileExists()) {
 			throw new Nano_Config_Exception('Configuration files not exists at ' . $this->path);
 		}
-		$this->config = self::getFormat()->read($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
-		$this->routes = self::getFormat()->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
+		$this->config = $this->format->read($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
+		$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 	}
 
 }

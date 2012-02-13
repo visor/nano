@@ -4,7 +4,7 @@
 	<title><?php echo $application->message->m('cp-title'); ?>: <?php echo $pageTitle; ?></title>
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<?php echo Assets::style()->import(), (isset($head) ? $head : ''); ?>
+	<?php /* TODO: use assets module echo Assets::style()->import(), (isset($head) ? $head : ''); */ ?>
 </head>
 <body>
 <div class="container_16">

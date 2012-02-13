@@ -50,37 +50,39 @@ class Nano_HelperBroker {
 	 * @param array $arguments
 	 */
 	public function __call($method, array $arguments) {
-		return $this->get($method, false)->invoke();
+		return $this->get($method);
 	}
 
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
-	 * @param boolean $isClass
 	 */
-	protected function get($name, $isClass = false) {
+	protected function get($name) {
 		$key = strToLower($name);
 		if (array_key_exists($key, $this->helpers)) {
 			return $this->helpers[$key];
 		}
 
-		$helper = $this->search($isClass ? $name : $key, $isClass);
+		$helper = $this->search($key);
 		$helper->setDispatcher($this->application->dispatcher);
 		$this->helpers[$key] = $helper;
+
 		return $this->helpers[$key];
 	}
 
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
-	 * @param boolean $isClass
 	 */
-	protected function search($name, $isClass) {
-		$className = $isClass ? $name : ucFirst($name) . 'Helper';
-		if ($this->application->loader->loadClass($className)) {
-			return new $className();
+	protected function search($name) {
+		$className = ucFirst($name) . 'Helper';
+		$classPath = $this->application->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className);
+
+		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
+			throw new Nano_Exception_HelperNotFound($name);
 		}
-		throw new Nano_Exception('Helper ' . $name . ' not found');
+
+		return new $className;
 	}
 
 }

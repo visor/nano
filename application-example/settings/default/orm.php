@@ -1,4 +1,8 @@
-<?php return array(
+<?php
+
+/** @var Application $application */
+
+return array(
 	'default' => array(
 		'dsn'          => 'mysql://host=localhost;dbname=nano'
 		, 'default'    => true
@@ -12,6 +16,6 @@
 		, 'datasource' => 'Orm_DataSource_Pdo_Mysql'
 		, 'username'   => 'user'
 		, 'password'   => ''
-		, 'log'        => APP_ROOT . DS . 'test-sql.log'
+		, 'log'        => $application->rootDir . DS . 'orm.log'
 	)
 );

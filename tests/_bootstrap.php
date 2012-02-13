@@ -8,12 +8,13 @@ require_once __DIR__ . '/../application-example/bootstrap.php';
 
 /** @var Application $application */
 
-define('SELENIUM_ENABLE', $application->config->get('selenium')->enabled);
+//define('SELENIUM_ENABLE', $application->config->get('selenium')->enabled);
+//
+//if (SELENIUM_ENABLE) {
+//	PHPUnit_Extensions_SeleniumTestCase::$browsers = array((array)($application->config->get('selenium')->browser));
+//}
 
-if (SELENIUM_ENABLE) {
-	PHPUnit_Extensions_SeleniumTestCase::$browsers = array((array)($application->config->get('selenium')->browser));
-}
-
+/** @global Application $application */
 $GLOBALS['application'] = $application;
 Nano_Db::setDefault('test');
 Orm::setDefaultSource('test');

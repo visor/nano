@@ -12,30 +12,31 @@ class ControlPanelAssets implements Nano_C_Plugin {
 		}
 
 		session_start();
-		$controller->dispatcher()->application()->message->load('control-panel');
-		Assets::style()
-			->variable('images', '/resources/images')
-			->append(WEB_ROOT . '/resources/styles/960.css')
-			->append(WEB_ROOT . '/resources/styles/reset.css')
-			->append(WEB_ROOT . '/resources/styles/text.css')
-			->append(WEB_ROOT . '/resources/styles/default.css')
-			->append(WEB_ROOT . '/resources/styles/blue.css')
-//			->append(WEB_ROOT . '/resources/styles/green.css')
-//			->append(WEB_ROOT . '/resources/styles/red.css')
-			->append(WEB_ROOT . '/resources/styles/smoothness-ui.css')
-			->append(WEB_ROOT . '/resources/styles/actions.css')
-		;
-
-		Assets::script()
-			->append(WEB_ROOT . '/resources/scripts/jquery.min.js')
-			->append(WEB_ROOT . '/resources/scripts/jquery.blend.js')
-			->append(WEB_ROOT . '/resources/scripts/ui.core.js')
-			->append(WEB_ROOT . '/resources/scripts/ui.sortable.js')
-			->append(WEB_ROOT . '/resources/scripts/ui.dialog.js')
-			->append(WEB_ROOT . '/resources/scripts/ui.datepicker.js')
-			->append(WEB_ROOT . '/resources/scripts/effects.js')
-			->append(WEB_ROOT . '/resources/scripts/cp.js')
-		;
+		$controller->application()->message->load('control-panel');
+//TODO: Use assets module
+//		Assets::style()
+//			->variable('images', '/resources/images')
+//			->append($controller->application()->publicDir . '/resources/styles/960.css')
+//			->append($controller->application()->publicDir . '/resources/styles/reset.css')
+//			->append($controller->application()->publicDir . '/resources/styles/text.css')
+//			->append($controller->application()->publicDir . '/resources/styles/default.css')
+//			->append($controller->application()->publicDir . '/resources/styles/blue.css')
+//			->append($controller->application()->publicDir . '/resources/styles/green.css')
+//			->append($controller->application()->publicDir . '/resources/styles/red.css')
+//			->append($controller->application()->publicDir . '/resources/styles/smoothness-ui.css')
+//			->append($controller->application()->publicDir . '/resources/styles/actions.css')
+//		;
+//
+//		Assets::script()
+//			->append($controller->application()->publicDir . '/resources/scripts/jquery.min.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/jquery.blend.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/ui.core.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/ui.sortable.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/ui.dialog.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/ui.datepicker.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/effects.js')
+//			->append($controller->application()->publicDir . '/resources/scripts/cp.js')
+//		;
 	}
 
 	/**

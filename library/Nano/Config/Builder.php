@@ -6,9 +6,18 @@ class Nano_Config_Builder {
 	const ROUTES_FILE  = 'routes.php';
 
 	/**
+	 * @var Application
+	 */
+	protected $application;
+
+	/**
 	 * @var string
 	 */
 	protected $source = null, $destination = null;
+
+	public function __construct(Application $application) {
+		$this->application = $application;
+	}
 
 	/**
 	 * @return Nano_Config_Builder
@@ -54,7 +63,7 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	protected function buildConfiguration($name) {
-		Nano_Config::getFormat()->write(
+		$this->application->configFormat->write(
 			$this->createSettings($name)
 			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
 		);
@@ -75,7 +84,7 @@ class Nano_Config_Builder {
 			}
 		}
 
-		Nano_Config::getFormat()->writeRoutes(
+		$this->application->configFormat->writeRoutes(
 			$routes
 			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME
 		);
@@ -127,6 +136,8 @@ class Nano_Config_Builder {
 	 * @param string $file
 	 */
 	protected function buildSingleFile($file) {
+		$application = $this->application;
+
 		return include($file);
 	}
 

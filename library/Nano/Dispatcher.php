@@ -316,6 +316,9 @@ class Nano_Dispatcher {
 	 */
 	protected function buildParams($data) {
 		$this->params = array();
+		if (!is_array($data)) {
+			return;
+		}
 		foreach ($data as $name => $value) {
 			if ('module' === $name) {
 				$this->module = $value;

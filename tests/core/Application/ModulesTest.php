@@ -38,13 +38,13 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	public function testDetectingApplicationModulesDir() {
 		$this->application
 			->withConfigurationFormat('php')
-			->withRootDir(__DIR__)
+			->withRootDir($GLOBALS['application']->rootDir)
 		;
 		self::assertFalse($this->application->offsetExists('modulesDir'));
 
 		$this->application->configure();
 		self::assertEquals(
-			__DIR__ . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME
+			$GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME
 			, $this->application->modulesDir
 		);
 	}
@@ -55,7 +55,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 		$this->application
 			->withConfigurationFormat('php')
-			->withRootDir(__DIR__)
+			->withRootDir($GLOBALS['application']->rootDir)
 			->configure()
 		;
 

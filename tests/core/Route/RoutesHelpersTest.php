@@ -40,8 +40,8 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 	public function testRegexpLocationWithSuffix() {
 		$key  = '~show/(?P<page>[-\w]+)';
 		$data = array(
-			  '.html'                      => '/^show\/(?P<page>[-\w]+)\.html$/'
-			, '~(?P<context>\.(xml|rss))?' => '/^show\/(?P<page>[-\w]+)(?P<context>\.(xml|rss))?$/'
+			  '.html'                      => '/^show\/(?P<page>[-\w]+)\.html$/i'
+			, '~(?P<context>\.(xml|rss))?' => '/^show\/(?P<page>[-\w]+)(?P<context>\.(xml|rss))?$/i'
 		);
 		foreach ($data as $suffix => $location) {
 			$this->routes->suffix($suffix)->get($key, 'index', 'index');
@@ -54,8 +54,8 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 	public function testRegexpLocationWithPrefix() {
 		$key  = '~show/(?P<page>[-\w]+)';
 		$data = array(
-			  'admin/'              => '/^admin\/show\/(?P<page>[-\w]+)$/'
-			, '~(?P<lang>(ru|en))/' => '/^(?P<lang>(ru|en))\/show\/(?P<page>[-\w]+)$/'
+			  'admin/'              => '/^admin\/show\/(?P<page>[-\w]+)$/i'
+			, '~(?P<lang>(ru|en))/' => '/^(?P<lang>(ru|en))\/show\/(?P<page>[-\w]+)$/i'
 		);
 		foreach ($data as $prefix => $location) {
 			$this->routes->prefix($prefix)->get($key, 'index', 'index');

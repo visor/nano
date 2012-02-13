@@ -116,6 +116,13 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return Application
+	 */
+	public function application() {
+		return $this->dispatcher->application();
+	}
+
+	/**
 	 * @return Nano_Dispatcher
 	 */
 	public function dispatcher() {

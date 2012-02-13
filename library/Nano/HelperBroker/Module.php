@@ -31,7 +31,7 @@ class Nano_HelperBroker_Module {
 	 * @param $name
 	 */
 	public function __get($name) {
-		return $this->get($name)->invoke();
+		return $this->get($name);
 	}
 
 	/**
@@ -40,7 +40,7 @@ class Nano_HelperBroker_Module {
 	 * @param array $arguments
 	 */
 	public function __call($name, array $arguments) {
-		return $this->get($name)->invoke();
+		return $this->get($name);
 	}
 
 	/**
@@ -67,18 +67,15 @@ class Nano_HelperBroker_Module {
 		$className = ucFirst($name) . 'Helper';
 		$classPath = $this->application->modules->getPath(
 			$this->module
-			, Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . $this->application->loader->classToPath($className)
+			, Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className)
 		);
-
-		if (!file_exists($classPath)) {
-			throw new Nano_Exception('Helper ' . $this->module . '\\' . $name . ' not found');
-		}
-		if (false === include($classPath)) {
-			throw new Nano_Exception('Helper ' . $this->module . '\\' . $name . ' not found');
-		}
-
 		$fullClassName = Nano_Loader::formatModuleClassName($this->module, $className);
-		return new $fullClassName();
+
+		if (!$this->application->loader->loadFileWithClass($fullClassName, $classPath)) {
+			throw new Nano_Exception_HelperNotFound($name, $this->module);
+		}
+
+		return new $fullClassName;
 	}
 
 }

@@ -4,7 +4,7 @@
 	<title><?php echo $application->message->m('cp-title'); ?>: <?php echo $pageTitle; ?></title>
 <?php /* <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /> */ ?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<?php echo Assets::style()->import(), (isset($head) ? $head : ''); ?>
+	<?php /* TODO: use assets module echo Assets::style()->import(), (isset($head) ? $head : ''); */ ?>
 	<script type="text/javascript">/*<![CDATA[*/ var email = function(s) { var r = function ( t, u, v ) { return String.fromCharCode(((t - u + v ) % (v * 2)) + u); }, b = [], c, i = s.length, a = "a".charCodeAt(), z = a + 26, A = "A".charCodeAt(), Z = A + 26; while (i--) { c = s.charCodeAt(i); if (c >= a && c < z) { b[i] = r(c, a, 13); } else if (c >= A && c < Z) { b[i] = r(c, A, 13); } else { b[i] = s.charAt(i); } }; return b.join(""); }; /*]]>*/</script>
 </head>
 <body>
@@ -43,6 +43,6 @@
 		<div class="grid_8" style="text-align: left;">&copy; studio-v</div>
 		<div class="grid_8" style="text-align: right;">Website Administration Share by <a href="http://nicetheme.net/">Nice Theme</a></div>
 	</div>
-	<?php echo Assets::script()->import(), $helper->scripts()->captured(); ?>
+	<?php /* TODO: use assets module echo Assets::script()->import(), $helper->scripts()->captured(); */ ?>
 </body>
 </html>

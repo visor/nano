@@ -41,6 +41,7 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 
 		$application = new Application();
 		$application
+			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')
 			->withPlugin($this)
 			->configure()

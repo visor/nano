@@ -1,4 +1,8 @@
-<?php return array(
+<?php
+
+/** @var Application $application */
+
+return array(
 	'default' => array(
 		  'type'     => 'mysql'
 		, 'dsn'      => 'host=localhost;dbname=nano'
@@ -17,6 +21,6 @@
 		, 'options'  => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 		)
-		, 'log'      => APP_ROOT . DS . 'test-sql.log'
+		, 'log'      => $application->rootDir . DS . 'test-sql.log'
 	)
 );

@@ -32,14 +32,15 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	}
 
 	public function testDetectingNanoDir() {
-		self::assertEquals(getCwd(), $this->application->nanoRootDir);
+		$expected = realPath(__DIR__ . '/../../../');
+		self::assertEquals($expected, $this->application->nanoRootDir);
 	}
 
 	public function testDetectingPublicDir() {
-		$expected = __DIR__ . DIRECTORY_SEPARATOR . Application::PUBLIC_DIR_NAME;
+		$expected = $GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . Application::PUBLIC_DIR_NAME;
 		$this->application
 			->withConfigurationFormat('php')
-			->withRootDir(__DIR__)
+			->withRootDir($GLOBALS['application']->rootDir)
 		;
 
 		self::assertFalse($this->application->offsetExists('publicDir'));

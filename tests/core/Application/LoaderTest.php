@@ -57,14 +57,12 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 		$appLibrary     = $app . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME;
 		$appModels      = $app . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME;
 		$appPlugins     = $app . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME;
-		$appHelpers     = $app . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME;
 		$this->application->withRootDir($app);
 
 		self::assertContains($appControllers . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appLibrary . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appModels . PATH_SEPARATOR, get_include_path());
 		self::assertContains($appPlugins . PATH_SEPARATOR, get_include_path());
-		self::assertContains($appHelpers . PATH_SEPARATOR, get_include_path());
 	}
 
 	public function testLoadingApplicationLibraryClass() {
@@ -117,6 +115,22 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 		$dirs = array_count_values($actual);
 		self::arrayHasKey($directory, $dirs);
 		self::assertEquals($dirs[$directory], 1);
+	}
+
+	public function testLoadFileShouldReturnTrueWhenClassLoadedSuccessful() {
+		self::assertTrue($this->application->loader->loadFileWithClass('FileWithSomeClass', __DIR__ . '/_files/FileWithClass.php'));
+	}
+
+	public function testLoadFileShouldReturnFalseWhenFileNotExists() {
+		self::assertFalse($this->application->loader->loadFileWithClass('SomeClass', __FILE__ . '.test'));
+	}
+
+	public function testLoadFileShuldReturnFalseWhenCannotIncludeFile() {
+		self::assertFalse($this->application->loader->loadFileWithClass('SomeClass', __DIR__ . '/_files/ReturnFalse.php'));
+	}
+
+	public function testLoadFileShouldReturnFalseWhenFileNotContainsRequiredClass() {
+		self::assertFalse($this->application->loader->loadFileWithClass('SomeClass', __DIR__ . '/_files/NotSomeClass.php'));
 	}
 
 	/**

@@ -6,20 +6,28 @@
 class Core_HelperBrokerTest extends TestUtils_TestCase {
 
 	/**
+	 * @var Application
+	 */
+	protected static $application;
+
+	/**
 	 * @var Nano_HelperBroker
 	 */
 	protected $helper;
 
-	protected function setUp() {
-		$application  = new Application();
-		$application
+	public static function setUpBeforeClass() {
+		self::$application = new Application();
+		self::$application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)
-			->withModule('example', $this->files->get($this, '/example'))
-			->withModule('another-example', $this->files->get($this, '/another-example'))
+			->withModule('example', __DIR__ . '/_files/example')
+			->withModule('another-example', __DIR__ . '/_files/another-example')
 			->configure()
 		;
-		$this->helper = $application->helper;
+	}
+
+	protected function setUp() {
+		$this->helper = self::$application->helper;
 	}
 
 	public function testShouldThrowExceptionWhenModuleNotFound() {
@@ -27,23 +35,14 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 		$this->helper->someModule;
 	}
 
-	public function testShouldThrowExceptionWhenModuleHelperFileNotFound() {
-		$this->setExpectedException('Nano_Exception', 'Helper example\\notfound not found');
-		$this->helper->example->notFound;
-	}
-
 	public function testShouldThrowExceptionWhenModuleHelperNotLoaded() {
-		$this->setExpectedException('Nano_Exception', 'Helper example\\wrong not found');
+		$this->setExpectedException('Nano_Exception_HelperNotFound', 'Helper wrong in module example not found');
 		$this->helper->example->wrong;
 	}
 
 	public function testShouldThrowExceptionWhenApplicationHelperNotLoaded() {
-		$this->setExpectedException('Nano_Exception', 'Helper notfound not found');
+		$this->setExpectedException('Nano_Exception_HelperNotFound', 'Helper notfound not found');
 		$this->helper->notFound();
-	}
-
-	public function testSearchingApplicationHelper() {
-		self::assertInstanceOf('CounterHelper', $this->helper->counter());
 	}
 
 	public function testSearchingModuleClasses() {
@@ -66,12 +65,20 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 		self::assertSame($this->helper->example, $this->helper->example);
 	}
 
+	public function testSearchingApplicationHelper() {
+		self::assertInstanceOf('CounterHelper', $this->helper->counter());
+	}
+
 	public function testShouldReturnSameInstancesForOneApplicationHelper() {
 		self::assertSame($this->helper->counter(), $this->helper->counter());
 	}
 
 	protected function tearDown() {
 		unSet($this->helper);
+	}
+
+	public static function tearDownAfterClass() {
+		self::$application = null;
 	}
 
 }

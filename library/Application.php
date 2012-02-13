@@ -1,7 +1,9 @@
 <?php
 
 require_once __DIR__ . '/TypedRegistry.php';
+require_once __DIR__ . '/Nano.php';
 require_once __DIR__ . '/Nano/Loader.php';
+require_once __DIR__ . '/Nano/Modules.php';
 
 /**
  * @property string $rootDir
@@ -85,9 +87,8 @@ class Application extends TypedRegistry {
 			$this->withSharedModulesDir($this->nanoRootDir . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
 		}
 
-		Nano_Config::setFormat($this->configFormat);
 		$this
-			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings'))
+			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
 			->readOnly('helper',       new Nano_HelperBroker($this))
 			->readOnly('dispatcher',   new Nano_Dispatcher($this))
 			->readOnly('eventManager', new Event_Manager())
@@ -95,13 +96,6 @@ class Application extends TypedRegistry {
 		;
 
 		$this->setupErrorReporting();
-
-		if (!defined('APP_ROOT')) {
-			//TODO: Remove this
-			define('APP_ROOT', $this->rootDir);
-			define('WEB_ROOT', $this->publicDir);
-		}
-
 		return $this;
 	}
 
@@ -110,7 +104,7 @@ class Application extends TypedRegistry {
 	 * @param string $value
 	 */
 	public function withConfigurationFormat($value) {
-		$this->offsetSet('configFormat', Nano_Config::formatFactory($value));
+		$this->offsetSet('configFormat', Nano_Config::format($value));
 		return $this;
 	}
 
@@ -124,7 +118,6 @@ class Application extends TypedRegistry {
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
-			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::HELPERS_DIR_NAME)
 			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
 		;
 		return $this;
@@ -224,4 +217,5 @@ class Application extends TypedRegistry {
 			ini_set('display_errors', false);
 		}
 	}
+
 }
