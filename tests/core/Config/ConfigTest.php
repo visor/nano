@@ -13,9 +13,9 @@ class Core_ConfigTest extends TestUtils_TestCase {
 		new Nano_Config('', new Nano_Config_Format_Unsupported());
 	}
 
-	public function testAfterCreatingConfigShouldBeLoaded() {
+	public function testAfterCreatingConfigShouldBeEmpty() {
 		$config = new Nano_Config($this->files->get($this, '/configs/default'), new Nano_Config_Format_Php());
-		self::assertNotNull(self::getObjectProperty($config, 'config'));
+		self::assertNull(self::getObjectProperty($config, 'config'));
 	}
 
 	public function testGetPathShouldReturnPathPassedToConstructor() {

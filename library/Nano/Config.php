@@ -63,14 +63,13 @@ class Nano_Config {
 
 		$this->format = $format;
 		$this->path   = $path;
-
-		$this->load();
 	}
 
 	/**
 	 * @return Nano_Routes
 	 */
 	public function routes() {
+		$this->load();
 		return $this->routes;
 	}
 
@@ -96,6 +95,8 @@ class Nano_Config {
 		if (!$this->fileExists()) {
 			return false;
 		}
+
+		$this->load();
 		return isSet($this->config->$name);
 	}
 
@@ -116,6 +117,7 @@ class Nano_Config {
 	 * @param mixed $value
 	 */
 	public function set($name, $value) {
+		$this->load();
 		$this->config->$name = $value;
 	}
 
@@ -124,9 +126,13 @@ class Nano_Config {
 	 * @throws Nano_Exception
 	 */
 	protected function load() {
+		if (null !== $this->config) {
+			return;
+		}
 		if (!$this->fileExists()) {
 			throw new Nano_Config_Exception('Configuration files not exists at ' . $this->path);
 		}
+
 		$this->config = $this->format->read($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
 		$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 	}
