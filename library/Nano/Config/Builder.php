@@ -37,9 +37,12 @@ class Nano_Config_Builder {
 		return $this;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public function clean() {
 		if (null === $this->destination) {
-			return;
+			return false;
 		}
 		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME)) {
 			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME);
@@ -47,6 +50,7 @@ class Nano_Config_Builder {
 		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME)) {
 			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME);
 		}
+		return true;
 	}
 
 	/**

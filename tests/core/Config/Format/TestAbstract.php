@@ -5,7 +5,7 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	/**
 	 * @var string
 	 */
-	protected $configFile, $resultFile;
+	protected $configFile, $routesFile, $resultFile;
 
 	/**
 	 * @var Nano_Config_Format
@@ -23,21 +23,23 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	abstract protected function getConfigName();
 
 	protected function setUp() {
-		$this->config       = $this->getConfigInstance();
+		$this->config = $this->getConfigInstance();
 		if (!$this->config->available()) {
 			self::markTestSkipped(get_class($this->config) . ' is not available');
 		}
 
-		$this->resultFile   = $this->files->get($this, '/config.result');
-		$this->configFile   = $this->files->get($this, '/config.' . $this->getConfigName());
+		$this->resultFile = $this->files->get($this, '/config.result');
+		$this->configFile = $this->files->get($this, '/config.' . $this->getConfigName());
+		$this->routesFile = $this->files->get($this, '/routes.' . $this->getConfigName());
 		if (file_exists($this->resultFile)) {
-			@unlink($this->resultFile);
+			@unLink($this->resultFile);
 		}
 	}
 
 	public function testSavingConfiguration() {
 		$data = include($this->files->get($this, '/config.source.php'));
 		$this->config->write($data, $this->resultFile);
+		self::assertFileExists($this->resultFile);
 		self::assertFileEquals($this->configFile, $this->resultFile);
 	}
 
@@ -47,12 +49,31 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 		self::assertEquals($expected, $config);
 	}
 
+	public function testSavingRoutes() {
+		$routes = new Nano_Routes();
+		include($this->files->get($this, '/routes.source.php'));
+
+		$this->config->writeRoutes($routes, $this->resultFile);
+
+		self::assertFileExists($this->resultFile);
+		self::assertEquals($routes, $this->config->readRoutes($this->resultFile));
+	}
+
+	public function testReadingRoutes() {
+		$routes = new Nano_Routes();
+		include($this->files->get($this, '/routes.source.php'));
+
+		$actual = $this->config->readRoutes($this->routesFile);
+//		exit(var_export($actual, true));
+		self::assertInstanceOf('Nano_Routes', $actual);
+		self::assertEquals($routes, $actual);
+	}
+
 	protected function tearDown() {
-		$this->configFile = null;
-		$this->config     = null;
 		if (file_exists($this->resultFile)) {
-			@unlink($this->resultFile);
+			@unLink($this->resultFile);
 		}
+		unSet($this->configFile, $this->resultFile, $this->routesFile, $this->config);
 	}
 
 }

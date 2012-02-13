@@ -8,7 +8,7 @@ class Nano_Exception_NotFound extends Nano_Exception {
 	 */
 	public function __construct($message = null, Nano_Route $route = null) {
 		if ($route instanceof Nano_Route) {
-			parent::__construct($message . '(route: ' . $route . ')');
+			parent::__construct($message . ' (route: ' . $route . ')');
 		} else {
 			parent::__construct($message);
 		}

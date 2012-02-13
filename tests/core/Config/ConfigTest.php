@@ -85,4 +85,23 @@ class Core_ConfigTest extends TestUtils_TestCase {
 		self::assertEquals('value', $config->get('section'));
 	}
 
+	public function testGettingRoutes() {
+		$config = new Nano_Config($this->files->get($this, '/configs/default'), new Nano_Config_Format_Php());
+		self::assertInstanceOf('Nano_Routes', $config->routes());
+	}
+
+	public function testExistsShouldReturnFalseWhenNoConfigFileExists() {
+		$config = new Nano_Config($this->files->get($this, '/configs/no-config'), new Nano_Config_Format_Php());
+
+		self::assertFalse($config->fileExists());
+		self::assertFalse($config->exists('section'));
+	}
+
+	public function testExistsShouldReturnFalseWhenNoRoutesFileExists() {
+		$config = new Nano_Config($this->files->get($this, '/configs/no-routes'), new Nano_Config_Format_Php());
+
+		self::assertFalse($config->fileExists());
+		self::assertFalse($config->exists('section'));
+	}
+
 }

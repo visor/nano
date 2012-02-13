@@ -19,7 +19,7 @@ class Core_Config_Format_PhpTest extends Core_Config_Format_TestAbstract {
 	 * @return string
 	 */
 	protected function getConfigName() {
-		return 'php';
+		return 'format.php';
 	}
 
 }

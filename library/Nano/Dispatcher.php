@@ -200,7 +200,7 @@ class Nano_Dispatcher {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
-			throw new Nano_Exception_NotFound('Controller class not found', $route);
+			throw new Nano_Exception_NotFound('Controller class not found: '. $className, $route);
 		}
 		$class = new ReflectionClass($className);
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {

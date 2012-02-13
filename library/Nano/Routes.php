@@ -197,4 +197,9 @@ class Nano_Routes implements IteratorAggregate {
 		}
 		return self::$empty;
 	}
+
+	public function __sleep() {
+		return array('routes');
+	}
+
 }

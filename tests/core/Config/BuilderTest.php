@@ -236,6 +236,24 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		self::assertEquals($this->application->rootDir, $config->get('config')->root);
 	}
 
+	public function testClearShoultReturnFalseWhenNoDestination() {
+		self::assertFalse($this->builder->clean());
+	}
+
+	public function testClearingDestination() {
+		$path = $this->files->get($this, '/settings');
+		$this->builder->setSource($this->files->get($this, '/application'));
+		$this->builder->setDestination($path);
+		$this->builder->build('default');
+
+		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . Nano_Config::ROUTES_FILE_NAME);
+
+		self::assertTrue($this->builder->clean());
+		self::assertFileNotExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileNotExists($path . DS . Nano_Config::ROUTES_FILE_NAME);
+	}
+
 	protected function tearDown() {
 		$this->files->clean($this, '/settings');
 		unSet($this->builder, $this->application);

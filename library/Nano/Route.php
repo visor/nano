@@ -19,6 +19,12 @@ abstract class Nano_Route {
 	}
 
 	/**
+	 * @return boolean
+	 * @param string $location
+	 */
+	abstract public function match($location);
+
+	/**
 	 * @return Nano_Route
 	 * @param string $location
 	 * @param string $controller
@@ -75,12 +81,6 @@ abstract class Nano_Route {
 	}
 
 	/**
-	 * @return boolean
-	 * @param string $location
-	 */
-	abstract public function match($location);
-
-	/**
 	 * @return string[]
 	 */
 	public function matches() {
@@ -92,6 +92,10 @@ abstract class Nano_Route {
 	 */
 	public function __toString() {
 		return $this->controller() . '::' . $this->action() . '() when location matches [' . $this->location() . ']';
+	}
+
+	public function __sleep() {
+		return array('location', 'module', 'controller', 'action');
 	}
 
 }
