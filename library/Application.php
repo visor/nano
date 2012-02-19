@@ -19,7 +19,6 @@ require_once __DIR__ . '/Nano/Modules.php';
  * @property Nano_Modules $modules
  * @property SplObjectStorage $plugins
  * @property Event_Manager $eventManager
- * @property Nano_Message $message
  * @property Nano_HelperBroker $helper
  */
 class Application extends TypedRegistry {
@@ -56,7 +55,6 @@ class Application extends TypedRegistry {
 			->ensure('modules',      'Nano_Modules')
 			->ensure('dispatcher',   'Nano_Dispatcher')
 			->ensure('helper',       'Nano_HelperBroker')
-			->ensure('message',      'Nano_Message')
 			->ensure('eventManager', 'Event_Manager')
 			->ensure('plugins',      'SplObjectStorage')
 		;
@@ -92,7 +90,6 @@ class Application extends TypedRegistry {
 			->readOnly('helper',       new Nano_HelperBroker($this))
 			->readOnly('dispatcher',   new Nano_Dispatcher($this))
 			->readOnly('eventManager', new Event_Manager())
-			->readOnly('message',      new Nano_Message($this))
 		;
 
 		$this->setupErrorReporting();

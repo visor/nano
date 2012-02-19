@@ -37,7 +37,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 		$this->renderer->setModuleViewsDirName('views/default');
 		$this->renderer->setLayoutsPath($this->files->get($this, '/layouts'));
 
-		$this->controller = new TestController(new Nano_Dispatcher($this->application));
+		$this->controller = new TestController($this->application);
 	}
 
 	public function testGettingApplicationViewPath() {

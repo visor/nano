@@ -43,6 +43,6 @@ class Cookie {
 	 * @return string
 	 */
 	protected static function domain() {
-		return '.' . Nano::config('web')->domain;
+//		return '.' . Nano::config('web')->domain;
 	}
 }

@@ -29,8 +29,8 @@ class Library_DateTest extends PHPUnit_Framework_TestCase {
 		$string = '2009-11-04 01:02:03';
 		$date   = Date::create($string);
 
-		$this->assertEquals($string, $date->toSql('MySQL'));
-		$this->assertEquals($string, $date->toSql('mysql'));
+		$this->assertEquals($string, $date->format(Date::FORMAT_MYSQL));
+		$this->assertEquals($string, $date->format(Date::FORMAT_MYSQL));
 	}
 
 	public function testToSqlForSqlite() {
@@ -38,16 +38,7 @@ class Library_DateTest extends PHPUnit_Framework_TestCase {
 		$date     = Date::create($string);
 		$expected = '1257274923';
 
-		$this->assertEquals($expected, $date->toSql('SQLite'));
-		$this->assertEquals($expected, $date->toSql('sqlite'));
-	}
-
-	public function testToSqlAutodetect() {
-		$string = '2009-11-04 01:02:03';
-		$this->assertEquals(
-			  Date::create($string)->format(constant('DATE::FORMAT_' . strToUpper(Nano::db()->getType())))
-			, Date::create($string)->toSql()
-		);
+		$this->assertEquals($expected, $date->format(Date::FORMAT_SQLITE));
 	}
 
 	public function testGettingDiffDays() {
@@ -63,7 +54,7 @@ class Library_DateTest extends PHPUnit_Framework_TestCase {
 		$test = Date::create('2009-01-01');
 		for ($i = 1; $i <= 365; $i++) {
 			$test->modify('+1 day');
-			$this->assertEquals($i, $date->daysTo($test), $test->toSql('mysql') . ' ' . $date->toSql('mysql'));
+			$this->assertEquals($i, $date->daysTo($test), $test->format(Date::FORMAT_MYSQL) . ' ' . $date->format(Date::FORMAT_MYSQL));
 		}
 	}
 

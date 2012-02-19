@@ -144,18 +144,6 @@ class Date extends DateTime {
 		return $diff;
 	}
 
-	/**
-	 * @return string
-	 * @param $type
-	 */
-	public function toSql($type = null) {
-		if (null === $type) {
-			$type = Nano::db()->getType();
-		}
-		$format = 'Date::FORMAT_' . strToUpper($type);
-		return $this->format(constant($format));
-	}
-
 	public function __toString() {
 		return $this->format(Date::ISO8601);
 	}

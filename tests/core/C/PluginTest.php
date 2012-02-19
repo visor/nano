@@ -46,7 +46,7 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 			->withPlugin($this)
 			->configure()
 		;
-		$this->controller = new Core_C_TestController(new Nano_Dispatcher($application));
+		$this->controller = new Core_C_TestController($application);
 		$this->resetWasRun();
 	}
 

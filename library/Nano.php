@@ -9,7 +9,6 @@ define('APP',         ROOT . DS . 'application');
 define('MODULES',     APP . DS . 'modules');
 define('SETTINGS',    APP . DS . 'settings');
 define('CONTROLLERS', APP . DS . 'controllers');
-define('MESSAGES',    APP . DS . 'messages');
 define('PUBLIC_DIR',  ROOT . DS . 'public');
 define('TESTS',       ROOT . DS . 'tests');
 
@@ -20,14 +19,6 @@ final class Nano {
 	 */
 	public static function isTesting() {
 		return isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) || defined('TESTING');
-	}
-
-	/**
-	 * @return Nano_Db
-	 * @param string $name
-	 */
-	public static function db($name = null) {
-		return Nano_Db::instance($name);
 	}
 
 	/**

@@ -6,11 +6,6 @@
  */
 abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 
-	/**
-	 * @var Application|null
-	 */
-	private static $backupApplication = null;
-
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
 		$this->addMixin('files', 'TestUtils_Mixin_Files');
@@ -55,7 +50,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		/** @var Nano_C $instance */
 		$className = Nano_Dispatcher::formatName($controller, true, null === $module ? null : Nano_Modules::nameToNamespace($module));
 
-		$instance  = new $className($application->getDispatcher());
+		$instance  = new $className($application);
 		$instance->setResponse(new \Nano_C_Response_Test($application));
 		$instance->setRenderer(new \Nano_Render($application));
 
@@ -91,13 +86,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		}
 
 		$this->$property = $class->newInstance();
-	}
-
-	/**
-	 * @return TestUtils_Fixture
-	 */
-	protected function fixture() {
-		return TestUtils_Fixture::instance();
 	}
 
 	/**

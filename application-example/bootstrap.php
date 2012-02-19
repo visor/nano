@@ -11,5 +11,3 @@ $application
 
 	->configure()
 ;
-
-Orm::configure((array)$application->config->get('orm'));

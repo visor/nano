@@ -17,7 +17,7 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 			->withRootDir(dirName(dirName(dirName(__DIR__))) . DS . 'application-example')
 			->configure()
 		;
-		$application->message->load('test');
+//		$application->message->load('test');
 		$this->redirect = new Nano_C_Redirect(new Nano_C_Response($application));
 	}
 
@@ -65,24 +65,9 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 		self::assertEquals(302, $this->getResponse()->getStatus());
 	}
 
-	public function testWithMessageAsText() {
+	public function testWithMessage() {
 		$this->redirect->withMessage('simple text');
 		self::assertEquals('simple text', Nano_C_Redirect::getMessage());
-	}
-
-	public function testWithMessageAsId() {
-		$this->redirect->withMessage('m1', true);
-		self::assertEquals('message 1', Nano_C_Redirect::getMessage());
-	}
-
-	public function testWithMessageAsIdAndParams() {
-		$this->redirect->withMessage('f1', array(1, 'foo'));
-		self::assertEquals('format 01 foo', Nano_C_Redirect::getMessage());
-	}
-
-	public function testGetMessageShouldReturnNullWhenoNotExists() {
-		unSet($_SESSION[Nano_C_Redirect::PARAM_MESSAGE]);
-		self::assertNull(Nano_C_Redirect::getMessage());
 	}
 
 	protected function tearDown() {

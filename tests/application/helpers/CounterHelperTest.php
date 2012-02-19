@@ -11,8 +11,14 @@ class CounterHelperTest extends TestUtils_TestCase {
 	private $helper = null;
 
 	protected function setUp() {
+		$application = new Application();
+		$application
+			->withConfigurationFormat('php')
+			->withRootDir($GLOBALS['application']->rootDir)
+			->configure()
+		;
+		$this->helper = $application->helper->counter();
 		$this->resetCounter();
-		$this->helper = new CounterHelper();
 	}
 
 	public function testDefaultCounter() {
@@ -38,6 +44,7 @@ class CounterHelperTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
+		unSet($this->helper);
 		$this->resetCounter();
 	}
 

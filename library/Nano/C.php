@@ -33,9 +33,9 @@ abstract class Nano_C {
 	protected $module = null;
 
 	/**
-	 * @var Nano_Dispatcher
+	 * @var Application
 	 */
-	protected $dispatcher;
+	protected $application;
 
 	/**
 	 * @var boolean
@@ -63,11 +63,11 @@ abstract class Nano_C {
 	protected $helper;
 
 	/**
-	 * @param Nano_Dispatcher $dispatcher
+	 * @param Application $application
 	 */
-	public function __construct(Nano_Dispatcher $dispatcher) {
-		$this->dispatcher = $dispatcher;
-		$this->helper     = $dispatcher->application()->helper;
+	public function __construct(Application $application) {
+		$this->application = $application;
+		$this->helper      = $application->helper;
 	}
 
 	/**
@@ -76,7 +76,7 @@ abstract class Nano_C {
 	public function getModule() {
 		if (null === $this->module && Nano_Loader::isModuleClass($className = get_class($this))) {
 			list($this->module, ) = Nano_Loader::extractModuleClassParts($className);
-			$this->module = $this->dispatcher()->application()->modules->nameToFolder($this->module);
+			$this->module = $this->application->modules->nameToFolder($this->module);
 		}
 		return $this->module;
 	}
@@ -119,23 +119,23 @@ abstract class Nano_C {
 	 * @return Application
 	 */
 	public function application() {
-		return $this->dispatcher->application();
+		return $this->application;
 	}
 
 	/**
 	 * @return Nano_Dispatcher
 	 */
 	public function dispatcher() {
-		return $this->dispatcher;
+		return $this->application->dispatcher;
 	}
 
 	/**
 	 * @return string
 	 * @param string $name
-	 * @param scalar $default
+	 * @param mixed $default
 	 */
 	public function p($name, $default = null) {
-		return $this->dispatcher()->param($name, $default);
+		return $this->application->dispatcher->param($name, $default);
 	}
 
 	/**
@@ -243,23 +243,33 @@ abstract class Nano_C {
 	 * @return Nano_Render
 	 */
 	protected function createRenderer() {
-		return new Nano_Render($this->dispatcher()->application());
+		return new Nano_Render($this->application);
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function configureRenderer() {
-		$this->renderer->setLayoutsPath($this->dispatcher()->application()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
-		$this->renderer->setViewsPath($this->dispatcher()->application()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
+		$this->renderer->setLayoutsPath($this->application->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath($this->application->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
 		$this->renderer->setModuleViewsDirName(Nano_Render::VIEW_DIR);
 	}
 
 	/**
 	 * @return void
 	 */
+	protected function createResponse() {
+		if (null !== $this->response) {
+			return;
+		}
+		$this->response = new Nano_C_Response($this->application);
+	}
+
+	/**
+	 * @return void
+	 */
 	protected function runInit() {
-		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->init($this);
 		}
 		$this->init();
@@ -269,7 +279,7 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			if (false === $plugin->before($this)) {
 				return false;
 			}
@@ -284,7 +294,7 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach ($this->dispatcher()->application()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->after($this);
 		}
 		$this->after();
@@ -306,13 +316,6 @@ abstract class Nano_C {
 	 */
 	protected function internalError($message = null) {
 		throw new Nano_Exception_InternalError(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message);
-	}
-
-	protected function createResponse() {
-		if (null !== $this->response) {
-			return;
-		}
-		$this->response = new Nano_C_Response($this->dispatcher()->application());
 	}
 
 }

@@ -76,10 +76,13 @@ class Nano_HelperBroker {
 	 */
 	protected function search($name) {
 		$className = ucFirst($name) . 'Helper';
-		$classPath = $this->application->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className);
 
-		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
-			throw new Nano_Exception_HelperNotFound($name);
+		if (!class_exists($className, false)) {
+			$classPath = $this->application->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className);
+
+			if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
+				throw new Nano_Exception_HelperNotFound($name);
+			}
 		}
 
 		return new $className;

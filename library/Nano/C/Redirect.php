@@ -66,16 +66,9 @@ class Nano_C_Redirect {
 	/**
 	 * @return Nano_C_Redirect
 	 * @param string $message
-	 * @param boolean|array $id
 	 */
-	public function withMessage($message, $id = false) {
-		$text = $message;
-		if (true === $id) {
-			$text = $this->response->getApplication()->message->m($message);
-		} elseif (is_array($id)) {
-			$text = $this->response->getApplication()->message->fa($message, $id);
-		}
-		$_SESSION[self::PARAM_MESSAGE] = $text;
+	public function withMessage($message) {
+		$_SESSION[self::PARAM_MESSAGE] = $message;
 		return $this;
 	}
 

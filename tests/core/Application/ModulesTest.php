@@ -196,11 +196,10 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		;
 		self::assertTrue($this->application->loader->loadClass('Test_Module\\ClassController'));
 
-		$dispatcher = new Nano_Dispatcher($this->application);
-		$response   = new Nano_C_Response_Test($this->application);
+		$response = new Nano_C_Response_Test($this->application);
 
-		$dispatcher->setResponse($response);
-		$dispatcher->run(Nano_Route::create('', 'class', 'view', 'test'));
+		$this->application->dispatcher->setResponse($response);
+		$this->application->dispatcher->run(Nano_Route::create('', 'class', 'view', 'test'));
 
 		self::assertEquals('view action runned', $response->getBody());
 	}
