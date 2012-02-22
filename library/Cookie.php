@@ -5,11 +5,30 @@ class Cookie {
 	const ONE_MONTH = 2592000;
 
 	/**
-	 * @return scalar
-	 * @param string $name
-	 * @param scalar $default
+	 * @var null|string
 	 */
-	public static function get($name, $default = null) {
+	protected $domain;
+
+	/**
+	 * @var boolean
+	 */
+	protected $secure, $httpOnly = false;
+
+	public function __construct($cookieDomain = null) {
+		$this->secure = isSet($_SERVER['HTTPS']) ? true : false;
+		$this->domain = $cookieDomain;
+	}
+
+	public function httpOnly($value = true) {
+		$this->httpOnly = $value;
+	}
+
+	/**
+	 * @return mixed
+	 * @param string $name
+	 * @param mixed $default
+	 */
+	public function get($name, $default = null) {
 		if (isset($_COOKIE[$name])) {
 			return $_COOKIE[$name];
 		}
@@ -19,14 +38,16 @@ class Cookie {
 	/**
 	 * @return void
 	 * @param string $name
-	 * @param scalar $value
+	 * @param mixed $value
 	 * @param int $expire
 	 */
-	public static function set($name, $value, $expire = null) {
+	public function set($name, $value, $expire = null) {
 		if (null === $expire) {
 			$expire = self::ONE_MONTH;
 		}
-		setCookie($name, $value, $_SERVER['REQUEST_TIME'] + $expire, '/', self::domain(), true, true);
+		if (!headers_sent()) {
+			setCookie($name, $value, $_SERVER['REQUEST_TIME'] + $expire, '/', $this->domain, $this->secure, $this->httpOnly);
+		}
 		$_COOKIE[$name] = $value;
 	}
 
@@ -34,15 +55,11 @@ class Cookie {
 	 * @return void
 	 * @param string $name
 	 */
-	public static function erase($name) {
-		setCookie($name, null, 0, '/', self::domain(), true, true);
+	public function erase($name) {
+		if (!headers_sent()) {
+			setCookie($name, null, -1, '/', $this->domain, $this->secure, $this->httpOnly);
+		}
 		unset($_COOKIE[$name]);
 	}
 
-	/**
-	 * @return string
-	 */
-	protected static function domain() {
-//		return '.' . Nano::config('web')->domain;
-	}
 }

@@ -369,7 +369,7 @@ class Nano_Dispatcher {
 
 		$controllerName = $this->application()->config->get('web')->errorController;
 		$className      = self::formatName($controllerName, true);
-		$controller     = new $className($this); /* @var $controller Nano_C */
+		$controller     = new $className($this->application); /* @var $controller Nano_C */
 		$action         = 'custom';
 
 		if ($error instanceof Nano_Exception_NotFound) {
