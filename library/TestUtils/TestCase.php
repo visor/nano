@@ -65,13 +65,6 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		return $instance->response();
 	}
 
-	/**
-	 * @return TestUtils_Stub_ReturnReal
-	 */
-	public function returnReal() {
-		return new TestUtils_Stub_ReturnReal();
-	}
-
 	protected function addMixin($property, $className) {
 		if (isset($this->$property)) {
 			throw new InvalidArgumentException('$property');

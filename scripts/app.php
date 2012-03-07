@@ -74,7 +74,7 @@ require_once 'Application.php';
 
 \$application = new Application;
 \$application
-	->usingConfigurationFormat('php')
+	->withConfigurationFormat('php')
 	->withRootDir(__DIR__)
 	// put your configuration here
 	->configure()
@@ -103,13 +103,30 @@ PHP;
 
 		$path = $this->path . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR;
 		echo '  Creating default routes';
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'routes.php', $path . 'routes.php');
+		$routesPhp = <<<PHP
+<?php
+/** @var \$routes Nano_Routes */
+
+\$routes
+	->get('', 'index', 'index')
+;
+PHP;
+		file_put_contents($path . 'routes.php', $routesPhp);
 		echo PHP_EOL;
 
 		echo '  Creating default configuration';
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'config-assets.php', $path . 'assets.php');
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'config-db.php', $path . 'db.php');
-		copy($this->defaults . DIRECTORY_SEPARATOR . 'config-web.php', $path . 'web.php');
+		$webPhp = <<<PHP
+<?php return array(
+	  'root'           => ROOT . DS . 'public'
+	, 'url'            => ''
+	, 'index'          => 'index.php'
+	, 'domain'         => 'example.com'
+	, 'public'         => true
+	, 'error'          => null
+	, 'errorReporting' => true
+);
+PHP;
+		file_put_contents($path . 'web.php', $webPhp);
 		echo PHP_EOL;
 	}
 

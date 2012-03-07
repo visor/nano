@@ -4,12 +4,11 @@ class Nano_Config {
 
 	const CONFIG_FILE_NAME  = 'configuration';
 	const ROUTES_FILE_NAME  = 'routes';
-	const CHANGED_FILE_NAME = 'changed';
 
 	/**
 	 * @var Nano_Config_Format
 	 */
-	protected  $format = null;
+	protected $format = null;
 
 	/**
 	 * @var string
@@ -29,6 +28,8 @@ class Nano_Config {
 	/**
 	 * @return Nano_Config_Format
 	 * @param string $name
+	 *
+	 * @throws Nano_Exception_UnsupportedConfigFormat
 	 */
 	public static function format($name) {
 		/** @var Nano_Config_Format $result */
@@ -97,7 +98,7 @@ class Nano_Config {
 		}
 
 		$this->load();
-		return isSet($this->config->$name);
+		return isSet($this->config[$name]);
 	}
 
 	/**
@@ -106,7 +107,7 @@ class Nano_Config {
 	 */
 	public function get($name) {
 		if ($this->exists($name)) {
-			return $this->config->$name;
+			return $this->config[$name];
 		}
 		return null;
 	}
@@ -118,12 +119,12 @@ class Nano_Config {
 	 */
 	public function set($name, $value) {
 		$this->load();
-		$this->config->$name = $value;
+		$this->config[$name] = $value;
 	}
 
 	/**
 	 * @return void
-	 * @throws Nano_Exception
+	 * @throws Nano_Config_Exception
 	 */
 	protected function load() {
 		if (null !== $this->config) {
