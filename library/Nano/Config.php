@@ -135,6 +135,9 @@ class Nano_Config {
 		}
 
 		$this->config = $this->format->read($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
+		if (empty($this->config)) {
+			$this->config = new stdClass;
+		}
 		$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 	}
 
