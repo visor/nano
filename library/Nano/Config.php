@@ -98,7 +98,7 @@ class Nano_Config {
 		}
 
 		$this->load();
-		return isSet($this->config[$name]);
+		return isSet($this->config->$name);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Nano_Config {
 	 */
 	public function get($name) {
 		if ($this->exists($name)) {
-			return $this->config[$name];
+			return $this->config->$name;
 		}
 		return null;
 	}
@@ -119,7 +119,7 @@ class Nano_Config {
 	 */
 	public function set($name, $value) {
 		$this->load();
-		$this->config[$name] = $value;
+		$this->config->$name = $value;
 	}
 
 	/**
