@@ -78,9 +78,10 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	protected function buildRoutes($name) {
-		$routes    = new Nano_Routes();
-		$parents   = $this->getParents($name);
-		$parents[] = $name;
+		$routes      = new Nano_Routes();
+		$parents     = $this->getParents($name);
+		$parents[]   = $name;
+		$application = $this->application;
 		foreach ($parents as $name) {
 			$routesFile = $this->getFilePath($name, self::ROUTES_FILE);
 			if (file_exists($routesFile)) {
