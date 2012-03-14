@@ -1,11 +1,5 @@
-.buildpath
-.project
-.settings
 .idea
-pmip
-cache
 build
-modules
 logs/access.log
 logs/error.log
 application-example/*.log
