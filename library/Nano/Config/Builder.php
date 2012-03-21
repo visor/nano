@@ -66,7 +66,7 @@ class Nano_Config_Builder {
 	 * @return void
 	 * @param string $name
 	 */
-	protected function buildConfiguration($name) {
+	public function buildConfiguration($name) {
 		$this->application->configFormat->write(
 			$this->createSettings($name)
 			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
@@ -77,7 +77,7 @@ class Nano_Config_Builder {
 	 * @return void
 	 * @param string $name
 	 */
-	protected function buildRoutes($name) {
+	public function buildRoutes($name) {
 		$routes      = new Nano_Routes();
 		$parents     = $this->getParents($name);
 		$parents[]   = $name;
