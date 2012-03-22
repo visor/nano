@@ -125,6 +125,8 @@ class Nano_Config_Builder {
 				$settings[$section] = $this->buildSingleFile($file->getPathName());
 			}
 		}
+
+		$settings[Nano_Config::CONFIG_NAME] = $name;
 		return $settings;
 	}
 

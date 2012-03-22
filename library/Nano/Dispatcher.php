@@ -157,9 +157,9 @@ class Nano_Dispatcher {
 				if (false !== $result) {
 					return $result;
 				}
-				throw new Nano_Exception_NotFound('Custom dispatcher fails', $route);
+				throw new Nano_Exception_NotFound('Custom dispatcher fails for: ' . $url, $route);
 			}
-			throw new Nano_Exception_NotFound('Route not found');
+			throw new Nano_Exception_NotFound('Route not found for: ' . $url);
 		} catch (Exception $e) {
 			$this->handleError($e);
 		}
@@ -355,7 +355,8 @@ class Nano_Dispatcher {
 	 */
 	protected function handleError(Exception $error) {
 		//todo: log message
-		if ($this->throw || null === $this->application()->config->get('web')->errorController) {
+		$errorController = isSet($this->application()->config->get('web')->errorController) ? $this->application()->config->get('web')->errorController : null;
+		if ($this->throw || null === $errorController) {
 			$this->getResponse()->addHeader('Content-Type', 'text/plain');
 			$this->getResponse()->setBody($error);
 			if ($error instanceof Nano_Exception_NotFound) {

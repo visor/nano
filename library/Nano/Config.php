@@ -4,6 +4,7 @@ class Nano_Config {
 
 	const CONFIG_FILE_NAME  = 'configuration';
 	const ROUTES_FILE_NAME  = 'routes';
+	const CONFIG_NAME       = '__name';
 
 	/**
 	 * @var Nano_Config_Format
@@ -86,6 +87,14 @@ class Nano_Config {
 			file_exists($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME)
 			&& file_exists($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME)
 		;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function name() {
+		$this->load();
+		return $this->config->{self::CONFIG_NAME};
 	}
 
 	/**
