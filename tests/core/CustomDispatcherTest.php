@@ -13,7 +13,13 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 	protected function setUp() {
 		require_once $this->files->get($this, '/Test_Dispatcher.php');
 
-		$this->dispatcher = new Nano_Dispatcher(new Application());
+		$application = new Application();
+		$application
+			->withConfigurationFormat('php')
+			->withRootDir(__DIR__)
+			->configure()
+		;
+		$this->dispatcher = $application->dispatcher;
 		$this->dispatcher->setCustom(new Test_Dispatcher());
 		$this->dispatcher->throwExceptions(true);
 	}

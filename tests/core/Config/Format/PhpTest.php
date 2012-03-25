@@ -1,6 +1,6 @@
 <?php
 
-require_once TESTS . '/core/Config/Format/TestAbstract.php';
+require_once __DIR__ . '/TestAbstract.php';
 
 /**
  * @group core

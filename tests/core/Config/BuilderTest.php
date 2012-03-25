@@ -103,12 +103,14 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		$config   = new Nano_Config($path, $this->application->configFormat);
 		$expected = (object)array(
-			  'file1' => (object)array('file1-param1' => 'value1')
-			, 'file2' => (object)array('file2-param1' => 'value1')
+			  'file1'  => (object)array('file1-param1' => 'value1')
+			, 'file2'  => (object)array('file2-param1' => 'value1')
+			, '__name' => 'default'
 		);
 
 		self::assertTrue($config->exists('file1'));
 		self::assertTrue($config->exists('file2'));
+		self::assertEquals('default', $config->name());
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}
 
@@ -123,8 +125,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$config   = new Nano_Config($path, $this->application->configFormat);
 		$config->get('file1');
 		$expected = (object)array(
-			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'new-value2.1'))
-			, 'file2' => (object)array('file2-param1' => 'new-value', 'file2-param2' => 'value2')
+			  'file1'  => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'new-value2.1'))
+			, 'file2'  => (object)array('file2-param1' => 'new-value', 'file2-param2' => 'value2')
+			, '__name' => 'basic-child'
 		);
 
 		self::assertTrue($config->exists('file1'));
@@ -141,8 +144,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 		$config   = new Nano_Config($path, $this->application->configFormat);
 		$expected = (object)array(
-			  'file1' => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
-			, 'file2' => (object)array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
+			  'file1'  => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
+			, 'file2'  => (object)array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
+			, '__name' => 'ext-child'
 		);
 
 		self::assertTrue($config->exists('file1'));
@@ -159,8 +163,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 		$config   = new Nano_Config($path, $this->application->configFormat);
 		$expected = (object)array(
-			  'file1' => (object)array('file1-param1' => 'new', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
-			, 'file2' => (object)array('file2-param1' => 'value2', 'file2-param2' => 'value2', 'file2-param100' => '100')
+			  'file1'  => (object)array('file1-param1' => 'new', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
+			, 'file2'  => (object)array('file2-param1' => 'value2', 'file2-param2' => 'value2', 'file2-param100' => '100')
+			, '__name' => 'child-of-child'
 		);
 
 		self::assertTrue($config->exists('file1'));
@@ -180,6 +185,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 			'db' => (object)array(
 				'hostname' => 'localhost', 'username' => 'user', 'password' => 'p4ssw0rd', 'database' => 'db1'
 			)
+			, '__name' => 'objects'
 		);
 		self::assertTrue($config->exists('db'));
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
@@ -193,28 +199,31 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
 
 		$config   = new Nano_Config($path, $this->application->configFormat);
-		$expected = (object)array('db' => (object)array(
-			'default' => (object)array(
-				  'type'     => 'mysql'
-				, 'dsn'      => 'host=localhost;dbname=bonus_hudson'
-				, 'username' => 'user'
-				, 'password' => ''
-				, 'options'  => (object)array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+		$expected = (object)array(
+			'db' => (object)array(
+				'default' => (object)array(
+					  'type'     => 'mysql'
+					, 'dsn'      => 'host=localhost;dbname=bonus_hudson'
+					, 'username' => 'user'
+					, 'password' => ''
+					, 'options'  => (object)array(
+						PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+					)
+					, 'log'      => APP . DS . 'sql.log'
 				)
-				, 'log'      => APP . DS . 'sql.log'
-			)
-			, 'test' => (object)array(
-				  'type'     => 'mysql'
-				, 'dsn'      => 'host=localhost;dbname=bonus_hudson_test'
-				, 'username' => 'user'
-				, 'password' => ''
-				, 'options'  => (object)array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+				, 'test' => (object)array(
+					  'type'     => 'mysql'
+					, 'dsn'      => 'host=localhost;dbname=bonus_hudson_test'
+					, 'username' => 'user'
+					, 'password' => ''
+					, 'options'  => (object)array(
+						PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+					)
+					, 'log'      => APP . DS . 'test-sql.log'
 				)
-				, 'log'      => APP . DS . 'test-sql.log'
 			)
-		));
+			, '__name' => 'child-of-child'
+		);
 		self::assertTrue($config->exists('db'));
 		self::assertEquals($expected, self::getObjectProperty($config, 'config'));
 	}
