@@ -217,9 +217,9 @@ class Nano_Dispatcher {
 	public function getRoute(Nano_Routes $routes, $url) {
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
-		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
-			$route->setApplication($this->application);
+		foreach ($routes->getRoutes($method) as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
+				$route->setApplication($this->application);
 				return $route;
 			}
 		}

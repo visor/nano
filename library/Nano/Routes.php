@@ -120,7 +120,7 @@ class Nano_Routes implements IteratorAggregate {
 	}
 
 	/**
-	 * @return ArrayIterator
+	 * @return ArrayObject
 	 * @param string $method
 	 */
 	public function getRoutes($method) {
@@ -135,7 +135,7 @@ class Nano_Routes implements IteratorAggregate {
 	 * @return ArrayIterator
 	 */
 	public function getIterator() {
-		return new RecursiveArrayIterator($this->routes->getIterator());
+		return $this->routes->getIterator();
 	}
 
 	/**
