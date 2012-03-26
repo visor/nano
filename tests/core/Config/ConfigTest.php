@@ -6,6 +6,22 @@
  */
 class Core_ConfigTest extends TestUtils_TestCase {
 
+	public function testNameShouldReturnNullWhenConfigurationNameNotSpecified() {
+		$config = new Nano_Config($this->files->get($this, '/configs/empty-array'), new Nano_Config_Format_Php());
+		self::assertNull($config->name());
+	}
+
+	public function testNameShouldReturnValueWhenPropertyStored() {
+		$config = new Nano_Config($this->files->get($this, '/configs/named'), new Nano_Config_Format_Php());
+		self::assertEquals('test', $config->name());
+	}
+
+	public function testLoadShouldUseEmptyStdClassWhenConfigIsEmpty() {
+		$config = new Nano_Config($this->files->get($this, '/configs/empty-array'), new Nano_Config_Format_Php());
+		self::assertNull($config->name());
+		self::assertEquals(new stdClass, self::getObjectProperty($config, 'config'));
+	}
+
 	public function testGetFormatThrowExceptionWhenFormatNotAvailable() {
 		include_once $this->files->get($this, '/classes/Unsupported.php', '/Format');
 
@@ -90,18 +106,28 @@ class Core_ConfigTest extends TestUtils_TestCase {
 		self::assertInstanceOf('Nano_Routes', $config->routes());
 	}
 
-	public function testExistsShouldReturnFalseWhenNoConfigFileExists() {
+	public function testConfigurationExistsShouldReturnFalseWhenNoConfigFileExists() {
 		$config = new Nano_Config($this->files->get($this, '/configs/no-config'), new Nano_Config_Format_Php());
 
-		self::assertFalse($config->fileExists());
-		self::assertFalse($config->exists('section'));
+		self::assertFalse($config->configurationExists());
 	}
 
-	public function testExistsShouldReturnFalseWhenNoRoutesFileExists() {
+	public function testExistsShouldReturnTrueWhenConfigurationFileExists() {
 		$config = new Nano_Config($this->files->get($this, '/configs/no-routes'), new Nano_Config_Format_Php());
 
-		self::assertFalse($config->fileExists());
-		self::assertFalse($config->exists('section'));
+		self::assertTrue($config->configurationExists());
+	}
+
+	public function testConfigurationShouldBeLoadedWhenNoRoutes() {
+		$config = new Nano_Config($this->files->get($this, '/configs/no-routes'), new Nano_Config_Format_Php());
+
+		self::assertTrue($config->exists('file1'));
+	}
+
+	public function testRoutesShouldBeEmptyWhenNoRouteFileExists() {
+		$config = new Nano_Config($this->files->get($this, '/configs/no-routes'), new Nano_Config_Format_Php());
+
+		self::assertEquals(new Nano_Routes(), $config->routes());
 	}
 
 }

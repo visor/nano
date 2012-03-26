@@ -82,11 +82,18 @@ class Nano_Config {
 		return $this->path;
 	}
 
-	public function fileExists() {
-		return
-			file_exists($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME)
-			&& file_exists($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME)
-		;
+	/**
+	 * @return boolean
+	 */
+	public function configurationExists() {
+		return file_exists($this->path . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function routesExists() {
+		return file_exists($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 	}
 
 	/**
@@ -94,6 +101,9 @@ class Nano_Config {
 	 */
 	public function name() {
 		$this->load();
+		if (false === $this->exists(self::CONFIG_NAME)) {
+			return null;
+		}
 		return $this->config->{self::CONFIG_NAME};
 	}
 
@@ -102,7 +112,7 @@ class Nano_Config {
 	 * @param string $name
 	 */
 	public function exists($name) {
-		if (!$this->fileExists()) {
+		if (!$this->configurationExists()) {
 			return false;
 		}
 
@@ -139,7 +149,7 @@ class Nano_Config {
 		if (null !== $this->config) {
 			return;
 		}
-		if (!$this->fileExists()) {
+		if (!$this->configurationExists() && !$this->routesExists()) {
 			throw new Nano_Config_Exception('Configuration files not exists at ' . $this->path);
 		}
 
@@ -147,7 +157,11 @@ class Nano_Config {
 		if (empty($this->config)) {
 			$this->config = new stdClass;
 		}
-		$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
+		if ($this->routesExists()) {
+			$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
+		} else {
+			$this->routes = new Nano_Routes();
+		}
 	}
 
 }
