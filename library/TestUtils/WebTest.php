@@ -17,9 +17,10 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	protected $application;
 
 	protected function screenshot($suffix = null, $screen = false) {
-		$folder         = TESTS . DIRECTORY_SEPARATOR . 'screenshots' . DIRECTORY_SEPARATOR;
-		$screenFileName = $folder . 'screen_' . get_class($this) . '_' . $this->getName(false);
-		$windowFileName = $folder . get_class($this) . '_' . $this->getName(false);
+		$baseName       = str_replace('\\', '-', get_class($this));
+		$folder         = $GLOBALS['application']->rootDir . '/tests/screenshots/';
+		$screenFileName = $folder . 'screen_' . $baseName . '_' . $this->getName(false);
+		$windowFileName = $folder . $baseName . '_' . $this->getName(false);
 		if ($suffix) {
 			$screenFileName .= '_' . $suffix;
 			$windowFileName .= '_' . $suffix;
