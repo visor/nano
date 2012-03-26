@@ -47,4 +47,8 @@ class CookieTestController extends Nano_C {
 		return $this->cookie;
 	}
 
+	protected function after() {
+		$this->renderer()->setViewsPath(dirName(__DIR__) . DIRECTORY_SEPARATOR . 'views');
+	}
+
 }
