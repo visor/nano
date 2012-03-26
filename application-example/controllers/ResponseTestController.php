@@ -28,4 +28,8 @@ class ResponseTestController extends Nano_C {
 		$this->internalError('always');
 	}
 
+	protected function after() {
+		$this->renderer()->setViewsPath(dirName(__DIR__) . DIRECTORY_SEPARATOR . 'views');
+	}
+
 }
