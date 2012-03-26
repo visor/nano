@@ -65,7 +65,7 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $action
 	 */
 	public function get($location, $controller = 'index', $action = 'index') {
-		return self::add(__FUNCTION__, $location, $controller, $action);
+		return $this->add(__FUNCTION__, $location, $controller, $action);
 	}
 
 	/**
@@ -75,7 +75,7 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $action
 	 */
 	public function post($location, $controller = 'index', $action = 'index') {
-		return self::add(__FUNCTION__, $location, $controller, $action);
+		return $this->add(__FUNCTION__, $location, $controller, $action);
 	}
 
 	/**
@@ -85,7 +85,7 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $action
 	 */
 	public function head($location, $controller = 'index', $action = 'index') {
-		return self::add(__FUNCTION__, $location, $controller, $action);
+		return $this->add(__FUNCTION__, $location, $controller, $action);
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Nano_Routes implements IteratorAggregate {
 		if (!$this->routes->offsetExists($key)) {
 			$this->routes->offsetSet($key, new ArrayObject());
 		}
-		$this->routes->offsetGet($key)->offsetSet($route->location(), $route);
+		$this->routes->offsetGet($key)->append($route);
 		return $this;
 	}
 
