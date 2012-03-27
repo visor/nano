@@ -132,7 +132,7 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Validator
+	 * @return Nano_Form
 	 * @param int $value
 	 */
 	public function setMode($value) {
