@@ -16,6 +16,11 @@ class Nano_Render {
 	protected $viewsPath, $moduleViewsDirName, $layoutsPath;
 
 	/**
+	 * @var boolean
+	 */
+	protected $useApplicationDirs = false;
+
+	/**
 	 * @param Application $application
 	 */
 	public function __construct(Application $application) {
@@ -39,6 +44,13 @@ class Nano_Render {
 		$variables['content'] = $content;
 		$layoutFile = $this->getLayoutFileName($object->layout, $object->context);
 		return self::file($this, $layoutFile, $variables);
+	}
+
+	/**
+	 * @param boolean $value
+	 */
+	public function useApplicationDirs($value) {
+		$this->useApplicationDirs = $value;
 	}
 
 	/**
@@ -76,7 +88,12 @@ class Nano_Render {
 		if (null === $module) {
 			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
-		$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+
+		if ($this->useApplicationDirs) {
+			$viewName = $this->viewsPath . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action;
+		} else {
+			$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+		}
 		return $this->addContext($viewName, $context) . '.php';
 	}
 
