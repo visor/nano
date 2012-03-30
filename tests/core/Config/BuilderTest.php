@@ -43,7 +43,6 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		/** @var Nano_Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
-		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
 	}
 
 	public function testAddingRoutesIntoChildConfigurations() {
@@ -62,7 +61,6 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		/** @var Nano_Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
-		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
 	}
 
 	public function testOverrideRoutesIntoChildConfigurations() {
@@ -82,8 +80,6 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		/** @var Nano_Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
-		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists('/help'));
-		self::assertTrue($actualRoutes->getRoutes('get')->offsetExists(''));
 	}
 
 	public function testLoadingOnlyPhpFiles() {

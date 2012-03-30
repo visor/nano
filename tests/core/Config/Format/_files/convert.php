@@ -17,7 +17,7 @@ include $dir . '/Nano/Route/Subdomain.php';
 include $dir . '/Nano/Route/Runnable.php';
 
 $routes = new Nano_Routes();
-include __DIR__ . '/routes.php';
+include __DIR__ . '/routes.source.php';
 
 $serialized = serialize($routes);
 file_put_contents(__DIR__ . '/routes.format.php', $serialized);

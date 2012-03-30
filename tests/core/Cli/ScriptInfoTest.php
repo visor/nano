@@ -17,6 +17,9 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	protected $cli;
 
 	protected function setUp() {
+		ob_start();
+		$this->setUseOutputBuffering(true);
+
 		$application = new Application();
 		$application
 			->withRootDir($GLOBALS['application']->rootDir)
@@ -75,6 +78,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		chDir($this->cwd);
+		ob_end_clean();
 	}
 
 }

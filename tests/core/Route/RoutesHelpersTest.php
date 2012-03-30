@@ -21,10 +21,8 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 			->get('/users', 'user', 'index')
 		;
 
-		$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
-		self::assertArrayHasKey('get', $routes);
-		self::assertArrayHasKey('admin', $routes['get']->getArrayCopy());
-		self::assertArrayHasKey('admin/users', $routes['get']->getArrayCopy());
+		$this->assertLocationExists('get', 'admin');
+		$this->assertLocationExists('get', 'admin/users');
 	}
 
 	public function testRoutesShouldHaveSuffixesWhenItSetuped() {
@@ -32,9 +30,7 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 			->get('users', 'user', 'index')
 		;
 
-		$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
-		self::assertArrayHasKey('get', $routes);
-		self::assertArrayHasKey('users.html', $routes['get']->getArrayCopy());
+		$this->assertLocationExists('get', 'users.html');
 	}
 
 	public function testRegexpLocationWithSuffix() {
@@ -45,9 +41,7 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 		);
 		foreach ($data as $suffix => $location) {
 			$this->routes->suffix($suffix)->get($key, 'index', 'index');
-			$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
-			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
-			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+			$this->assertLocationExists('get', $location);
 		}
 	}
 
@@ -59,9 +53,7 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 		);
 		foreach ($data as $prefix => $location) {
 			$this->routes->prefix($prefix)->get($key, 'index', 'index');
-			$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
-			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
-			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+			$this->assertLocationExists('get', $location);
 		}
 	}
 
@@ -69,11 +61,9 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 		$this->routes->prefix('admin')->suffix('.html')->get('', 'index', 'index');
 		$this->routes->prefix('admin')->suffix('.html')->get('/index', 'index', 'index');
 
-		$keys   = array('admin.html', 'admin/index.html');
-		$routes = self::getObjectProperty($this->routes, 'routes')->getArrayCopy();
+		$keys = array('admin.html', 'admin/index.html');
 		foreach ($keys as $location) {
-			self::assertArrayHasKey($location, $routes['get']->getArrayCopy());
-			self::assertEquals($location, $routes['get']->offsetGet($location)->location());
+			$this->assertLocationExists('get', $location);
 		}
 	}
 
@@ -98,12 +88,23 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 				->get('', 'index', 'index')
 		;
 
+		$this->assertLocationExists('get', 'test');
+		$this->assertLocationExists('get', '');
 		$routes = self::getObjectProperty($this->routes, 'routes')->offsetGet('get')->getArrayCopy();
-		self::assertArrayHasKey('', $routes);
-		self::assertArrayHasKey('test', $routes);
+		self::assertEquals('test-module', $routes[0]->module());
+		self::assertEquals('default', $routes[1]->module());
+	}
 
-		self::assertEquals('test-module', $routes['test']->module());
-		self::assertEquals('default', $routes['']->module());
+	protected function assertLocationExists($method, $location) {
+		self::assertArrayHasKey($method, $this->routes->getIterator()->getArrayCopy());
+		$routesArray = $this->routes->getRoutes($method)->getArrayCopy();
+
+		foreach ($routesArray as /** @var Nano_Route $route */ $route) {
+			if ($route->location() == $location) {
+				return;
+			}
+		}
+		self::fail('Failed assertion: Routes contains ' . $method . ': ' . $location);
 	}
 
 	protected function tearDown() {
