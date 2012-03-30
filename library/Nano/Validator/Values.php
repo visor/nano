@@ -13,7 +13,7 @@ class Nano_Validator_Values extends Nano_Validator {
 	 */
 	public function __construct(array $values, $message = null) {
 		$this->values = $values;
-		parent::__construct($message);
+		$this->setMessage($message);
 	}
 
 	/**
