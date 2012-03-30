@@ -16,7 +16,7 @@ class Nano_Form {
 	protected $data = array();
 
 	/**
-	 * @var SplObjectStorage
+	 * @var Nano_Validator[]
 	 */
 	protected $validators = array();
 
@@ -67,19 +67,34 @@ class Nano_Form {
 	/**
 	 * @return Nano_Form
 	 * @param string $field
-	 * @param Nano_Validator_Interface $validator
+	 * @param Nano_Validator $validator
 	 * @param string $message
+	 *
+	 * @throws Nano_Exception
 	 */
-	public function addValidator($field, Nano_Validator_Interface $validator, $message = null) {
+	public function addValidator($field, Nano_Validator $validator, $message = null) {
 		$this->invalidate();
-		if (!isset($this->validators[$field])) {
-			$this->validators[$field] = array();
+		if (isSet($this->validators[$field])) {
+			throw new Nano_Exception('Validator for field "' . $field . '" already defined');
 		}
-		if (null !== $message) { //HACK. refactor it
+		if (null !== $message) {
 			$validator->setMessage($message);
 		}
-		$this->validators[$field][] = $validator;
+		$this->validators[$field] = $validator;
 		return $this;
+	}
+
+	/**
+	 * @return Nano_Validator
+	 * @param string $field
+	 *
+	 * @throws Nano_Exception
+	 */
+	public function getValidator($field) {
+		if (isSet($this->validators[$field])) {
+			return $this->validators[$field];
+		}
+		throw new Nano_Exception('Validator for field "' . $field . '" not defined');
 	}
 
 	/**
@@ -98,16 +113,15 @@ class Nano_Form {
 	public function validate() {
 		$this->invalidate();
 		$this->isValid = true;
-		foreach ($this->validators as $field => $validators) {
-			foreach ($validators as $validator) { /* @var $validator Nano_Validator */
-				if ($validator->isValid($this->$field)) {
-					continue;
-				}
-				$this->isValid = false;
-				$this->addError($field, $validator->getMessage());
-				if (self::MODE_STOP_ON_ERROR === $this->mode) {
-					break;
-				}
+		foreach ($this->validators as $field => $validator) {
+			if ($validator->isValid($this->$field)) {
+				continue;
+			}
+
+			$this->isValid = false;
+			$this->addError($field, $validator->getMessage());
+			if (self::MODE_STOP_ON_ERROR === $this->mode) {
+				break;
 			}
 		}
 		return $this;
@@ -125,7 +139,7 @@ class Nano_Form {
 	 * @param string $field
 	 */
 	public function getFieldError($field) {
-		if (isset($this->errors[$field])) {
+		if (isSet($this->errors[$field])) {
 			return $this->errors[$field];
 		}
 		return null;
@@ -209,14 +223,7 @@ class Nano_Form {
 	 * @param string $message
 	 */
 	protected function addError($field, $message) {
-//		if (self::MODE_STOP_ON_ERROR == $this->mode) {
-			$this->errors[$field] = $message;
-//			return;
-//		}
-//		if (!isset($this->errors[$field])) {
-//			$this->errors[$field] = array();
-//		}
-//		$this->errors[$field][] = $message;
+		$this->errors[$field] = $message;
 	}
 
 }
