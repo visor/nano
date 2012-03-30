@@ -68,6 +68,9 @@ class Event_Loader {
 	 * @param string $fileName
 	 */
 	protected function loadHandlersFromFile(Event_Manager $manager, $fileName) {
+		if (!file_exists($fileName)) {
+			return;
+		}
 		$loader = function () use ($manager, $fileName) {
 			include $fileName;
 		};
