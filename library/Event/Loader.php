@@ -17,7 +17,7 @@ class Event_Loader {
 	}
 
 	/**
-	 * @return Event_Manager
+	 * @return Event_Loader
 	 * @param $filePathName
 	 */
 	public function useFile($filePathName) {
@@ -26,8 +26,8 @@ class Event_Loader {
 	}
 
 	/**
-	 * @return Event_Manager
-	 * @param string	  $dirName
+	 * @return Event_Loader
+	 * @param string $dirName
 	 * @param string|null $fileMask
 	 */
 	public function useDirectory($dirName, $fileMask = null) {
