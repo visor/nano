@@ -2,13 +2,28 @@
 
 class Nano_Loader {
 
-	const LIBRARY_DIR           = 'library';
-	const NAME_SEPARATOR        = '_';
+	const LIBRARY_DIR          = 'library';
+	const NAME_SEPARATOR       = '_';
 
-	protected $inModule          = false;
-	protected $modules           = array();
-	protected $baseIncludePath   = '';
-	protected $loadedIncludePath = array();
+	/**
+	 * @var null|string
+	 */
+	protected $nanoDir         = null;
+
+	/**
+	 * @var array|null
+	 */
+	protected $baseIncludePath = null;
+
+	/**
+	 * @var array|null
+	 */
+	protected $applicationPath = null;
+
+	/**
+	 * @var array|null
+	 */
+	protected $modulesPath     = array();
 
 	/**
 	 * @return string
@@ -47,77 +62,47 @@ class Nano_Loader {
 	}
 
 	public function __construct() {
-		$this->baseIncludePath = trim(get_include_path(), PATH_SEPARATOR);
+		$this->nanoDir         = dirName(__DIR__);
+		$this->baseIncludePath = explode(PATH_SEPARATOR, $this->nanoDir . PATH_SEPARATOR . trim(get_include_path(), PATH_SEPARATOR));
+		spl_autoload_register(array($this, 'loadClass'));
+		spl_autoload_register(array($this, 'loadCommonClass'));
 	}
 
 	/**
-	 * Registers self instance as spl __autoload implementations
+	 * Registers application directories for autoloading
 	 *
 	 * @return void
 	 * @param Application $application
 	 */
-	public function register(Application $application = null) {
-		spl_autoload_register(array($this, 'loadClass'));
-		$nanoDir =
-			(null === $application ? dirName(dirName(__DIR__)) : $application->nanoRootDir)
-			. DIRECTORY_SEPARATOR . self::LIBRARY_DIR
-		;
-		error_log('Nano: ' . $nanoDir);
-		$this->useDirectory($nanoDir);
-	}
-
-	public function registerModule($name, $path) {
-		$this->modules[$name] =
-			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
-			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
-			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
-			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
-		;
+	public function registerApplication(Application $application) {
+		$this->applicationPath = array(
+			$this->nanoDir
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
+		);
 	}
 
 	/**
-	 * Appends given $path into PHP include_path
+	 * Registers module directories for autoloading
 	 *
-	 * @return Nano_Loader
+	 * @return void
+	 * @param string $name
 	 * @param string $path
 	 */
-	public function useDirectory($path) {
-		if (isSet($this->loadedIncludePath[$path])) {
-			return $this;
-		}
-
-		$this->loadedIncludePath[$path] = $path;
-		set_include_path(
-			implode(PATH_SEPARATOR, $this->loadedIncludePath)
-			. PATH_SEPARATOR . $this->baseIncludePath
+	public function registerModule($name, $path) {
+		$this->modulesPath[Nano_Modules::nameToNamespace($name)] = array(
+			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
 		);
-		return $this;
 	}
 
 	/**
-	 * Tries to find and include $className
+	 * Tries to load require class from file
 	 *
-	 * @return boolean
-	 * @param string $name
-	 */
-	public function loadClass($name) {
-		try {
-			error_log($name);
-			if (class_exists($name, false)) {
-				return true;
-			}
-
-			if (self::isModuleClass($name)) {
-				return $this->loadModuleClass($name);
-			}
-
-			return $this->loadCommonClass($name);
-		} catch (Exception $e) {
-			return false;
-		}
-	}
-
-	/**
 	 * @return boolean
 	 * @param string $className
 	 * @param string $fileName
@@ -132,41 +117,70 @@ class Nano_Loader {
 		if (!class_exists($className, false)) {
 			return false;
 		}
-
 		return true;
+	}
+
+	/**
+	 * Tries to find and include $className
+	 *
+	 * @return boolean
+	 * @param string $name
+	 */
+	public function loadClass($name) {
+		try {
+			if (class_exists($name, false)) {
+				return true;
+			}
+			if (self::isModuleClass($name)) {
+				return $this->loadModuleClass($name);
+			}
+			if (null === $this->applicationPath) {
+				return $this->loadCommonClass($name);
+			}
+			return $this->loadApplicationClass($name);
+		} catch (Exception $e) {
+			return false;
+		}
+	}
+
+	public function loadCommonClass($name) {
+//		echo $name, PHP_EOL;
+		return $this->loadWithIncludePath($name, $this->baseIncludePath);
 	}
 
 	/**
 	 * @return boolean
 	 * @param string $name
 	 */
-	protected function loadCommonClass($name) {
-		$includePath = implode(PATH_SEPARATOR, $this->loadedIncludePath) . PATH_SEPARATOR . $this->baseIncludePath;
-
-		return $this->loadWithIncludePath($name, $includePath);
+	protected function loadApplicationClass($name) {
+		return $this->loadWithIncludePath($name, $this->applicationPath);
 	}
 
 	protected function loadModuleClass($name) {
 		list($namespace, $className) = self::extractModuleClassParts($name);
-		$module = Nano_Modules::namespaceToName($namespace);
-
-		return $this->loadWithIncludePath($className, $this->modules[$module]);
+		if (!isSet($this->modulesPath[$namespace])) {
+			return false;
+		}
+		return $this->loadWithIncludePath($className, $this->modulesPath[$namespace]);
 	}
 
-	public function loadWithIncludePath($className, $includePath) {
-		$backup = get_include_path();
-		set_include_path($includePath);
+	public function loadWithIncludePath($className, array $directories) {
+		$result = true;
 		try {
-			$result = true;
-			if (false === include(self::classToPath($className))) {
-				$result = false;
+			$fileName = self::classToPath($className);
+			foreach ($directories as $path) {
+				$testFile = $path . DIRECTORY_SEPARATOR . $fileName;
+				if (!file_exists($testFile)) {
+					continue;
+				}
+				if (false === include($testFile)) {
+					$result = false;
+				}
+				break;
 			}
-			return $result;
 		} catch (Exception $e) {
 			$result = false;
 		}
-
-		set_include_path($backup);
 		return $result;
 	}
 

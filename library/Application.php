@@ -58,7 +58,6 @@ class Application extends TypedRegistry {
 			->ensure('eventManager', 'Event_Manager')
 			->ensure('plugins',      'SplObjectStorage')
 		;
-		$this->loader->register($this);
 		$this
 			->readOnly('plugins', new SplObjectStorage())
 			->readOnly('modules', new Nano_Modules())
@@ -111,12 +110,7 @@ class Application extends TypedRegistry {
 	 */
 	public function withRootDir($value) {
 		$this->offsetSet('rootDir', $value);
-		$this->loader
-			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
-			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
-			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
-			->useDirectory($this->rootDir . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
-		;
+		$this->loader->registerApplication($this);
 		return $this;
 	}
 

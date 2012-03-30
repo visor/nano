@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/library/Application.php';
 $loader = new Nano_Loader();
-$loader->register();
+$loader->registerApplication();
 
 $args = $_SERVER['argv'];
 array_shift($args);

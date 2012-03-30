@@ -39,30 +39,12 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 		self::assertInstanceOf('Nano_Loader', $this->application->loader);
 	}
 
-	public function testNanoLibraryDirectoryShouldBeInIncludePahWhenApplicationCreated() {
-		self::assertContains($this->application->nanoRootDir . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR, get_include_path());
-	}
-
 	public function testNanoClassShouldBeLoaded() {
 		self::assertTrue(class_exists('Nano', false));
 	}
 
 	public function testLoadingCoreClass() {
 		$this->assertClassLoaded('TestUtils_Example');
-	}
-
-	public function testApplicationClassesDirectoriesShouldBeInIncludePath() {
-		$app            = $this->files->get($this, '');
-		$appControllers = $app . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME;
-		$appLibrary     = $app . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME;
-		$appModels      = $app . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME;
-		$appPlugins     = $app . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME;
-		$this->application->withRootDir($app);
-
-		self::assertContains($appControllers . PATH_SEPARATOR, get_include_path());
-		self::assertContains($appLibrary . PATH_SEPARATOR, get_include_path());
-		self::assertContains($appModels . PATH_SEPARATOR, get_include_path());
-		self::assertContains($appPlugins . PATH_SEPARATOR, get_include_path());
 	}
 
 	public function testLoadingApplicationLibraryClass() {
@@ -101,20 +83,6 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 		$this->application->withRootDir($this->files->get($this, ''));
 
 		self::assertFalse($this->application->loader->loadClass('ThrowsException'));
-	}
-
-	public function testLoaderShouldPutDirectoryOnlyOnceInIncludePath() {
-		$directory = '/some/test/dir';
-		self::assertNotContains($directory, get_include_path());
-
-		$this->application->loader->useDirectory($directory);
-		$this->application->loader->useDirectory($directory);
-
-		self::assertContains($directory, get_include_path());
-		$actual = explode(PATH_SEPARATOR, get_include_path());
-		$dirs = array_count_values($actual);
-		self::arrayHasKey($directory, $dirs);
-		self::assertEquals($dirs[$directory], 1);
 	}
 
 	public function testLoadFileShouldReturnTrueWhenClassLoadedSuccessful() {
