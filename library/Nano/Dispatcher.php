@@ -97,17 +97,6 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return Nano_Dispatcher
-	 */
-	public function clean() {
-		$this->controller         = null;
-		$this->action             = null;
-		$this->params             = array();
-		$this->controllerInstance = null;
-		return $this;
-	}
-
-	/**
-	 * @return Nano_Dispatcher
 	 * @param Nano_Dispatcher_Custom $value
 	 */
 	public function setCustom(Nano_Dispatcher_Custom $value) {

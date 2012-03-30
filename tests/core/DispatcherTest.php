@@ -170,6 +170,23 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		self::assertContains('Route not found', $response->getBody());
 	}
 
+	public function testSettingParamsShouldSetupModuleControllerActionParams() {
+		$this->dispatcher->setParams(array(
+			'module'       => 'default'
+			, 'controller' => 'public'
+			, 'action'     => 'index'
+		));
+		self::assertEquals('default', $this->dispatcher->module());
+		self::assertEquals('public', $this->dispatcher->controller());
+		self::assertEquals('index', $this->dispatcher->action());
+		self::assertEquals(array(), $this->dispatcher->params());
+	}
+
+	public function testGetResponseShouldCreateInstanceWhenNull() {
+		self::setObjectProperty($this->dispatcher, 'response', null);
+		self::assertInstanceOf('Nano_C_Response', $this->dispatcher->getResponse());
+	}
+
 	protected function tearDown() {
 		unSet($this->dispatcher);
 	}
