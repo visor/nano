@@ -5,6 +5,8 @@ class Nano_Loader {
 	const LIBRARY_DIR           = 'library';
 	const NAME_SEPARATOR        = '_';
 
+	protected $inModule          = false;
+	protected $modules           = array();
 	protected $baseIncludePath   = '';
 	protected $loadedIncludePath = array();
 
@@ -60,7 +62,17 @@ class Nano_Loader {
 			(null === $application ? dirName(dirName(__DIR__)) : $application->nanoRootDir)
 			. DIRECTORY_SEPARATOR . self::LIBRARY_DIR
 		;
+		error_log('Nano: ' . $nanoDir);
 		$this->useDirectory($nanoDir);
+	}
+
+	public function registerModule($name, $path) {
+		$this->modules[$name] =
+			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
+			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
+			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
+			. PATH_SEPARATOR . $path . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
+		;
 	}
 
 	/**
@@ -90,16 +102,13 @@ class Nano_Loader {
 	 */
 	public function loadClass($name) {
 		try {
+			error_log($name);
 			if (class_exists($name, false)) {
 				return true;
 			}
 
 			if (self::isModuleClass($name)) {
-				list(, $className) = self::extractModuleClassParts($name);
-				if (false === include(self::classToPath($className))) {
-					return false;
-				}
-				return true;
+				return $this->loadModuleClass($name);
 			}
 
 			return $this->loadCommonClass($name);
@@ -132,10 +141,33 @@ class Nano_Loader {
 	 * @param string $name
 	 */
 	protected function loadCommonClass($name) {
-		if (false === include(self::classToPath($name))) {
-			return false;
+		$includePath = implode(PATH_SEPARATOR, $this->loadedIncludePath) . PATH_SEPARATOR . $this->baseIncludePath;
+
+		return $this->loadWithIncludePath($name, $includePath);
+	}
+
+	protected function loadModuleClass($name) {
+		list($namespace, $className) = self::extractModuleClassParts($name);
+		$module = Nano_Modules::namespaceToName($namespace);
+
+		return $this->loadWithIncludePath($className, $this->modules[$module]);
+	}
+
+	public function loadWithIncludePath($className, $includePath) {
+		$backup = get_include_path();
+		set_include_path($includePath);
+		try {
+			$result = true;
+			if (false === include(self::classToPath($className))) {
+				$result = false;
+			}
+			return $result;
+		} catch (Exception $e) {
+			$result = false;
 		}
-		return true;
+
+		set_include_path($backup);
+		return $result;
 	}
 
 }

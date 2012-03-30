@@ -21,7 +21,9 @@ class Nano_C_Redirect {
 	 */
 	public static function getMessage() {
 		if (isSet($_SESSION[self::PARAM_MESSAGE])) {
-			return $_SESSION[self::PARAM_MESSAGE];
+			$result = $_SESSION[self::PARAM_MESSAGE];
+			unSet($_SESSION[self::PARAM_MESSAGE]);
+			return $result;
 		}
 		return null;
 	}

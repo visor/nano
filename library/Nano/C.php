@@ -147,6 +147,7 @@ abstract class Nano_C {
 		if (null === $this->redirect) {
 			$this->redirect = new Nano_C_Redirect($this->response());
 		}
+		$this->markRendered();
 		if (null === $to) {
 			return $this->redirect;
 		}

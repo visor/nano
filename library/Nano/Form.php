@@ -132,7 +132,7 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Validator
+	 * @return Nano_Form
 	 * @param int $value
 	 */
 	public function setMode($value) {
@@ -209,14 +209,14 @@ class Nano_Form {
 	 * @param string $message
 	 */
 	protected function addError($field, $message) {
-		if (self::MODE_STOP_ON_ERROR == $this->mode) {
+//		if (self::MODE_STOP_ON_ERROR == $this->mode) {
 			$this->errors[$field] = $message;
-			return;
-		}
-		if (!isset($this->errors[$field])) {
-			$this->errors[$field] = array();
-		}
-		$this->errors[$field][] = $message;
+//			return;
+//		}
+//		if (!isset($this->errors[$field])) {
+//			$this->errors[$field] = array();
+//		}
+//		$this->errors[$field][] = $message;
 	}
 
 }

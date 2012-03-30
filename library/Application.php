@@ -164,12 +164,7 @@ class Application extends TypedRegistry {
 		}
 
 		$this->modules->append($name, $path);
-		$this->loader
-			->useDirectory($path . DIRECTORY_SEPARATOR . self::CONTROLLER_DIR_NAME)
-			->useDirectory($path . DIRECTORY_SEPARATOR . self::LIBRARY_DIR_NAME)
-			->useDirectory($path . DIRECTORY_SEPARATOR . self::MODELS_DIR_NAME)
-			->useDirectory($path . DIRECTORY_SEPARATOR . self::PLUGINS_DIR_NAME)
-		;
+		$this->loader->registerModule($name, $path);
 		return $this;
 	}
 

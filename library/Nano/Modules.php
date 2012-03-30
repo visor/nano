@@ -34,6 +34,17 @@ class Nano_Modules extends ArrayObject {
 	}
 
 	/**
+	 * @return string
+	 * @param string $namespace
+	 */
+	public static function namespaceToName($namespace) {
+		$result = preg_replace('/' . preg_quote(self::MODULE_SUFFIX) . '$/', '', $namespace);
+		$result = preg_replace('/(.)([A-Z])/', '\\1' . self::MODULE_NAME_SEPARATOR . '\\2', $result);
+		$result = strToLower($result);
+		return $result;
+	}
+
+	/**
 	 * @return Nano_Modules
 	 * @param string $name
 	 * @param string $path
@@ -73,6 +84,8 @@ class Nano_Modules extends ArrayObject {
 	/**
 	 * @return string
 	 * @param string $module
+	 *
+	 * @throws Application_Exception_InvalidModuleNamespace
 	 */
 	public function nameToFolder($module) {
 		if ($this->offsetExists($module)) {
@@ -82,10 +95,7 @@ class Nano_Modules extends ArrayObject {
 			throw new Application_Exception_InvalidModuleNamespace($module);
 		}
 
-		$result = preg_replace('/' . preg_quote(self::MODULE_SUFFIX) . '$/', '', $module);
-		$result = preg_replace('/(.)([A-Z])/', '\\1' . self::MODULE_NAME_SEPARATOR . '\\2', $result);
-		$result = strToLower($result);
-		return $result;
+		return self::namespaceToName($module);
 	}
 
 	/**
