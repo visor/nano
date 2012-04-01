@@ -123,35 +123,33 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return null|string
+	 * @return boolean|null
 	 * @param Nano_Routes $routes
 	 * @param string $url
+	 *
+	 * @throws Nano_Exception_NotFound
 	 */
 	public function dispatch(Nano_Routes $routes, $url) {
-		try {
-			if ($this->context) {
-				$this->context->detect();
-				if ($this->context->needRedirect()) {
-					$this->context->redirect($url);
-					return null;
-				}
-			}
-			$route = $this->getRoute($routes, $url);
-			if (null !== $route) {
-				$this->run($route);
+		if ($this->context) {
+			$this->context->detect();
+			if ($this->context->needRedirect()) {
+				$this->context->redirect($url);
 				return null;
 			}
-			if ($this->custom) {
-				$result = $this->custom->dispatch();
-				if (false !== $result) {
-					return $result;
-				}
+		}
+		$route = $this->getRoute($routes, $url);
+		if (null !== $route) {
+			$this->run($route);
+			return null;
+		}
+		if ($this->custom) {
+			$result = $this->custom->dispatch();
+			if (false === $result) {
 				throw new Nano_Exception_NotFound('Custom dispatcher fails for: ' . $url, $route);
 			}
-			throw new Nano_Exception_NotFound('Route not found for: ' . $url);
-		} catch (Exception $e) {
-			$this->handleError($e);
+			return $result;
 		}
+		$this->application()->errorHandler()->notFound('Route not found for: ' . $url);
 		return null;
 	}
 
@@ -178,7 +176,7 @@ class Nano_Dispatcher {
 			$this->controllerInstance->context = $this->context->get();
 		}
 
-		return $this->controllerInstance->run($this->action());
+		$this->controllerInstance->run($this->action());
 	}
 
 	/**

@@ -127,10 +127,14 @@ class Nano_Render {
 			include($fileName);
 
 			$result = ob_get_contents();
-			ob_end_clean();
+			if (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			return $result;
 		} catch (Exception $e) {
-			ob_end_clean();
+			if (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			throw $e;
 		}
 	}

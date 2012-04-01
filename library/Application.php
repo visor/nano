@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/TypedRegistry.php';
+require_once __DIR__ . '/Application/ErrorHandler.php';
 require_once __DIR__ . '/Nano.php';
 require_once __DIR__ . '/Nano/Loader.php';
 require_once __DIR__ . '/Nano/Modules.php';
@@ -32,6 +33,11 @@ class Application extends TypedRegistry {
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
+	 * @var Application_ErrorHandler;
+	 */
+	protected $errorHandler;
+
+	/**
 	 * @return Application
 	 */
 	public static function create() {
@@ -40,6 +46,7 @@ class Application extends TypedRegistry {
 
 	public function __construct() {
 		parent::__construct();
+
 		$this
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
@@ -84,6 +91,9 @@ class Application extends TypedRegistry {
 			$this->withSharedModulesDir($this->nanoRootDir . DIRECTORY_SEPARATOR . self::MODULES_DIR_NAME);
 		}
 
+		if ('cli' !== php_sapi_name()) {
+			$this->errorHandler = new Application_ErrorHandler($this);
+		}
 		$this
 			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
 			->readOnly('helper',       new Nano_HelperBroker($this))
@@ -188,20 +198,25 @@ class Application extends TypedRegistry {
 	}
 
 	/**
+	 * @deprecated
 	 * @return Nano_Dispatcher
 	 */
 	public function getDispatcher() {
 		return $this->dispatcher;
 	}
 
+	public function errorHandler() {
+		return $this->errorHandler;
+	}
+
 	protected function setupErrorReporting() {
-		if ($this->config->exists('web') && isSet($this->config->get('web')->errorReporting) && true === $this->config->get('web')->errorReporting) {
+//		if ($this->config->exists('web') && isSet($this->config->get('web')->errorReporting) && true === $this->config->get('web')->errorReporting) {
 			error_reporting(E_ALL | E_STRICT);
 			ini_set('display_errors', true);
-		} else {
-			error_reporting(0);
-			ini_set('display_errors', false);
-		}
+//		} else {
+//			error_reporting(0);
+//			ini_set('display_errors', false);
+//		}
 	}
 
 }

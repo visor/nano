@@ -92,11 +92,7 @@ abstract class Nano_C {
 		$this->createResponse();
 		$this->runInit();
 		if (false !== $this->runBefore()) {
-			try {
-				$this->$method();
-			} catch (Exception $e) {
-				throw $e;
-			}
+			$this->$method();
 		}
 		$this->runAfter();
 
@@ -307,7 +303,8 @@ abstract class Nano_C {
 	 * @throws Nano_Exception_NotFound
 	 */
 	protected function pageNotFound($message = null) {
-		throw new Nano_Exception_NotFound(null === $message ? Nano_Dispatcher::ERROR_NOT_FOUND : $message);
+		$this->markRendered();
+		$this->application()->errorHandler()->notFound($message);
 	}
 
 	/**
@@ -316,7 +313,8 @@ abstract class Nano_C {
 	 * @throws Nano_Exception_InternalError
 	 */
 	protected function internalError($message = null) {
-		throw new Nano_Exception_InternalError(null === $message ? Nano_Dispatcher::ERROR_INTERNAL : $message);
+		$this->markRendered();
+		$this->application()->errorHandler()->notFound($message);
 	}
 
 }

@@ -3,6 +3,10 @@
 	, 'url'             => ''
 	, 'index'           => 'index.php'
 
-	, 'errorController' => 'error'
-	, 'errorReporting'  => true
+	, 'errorController' => null
+	, 'errorReporting'  => false
+
+	, 'auth'     => true
+	, 'username' => 'test'
+	, 'password' => 'tset'
 );

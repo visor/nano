@@ -28,8 +28,6 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 			mkDir($this->dataDirName, 0755, true);
 		}
 
-		register_shutdown_function(array($this, 'shutdown'));
-
 		if ($this->testIdExists()) {
 			include $this->coverageFileName;
 			exit();
@@ -37,13 +35,12 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 
 		if ($this->testCookieExists()) {
 			include $this->prependFileName;
+//			register_shutdown_function(array($this, 'shutdown'));
 		}
 	}
 
 	public function shutdown() {
-		if ($this->testCookieExists()) {
-			include $this->appendFileName;
-		}
+		include $this->appendFileName;
 	}
 
 	/**
@@ -65,6 +62,9 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 	 * @param Nano_C $controller
 	 */
 	public function init(Nano_C $controller) {
+		if ($this->testCookieExists()) {
+			register_shutdown_function(array($this, 'shutdown'));
+		}
 	}
 
 	/**

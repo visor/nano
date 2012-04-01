@@ -20,14 +20,6 @@ class ResponseTestController extends Nano_C {
 		$this->markRendered();
 	}
 
-	public function notFoundAction() {
-		$this->pageNotFound('always');
-	}
-
-	public function errorAction() {
-		$this->internalError('always');
-	}
-
 	protected function after() {
 		$this->renderer()->setViewsPath(dirName(__DIR__) . DIRECTORY_SEPARATOR . 'views');
 	}

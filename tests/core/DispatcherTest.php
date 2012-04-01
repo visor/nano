@@ -70,42 +70,6 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		self::assertInstanceOf('TestController', $c);
 	}
 
-	public function testGetControllerShouldThrowWhenClassNotExists() {
-		$this->setExpectedException('Nano_Exception_NotFound', 'Controller class not found');
-		$this->dispatcher
-			->setResponse(new Nano_C_Response_Test($this->dispatcher->application()))
-			->getController(new Nano_Route_Static('test', 'std-class', 'index', null))
-		;
-	}
-
-	public function testGetControllerShouldThrowWhenNotControllerClassRequired() {
-		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: NotController');
-
-		$application = new Application();
-		$application
-			->withConfigurationFormat('php')
-			->withRootDir($this->files->get($this, ''))
-			->configure()
-		;
-
-		$application->dispatcher->setResponse(new Nano_C_Response_Test($application));
-		$application->dispatcher->getController(Nano_Route::create('', 'not', 'test'));
-	}
-
-	public function testGetControllerShouldThrowWhenAbstractClassRequired() {
-		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: AbstractController');
-
-		$application = new Application();
-		$application
-			->withConfigurationFormat('php')
-			->withRootDir($this->files->get($this, ''))
-			->configure()
-		;
-
-		$application->dispatcher->setResponse(new Nano_C_Response_Test($application));
-		$application->dispatcher->getController(Nano_Route::create('', 'abstract', 'test'));
-	}
-
 	public function testDetectingContextBySuffix() {
 		$application = new Application();
 		$application
@@ -127,47 +91,6 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.rss'));
 		self::assertEquals('rss', $application->dispatcher->controllerInstance()->context);
-	}
-
-	public function testShouldReturnStatusCodeWhenNotFound() {
-		$this->dispatcher
-			->throwExceptions(true)
-			->setResponse(new Nano_C_Response_Test($this->dispatcher->application()))
-		;
-		$routes = new Nano_Routes();
-		$routes->get('', 'response-test', 'not-found');
-
-		$this->dispatcher->dispatch($routes, '');
-		self::assertTrue($this->dispatcher->getResponse()->isModified());
-		self::assertEquals(404, $this->dispatcher->getResponse()->getStatus());
-	}
-
-	public function testShouldReturnStatusCodeWhenInternalError() {
-		$this->dispatcher
-			->throwExceptions(true)
-			->setResponse(new Nano_C_Response_Test($this->dispatcher->application()))
-		;
-		$routes = new Nano_Routes();
-		$routes->get('', 'response-test', 'error');
-
-		$this->dispatcher->dispatch($routes, '');
-		self::assertTrue($this->dispatcher->getResponse()->isModified());
-		self::assertEquals(500, $this->dispatcher->getResponse()->getStatus());
-	}
-
-	public function testDispatchShouldSendNotFoundExceptionWhenNoRoutesMatched() {
-		$routes = new Nano_Routes();
-		$routes->post('other', 'test', 'test');
-
-		$response = new Nano_C_Response_Test($this->dispatcher->application());
-		$this->dispatcher
-			->throwExceptions(true)
-			->setResponse($response)
-			->dispatch($routes, 'some')
-		;
-
-		self::assertContains('Nano_Exception_NotFound', $response->getBody());
-		self::assertContains('Route not found', $response->getBody());
 	}
 
 	public function testSettingParamsShouldSetupModuleControllerActionParams() {

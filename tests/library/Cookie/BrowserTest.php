@@ -3,52 +3,56 @@
 /**
  * @group cookie
  */
-class Library_Cookie_BrowserTest extends TestUtils_WebTest {
+class Library_Cookie_BrowserTest extends TestUtils_HttpTest {
 
 	public function testSetCookieInBrowser() {
-		$this->open($this->url('/cookie/set'));
-		$this->clickAndWait('id=gotoView');
+		$this->request->enableCookies();
+		$this->sendGet('/cookie/set');
+		$this->sendGet('/cookie/view');
 
-		self::assertContains('name1=value1', $this->getText('id=cookie-value'));
-		self::assertContains('name2=value2', $this->getText('id=cookie-value'));
+		self::assertContains('\'name1\' => \'value1\'', $this->request->getResponseBody());
+		self::assertContains('\'name2\' => \'value2\'', $this->request->getResponseBody());
 
-		self::assertContains('name1 = [value1];', $this->getText('id=values'));
-		self::assertContains('name2 = [value2];', $this->getText('id=values'));
+		self::assertContains('name1 = [value1];', $this->request->getResponseBody());
+		self::assertContains('name2 = [value2];', $this->request->getResponseBody());
 	}
 
 	public function testSetHttpOnlyCookieInBrowser() {
-		$this->open($this->url('/cookie/set?http=1'));
-		$this->clickAndWait('id=gotoView');
+		$this->request->enableCookies();
+		$this->sendGet('/cookie/set?http=1');
+		$this->sendGet('/cookie/view');
 
-		self::assertNotContains('name1', $this->getText('id=cookie-value'));
-		self::assertNotContains('name2', $this->getText('id=cookie-value'));
+		self::assertContains('\'name1\' => \'value1\'', $this->request->getResponseBody());
+		self::assertContains('\'name2\' => \'value2\'', $this->request->getResponseBody());
 
-		self::assertContains('name1 = [value1];', $this->getText('id=values'));
-		self::assertContains('name2 = [value2];', $this->getText('id=values'));
+		self::assertContains('name1 = [value1];', $this->request->getResponseBody());
+		self::assertContains('name2 = [value2];', $this->request->getResponseBody());
 	}
 
 	public function testErasingCookieInBrowser() {
-		$this->open($this->url('/cookie/set'));
-		$this->clickAndWait('id=gotoErase');
-		$this->clickAndWait('id=gotoView');
+		$this->request->enableCookies();
+		$this->sendGet('/cookie/set');
+		$this->sendGet('/cookie/erase');
+		$this->sendGet('/cookie/view');
 
-		self::assertContains('name1=value1', $this->getText('id=cookie-value'));
-		self::assertNotContains('name2', $this->getText('id=cookie-value'));
+		self::assertContains('\'name1\' => \'value1\'', $this->request->getResponseBody());
+		self::assertNotContains('\'name2\' => \'value2\'', $this->request->getResponseBody());
 
-		self::assertContains('name1 = [value1];', $this->getText('id=values'));
-		self::assertContains('name2 = [];', $this->getText('id=values'));
+		self::assertContains('name1 = [value1];', $this->request->getResponseBody());
+		self::assertContains('name2 = [];', $this->request->getResponseBody());
 	}
 
 	public function testEraseHttpOnlyCookieInBrowser() {
-		$this->open($this->url('/cookie/set?http=1'));
-		$this->clickAndWait('id=gotoEraseHttp');
-		$this->clickAndWait('id=gotoView');
+		$this->request->enableCookies();
+		$this->sendGet('/cookie/set?http=1');
+		$this->sendGet('/cookie/erase?http=1');
+		$this->sendGet('/cookie/view');
 
-		self::assertNotContains('name1', $this->getText('id=cookie-value'));
-		self::assertNotContains('name2', $this->getText('id=cookie-value'));
+		self::assertContains('\'name1\' => \'value1\'', $this->request->getResponseBody());
+		self::assertNotContains('\'name2\' => \'value2\'', $this->request->getResponseBody());
 
-		self::assertContains('name1 = [value1];', $this->getText('id=values'));
-		self::assertContains('name2 = [];', $this->getText('id=values'));
+		self::assertContains('name1 = [value1];', $this->request->getResponseBody());
+		self::assertContains('name2 = [];', $this->request->getResponseBody());
 	}
 
 }

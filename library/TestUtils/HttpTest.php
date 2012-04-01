@@ -55,7 +55,16 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		return $result;
 	}
 
+	protected function sendGet($url) {
+		$this->request->setUrl($this->getUrl($url));
+		$this->request->setMethod(HttpRequest::METH_GET);
+		$this->request->send();
+	}
+
 	protected function setUp() {
+		if (!class_exists('HttpRequest')) {
+			self::markTestSkipped('Please install pecl_http extension');
+		}
 		if (!isSet($GLOBALS['application'])) {
 			$this->markTestSkipped('Store tested application instance in $GLOBALS array');
 		}
