@@ -171,6 +171,17 @@ abstract class Nano_C {
 	}
 
 	/**
+	 * @return Nano_Render
+	 */
+	public function renderer() {
+		if (null === $this->renderer) {
+			$this->renderer = $this->createRenderer();
+			$this->configureRenderer();
+		}
+		return $this->renderer;
+	}
+
+	/**
 	 * @return void
 	 * @param Nano_Render $value
 	 */
@@ -227,17 +238,6 @@ abstract class Nano_C {
 
 		$this->response()->setBody($this->renderer()->render($this));
 		$this->markRendered();
-	}
-
-	/**
-	 * @return Nano_Render
-	 */
-	protected function renderer() {
-		if (null === $this->renderer) {
-			$this->renderer = $this->createRenderer();
-			$this->configureRenderer();
-		}
-		return $this->renderer;
 	}
 
 	/**

@@ -14,14 +14,7 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 	protected $rootDir, $dataDirName, $prependFileName, $appendFileName, $coverageFileName;
 
 	public function __construct($rootDir) {
-		$this->rootDir = $rootDir;
-	}
-
-	/**
-	 * @return void
-	 * @param Nano_C $controller
-	 */
-	public function init(Nano_C $controller) {
+		$this->rootDir          = $rootDir;
 		$this->dataDirName      = $this->rootDir . DIRECTORY_SEPARATOR . self::DATA_DIR;
 
 		$filesBaseDir           = __DIR__ . DIRECTORY_SEPARATOR . self::FILES_DIR;
@@ -35,27 +28,19 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 			mkDir($this->dataDirName, 0755, true);
 		}
 
+		register_shutdown_function(array($this, 'shutdown'));
+
 		if ($this->testIdExists()) {
 			include $this->coverageFileName;
 			exit();
 		}
-	}
 
-	/**
-	 * @return boolean
-	 * @param Nano_C $controller
-	 */
-	public function before(Nano_C $controller) {
 		if ($this->testCookieExists()) {
 			include $this->prependFileName;
 		}
 	}
 
-	/**
-	 * @return void
-	 * @param Nano_C $controller
-	 */
-	public function after(Nano_C $controller) {
+	public function shutdown() {
 		if ($this->testCookieExists()) {
 			include $this->appendFileName;
 		}
@@ -73,6 +58,27 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 	 */
 	protected function testCookieExists() {
 		return isSet($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']);
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_C $controller
+	 */
+	public function init(Nano_C $controller) {
+	}
+
+	/**
+	 * @return boolean
+	 * @param Nano_C $controller
+	 */
+	public function before(Nano_C $controller) {
+	}
+
+	/**
+	 * @return void
+	 * @param Nano_C $controller
+	 */
+	public function after(Nano_C $controller) {
 	}
 
 }
