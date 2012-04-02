@@ -61,6 +61,15 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		$this->request->send();
 	}
 
+	protected function sendPost($url, array $data = array()) {
+		$this->request->setUrl($this->getUrl($url));
+		$this->request->setMethod(HttpRequest::METH_POST);
+		if (count($data)) {
+			$this->request->setPostFields($data);
+		}
+		$this->request->send();
+	}
+
 	protected function setUp() {
 		if (!class_exists('HttpRequest')) {
 			self::markTestSkipped('Please install pecl_http extension');
