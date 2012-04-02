@@ -70,6 +70,22 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		$this->request->send();
 	}
 
+	protected function assertLocation($expected) {
+		self::assertEquals($expected, $this->request->getResponseInfo('effective_url'));
+	}
+
+	protected function assertResponseCode($expected) {
+		self::assertEquals($expected, $this->request->getResponseCode());
+	}
+
+	protected function assertBodyEquals($expected) {
+		self::assertEquals($expected, $this->request->getResponseBody());
+	}
+
+	protected function assertBodyContains($expected) {
+		self::assertContains($expected, $this->request->getResponseBody());
+	}
+
 	protected function setUp() {
 		if (!class_exists('HttpRequest')) {
 			self::markTestSkipped('Please install pecl_http extension');
@@ -79,12 +95,8 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		}
 
 		$this->application = $GLOBALS['application'];
-		$this->request = $this->getRequest();
+		$this->request     = $this->getRequest();
 	}
-
-//	protected function tearDown() {
-//		unSet($this->application, $this->request);
-//	}
 
 	/**
 	 * @return array
