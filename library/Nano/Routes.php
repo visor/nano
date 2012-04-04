@@ -157,10 +157,6 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $location
 	 */
 	protected function getLocation($location) {
-		if (null === $this->prefix && null === $this->suffix) {
-			return $location;
-		}
-
 		$isRegExp = false;
 		$tests    = array($this->prefix, $location, $this->suffix);
 		$parts    = array();
