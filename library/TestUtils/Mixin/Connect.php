@@ -12,9 +12,9 @@ class TestUtils_Mixin_Connect extends TestUtils_Mixin {
 		try {
 			$errNo = $errStr = null;
 			if (!@fsockopen($host, $port, $errNo, $errStr, 1)) {
-				PHPUnit_Framework_Assert::fail();
+				throw new PHPUnit_Framework_AssertionFailedError();
 			}
-		} catch (Exception $e) {
+		} catch (PHPUnit_Framework_AssertionFailedError $e) {
 			PHPUnit_Framework_Assert::markTestSkipped(sprintf($message, $host, $port));
 		}
 	}

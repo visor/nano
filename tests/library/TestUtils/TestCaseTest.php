@@ -10,6 +10,27 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 
 	private $private = 'some private value';
 
+	public function testShouldCreateMixinsInConstructor() {
+		$testCase = new self('test');
+		self::assertInstanceOf('TestUtils_Mixin_Files', $testCase->files);
+		self::assertInstanceOf('TestUtils_Mixin_Connect', $testCase->connection);
+	}
+
+	public function testAddMixinShouldThrowExceptionWhenPropertyExists() {
+		$this->setExpectedException('InvalidArgumentException', '$property');
+		$this->addMixin('files', 'stdClass');
+	}
+
+	public function testAddMixinShouldThrowExceptionWhenNotMixinClassPassed() {
+		$this->setExpectedException('InvalidArgumentException', '$className');
+		$this->addMixin('shouldNotSet', 'stdClass');
+	}
+
+	public function testAddMixinShouldThrowExceptionWhenAbstractClassPassed() {
+		$this->setExpectedException('InvalidArgumentException', '$className');
+		$this->addMixin('shouldNotSet', 'Abstract_Test_Mixin');
+	}
+
 	public function testNonPublicPropertyGet() {
 		self::assertEquals($this->protected, self::getObjectProperty($this, 'protected'));
 		self::assertEquals($this->private, self::getObjectProperty($this, 'private'));
@@ -23,4 +44,22 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 		self::assertNull($this->private);
 	}
 
+	public function testRunTestActionShouldThrowRuntimeExceptionWhenApplicationPropertyNotExists() {
+		$this->setExpectedException('RuntimeException', 'Configure test application');
+		unSet($this->application);
+		$this->runTestAction('module', 'controller', 'action');
+	}
+
+	public function testRunTestActionShouldReturnActionResponse() {
+		$this->application = $GLOBALS['application'];
+		$result = $this->runTestAction(null, 'response-test', 'set-body');
+		self::assertInstanceOf('Nano_C_Response_Test', $result);
+	}
+
+	protected function tearDown() {
+		unSet($this->application);
+	}
+
 }
+
+abstract class Abstract_Test_Mixin extends TestUtils_Mixin {}

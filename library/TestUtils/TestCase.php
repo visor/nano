@@ -90,7 +90,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	protected function runTestAction($module, $controller, $action, array $params = array()) {
 		if (!isSet($this->application)) {
-			self::fail('Configure test application');
+			throw new RuntimeException('Configure test application');
 		}
 		return self::runAction($this->application, $module, $controller, $action, $params);
 	}

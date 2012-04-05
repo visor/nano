@@ -15,9 +15,9 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 		$name   = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $name);
 		$result = dirName($class->getFileName());
 		if (null !== $anotherDir) {
-			$result .= $anotherDir;
+			$result .= str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $anotherDir);
 		}
-		return  $result . '/_files' . $name;
+		return  $result . DIRECTORY_SEPARATOR . '_files' . $name;
 	}
 
 	public function clean(TestUtils_TestCase $test, $dir, $fullPath = false) {
@@ -54,11 +54,24 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 	 * @return int
 	 * @param TestUtils_TestCase $test
 	 * @param string $dir
+	 *
+	 * @throws InvalidArgumentException
 	 */
 	public function countFiles(TestUtils_TestCase $test, $dir) {
-		$iterator = new DirectoryIterator($this->get($test, $dir));
+		$realPath = $this->get($test, $dir);
+		if (!file_exists($realPath)) {
+			throw new InvalidArgumentException($realPath . ' not exists');
+		}
+		if (!is_dir($realPath)) {
+			throw new InvalidArgumentException($realPath . ' is not directory');
+		}
+
+		$iterator = new DirectoryIterator($realPath);
 		$result   = 0;
 		foreach ($iterator as $item) {
+			if ($item->isDot()) {
+				continue;
+			}
 			++$result;
 		}
 		return $result;

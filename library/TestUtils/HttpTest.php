@@ -33,7 +33,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		$this->collectCodeCoverageInformation = $result->getCollectCodeCoverageInformation();
 		$result->run($this);
 		if ($this->collectCodeCoverageInformation) {
-			$result->getCodeCoverage()->append($this->getCodeCoverage(), $this);
+			$result->getCodeCoverage()->append($this->getCodeCoverage(), $this->testId);
 		}
 		return $result;
 	}
@@ -87,11 +87,8 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
-		if (!class_exists('HttpRequest')) {
-			self::markTestSkipped('Please install pecl_http extension');
-		}
 		if (!isSet($GLOBALS['application'])) {
-			$this->markTestSkipped('Store tested application instance in $GLOBALS array');
+			throw new PHPUnit_Framework_SkippedTestError('Store application instance in $GLOBALS[\'application\']');
 		}
 
 		$this->application = $GLOBALS['application'];
