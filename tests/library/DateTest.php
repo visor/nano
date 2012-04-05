@@ -5,6 +5,27 @@
  */
 class Library_DateTest extends PHPUnit_Framework_TestCase {
 
+	public function testNowShouldReturnSameInstance() {
+		self::assertSame(Date::now(), Date::now());
+	}
+
+	public function testAfterInvalidatingNowShouldReturnNewInstance() {
+		$now = Date::now();
+		Date::invalidateNow();
+		self::assertNotSame($now, Date::now());
+	}
+
+	public function testCreateFromFormatShouldUseTimeZoneWhenPassed() {
+		$name = 'Europe/Moscow';
+		$date = Date::createFromFormat('Y-m-d', '2012-01-01', new DateTimeZone($name));
+		self::assertEquals($name, $date->getTimezone()->getName());
+	}
+
+	public function testToStringReturnDateTimeInIso8601Format() {
+		$date = Date::createFromFormat('Y-m-d H:i:s', '2012-01-01 12:00:00', new DateTimeZone('GMT'));
+		self::assertEquals('2012-01-01T12:00:00+0000', $date->__toString());
+	}
+
 	public function testFromString() {
 		$expected = new Date();
 		$expected->setDate(2009, 11, 4);
