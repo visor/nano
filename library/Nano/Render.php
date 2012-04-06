@@ -33,9 +33,8 @@ class Nano_Render {
 	 */
 	public function render(Nano_C $object) {
 		$module    = $object->getModule();
-		$viewFile  = $this->getViewFileName($object->controller, $object->template, $object->context, $module);
 		$variables = get_object_vars($object);
-		$content   = self::file($this, $viewFile, $variables);
+		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
 
 		if (null === $object->layout) {
 			return $content;
@@ -44,6 +43,19 @@ class Nano_Render {
 		$variables['content'] = $content;
 		$layoutFile = $this->getLayoutFileName($object->layout, $object->context);
 		return self::file($this, $layoutFile, $variables);
+	}
+
+	/**
+	 * @return null|string
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $template
+	 * @param string $context
+	 * @param array $variables
+	 */
+	public function renderView($module, $controller, $template, $context, array $variables) {
+		$viewFile = $this->getViewFileName($controller, $template, $context, $module);
+		return self::file($this, $viewFile, $variables);
 	}
 
 	/**
@@ -108,10 +120,12 @@ class Nano_Render {
 
 	/**
 	 * @return null|string
+	 *
 	 * @param Nano_Render $renderer
-	 * @param string $fileName
-	 * @param array $variables
-	 * @throws Nano_Exception
+	 * @param string      $fileName
+	 * @param array       $variables
+	 *
+	 * @throws \Exception|\Nano_Exception
 	 */
 	protected static function file(Nano_Render $renderer, $fileName, array $variables = array()) {
 		if (!file_exists($fileName)) {
