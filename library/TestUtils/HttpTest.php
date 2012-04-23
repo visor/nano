@@ -87,6 +87,9 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	}
 
 	protected function setUp() {
+		if (!class_exists('HttpRequest', false)) {
+			throw new PHPUnit_Framework_SkippedTestError('Required pecl_http module not installed');
+		}
 		if (!isSet($GLOBALS['application'])) {
 			throw new PHPUnit_Framework_SkippedTestError('Store application instance in $GLOBALS[\'application\']');
 		}
@@ -100,6 +103,10 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	 * @throws Exception
 	 */
 	protected function getCodeCoverage() {
+		if (null === $this->request) {
+			return array();
+		}
+
 		$url    = $this->getUrl('/?PHPUNIT_SELENIUM_TEST_ID=' . $this->testId);
 		$buffer = @file_get_contents($url);
 

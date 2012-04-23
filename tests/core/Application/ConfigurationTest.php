@@ -74,4 +74,13 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 		self::assertInstanceOf('SplObjectStorage', $this->application->plugins);
 	}
 
+	public function testConfigureShouldSetupCurrentApplication() {
+		$this->application
+			->withConfigurationFormat('php')
+			->withRootDir($GLOBALS['application']->rootDir)
+			->configure()
+		;
+		self::assertSame($this->application, Nano::app());
+	}
+
 }

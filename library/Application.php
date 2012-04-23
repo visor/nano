@@ -102,6 +102,7 @@ class Application extends TypedRegistry {
 		;
 
 		$this->setupErrorReporting();
+		Nano::setApplication($this);
 		return $this;
 	}
 

@@ -5,7 +5,7 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 	/**
 	 * @var Application
 	 */
-	protected $application;
+	protected $application, $backup;
 
 	/**
 	 * @var string
@@ -13,6 +13,9 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 	protected $workingDir;
 
 	protected function setUp() {
+		$this->backup = Nano::app();
+		Nano::setApplication(null);
+
 		$this->workingDir  = getCwd();
 		chDir($GLOBALS['application']->rootDir);
 
@@ -20,8 +23,10 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
+		Nano::setApplication(null);
+		Nano::setApplication($this->backup);
 		chDir($this->workingDir);
-		unSet($this->workingDir, $this->application);
+		unSet($this->workingDir, $this->application, $this->backup);
 	}
 
 }

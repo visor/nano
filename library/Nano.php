@@ -2,17 +2,28 @@
 
 //todo: move defines into application or nano start method
 define('DS',          DIRECTORY_SEPARATOR);
-define('PS',          PATH_SEPARATOR);
-define('LIB',         __DIR__);
-define('ROOT',        dirName(LIB));
-define('APP',         ROOT . DS . 'application');
-define('MODULES',     APP . DS . 'modules');
-define('SETTINGS',    APP . DS . 'settings');
-define('CONTROLLERS', APP . DS . 'controllers');
-define('PUBLIC_DIR',  ROOT . DS . 'public');
-define('TESTS',       ROOT . DS . 'tests');
 
 final class Nano {
+
+	/**
+	 * @var Application|null
+	 */
+	private static $app = null;
+
+	/**
+	 * @return Application|null
+	 */
+	public static function app() {
+		return self::$app;
+	}
+
+	public static function setApplication(Application $app = null) {
+		if (null === self::$app || null === $app) {
+			self::$app = $app;
+			return;
+		}
+		throw new Nano_Exception('Application inctance already created');
+	}
 
 	/**
 	 * @return boolean

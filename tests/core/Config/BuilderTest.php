@@ -205,7 +205,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 					, 'options'  => (object)array(
 						PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 					)
-					, 'log'      => APP . DS . 'sql.log'
+					, 'log'      => $this->application->rootDir . '/sql.log'
 				)
 				, 'test' => (object)array(
 					  'type'     => 'mysql'
@@ -215,7 +215,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 					, 'options'  => (object)array(
 						PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 					)
-					, 'log'      => APP . DS . 'test-sql.log'
+					, 'log'      => $this->application->rootDir . '/test-sql.log'
 				)
 			)
 			, '__name' => 'child-of-child'
