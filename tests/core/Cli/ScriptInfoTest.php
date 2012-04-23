@@ -9,7 +9,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	/**
 	 * @var string
 	 */
-	protected $cwd, $appRoot, $nanoRoot;
+	protected $cwd, $appRoot;
 
 	/**
 	 * @var Nano_Cli
@@ -17,18 +17,11 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	protected $cli;
 
 	protected function setUp() {
+		$this->app->backup();
 		ob_start();
 		$this->setUseOutputBuffering(true);
 
-		$application = new Application();
-		$application
-			->withRootDir($GLOBALS['application']->rootDir)
-			->withConfigurationFormat('php')
-			->configure()
-		;
-
 		$this->appRoot  = dirName(__DIR__) . '/Application/_files';
-		$this->nanoRoot = $application->nanoRootDir;
 		$this->cwd      = getCwd();
 		$this->cli      = new Nano_Cli();
 		chDir($this->appRoot);
@@ -63,6 +56,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	}
 
 	public function testStopUsage() {
+		Nano::setApplication(null);
 		self::assertEquals(200, $this->cli->run(array('no-description')));
 		self::assertContains('[script stop message]', $this->getActualOutput());
 	}
@@ -79,6 +73,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	protected function tearDown() {
 		chDir($this->cwd);
 		ob_end_clean();
+		$this->app->restore();
 	}
 
 }

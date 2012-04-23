@@ -12,6 +12,7 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 	protected $application;
 
 	protected function setUp() {
+		$this->app->backup();
 		include_once $this->files->get($this, '/TestRunnableRoute.php');
 
 		$this->application = new Application();
@@ -37,6 +38,7 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		unSet($this->application);
+		$this->app->restore();
 	}
 
 }

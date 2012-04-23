@@ -37,6 +37,7 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 	}
 
 	protected function setUp() {
+		$this->app->backup();
 		include_once $this->files->get($this, '/TestController.php');
 
 		$application = new Application();
@@ -61,15 +62,16 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 		self::assertTrue($this->afterWasRun);
 	}
 
-	protected function tearDown() {
-		$this->resetWasRun();
-		unSet($this->controller);
-	}
-
 	protected function resetWasRun() {
 		$this->initWasRun   = false;
 		$this->beforeWasRun = false;
 		$this->afterWasRun  = false;
+	}
+
+	protected function tearDown() {
+		$this->resetWasRun();
+		unSet($this->controller);
+		$this->app->restore();
 	}
 
 }

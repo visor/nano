@@ -17,6 +17,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	protected $application;
 
 	protected function setUp() {
+		$this->app->backup();
 		$this->application = new Application();
 		$this->application
 			->withConfigurationFormat('php')
@@ -262,6 +263,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	protected function tearDown() {
 		$this->files->clean($this, '/settings');
 		unSet($this->builder, $this->application);
+		$this->app->restore();
 	}
 
 }

@@ -11,6 +11,7 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 	protected $redirect;
 
 	protected function setUp() {
+		$this->app->backup();
 		$application = new Application();
 		$application
 			->withConfigurationFormat('php')
@@ -70,15 +71,16 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 		self::assertEquals('simple text', Nano_C_Redirect::getMessage());
 	}
 
-	protected function tearDown() {
-		unSet($this->redirect);
-	}
-
 	/**
 	 * @return Nano_C_Response
 	 */
 	protected function getResponse() {
 		return self::getObjectProperty($this->redirect, 'response');
+	}
+
+	protected function tearDown() {
+		unSet($this->redirect);
+		$this->app->restore();
 	}
 
 }

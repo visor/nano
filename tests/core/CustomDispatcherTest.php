@@ -11,6 +11,8 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 	private $dispatcher;
 
 	protected function setUp() {
+		$this->app->backup();
+
 		require_once $this->files->get($this, '/Test_Dispatcher.php');
 
 		$application = new Application();
@@ -42,6 +44,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		unset($_COOKIE['accept']);
+		$this->app->restore();
 	}
 
 }
