@@ -109,6 +109,7 @@ class Nano_Dispatcher {
 			}
 			return $result;
 		}
+
 		Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
 		return null;
 	}

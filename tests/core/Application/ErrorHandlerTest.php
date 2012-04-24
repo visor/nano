@@ -89,6 +89,15 @@ class Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		self::assertContains('Message from action', $this->request->getResponseBody());
 	}
 
+	public function testShouldSend404WhenRouteNotFound() {
+		$this->request->setUrl($this->getUrl('/this-page-not-routed'));
+		$this->request->setMethod(HttpRequest::METH_GET);
+		$this->request->send();
+
+		self::assertEquals(Nano_C_Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
+		self::assertContains('Route not found for: this-page-not-routed', $this->request->getResponseBody());
+	}
+
 	public function testShouldSend500CodeForInternalError() {
 		$this->request->setUrl($this->getUrl('/error/500'));
 		$this->request->setMethod(HttpRequest::METH_GET);

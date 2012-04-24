@@ -24,7 +24,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 			->withRootDir($GLOBALS['application']->rootDir)
 			->configure()
 		;
-		$this->dispatcher = new Nano_Dispatcher($application);
+		$this->dispatcher = $application->dispatcher;
 	}
 
 	public function testControllersNamesFormatting() {
