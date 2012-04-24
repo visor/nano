@@ -11,11 +11,6 @@ class Nano_Dispatcher {
 	const CONTEXT           = 'context';
 
 	/**
-	 * @var Application
-	 */
-	protected $application;
-
-	/**
 	 * @var Nano_Dispatcher_Custom
 	 */
 	protected $custom             = null;
@@ -82,20 +77,6 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @param Application $application
-	 */
-	public function __construct(Application $application) {
-		$this->application = $application;
-	}
-
-	/**
-	 * @return Application
-	 */
-	public function application() {
-		return $this->application;
-	}
-
-	/**
 	 * @return Nano_Dispatcher
 	 * @param Nano_Dispatcher_Custom $value
 	 */
@@ -149,7 +130,7 @@ class Nano_Dispatcher {
 			}
 			return $result;
 		}
-		$this->application()->errorHandler()->notFound('Route not found for: ' . $url);
+		Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
 		return null;
 	}
 
@@ -182,6 +163,9 @@ class Nano_Dispatcher {
 	/**
 	 * @return Nano_C
 	 * @param Nano_Route $route
+	 *
+	 * @throws Nano_Exception_NotFound
+	 * @throws Nano_Exception_InternalError
 	 */
 	public function getController(Nano_Route $route) {
 		$this->setUpController($route);
@@ -206,7 +190,6 @@ class Nano_Dispatcher {
 		$testUrl = trim($url, '/');
 		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
-				$route->setApplication($this->application);
 				return $route;
 			}
 		}
@@ -283,7 +266,7 @@ class Nano_Dispatcher {
 	 */
 	public function getResponse() {
 		if (null === $this->response) {
-			$this->setResponse(new Nano_C_Response($this->application));
+			$this->setResponse(new Nano_C_Response);
 		}
 		return $this->response;
 	}
@@ -340,7 +323,7 @@ class Nano_Dispatcher {
 	 */
 	protected function handleError(Exception $error) {
 		//todo: log message
-		$errorController = isSet($this->application()->config->get('web')->errorController) ? $this->application()->config->get('web')->errorController : null;
+		$errorController = isSet(Nano::app()->config->get('web')->errorController) ? Nano::app()->config->get('web')->errorController : null;
 		if ($this->throw || null === $errorController) {
 			$this->getResponse()->addHeader('Content-Type', 'text/plain');
 			$this->getResponse()->setBody($error);
@@ -353,7 +336,7 @@ class Nano_Dispatcher {
 			return;
 		}
 
-		$controllerName = $this->application()->config->get('web')->errorController;
+		$controllerName = Nano::app()->config->get('web')->errorController;
 		$className      = self::formatName($controllerName, true);
 		$controller     = new $className($this->application); /* @var $controller Nano_C */
 		$action         = 'custom';

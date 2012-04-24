@@ -38,10 +38,10 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 	 * @return string
 	 */
 	protected function getSubDomain() {
-		if ($this->application->config->get('web')->domain === $_SERVER['HTTP_HOST']) {
+		if (Nano::app()->config->get('web')->domain === $_SERVER['HTTP_HOST']) {
 			return null;
 		}
-		$result = preg_replace('/\.' . preg_quote($this->application->config->get('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
+		$result = preg_replace('/\.' . preg_quote(Nano::app()->config->get('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
 		$result = strToLower($result);
 		return $result;
 	}

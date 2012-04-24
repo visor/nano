@@ -3,11 +3,6 @@
 class Nano_HelperBroker {
 
 	/**
-	 * @var Application
-	 */
-	protected $application;
-
-	/**
 	 * @var Nano_Helper[]
 	 */
 	protected $helpers = array();
@@ -17,19 +12,15 @@ class Nano_HelperBroker {
 	 */
 	protected $modules = array();
 
-	public function __construct(Application $application) {
-		$this->application = $application;
-	}
-
 	/**
 	 * @return Nano_HelperBroker_Module
-	 * @param $module
+	 * @param string $module
 	 *
-	 * @thows Application_Exception_ModuleNotFound
+	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = $this->application->modules->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
-		if (!$this->application->modules->active($moduleName)) {
+		$moduleName = Nano::app()->modules->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
+		if (!Nano::app()->modules->active($moduleName)) {
 			throw new Application_Exception_ModuleNotFound($moduleName);
 		}
 
@@ -37,7 +28,7 @@ class Nano_HelperBroker {
 			return $this->modules[$moduleName];
 		}
 
-		$this->modules[$moduleName] = new Nano_HelperBroker_Module($this->application, $moduleName);
+		$this->modules[$moduleName] = new Nano_HelperBroker_Module(Nano::app(), $moduleName);
 		return $this->modules[$moduleName];
 	}
 
@@ -69,14 +60,16 @@ class Nano_HelperBroker {
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
+	 *
+	 * @throws Nano_Exception_HelperNotFound
 	 */
 	protected function search($name) {
 		$className = ucFirst($name) . 'Helper';
 
 		if (!class_exists($className, false)) {
-			$classPath = $this->application->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className);
+			$classPath = Nano::app()->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . Nano_Loader::classToPath($className);
 
-			if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
+			if (!Nano::app()->loader->loadFileWithClass($className, $classPath)) {
 				throw new Nano_Exception_HelperNotFound($name);
 			}
 		}

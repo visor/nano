@@ -2,8 +2,6 @@
 
 class Application_ErrorHandler {
 
-	protected $application;
-
 	/**
 	 * @var boolean
 	 */
@@ -30,12 +28,11 @@ class Application_ErrorHandler {
 	 */
 	private static $defaultLevel = E_ERROR;
 
-	public function __construct(Application $application) {
+	public function __construct() {
 		ob_start();
 		register_shutdown_function(array($this, 'shutdownFunction'));
 		set_error_handler(array($this, 'handleError'));
 		set_exception_handler(array($this, 'handleException'));
-		$this->application = $application;
 	}
 
 	public function notFound($message) {
@@ -89,7 +86,7 @@ class Application_ErrorHandler {
 	 * @param int $status
 	 */
 	public function createDefaultResponse($status = Nano_C_Response::STATUS_ERROR) {
-		$result = new Nano_C_Response($this->application);
+		$result = new Nano_C_Response(Nano::app());
 		$result->setStatus($status);
 		return $result;
 	}
@@ -99,10 +96,10 @@ class Application_ErrorHandler {
 	 * @param Nano_C_Response $response
 	 */
 	protected function updateResponse(Nano_C_Response $response) {
-		if (!$this->application->config->exists('errors')) {
+		if (!Nano::app()->config->exists('errors')) {
 			return $response;
 		}
-		$errors = $this->application->config->get('errors');
+		$errors = Nano::app()->config->get('errors');
 		if (!isSet($errors->response)) {
 			return $response;
 		}
@@ -177,9 +174,9 @@ class Application_ErrorHandler {
 		if (ob_get_level() > 0) {
 			ob_end_clean();
 		}
-		if ($this->application->dispatcher->controllerInstance() && false === $forceExit) {
-			$this->application->dispatcher->controllerInstance()->markRendered();
-			$this->application->dispatcher->controllerInstance()->setResponse($response);
+		if (Nano::app()->dispatcher->controllerInstance() && false === $forceExit) {
+			Nano::app()->dispatcher->controllerInstance()->markRendered();
+			Nano::app()->dispatcher->controllerInstance()->setResponse($response);
 		}
 		$response->send();
 	}

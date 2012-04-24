@@ -11,7 +11,6 @@ abstract class Nano_Route {
 	protected $params         = array();
 	protected $matches        = null;
 	protected $compiledParams = null;
-	protected $application    = null;
 
 	public function __construct($location, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		$this->location   = $location;
@@ -43,10 +42,6 @@ abstract class Nano_Route {
 			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module, $params);
 		}
 		return new Nano_Route_Static($location, $controller, $action, $module, $params);
-	}
-
-	public function setApplication(Application $value) {
-		$this->application = $value;
 	}
 
 	/**

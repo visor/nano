@@ -8,7 +8,6 @@ class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainOnly() {
 		$route = new Nano_Route_Subdomain('.+', null);
-		$route->setApplication($GLOBALS['application']);
 
 		$_SERVER['HTTP_HOST'] = $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some-url'));
@@ -17,7 +16,6 @@ class Core_Route_SubdomainTest extends TestUtils_TestCase {
 		self::assertTrue($route->match('some-url'));
 
 		$route = new Nano_Route_Subdomain('some', null);
-		$route->setApplication($GLOBALS['application']);
 
 		self::assertTrue($route->match('some-url'));
 
@@ -27,7 +25,6 @@ class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testMatchSubdomainAndUrl() {
 		$route = new Nano_Route_Subdomain('some', 'some');
-		$route->setApplication($GLOBALS['application']);
 
 		$_SERVER['HTTP_HOST'] = $GLOBALS['application']->config->get('web')->domain;
 		self::assertFalse($route->match('some'));
@@ -42,7 +39,6 @@ class Core_Route_SubdomainTest extends TestUtils_TestCase {
 
 	public function testParameters() {
 		$route = new Nano_Route_Subdomain('(?P<p1>some)', '(?P<p2>some)');
-		$route->setApplication($GLOBALS['application']);
 
 		$_SERVER['HTTP_HOST'] = 'some.' . $GLOBALS['application']->config->get('web')->domain;
 		self::assertTrue($route->match('some'));
