@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_LogTest extends PHPUnit_Framework_TestCase {
+class Core_LogTest extends TestUtils_TestCase {
 
 	/**
 	 * @var Application
@@ -16,6 +16,8 @@ class Core_LogTest extends PHPUnit_Framework_TestCase {
 	protected $log;
 
 	protected function setUp() {
+		$this->app->backup();
+
 		$this->application = new Application();
 		$this->application->withRootDir(__DIR__ . DS . '_files');
 
@@ -43,6 +45,7 @@ class Core_LogTest extends PHPUnit_Framework_TestCase {
 	}
 
 	protected function tearDown() {
+		$this->app->restore();
 		$this->log->clear();
 	}
 

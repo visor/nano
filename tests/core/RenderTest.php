@@ -21,6 +21,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	protected $controller;
 
 	protected function setUp() {
+		$this->app->backup();
 		require_once $this->files->get($this, '/controllers/TestController.php');
 		$this->application = new Application();
 
@@ -135,6 +136,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
+		$this->app->restore();
 		unSet($this->controller, $this->renderer);
 	}
 

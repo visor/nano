@@ -13,6 +13,9 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 	protected $workingDir;
 
 	protected function setUp() {
+		$this->app->backup();
+		Nano::setApplication(null);
+
 		$this->workingDir  = getCwd();
 		chDir($GLOBALS['application']->rootDir);
 
@@ -22,6 +25,7 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 	protected function tearDown() {
 		chDir($this->workingDir);
 		unSet($this->workingDir, $this->application);
+		$this->app->restore();
 	}
 
 }

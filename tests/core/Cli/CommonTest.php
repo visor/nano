@@ -17,6 +17,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	protected $cli;
 
 	protected function setUp() {
+		$this->app->backup();
 		ob_start();
 		$this->setUseOutputBuffering(true);
 
@@ -39,6 +40,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingApplicationDirectoryInBootstrapDir() {
+		Nano::setApplication(null);
 		self::assertNull(self::getObjectProperty($this->cli, 'applicationDir'));
 
 		self::assertEquals(0, $this->cli->run(array()));
@@ -47,6 +49,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingApplicationDirectoryInSubdir() {
+		Nano::setApplication(null);
 		chDir($this->appRoot . '/application-modules/module1');
 
 		self::assertNull(self::getObjectProperty($this->cli, 'applicationDir'));
@@ -74,6 +77,8 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testDefaultScriptsShouldBeLoaded() {
+		Nano::setApplication(null);
+
 		$expected = array();
 		$iterator = new DirectoryIterator($this->nanoRoot . DIRECTORY_SEPARATOR . Nano_Cli::DIR);
 		foreach ($iterator as /** @var DirectoryIterator $item */ $item) {
@@ -94,6 +99,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testApplicationScriptsShouldBeLoadedIfExists() {
+		Nano::setApplication(null);
 		self::assertEquals(0, $this->cli->run(array()));
 		/** @var ArrayObject $actual */
 		$actual = $this->cli->getScripts();
@@ -101,6 +107,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testModulesScriptsShouldBeLoadedIfExists() {
+		Nano::setApplication(null);
 		self::assertEquals(0, $this->cli->run(array()));
 
 		/** @var ArrayObject $actual */
@@ -110,6 +117,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testOnlyProperlyNamedScriptsShouldBeLoaded() {
+		Nano::setApplication(null);
 		self::assertEquals(0, $this->cli->run(array()));
 		/** @var ArrayObject $actual */
 		$actual = $this->cli->getScripts();
@@ -121,6 +129,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testNotScriptFilesShouldNotLoaded() {
+		Nano::setApplication(null);
 		self::assertEquals(0, $this->cli->run(array()));
 		/** @var ArrayObject $actual */
 		self::assertNull($this->cli->getScript('abstract-script'));
@@ -128,37 +137,44 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testGetScriptShouldReturnNullIfScriptNotExists() {
+		Nano::setApplication(null);
 		self::assertNull($this->cli->getScript('test-script'));
 		self::assertEquals(0, $this->cli->run(array()));
 		self::assertNull($this->cli->getScript('another-script'));
 	}
 
 	public function testGetScriptShouldReturnScriptIfExists() {
+		Nano::setApplication(null);
 		self::assertEquals(0, $this->cli->run(array()));
 		self::assertInstanceOf('ReflectionClass', $this->cli->getScript('test-script'));
 	}
 
 	public function testRunShouldReturn1WhenScriptNotFound() {
+		Nano::setApplication(null);
 		self::assertEquals(1, $this->cli->run(array('script-not-found')));
 	}
 
 	public function testRunShouldReturn2WhenScriptNeedApplicationButNotSpecified() {
+		Nano::setApplication(null);
 		chdir(__DIR__);
 		self::assertEquals(2, $this->cli->run(array('setup')));
 	}
 
 	public function testRunShouldReturnScriptResultAfterExecute() {
+		Nano::setApplication(null);
 		self::assertEquals(100, $this->cli->run(array('test-script')));
 		self::assertContains('[test script was run]', $this->getActualOutput());
 	}
 
 	public function testRunWrapper() {
+		Nano::setApplication(null);
 		self::assertEquals(0, Nano_Cli::main(array()));
 	}
 
 	protected function tearDown() {
 		chDir($this->cwd);
 		ob_end_clean();
+		$this->app->restore();
 	}
 
 }

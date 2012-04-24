@@ -11,6 +11,7 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 	protected $response;
 
 	protected function setUp() {
+		$this->app->backup();
 		$application = new Application();
 		$application
 			->withRootDir($GLOBALS['application']->rootDir)
@@ -102,6 +103,7 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		unSet($this->response);
+		$this->app->restore();
 	}
 
 }

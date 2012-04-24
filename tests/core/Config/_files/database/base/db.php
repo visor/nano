@@ -7,7 +7,7 @@
 		, 'options'  => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 		)
-		, 'log'      => APP . DS . 'sql.log'
+		, 'log'      => $application->rootDir . '/sql.log'
 	)
 	, 'test' => array(
 		  'type'     => 'mysql'
@@ -17,6 +17,6 @@
 		, 'options'  => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 		)
-		, 'log'      => APP . DS . 'test-sql.log'
+		, 'log'      => $application->rootDir . '/test-sql.log'
 	)
 );

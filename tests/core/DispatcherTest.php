@@ -16,6 +16,8 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	private $dispatcher;
 
 	protected function setUp() {
+		$this->app->backup();
+
 		$application = new Application();
 		$application
 			->withConfigurationFormat('php')
@@ -58,6 +60,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testGetController() {
+		Nano::setApplication(null);
 		$application = new Application();
 		$application
 			->withConfigurationFormat('php')
@@ -71,6 +74,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testDetectingContextBySuffix() {
+		Nano::setApplication(null);
 		$application = new Application();
 		$application
 			->withConfigurationFormat('php')
@@ -112,6 +116,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 	protected function tearDown() {
 		unSet($this->dispatcher);
+		$this->app->restore();
 	}
 
 }

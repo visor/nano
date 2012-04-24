@@ -8,26 +8,25 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	/**
 	 * @var Application
 	 */
-	protected static $application;
+	protected $application;
 
 	/**
 	 * @var Nano_HelperBroker
 	 */
 	protected $helper;
 
-	public static function setUpBeforeClass() {
-		self::$application = new Application();
-		self::$application
+	protected function setUp() {
+		$this->app->backup();
+
+		$this->application = new Application();
+		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)
 			->withModule('example', __DIR__ . '/_files/example')
 			->withModule('another-example', __DIR__ . '/_files/another-example')
 			->configure()
 		;
-	}
-
-	protected function setUp() {
-		$this->helper = self::$application->helper;
+		$this->helper = $this->application->helper;
 	}
 
 	public function testShouldThrowExceptionWhenModuleNotFound() {
@@ -74,11 +73,8 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	}
 
 	protected function tearDown() {
-		unSet($this->helper);
-	}
-
-	public static function tearDownAfterClass() {
-		self::$application = null;
+		unSet($this->helper, $this->application);
+		$this->app->restore();
 	}
 
 }

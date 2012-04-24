@@ -82,11 +82,6 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		self::assertFalse($response->hasHeader('X-Modified'));
 	}
 
-//	public function testGetOutputShouldReturnNullWhenNoOutputBuffering() {
-//		$handler = new PublicErrorHandler($GLOBALS['application'], true);
-//		self::assertNull($handler->getOutput());
-//	}
-
 	protected function reloadConfig() {
 		self::setObjectProperty($GLOBALS['application']->config, 'config', null);
 		self::setObjectProperty($GLOBALS['application']->config, 'routes', null);
