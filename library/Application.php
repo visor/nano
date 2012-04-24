@@ -198,14 +198,6 @@ class Application extends TypedRegistry {
 		$this->dispatcher->dispatch($this->config->routes(), $url);
 	}
 
-	/**
-	 * @deprecated
-	 * @return Nano_Dispatcher
-	 */
-	public function getDispatcher() {
-		return $this->dispatcher;
-	}
-
 	public function errorHandler() {
 		return $this->errorHandler;
 	}

@@ -59,9 +59,9 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		$params['module']     = $module;
 		$params['controller'] = $controller;
 		$params['action']     = $action;
-		$application->getDispatcher()->setParams($params);
+		$application->dispatcher->setParams($params);
 
-		self::setObjectProperty($application->getDispatcher(), 'controllerInstance', $instance);
+		self::setObjectProperty($application->dispatcher, 'controllerInstance', $instance);
 
 		$instance->run($action);
 		return $instance->response();

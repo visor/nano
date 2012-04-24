@@ -193,7 +193,7 @@ class Nano_Dispatcher {
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
 			throw new Nano_Exception_InternalError('Not a controller class: ' . $className);
 		}
-		return $class->newInstance($this->application);
+		return $class->newInstance();
 	}
 
 	/**

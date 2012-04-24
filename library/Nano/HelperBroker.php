@@ -1,8 +1,5 @@
 <?php
 
-/**
- * @method ResourceHelper resource()
- */
 class Nano_HelperBroker {
 
 	/**
@@ -64,7 +61,6 @@ class Nano_HelperBroker {
 		}
 
 		$helper = $this->search($key);
-		$helper->setDispatcher($this->application->dispatcher);
 		$this->helpers[$key] = $helper;
 
 		return $this->helpers[$key];

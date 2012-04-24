@@ -28,15 +28,15 @@ class RaiseController extends Nano_C {
 	}
 
 	public function customAction() {
-		$this->application()->errorHandler()->handleError(-1, 'Message from action', __FILE__, __LINE__, array());
+		Nano::app()->errorHandler()->handleError(-1, 'Message from action', __FILE__, __LINE__, array());
 	}
 
 	public function notFoundAction() {
-		$this->application()->errorHandler()->notFound('Message from action');
+		Nano::app()->errorHandler()->notFound('Message from action');
 	}
 
 	public function internalErrorAction() {
-		$this->application()->errorHandler()->internalError('Message from action');
+		Nano::app()->errorHandler()->internalError('Message from action');
 	}
 
 	public function nullOutputAction() {

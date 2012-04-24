@@ -178,7 +178,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 		$routes     = new Nano_Routes();
 		$route      = Nano_Route::create('some', 'class', 'index', 'test');
-		$dispatcher = $this->application->getDispatcher();
+		$dispatcher = $this->application->dispatcher;
 		$response   = new Nano_C_Response_Test($this->application);
 
 		$dispatcher->setResponse($response);

@@ -58,25 +58,12 @@ abstract class Nano_C {
 	protected $redirect = null;
 
 	/**
-	 * @var Nano_HelperBroker
-	 */
-	protected $helper;
-
-	/**
-	 * @param Application $application
-	 */
-	public function __construct(Application $application) {
-		$this->application = $application;
-		$this->helper      = $application->helper;
-	}
-
-	/**
 	 * @return string|null
 	 */
 	public function getModule() {
 		if (null === $this->module && Nano_Loader::isModuleClass($className = get_class($this))) {
 			list($this->module, ) = Nano_Loader::extractModuleClassParts($className);
-			$this->module = $this->application->modules->nameToFolder($this->module);
+			$this->module = Nano::app()->modules->nameToFolder($this->module);
 		}
 		return $this->module;
 	}
@@ -112,17 +99,10 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return Application
-	 */
-	public function application() {
-		return $this->application;
-	}
-
-	/**
 	 * @return Nano_Dispatcher
 	 */
 	public function dispatcher() {
-		return $this->application->dispatcher;
+		return Nano::app()->dispatcher;
 	}
 
 	/**
@@ -131,7 +111,7 @@ abstract class Nano_C {
 	 * @param mixed $default
 	 */
 	public function p($name, $default = null) {
-		return $this->application->dispatcher->param($name, $default);
+		return Nano::app()->dispatcher->param($name, $default);
 	}
 
 	/**
@@ -240,15 +220,15 @@ abstract class Nano_C {
 	 * @return Nano_Render
 	 */
 	protected function createRenderer() {
-		return new Nano_Render($this->application);
+		return new Nano_Render(Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function configureRenderer() {
-		$this->renderer->setLayoutsPath($this->application->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
-		$this->renderer->setViewsPath($this->application->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
+		$this->renderer->setLayoutsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
 		$this->renderer->setModuleViewsDirName(Nano_Render::VIEW_DIR);
 	}
 
@@ -259,14 +239,14 @@ abstract class Nano_C {
 		if (null !== $this->response) {
 			return;
 		}
-		$this->response = new Nano_C_Response($this->application);
+		$this->response = new Nano_C_Response(Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function runInit() {
-		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->init($this);
 		}
 		$this->init();
@@ -276,7 +256,7 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			if (false === $plugin->before($this)) {
 				return false;
 			}
@@ -291,7 +271,7 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach ($this->application->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
 			$plugin->after($this);
 		}
 		$this->after();
@@ -304,7 +284,7 @@ abstract class Nano_C {
 	 */
 	protected function pageNotFound($message = null) {
 		$this->markRendered();
-		$this->application()->errorHandler()->notFound($message);
+		Nano::app()->errorHandler()->notFound($message);
 	}
 
 	/**
@@ -314,7 +294,7 @@ abstract class Nano_C {
 	 */
 	protected function internalError($message = null) {
 		$this->markRendered();
-		$this->application()->errorHandler()->notFound($message);
+		Nano::app()->errorHandler()->notFound($message);
 	}
 
 }
