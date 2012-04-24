@@ -8,13 +8,6 @@ abstract class Nano_Helper {
 	protected $dispatcher;
 
 	/**
-	 * @return Nano_Helper
-	 */
-	public function invoke() {
-		return $this;
-	}
-
-	/**
 	 * @return Nano_Dispatcher
 	 */
 	protected function dispatcher() {
