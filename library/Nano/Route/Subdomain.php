@@ -7,9 +7,9 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 	 */
 	protected $domainPattern;
 
-	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index', $module = null) {
+	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		$this->domainPattern = '/^' . str_replace('/','\/', $domainPattern) . '$/';
-		parent::__construct($urlPattern, $controller, $action, $module);
+		parent::__construct($urlPattern, $controller, $action, $module, $params);
 	}
 
 	/**

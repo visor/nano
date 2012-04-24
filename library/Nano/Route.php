@@ -4,18 +4,21 @@ abstract class Nano_Route {
 
 	const PREFIX_REGEXP = '~';
 
-	protected $location    = null;
-	protected $module      = null;
-	protected $controller  = null;
-	protected $action      = null;
-	protected $matches     = null;
-	protected $application = null;
+	protected $location       = null;
+	protected $module         = null;
+	protected $controller     = null;
+	protected $action         = null;
+	protected $params         = array();
+	protected $matches        = null;
+	protected $compiledParams = null;
+	protected $application    = null;
 
-	public function __construct($location, $controller = 'index', $action = 'index', $module = null) {
+	public function __construct($location, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		$this->location   = $location;
 		$this->module     = $module;
 		$this->controller = $controller;
 		$this->action     = $action;
+		$this->params     = $params;
 	}
 
 	/**
@@ -30,15 +33,16 @@ abstract class Nano_Route {
 	 * @param string $controller
 	 * @param string $action
 	 * @param string $module
+	 * @param array $params
 	 */
-	public static function create($location, $controller = 'index', $action = 'index', $module = null) {
+	public static function create($location, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		if ('' === $location || null === $location) {
-			return new Nano_Route_Static($location, $controller, $action, $module);
+			return new Nano_Route_Static($location, $controller, $action, $module, $params);
 		}
 		if (self::PREFIX_REGEXP == $location[0]) {
-			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module);
+			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module, $params);
 		}
-		return new Nano_Route_Static($location, $controller, $action, $module);
+		return new Nano_Route_Static($location, $controller, $action, $module, $params);
 	}
 
 	public function setApplication(Application $value) {
@@ -88,6 +92,23 @@ abstract class Nano_Route {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function params() {
+		if (null === $this->compiledParams) {
+			$this->compiledParams = $this->params;
+			if (is_array($this->matches())) {
+				foreach ($this->matches() as $name => $value) {
+					if (is_string($name)) {
+						$this->compiledParams[$name] = $value;
+					}
+				}
+			}
+		}
+		return $this->compiledParams;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function __toString() {
@@ -95,7 +116,7 @@ abstract class Nano_Route {
 	}
 
 	public function __sleep() {
-		return array('location', 'module', 'controller', 'action');
+		return array('location', 'module', 'controller', 'action', 'params');
 	}
 
 }

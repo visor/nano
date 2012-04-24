@@ -222,7 +222,7 @@ class Nano_Dispatcher {
 		if (false === $route->match($url)) {
 			return false;
 		}
-		$this->buildParams($route->matches());
+		$this->buildParams($route->params());
 		return true;
 	}
 
@@ -319,9 +319,7 @@ class Nano_Dispatcher {
 				$this->action = $value;
 				continue;
 			}
-			if (is_string($name)) {
-				$this->params[$name] = $value;
-			}
+			$this->params[$name] = $value;
 		}
 	}
 

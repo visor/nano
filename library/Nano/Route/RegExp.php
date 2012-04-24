@@ -2,12 +2,12 @@
 
 class Nano_Route_RegExp extends Nano_Route {
 
-	public function __construct($location, $controller, $action, $module) {
+	public function __construct($location, $controller, $action, $module, array $params = array()) {
 		$location = null === $location || 0 === strLen($location)
 			? null
 			: '/^' . $location . '$/i'
 		;
-		parent::__construct($location, $controller, $action, $module);
+		parent::__construct($location, $controller, $action, $module, $params);
 	}
 
 	/**

@@ -66,11 +66,6 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 		self::assertEquals(302, $this->getResponse()->getStatus());
 	}
 
-	public function testWithMessage() {
-		$this->redirect->withMessage('simple text');
-		self::assertEquals('simple text', Nano_C_Redirect::getMessage());
-	}
-
 	/**
 	 * @return Nano_C_Response
 	 */

@@ -23,4 +23,10 @@ class Core_Route_CommonTest extends TestUtils_TestCase {
 		self::assertEquals('some-page', $params['page']);
 	}
 
+	public function testParamsShouldPassedIntoRoute() {
+		$params = Nano_Route::create('', 'index', 'index', null, array('param' => 'value'))->params();
+		self::assertArrayHasKey('param', $params);
+		self::assertEquals('value', $params['param']);
+	}
+
 }
