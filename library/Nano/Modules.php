@@ -48,6 +48,8 @@ class Nano_Modules extends ArrayObject {
 	 * @return Nano_Modules
 	 * @param string $name
 	 * @param string $path
+	 *
+	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function append($name, $path = null) {
 		if (null === $path) {

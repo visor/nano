@@ -61,6 +61,11 @@ class Core_ConfigTest extends TestUtils_TestCase {
 		}
 	}
 
+	public function testExistsShouldReturnFalseWhenConfigurationFileNotExists() {
+		$config = new Nano_Config($this->files->get($this, '/configs/not-exists'), new Nano_Config_Format_Php());
+		self::assertFalse($config->exists('some'));
+	}
+
 	public function testShouldTrowExceptionWhenNotExistedFileLoading() {
 		$this->setExpectedException('Nano_Config_Exception', 'Configuration files not exists at ' . __FILE__);
 

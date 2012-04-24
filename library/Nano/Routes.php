@@ -80,16 +80,6 @@ class Nano_Routes implements IteratorAggregate {
 
 	/**
 	 * @return Nano_Routes
-	 * @param string $location
-	 * @param string $controller
-	 * @param string $action
-	 */
-	public function head($location, $controller = 'index', $action = 'index') {
-		return $this->add(__FUNCTION__, $location, $controller, $action);
-	}
-
-	/**
-	 * @return Nano_Routes
 	 * @param string $method
 	 * @param string $location
 	 * @param string $controller
@@ -136,20 +126,6 @@ class Nano_Routes implements IteratorAggregate {
 	 */
 	public function getIterator() {
 		return $this->routes->getIterator();
-	}
-
-	/**
-	 * @return string
-	 */
-	public function __toString() {
-		$result = '';
-		foreach ($this->routes as $method => $routes) {/** @var ArrayObject $routes */
-			$result .= $method . PHP_EOL;
-			foreach ($routes->getArrayCopy() as $location => $route) {/** @var Nano_Route $route */
-				$result .= '	' . $route->__toString() . PHP_EOL;
-			}
-		}
-		return $result;
 	}
 
 	/**

@@ -123,6 +123,12 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		$this->application->withModule('module6');
 	}
 
+	public function testAppendShouldThrowExceptionWhenPathParamIsNull() {
+		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module\' not found in application and shared modules');
+
+		$this->application->modules->append('module', null);
+	}
+
 	public function testPathes() {
 		$this->application->withModule('default', $this->files->get($this, '/test'));
 
