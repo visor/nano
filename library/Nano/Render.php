@@ -100,12 +100,17 @@ class Nano_Render {
 		if (null === $module) {
 			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
-
-		if ($this->useApplicationDirs) {
-			$viewName = $this->viewsPath . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action;
-		} else {
+		if (false === $this->useApplicationDirs) {
 			$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+			return $this->addContext($viewName, $context) . '.php';
 		}
+
+		$result = $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
+		if (file_exists($result)) {
+			return $result;
+		}
+
+		$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
 		return $this->addContext($viewName, $context) . '.php';
 	}
 
@@ -160,7 +165,7 @@ class Nano_Render {
 	 */
 	protected function addContext($path, $context) {
 		$result = $path;
-		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT != $context && null !== $context) {
+		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT !== $context && null !== $context) {
 			$result .= '.' . $context;
 		}
 		return $result;

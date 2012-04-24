@@ -71,6 +71,8 @@ class Nano_Modules extends ArrayObject {
 	 * @return string
 	 * @param string $name
 	 * @param string $folder
+	 *
+	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function getPath($name, $folder = null) {
 		if (!$this->offsetExists($name)) {

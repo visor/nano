@@ -63,9 +63,10 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $location
 	 * @param string $controller
 	 * @param string $action
+	 * @param array $params
 	 */
-	public function get($location, $controller = 'index', $action = 'index') {
-		return $this->add(__FUNCTION__, $location, $controller, $action);
+	public function get($location, $controller = 'index', $action = 'index', array $params = array()) {
+		return $this->add(__FUNCTION__, $location, $controller, $action, $params);
 	}
 
 	/**
@@ -73,9 +74,10 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $location
 	 * @param string $controller
 	 * @param string $action
+	 * @param array $params
 	 */
-	public function post($location, $controller = 'index', $action = 'index') {
-		return $this->add(__FUNCTION__, $location, $controller, $action);
+	public function post($location, $controller = 'index', $action = 'index', array $params = array()) {
+		return $this->add(__FUNCTION__, $location, $controller, $action, $params);
 	}
 
 	/**
@@ -84,13 +86,15 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param string $location
 	 * @param string $controller
 	 * @param string $action
+	 * @param array $params
 	 */
-	public function add($method, $location, $controller = 'index', $action = 'index') {
+	public function add($method, $location, $controller = 'index', $action = 'index', array $params = array()) {
 		$this->addRoute($method, Nano_Route::create(
 			$this->getLocation($location)
 			, $controller
 			, $action
 			, $this->module
+			, $params
 		));
 		return $this;
 	}

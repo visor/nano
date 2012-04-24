@@ -18,7 +18,6 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 			->withRootDir(dirName(dirName(dirName(__DIR__))) . DS . 'application-example')
 			->configure()
 		;
-//		$application->message->load('test');
 		$this->redirect = new Nano_C_Redirect(new Nano_C_Response($application));
 	}
 
@@ -64,6 +63,29 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 
 		self::assertEquals('/', $this->getResponse()->getHeader('Location'));
 		self::assertEquals(302, $this->getResponse()->getStatus());
+	}
+
+	public function testControllerHelperShouldCreateRedirectInstance() {
+		$controller = new ResponseTestController();
+		$controller->setResponse(new Nano_C_Response_Test());
+
+		self::assertInstanceOf('Nano_C_Redirect', $controller->redirect());
+	}
+
+	public function testControllerHelperShouldAddLocationWhenParameterPassed() {
+		$controller = new ResponseTestController();
+		$controller->setResponse(new Nano_C_Response_Test());
+		$controller->redirect('/some/location');
+
+		self::assertTrue($controller->response()->hasHeader('Location'));
+		self::assertEquals('/some/location', $controller->response()->getHeader('Location'));
+	}
+
+	public function testControllerHelperShouldMarkControlerRendered() {
+		$controller = new ResponseTestController();
+		$controller->setResponse(new Nano_C_Response_Test());
+		$controller->redirect();
+		self::assertTrue(self::getObjectProperty($controller, 'rendered'));
 	}
 
 	/**
