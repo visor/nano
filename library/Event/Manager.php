@@ -21,6 +21,8 @@ class Event_Manager {
 	 * @param string $eventType
 	 * @param string|array|Closure $handler
 	 * @param int $priority
+	 *
+	 * @throws Event_Exception
 	 */
 	public function attach($eventType, $handler, $priority = 100) {
 		if ($handler instanceof Closure) {

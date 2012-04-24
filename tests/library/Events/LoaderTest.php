@@ -22,6 +22,11 @@ class Library_Events_LoaderTest extends TestUtils_TestCase {
 		$this->checkHandlersLoaded('another-test-event', 1);
 	}
 
+	public function testLoadFromFileShouldIgnoreNotExistedFile() {
+		$this->manager->loader()->useFile(__DIR__ . '/_files/not-exists.php');
+		$this->manager->loader()->load($this->manager);
+	}
+
 	public function testLoadingHandlersFromDirectory() {
 		$this->manager->loader()->useDirectory(__DIR__ . '/_files/dir');
 		$this->checkHandlersLoaded('test-event', 3);

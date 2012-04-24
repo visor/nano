@@ -16,11 +16,6 @@ class Nano_Dispatcher {
 	protected $custom             = null;
 
 	/**
-	 * @var Nano_Dispatcher_Context
-	 */
-	protected $context            = null;
-
-	/**
 	 * @var string
 	 */
 	protected $module             = null;
@@ -87,15 +82,6 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return Nano_Dispatcher
-	 * @param Nano_Dispatcher_Context $value
-	 */
-	public function setContext(Nano_Dispatcher_Context $value) {
-		$this->context = $value;
-		return $this;
-	}
-
-	/**
-	 * @return Nano_Dispatcher
 	 * @param boolean $value
 	 */
 	public function throwExceptions($value) {
@@ -111,13 +97,6 @@ class Nano_Dispatcher {
 	 * @throws Nano_Exception_NotFound
 	 */
 	public function dispatch(Nano_Routes $routes, $url) {
-		if ($this->context) {
-			$this->context->detect();
-			if ($this->context->needRedirect()) {
-				$this->context->redirect($url);
-				return null;
-			}
-		}
 		$route = $this->getRoute($routes, $url);
 		if (null !== $route) {
 			$this->run($route);
@@ -153,8 +132,6 @@ class Nano_Dispatcher {
 
 		if ($this->param('context')) {
 			$this->controllerInstance->context = $this->param('context');
-		} elseif ($this->context) {
-			$this->controllerInstance->context = $this->context->get();
 		}
 
 		$this->controllerInstance->run($this->action());

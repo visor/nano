@@ -165,7 +165,7 @@ class Nano_Render {
 	 */
 	protected function addContext($path, $context) {
 		$result = $path;
-		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT !== $context && null !== $context) {
+		if (Nano_C::CONTEXT_DEFAULT !== $context && null !== $context) {
 			$result .= '.' . $context;
 		}
 		return $result;

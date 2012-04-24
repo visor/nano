@@ -2,6 +2,8 @@
 
 abstract class Nano_C {
 
+	const CONTEXT_DEFAULT = 'default';
+
 	/**
 	 * @var string
 	 */
@@ -25,7 +27,7 @@ abstract class Nano_C {
 	/**
 	 * @var string
 	 */
-	public $context = Nano_Dispatcher_Context::CONTEXT_DEFAULT;
+	public $context = self::CONTEXT_DEFAULT;
 
 	/**
 	 * @var string
