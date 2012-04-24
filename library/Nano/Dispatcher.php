@@ -313,45 +313,4 @@ class Nano_Dispatcher {
 		$this->module     = $route->module();
 	}
 
-	/**
-	 * @return void
-	 * @param Exception $error
-	 * @throws Exception
-	 */
-	protected function handleError(Exception $error) {
-		//todo: log message
-		$errorController = isSet(Nano::app()->config->get('web')->errorController) ? Nano::app()->config->get('web')->errorController : null;
-		if ($this->throw || null === $errorController) {
-			$this->getResponse()->addHeader('Content-Type', 'text/plain');
-			$this->getResponse()->setBody($error);
-			if ($error instanceof Nano_Exception_NotFound) {
-				$this->getResponse()->setStatus(Nano_C_Response::STATUS_NOT_FOUND);
-			} else {
-				$this->getResponse()->setStatus(Nano_C_Response::STATUS_ERROR);
-			}
-			$this->getResponse()->send();
-			return;
-		}
-
-		$controllerName = Nano::app()->config->get('web')->errorController;
-		$className      = self::formatName($controllerName, true);
-		$controller     = new $className($this->application); /* @var $controller Nano_C */
-		$action         = 'custom';
-
-		if ($error instanceof Nano_Exception_NotFound) {
-			$action = 'e404';
-		}
-		if ($error instanceof Nano_Exception_InternalError) {
-			$action = 'e500';
-		}
-
-		$this->controller         = $controllerName;
-		$this->controllerInstance = $controller;
-		$this->action             = $action;
-		$controller->error        = $error;
-
-		$controller->setResponse($this->getResponse());
-		$controller->run($action);
-	}
-
 }
