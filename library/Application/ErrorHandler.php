@@ -86,7 +86,7 @@ class Application_ErrorHandler {
 	 * @param int $status
 	 */
 	public function createDefaultResponse($status = Nano_C_Response::STATUS_ERROR) {
-		$result = new Nano_C_Response(Nano::app());
+		$result = new Nano_C_Response;
 		$result->setStatus($status);
 		return $result;
 	}

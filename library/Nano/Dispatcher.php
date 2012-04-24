@@ -118,9 +118,6 @@ class Nano_Dispatcher {
 	 * @param Nano_Route $route
 	 */
 	public function run(Nano_Route $route) {
-		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD']) && Nano::isTesting()) {
-			return null;
-		}
 		if ($route instanceof Nano_Route_Runnable) {
 			/* @var $route Nano_Route_Runnable */
 			$route->run();
