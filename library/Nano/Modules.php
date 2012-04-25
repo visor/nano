@@ -48,6 +48,8 @@ class Nano_Modules extends ArrayObject {
 	 * @return Nano_Modules
 	 * @param string $name
 	 * @param string $path
+	 *
+	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function append($name, $path = null) {
 		if (null === $path) {
@@ -69,6 +71,8 @@ class Nano_Modules extends ArrayObject {
 	 * @return string
 	 * @param string $name
 	 * @param string $folder
+	 *
+	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function getPath($name, $folder = null) {
 		if (!$this->offsetExists($name)) {

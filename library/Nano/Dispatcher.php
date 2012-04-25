@@ -11,19 +11,9 @@ class Nano_Dispatcher {
 	const CONTEXT           = 'context';
 
 	/**
-	 * @var Application
-	 */
-	protected $application;
-
-	/**
 	 * @var Nano_Dispatcher_Custom
 	 */
 	protected $custom             = null;
-
-	/**
-	 * @var Nano_Dispatcher_Context
-	 */
-	protected $context            = null;
 
 	/**
 	 * @var string
@@ -82,34 +72,11 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @param Application $application
-	 */
-	public function __construct(Application $application) {
-		$this->application = $application;
-	}
-
-	/**
-	 * @return Application
-	 */
-	public function application() {
-		return $this->application;
-	}
-
-	/**
 	 * @return Nano_Dispatcher
 	 * @param Nano_Dispatcher_Custom $value
 	 */
 	public function setCustom(Nano_Dispatcher_Custom $value) {
 		$this->custom = $value;
-		return $this;
-	}
-
-	/**
-	 * @return Nano_Dispatcher
-	 * @param Nano_Dispatcher_Context $value
-	 */
-	public function setContext(Nano_Dispatcher_Context $value) {
-		$this->context = $value;
 		return $this;
 	}
 
@@ -130,13 +97,6 @@ class Nano_Dispatcher {
 	 * @throws Nano_Exception_NotFound
 	 */
 	public function dispatch(Nano_Routes $routes, $url) {
-		if ($this->context) {
-			$this->context->detect();
-			if ($this->context->needRedirect()) {
-				$this->context->redirect($url);
-				return null;
-			}
-		}
 		$route = $this->getRoute($routes, $url);
 		if (null !== $route) {
 			$this->run($route);
@@ -149,7 +109,8 @@ class Nano_Dispatcher {
 			}
 			return $result;
 		}
-		$this->application()->errorHandler()->notFound('Route not found for: ' . $url);
+
+		Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
 		return null;
 	}
 
@@ -158,9 +119,6 @@ class Nano_Dispatcher {
 	 * @param Nano_Route $route
 	 */
 	public function run(Nano_Route $route) {
-		if (isset($_SERVER['REQUEST_METHOD']) && 'HEAD' === strToUpper($_SERVER['REQUEST_METHOD']) && Nano::isTesting()) {
-			return null;
-		}
 		if ($route instanceof Nano_Route_Runnable) {
 			/* @var $route Nano_Route_Runnable */
 			$route->run();
@@ -172,8 +130,6 @@ class Nano_Dispatcher {
 
 		if ($this->param('context')) {
 			$this->controllerInstance->context = $this->param('context');
-		} elseif ($this->context) {
-			$this->controllerInstance->context = $this->context->get();
 		}
 
 		$this->controllerInstance->run($this->action());
@@ -182,6 +138,9 @@ class Nano_Dispatcher {
 	/**
 	 * @return Nano_C
 	 * @param Nano_Route $route
+	 *
+	 * @throws Nano_Exception_NotFound
+	 * @throws Nano_Exception_InternalError
 	 */
 	public function getController(Nano_Route $route) {
 		$this->setUpController($route);
@@ -193,7 +152,7 @@ class Nano_Dispatcher {
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
 			throw new Nano_Exception_InternalError('Not a controller class: ' . $className);
 		}
-		return $class->newInstance($this->application);
+		return $class->newInstance();
 	}
 
 	/**
@@ -206,7 +165,6 @@ class Nano_Dispatcher {
 		$testUrl = trim($url, '/');
 		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
 			if ($this->test($route, $testUrl)) {
-				$route->setApplication($this->application);
 				return $route;
 			}
 		}
@@ -222,7 +180,7 @@ class Nano_Dispatcher {
 		if (false === $route->match($url)) {
 			return false;
 		}
-		$this->buildParams($route->matches());
+		$this->buildParams($route->params());
 		return true;
 	}
 
@@ -283,7 +241,7 @@ class Nano_Dispatcher {
 	 */
 	public function getResponse() {
 		if (null === $this->response) {
-			$this->setResponse(new Nano_C_Response($this->application));
+			$this->setResponse(new Nano_C_Response);
 		}
 		return $this->response;
 	}
@@ -301,11 +259,8 @@ class Nano_Dispatcher {
 	 * @return void
 	 * @param array $data
 	 */
-	protected function buildParams($data) {
+	protected function buildParams(array $data) {
 		$this->params = array();
-		if (!is_array($data)) {
-			return;
-		}
 		foreach ($data as $name => $value) {
 			if ('module' === $name) {
 				$this->module = $value;
@@ -319,9 +274,7 @@ class Nano_Dispatcher {
 				$this->action = $value;
 				continue;
 			}
-			if (is_string($name)) {
-				$this->params[$name] = $value;
-			}
+			$this->params[$name] = $value;
 		}
 	}
 
@@ -333,47 +286,6 @@ class Nano_Dispatcher {
 		$this->action     = $route->action();
 		$this->controller = $route->controller();
 		$this->module     = $route->module();
-	}
-
-	/**
-	 * @return void
-	 * @param Exception $error
-	 * @throws Exception
-	 */
-	protected function handleError(Exception $error) {
-		//todo: log message
-		$errorController = isSet($this->application()->config->get('web')->errorController) ? $this->application()->config->get('web')->errorController : null;
-		if ($this->throw || null === $errorController) {
-			$this->getResponse()->addHeader('Content-Type', 'text/plain');
-			$this->getResponse()->setBody($error);
-			if ($error instanceof Nano_Exception_NotFound) {
-				$this->getResponse()->setStatus(Nano_C_Response::STATUS_NOT_FOUND);
-			} else {
-				$this->getResponse()->setStatus(Nano_C_Response::STATUS_ERROR);
-			}
-			$this->getResponse()->send();
-			return;
-		}
-
-		$controllerName = $this->application()->config->get('web')->errorController;
-		$className      = self::formatName($controllerName, true);
-		$controller     = new $className($this->application); /* @var $controller Nano_C */
-		$action         = 'custom';
-
-		if ($error instanceof Nano_Exception_NotFound) {
-			$action = 'e404';
-		}
-		if ($error instanceof Nano_Exception_InternalError) {
-			$action = 'e500';
-		}
-
-		$this->controller         = $controllerName;
-		$this->controllerInstance = $controller;
-		$this->action             = $action;
-		$controller->error        = $error;
-
-		$controller->setResponse($this->getResponse());
-		$controller->run($action);
 	}
 
 }

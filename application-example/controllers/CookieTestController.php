@@ -42,7 +42,7 @@ class CookieTestController extends Nano_C {
 	 */
 	protected function cookie() {
 		if (null === $this->cookie) {
-			$this->cookie = new Cookie($this->application()->config->get('web')->domain);
+			$this->cookie = new Cookie(Nano::app()->config->get('web')->domain);
 		}
 		return $this->cookie;
 	}

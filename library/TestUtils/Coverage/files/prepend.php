@@ -42,9 +42,7 @@
  * @since      File available since Release 3.2.10
  */
 
-if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
-	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
-	extension_loaded('xdebug')) {
+if (isSet($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) && !isSet($_GET['PHPUNIT_SELENIUM_TEST_ID']) && extension_loaded('xdebug')) {
 	$GLOBALS['PHPUNIT_FILTERED_FILES'] = array(__FILE__);
 
 	xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);

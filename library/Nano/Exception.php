@@ -2,6 +2,8 @@
 
 class Nano_Exception extends RuntimeException {
 
+	const VALUE_NULL = 'NULL';
+
 	/**
 	 * @return string
 	 * @param mixed $value
@@ -11,7 +13,7 @@ class Nano_Exception extends RuntimeException {
 			return get_class($value);
 		}
 		if (is_null($value)) {
-			return 'NULL';
+			return self::VALUE_NULL;
 		}
 		return var_export($value, true);
 	}

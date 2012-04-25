@@ -78,6 +78,9 @@ class Application extends TypedRegistry {
 		if (!$this->offsetExists('configFormat')) {
 			throw new Application_Exception_InvalidConfiguration('Configuration format not specified');
 		}
+
+		Nano::setApplication($this);
+
 		if (!$this->offsetExists('rootDir')) {
 			$this->withRootDir(getCwd());
 		}
@@ -92,17 +95,16 @@ class Application extends TypedRegistry {
 		}
 
 		if ('cli' !== php_sapi_name()) {
-			$this->errorHandler = new Application_ErrorHandler($this);
+			$this->errorHandler = new Application_ErrorHandler;
 		}
 		$this
 			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
-			->readOnly('helper',       new Nano_HelperBroker($this))
-			->readOnly('dispatcher',   new Nano_Dispatcher($this))
-			->readOnly('eventManager', new Event_Manager())
+			->readOnly('helper',       new Nano_HelperBroker)
+			->readOnly('dispatcher',   new Nano_Dispatcher)
+			->readOnly('eventManager', new Event_Manager)
 		;
 
 		$this->setupErrorReporting();
-		Nano::setApplication($this);
 		return $this;
 	}
 
@@ -196,14 +198,6 @@ class Application extends TypedRegistry {
 		}
 		$url = trim(rawUrlDecode($url), '/');
 		$this->dispatcher->dispatch($this->config->routes(), $url);
-	}
-
-	/**
-	 * @deprecated
-	 * @return Nano_Dispatcher
-	 */
-	public function getDispatcher() {
-		return $this->dispatcher;
 	}
 
 	public function errorHandler() {

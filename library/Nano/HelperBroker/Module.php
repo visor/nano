@@ -54,7 +54,6 @@ class Nano_HelperBroker_Module {
 		}
 
 		$helper = $this->search($key);
-		$helper->setDispatcher($this->application->getDispatcher());
 		$this->helpers[$key] = $helper;
 		return $this->helpers[$key];
 	}

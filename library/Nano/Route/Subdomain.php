@@ -7,9 +7,9 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 	 */
 	protected $domainPattern;
 
-	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index', $module = null) {
+	public function __construct($domainPattern, $urlPattern = null, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		$this->domainPattern = '/^' . str_replace('/','\/', $domainPattern) . '$/';
-		parent::__construct($urlPattern, $controller, $action, $module);
+		parent::__construct($urlPattern, $controller, $action, $module, $params);
 	}
 
 	/**
@@ -38,10 +38,10 @@ class Nano_Route_Subdomain extends Nano_Route_RegExp {
 	 * @return string
 	 */
 	protected function getSubDomain() {
-		if ($this->application->config->get('web')->domain === $_SERVER['HTTP_HOST']) {
+		if (Nano::app()->config->get('web')->domain === $_SERVER['HTTP_HOST']) {
 			return null;
 		}
-		$result = preg_replace('/\.' . preg_quote($this->application->config->get('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
+		$result = preg_replace('/\.' . preg_quote(Nano::app()->config->get('web')->domain, '/') .'$/i', '', $_SERVER['HTTP_HOST']);
 		$result = strToLower($result);
 		return $result;
 	}

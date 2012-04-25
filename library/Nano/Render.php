@@ -33,9 +33,8 @@ class Nano_Render {
 	 */
 	public function render(Nano_C $object) {
 		$module    = $object->getModule();
-		$viewFile  = $this->getViewFileName($object->controller, $object->template, $object->context, $module);
 		$variables = get_object_vars($object);
-		$content   = self::file($this, $viewFile, $variables);
+		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
 
 		if (null === $object->layout) {
 			return $content;
@@ -44,6 +43,19 @@ class Nano_Render {
 		$variables['content'] = $content;
 		$layoutFile = $this->getLayoutFileName($object->layout, $object->context);
 		return self::file($this, $layoutFile, $variables);
+	}
+
+	/**
+	 * @return null|string
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $template
+	 * @param string $context
+	 * @param array $variables
+	 */
+	public function renderView($module, $controller, $template, $context, array $variables) {
+		$viewFile = $this->getViewFileName($controller, $template, $context, $module);
+		return self::file($this, $viewFile, $variables);
 	}
 
 	/**
@@ -88,12 +100,17 @@ class Nano_Render {
 		if (null === $module) {
 			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
-
-		if ($this->useApplicationDirs) {
-			$viewName = $this->viewsPath . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action;
-		} else {
+		if (false === $this->useApplicationDirs) {
 			$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+			return $this->addContext($viewName, $context) . '.php';
 		}
+
+		$result = $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
+		if (file_exists($result)) {
+			return $result;
+		}
+
+		$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
 		return $this->addContext($viewName, $context) . '.php';
 	}
 
@@ -108,10 +125,12 @@ class Nano_Render {
 
 	/**
 	 * @return null|string
+	 *
 	 * @param Nano_Render $renderer
-	 * @param string $fileName
-	 * @param array $variables
-	 * @throws Nano_Exception
+	 * @param string      $fileName
+	 * @param array       $variables
+	 *
+	 * @throws \Exception|\Nano_Exception
 	 */
 	protected static function file(Nano_Render $renderer, $fileName, array $variables = array()) {
 		if (!file_exists($fileName)) {
@@ -146,7 +165,7 @@ class Nano_Render {
 	 */
 	protected function addContext($path, $context) {
 		$result = $path;
-		if (Nano_Dispatcher_Context::CONTEXT_DEFAULT != $context && null !== $context) {
+		if (Nano_C::CONTEXT_DEFAULT !== $context && null !== $context) {
 			$result .= '.' . $context;
 		}
 		return $result;

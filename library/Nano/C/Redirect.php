@@ -2,8 +2,6 @@
 
 class Nano_C_Redirect {
 
-	const PARAM_MESSAGE = 'flashMessage';
-
 	/**
 	 * @var Nano_C_Response
 	 */
@@ -14,18 +12,6 @@ class Nano_C_Redirect {
 	 */
 	function __construct(Nano_C_Response $response) {
 		$this->response = $response;
-	}
-
-	/**
-	 * @return string|null
-	 */
-	public static function getMessage() {
-		if (isSet($_SESSION[self::PARAM_MESSAGE])) {
-			$result = $_SESSION[self::PARAM_MESSAGE];
-			unSet($_SESSION[self::PARAM_MESSAGE]);
-			return $result;
-		}
-		return null;
 	}
 
 	/**
@@ -62,15 +48,6 @@ class Nano_C_Redirect {
 	 */
 	public function permanent() {
 		$this->response->setStatus(301);
-		return $this;
-	}
-
-	/**
-	 * @return Nano_C_Redirect
-	 * @param string $message
-	 */
-	public function withMessage($message) {
-		$_SESSION[self::PARAM_MESSAGE] = $message;
 		return $this;
 	}
 

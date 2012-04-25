@@ -24,7 +24,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 			->withRootDir($GLOBALS['application']->rootDir)
 			->configure()
 		;
-		$this->dispatcher = new Nano_Dispatcher($application);
+		$this->dispatcher = $application->dispatcher;
 	}
 
 	public function testControllersNamesFormatting() {
@@ -93,6 +93,11 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.xml'));
 		self::assertEquals('xml', $application->dispatcher->controllerInstance()->context);
 
+		$routes = new Nano_Routes();
+		$routes
+			->suffix('~(\.(?P<context>xml|rss))?')
+				->get('index', 'test', 'index')
+		;
 		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.rss'));
 		self::assertEquals('rss', $application->dispatcher->controllerInstance()->context);
 	}

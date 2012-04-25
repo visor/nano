@@ -127,20 +127,16 @@ class Nano_Loader {
 	 * @param string $name
 	 */
 	public function loadClass($name) {
-		try {
-			if (class_exists($name, false)) {
-				return true;
-			}
-			if (self::isModuleClass($name)) {
-				return $this->loadModuleClass($name);
-			}
-			if (null === $this->applicationPath) {
-				return $this->loadCommonClass($name);
-			}
-			return $this->loadApplicationClass($name);
-		} catch (Exception $e) {
-			return false;
+		if (class_exists($name, false)) {
+			return true;
 		}
+		if (self::isModuleClass($name)) {
+			return $this->loadModuleClass($name);
+		}
+		if (null === $this->applicationPath) {
+			return $this->loadCommonClass($name);
+		}
+		return $this->loadApplicationClass($name);
 	}
 
 	public function loadCommonClass($name) {

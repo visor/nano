@@ -35,7 +35,7 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 
 		if ($this->testCookieExists()) {
 			include $this->prependFileName;
-//			register_shutdown_function(array($this, 'shutdown'));
+			register_shutdown_function(array($this, 'shutdown'));
 		}
 	}
 
@@ -62,9 +62,6 @@ class TestUtils_Coverage_Plugin implements Nano_C_Plugin {
 	 * @param Nano_C $controller
 	 */
 	public function init(Nano_C $controller) {
-		if ($this->testCookieExists()) {
-			register_shutdown_function(array($this, 'shutdown'));
-		}
 	}
 
 	/**

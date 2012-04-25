@@ -135,6 +135,19 @@ class Core_RenderTest extends TestUtils_TestCase {
 		$this->assertEquals('{RSS test}', $this->renderer->render($this->controller));
 	}
 
+	public function testViewNameShouldReturnApplicationViewWhenUseApplicationDirFlagEnabled() {
+		$this->renderer->useApplicationDirs(true);
+		$expectedView = $this->files->get($this, '/views/module1/controller/action.php');
+		self::assertEquals($expectedView, $this->renderer->getViewFileName('controller', 'action', null, 'module1'));
+	}
+
+	public function testViewNameShouldReturnModulleViewWhenUseApplicationDirFlagEnabledBuViewNotExists() {
+		$this->renderer->useApplicationDirs(true);
+
+		$expectedView = $this->files->get($this, '/module2/views/default/controller/action.php');
+		self::assertEquals($expectedView, $this->renderer->getViewFileName('controller', 'action', null, 'module2'));
+	}
+
 	protected function tearDown() {
 		$this->app->restore();
 		unSet($this->controller, $this->renderer);

@@ -27,6 +27,8 @@ class Event_Manager {
 	 * @param string $eventType
 	 * @param string|array|Closure $callback
 	 * @param int $priority
+	 *
+	 * @throws Event_Exception
 	 */
 	public function attach($eventType, $callback, $priority = 100) {
 		if ($callback instanceof Closure) {
