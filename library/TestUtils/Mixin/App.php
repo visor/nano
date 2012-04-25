@@ -2,16 +2,22 @@
 
 class TestUtils_Mixin_App extends TestUtils_Mixin {
 
-	protected $app = null;
+	protected $backup = null;
 
 	public function backup() {
-		$this->app = Nano::app();
+		if (null === $this->backup) {
+			$this->backup = Nano::app();
+		}
 		Nano::setApplication(null);
 	}
 
 	public function restore() {
+		if (null === $this->backup) {
+			return;
+		}
 		Nano::setApplication(null);
-		Nano::setApplication($this->app);
+		Nano::setApplication($this->backup);
+		$this->backup = null;
 	}
 
 }
