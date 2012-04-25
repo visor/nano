@@ -58,10 +58,10 @@ class Library_Events_LoaderTest extends TestUtils_TestCase {
 	protected function checkHandlersLoaded($eventName, $handlersCount) {
 		$this->manager->trigger('nop'); //trigger fake event to load event using loader
 
-		self::assertTrue($this->manager->handlerExists($eventName));
-		$handlers = self::getObjectProperty($this->manager, 'handlers');
-		self::assertInstanceOf('Event_Queue', $handlers->offsetGet($eventName));
-		self::assertEquals($handlersCount, $handlers->offsetGet($eventName)->count());
+		self::assertTrue($this->manager->callbackExists($eventName));
+		$callbacks = self::getObjectProperty($this->manager, 'callbacks');
+		self::assertInstanceOf('Event_Queue', $callbacks->offsetGet($eventName));
+		self::assertEquals($handlersCount, $callbacks->offsetGet($eventName)->count());
 	}
 
 	protected function tearDown() {

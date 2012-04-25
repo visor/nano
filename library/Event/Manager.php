@@ -5,6 +5,11 @@ class Event_Manager {
 	/**
 	 * @var ArrayObject
 	 */
+	protected $callbacks;
+
+	/**
+	 * @var Event_Handler[]|SplObjectStorage
+	 */
 	protected $handlers;
 
 	/**
@@ -13,31 +18,45 @@ class Event_Manager {
 	protected $loader = null;
 
 	public function __construct() {
-		$this->handlers = new ArrayObject();
+		$this->callbacks = new ArrayObject;
+		$this->handlers  = new SplObjectStorage;
 	}
 
 	/**
 	 * @return Event_Manager
 	 * @param string $eventType
-	 * @param string|array|Closure $handler
+	 * @param string|array|Closure $callback
 	 * @param int $priority
 	 */
-	public function attach($eventType, $handler, $priority = 100) {
-		if ($handler instanceof Closure) {
-			$this->addEventHandler($eventType, $handler, (int)$priority);
+	public function attach($eventType, $callback, $priority = 100) {
+		if ($callback instanceof Closure) {
+			$this->addEventCallback($eventType, $callback, (int)$priority);
 			return $this;
 		}
 
-		if (is_callable($handler, false)) {
-			$handlerFunction = function(Event $event) use ($handler) {
-				call_user_func($handler, $event);
+		if (is_callable($callback, false)) {
+			$callbackFunction = function(Event $event) use ($callback) {
+				call_user_func($callback, $event);
 			};
 
-			$this->addEventHandler($eventType, $handlerFunction, (int)$priority);
+			$this->addEventCallback($eventType, $callbackFunction, (int)$priority);
 			return $this;
 		}
 
 		throw new Event_Exception('Passed handler not callable');
+	}
+
+	/**
+	 * @return Event_Manager
+	 * @param Event_Handler $handler
+	 */
+	public function attachHandler(Event_Handler $handler) {
+		if ($this->handlers->contains($handler)) {
+			return $this;
+		}
+
+		$this->handlers->attach($handler);
+		return $this;
 	}
 
 	/**
@@ -49,17 +68,21 @@ class Event_Manager {
 		$this->loadEvents();
 
 		$event = $eventOrType instanceof Event ? $eventOrType : new Event($eventOrType);
-
-		if (!$this->handlerExists($eventOrType)) {
-			return $event;
-		}
-
 		foreach ($arguments as $name => $value) {
 			$event->setArgument($name, $value);
 		}
 
-		foreach ($this->handlers->offsetGet($event->getType()) as /** @var Closure $handler */ $handler) {
-			$handler($event);
+		$methodName = 'on' . Nano::stringToName($event->getType());
+		foreach ($this->handlers as $instance) {
+			if (method_exists($instance, $methodName)) {
+				call_user_func(array($instance, $methodName), $event);
+			}
+		}
+
+		if ($this->callbackExists($eventOrType)) {
+			foreach ($this->callbacks->offsetGet($event->getType()) as /** @var Closure $handler */ $handler) {
+				$handler($event);
+			}
 		}
 		return $event;
 	}
@@ -68,8 +91,8 @@ class Event_Manager {
 	 * @return boolean
 	 * @param string|Event $eventOrType
 	 */
-	public function handlerExists($eventOrType) {
-		return $this->handlers->offsetExists($eventOrType instanceof Event ? $eventOrType->getType() : $eventOrType);
+	public function callbackExists($eventOrType) {
+		return $this->callbacks->offsetExists($eventOrType instanceof Event ? $eventOrType->getType() : $eventOrType);
 	}
 
 	/**
@@ -87,12 +110,12 @@ class Event_Manager {
 	 * @param Closure $handler
 	 * @param int $priority
 	 */
-	protected function addEventHandler($event, Closure $handler, $priority) {
-		if (!$this->handlers->offsetExists($event)) {
-			$this->handlers->offsetSet($event, new Event_Queue());
+	protected function addEventCallback($event, Closure $handler, $priority) {
+		if (!$this->callbacks->offsetExists($event)) {
+			$this->callbacks->offsetSet($event, new Event_Queue());
 		}
 
-		$this->handlers->offsetGet($event)->insert($handler, $priority);
+		$this->callbacks->offsetGet($event)->insert($handler, $priority);
 	}
 
 	protected function loadEvents() {

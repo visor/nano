@@ -13,16 +13,17 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		require_once $this->files->get($this, '/handlers.php');
+		require_once $this->files->get($this, '/TestHandler.php');
 		$this->manager = new Event_Manager();
 	}
 
-	public function testAddingHandlerAsFunctionName() {
+	public function testAddingCallbackAsFunctionName() {
 		$event = Event::create('test-event');
 		$this->manager->attach($event->getType(), 'library_events_handler_f1');
 		$this->checkHandlerCalled($event);
 	}
 
-	public function testAddingHandlerAsClosure() {
+	public function testAddingCallbackAsClosure() {
 		$event = Event::create('test-event');
 		$this->manager->attach($event->getType(), function (Event $e) {
 			$runs = $e->getArgument('runs', 0);
@@ -32,7 +33,7 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 		$this->checkHandlerCalled($event);
 	}
 
-	public function testAddingHandlerAsAnonynousFunction() {
+	public function testAddingCallbackAsAnonynousFunction() {
 		$event   = Event::create('test-event');
 		$handler = function (Event $e) {
 			$runs = $e->getArgument('runs', 0);
@@ -43,23 +44,23 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 		$this->checkHandlerCalled($event);
 	}
 
-	public function testAddingHandlerAsInstanceMethod() {
+	public function testAddingCallbackAsInstanceMethod() {
 		$event    = Event::create('test-event');
 		$instance = new Library_Events_Handler_C1();
 		$this->manager->attach($event->getType(), array($instance, 'instanceHandler'));
 		$this->checkHandlerCalled($event);
 	}
 
-	public function testAddingHandlerAsStaticMethod() {
+	public function testAddingCallbackAsStaticMethod() {
 		$event = Event::create('test-event');
 		$this->manager->attach($event->getType(), array('Library_Events_Handler_C1', 'staticHandler'));
 		$this->checkHandlerCalled($event);
 	}
 
-	public function testIsHandlerExists() {
-		self::assertFalse($this->manager->handlerExists('test-event'));
+	public function testIsCallbackExists() {
+		self::assertFalse($this->manager->callbackExists('test-event'));
 		$this->manager->attach('test-event', 'library_events_handler_f1');
-		self::assertTrue($this->manager->handlerExists('test-event'));
+		self::assertTrue($this->manager->callbackExists('test-event'));
 	}
 
 	public function testEventTriggering() {
@@ -77,7 +78,7 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testTriggeringEventWithoutHandlers() {
-		self::assertFalse($this->manager->handlerExists('test-event'));
+		self::assertFalse($this->manager->callbackExists('test-event'));
 		$event = $this->manager->trigger('test-event');
 		self::assertNull($event->getArgument('runs'));
 	}
@@ -116,6 +117,15 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 		self::assertSame($event, $this->manager->trigger($event));
 		self::assertEquals(3, $event->getArgument('runs'));
 		self::assertEquals('123', $event->getArgument('run-order'));
+	}
+
+	public function testHandlerInstanceShouldStoredOnce() {
+		$handler = new Library_Events_TestHandler();
+		$this->manager->attachHandler($handler);
+		$this->manager->attachHandler($handler);
+
+		$this->manager->trigger('some-event');
+		self::assertEquals(1, $handler->someEventRised);
 	}
 
 	protected function tearDown() {
