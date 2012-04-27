@@ -8,7 +8,7 @@ abstract class Nano_Route_Abstract {
 	protected $module         = null;
 	protected $controller     = null;
 	protected $action         = null;
-	protected $params         = array();
+	protected $params         = null;
 	protected $matches        = null;
 	protected $compiledParams = null;
 

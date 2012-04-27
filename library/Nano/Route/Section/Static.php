@@ -10,7 +10,7 @@ class Nano_Route_Section_Static extends Nano_Route_Section {
 	 * @return boolean
 	 * @param string $location
 	 */
-	protected function sectionMatches($location) {
+	public function sectionMatches($location) {
 		return 0 === strPos($location, $this->location);
 	}
 
@@ -18,7 +18,7 @@ class Nano_Route_Section_Static extends Nano_Route_Section {
 	 * @return string
 	 * @param string $location
 	 */
-	protected function trimSectionLocation($location) {
+	public function trimSectionLocation($location) {
 		return subStr($location, mb_strLen($this->location));
 	}
 

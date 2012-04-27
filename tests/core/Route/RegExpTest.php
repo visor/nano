@@ -29,8 +29,8 @@ class Core_Route_RegExpTest extends TestUtils_TestCase {
 
 		self::assertTrue($route->match('some-string'));
 
-		$matches = $route->matches();
-		self::assertArrayHasKey('param', $route->matches());
+		$matches = $route->params();
+		self::assertArrayHasKey('param', $route->params());
 		self::assertEquals('string', $matches['param']);
 	}
 

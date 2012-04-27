@@ -2,7 +2,7 @@
 /**
  * @var Nano_Routes $routes
  */
-$routes->prefix('response')
+$routes->section('response')
 	->get('/set-body',    'response-test', 'set-body')
 	->get('/render-body', 'response-test', 'render-body')
 	->get('/header',      'response-test', 'header')

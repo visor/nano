@@ -5,7 +5,7 @@
 $routes
 	->get('', 'index', 'index')
 
-	->prefix('cp')
+	->section('cp')
 		->get('',                    'control-panel', 'dashboard')
 		->get('/items',              'control-panel', 'items')
 		->get('~/edit/(?P<id>\d+)',  'control-panel', 'edit')
@@ -15,9 +15,9 @@ $routes
 		->get('/settings',                   'setting', 'index')
 		->get('~/settings/(?P<category>.+)', 'setting', 'index')
 		->post('/settings/save',              'setting', 'save')
+	->end()
 
-	->prefix(null)
-		->add('login',  'auth', 'login')
-		->post('auth',   'auth', 'auth')
-		->add('logout', 'auth', 'logout')
+	->get('login',  'auth', 'login')
+	->post('auth',  'auth', 'auth')
+	->get('logout', 'auth', 'logout')
 ;

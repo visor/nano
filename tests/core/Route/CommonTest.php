@@ -6,6 +6,19 @@
  */
 class Core_Route_CommonTest extends TestUtils_TestCase {
 
+	public function testControllerShouldReturnPassedParam() {
+		self::assertEquals('some', Nano_Route_Abstract::create('', 'some', 'action')->controller());
+	}
+
+	public function testControllerClassShouldReturnFormatterControllerClassName() {
+		self::assertEquals('SomeController', Nano_Route_Abstract::create('', 'some', 'action')->controllerClass());
+		self::assertEquals('Common_Module\SomeController', Nano_Route_Abstract::create('', 'some', 'action', 'common')->controllerClass());
+	}
+
+	public function testStringCasting() {
+		self::assertEquals('some::action() when location matches [home]', Nano_Route_Abstract::create('home', 'some', 'action')->__toString());
+	}
+
 	public function testTestEmptyUrl() {
 		self::assertTrue(Nano_Route_Abstract::create('', 'index', 'index')->match(''));
 		self::assertTrue(Nano_Route_Abstract::create(null, 'index', 'index')->match(''));

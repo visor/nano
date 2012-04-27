@@ -110,7 +110,9 @@ class Nano_Dispatcher {
 			return $result;
 		}
 
-		Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
+		if (Nano::app()->errorHandler()) {
+			Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
+		}
 		return null;
 	}
 
@@ -125,6 +127,7 @@ class Nano_Dispatcher {
 			return null;
 		}
 
+		$this->buildParams($route->params());
 		$this->controllerInstance = $this->getController($route);
 		$this->controllerInstance->setResponse($this->getResponse());
 
@@ -161,15 +164,9 @@ class Nano_Dispatcher {
 	 * @param string $url
 	 */
 	public function getRoute(Nano_Routes $routes, $url) {
-		//todo: use $routes->getFor($url);
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
-		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route_Abstract */
-			if ($this->test($route, $testUrl)) {
-				return $route;
-			}
-		}
-		return null;
+		return $routes->getFor($method, $testUrl);
 	}
 
 	/**
@@ -181,7 +178,6 @@ class Nano_Dispatcher {
 		if (false === $route->match($url)) {
 			return false;
 		}
-		$this->buildParams($route->params());
 		return true;
 	}
 

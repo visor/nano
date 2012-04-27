@@ -3,23 +3,23 @@
 class Nano_Route_Section_RegExp extends Nano_Route_Section {
 
 	public function __construct($location) {
-		parent::__construct('/' . mb_strToLower($location, 'UTF-8') . '/i');
+		parent::__construct('/^' . $location . '/i');
 	}
 
 	/**
 	 * @return boolean
 	 * @param string $location
 	 */
-	protected function sectionMatches($location) {
-		return false;
+	public function sectionMatches($location) {
+		return (1 === preg_match($this->location, $location));
 	}
 
 	/**
 	 * @return string
 	 * @param string $location
 	 */
-	protected function trimSectionLocation($location) {
-		return $location;
+	public function trimSectionLocation($location) {
+		return preg_replace($this->location, '', $location);
 	}
 
 }

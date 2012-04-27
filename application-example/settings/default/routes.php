@@ -3,7 +3,7 @@
  * @var Nano_Routes $routes
  */
 $routes
-	->prefix('error')
+	->section('error')
 		->get('/no-errors',    'raise', 'ok')
 		->get('/action-fatal', 'raise', 'fatal-error')
 		->get('/view-fatal',   'raise', 'fatal-error-in-view')
@@ -17,14 +17,17 @@ $routes
 		->get('/custom',       'raise', 'custom')
 		->get('/no-class',     'no-class', 'index')
 		->get('/null-output',  'raise', 'null-output')
+	->end()
 
-	->prefix('response')
+	->section('response')
 		->get('/set-body',    'response-test', 'set-body')
 		->get('/render-body', 'response-test', 'render-body')
 		->get('/header',      'response-test', 'header')
+	->end()
 
-	->prefix('cookie')
+	->section('cookie')
 		->get('/set',   'cookie-test', 'set')
 		->get('/view',  'cookie-test', 'view')
 		->get('/erase', 'cookie-test', 'erase')
+	->end()
 ;

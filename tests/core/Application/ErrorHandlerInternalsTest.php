@@ -7,13 +7,16 @@
 class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 
 	protected function setUp() {
+		$this->app->backup();
+		Nano::setApplication($GLOBALS['application']);
+
 		require_once __DIR__ . '/_files/PublicErrorHandler.php';
 		require_once __DIR__ . '/_files/AbstractResponseModifier.php';
 		$this->reloadConfig();
 	}
 
 	public function testShouldNotCallResponseModifierWhenNoErrorsSection() {
-		$application = $GLOBALS['application'];
+		$application = Nano::app();
 		$application->config->name();
 
 		$config = self::getObjectProperty($application->config, 'config');
@@ -27,7 +30,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldNotCallResponseModifierWhenNoResponseSetting() {
-		$application = $GLOBALS['application'];
+		$application = Nano::app();
 		$application->config->name();
 
 		$config = self::getObjectProperty($application->config, 'config');
@@ -41,7 +44,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldNotCallResponseModifierWhenClassNotExists() {
-		$application = $GLOBALS['application'];
+		$application = Nano::app();
 		$application->config->name();
 
 		$config = self::getObjectProperty($application->config, 'config');
@@ -55,7 +58,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldNotCallResponseModifierClassNotImplementsInterface() {
-		$application = $GLOBALS['application'];
+		$application = Nano::app();
 		$application->config->name();
 
 		$config = self::getObjectProperty($application->config, 'config');
@@ -69,7 +72,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldNotCallResponseModifierClassIsAbstract() {
-		$application = $GLOBALS['application'];
+		$application = Nano::app();
 		$application->config->name();
 
 		$config = self::getObjectProperty($application->config, 'config');
@@ -83,13 +86,14 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 	}
 
 	protected function reloadConfig() {
-		self::setObjectProperty($GLOBALS['application']->config, 'config', null);
-		self::setObjectProperty($GLOBALS['application']->config, 'routes', null);
-		$GLOBALS['application']->config->name();
+		self::setObjectProperty(Nano::app()->config, 'config', null);
+		self::setObjectProperty(Nano::app()->config, 'routes', null);
+		Nano::app()->config->name();
 	}
 
 	protected function tearDown() {
 		$this->reloadConfig();
+		$this->app->restore();
 	}
 
 }

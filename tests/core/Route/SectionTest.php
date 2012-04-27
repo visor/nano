@@ -91,35 +91,61 @@ class Core_Route_SectionTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldPassModuleParameterIntoChildSection() {
-		self::markTestIncomplete('Not implemented yet');
+		$section = $this->section
+			->module('some')
+			->section('/bar')
+		;
+		self::assertEquals($this->section->getModule(), $section->getModule());
 	}
 
 	public function testShouldPassModuleParameterIntoRoute() {
-		self::markTestIncomplete('Not implemented yet');
+		$section = $this->section
+			->module('some')
+			->section('/bar')
+				->get('', 'index', 'index')
+		;
+		self::assertEquals($this->section->getModule(), $section->getRoutes()->offsetGet('get')->offsetGet(0)->module());
 	}
 
 	public function testShouldPassSuffixParamInfoChildSection() {
-		self::markTestIncomplete('Not implemented yet');
+		$section = $this->section
+			->suffix('.html')
+			->section('/bar')
+		;
+		self::assertEquals($this->section->getSuffix(), $section->getSuffix());
 	}
 
 	public function testShouldPassSuffixParamInfoRoute() {
-		self::markTestIncomplete('Not implemented yet');
+		$section = $this->section
+			->suffix('.html')
+			->section('/bar')
+				->get('index', 'index', 'index')
+		;
+		self::assertEquals('index.html', $section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildStaticLocationWithoutSuffix() {
-		self::markTestIncomplete('Not implemented yet');
+		$this->section->get('', 'index', 'index');
+		self::assertInstanceOf('Nano_Route_Static', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertEquals('', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildStaticLocationWithStaticSuffix() {
-		self::markTestIncomplete('Not implemented yet');
+		$this->section->suffix('.html')->get('index', 'index', 'index');
+		self::assertInstanceOf('Nano_Route_Static', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertEquals('index.html', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildStaticLocationWithRegexpSuffix() {
-		self::markTestIncomplete('Not implemented yet');
+		$this->section->suffix('~\.(html|rss)')->get('index', 'index', 'index');
+		self::assertInstanceOf('Nano_Route_RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertEquals('/^index\.(html|rss)$/i', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildRegexpLocationWithRegexpSuffix() {
-		self::markTestIncomplete('Not implemented yet');
+		$this->section->suffix('~\.(html|rss)')->get('~(index|home)', 'index', 'index');
+		self::assertInstanceOf('Nano_Route_RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertEquals('/^(index|home)\.(html|rss)$/i', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testGetForShouldReturnNullWhenNoMatches() {

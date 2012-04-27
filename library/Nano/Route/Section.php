@@ -34,13 +34,13 @@ abstract class Nano_Route_Section {
 	 * @return boolean
 	 * @param string $location
 	 */
-	abstract protected function sectionMatches($location);
+	abstract public function sectionMatches($location);
 
 	/**
 	 * @return string
 	 * @param string $location
 	 */
-	abstract protected function trimSectionLocation($location);
+	abstract public function trimSectionLocation($location);
 
 	/**
 	 * @param string $location
@@ -77,8 +77,11 @@ abstract class Nano_Route_Section {
 	 */
 	public function section($location) {
 		$result = self::create($location);
-		$result->setParent($this);
 		$this->sections->append($result);
+
+		$result->setParent($this);
+		$result->module($this->module);
+		$result->suffix($this->suffix);
 		return $result;
 	}
 
@@ -134,6 +137,24 @@ abstract class Nano_Route_Section {
 
 	/**
 	 * @return Nano_Route_Section
+	 * @param string $value
+	 */
+	public function module($value) {
+		$this->module = $value;
+		return $this;
+	}
+
+	/**
+	 * @return Nano_Route_Section
+	 * @param string $value
+	 */
+	public function suffix($value) {
+		$this->suffix = $value;
+		return $this;
+	}
+
+	/**
+	 * @return Nano_Route_Section
 	 * @param string $method
 	 * @param Nano_Route_Abstract $route
 	 */
@@ -165,6 +186,20 @@ abstract class Nano_Route_Section {
 	 */
 	public function getLocation() {
 		return $this->location;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getModule() {
+		return $this->module;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getSuffix() {
+		return $this->suffix;
 	}
 
 	/**
@@ -250,7 +285,7 @@ abstract class Nano_Route_Section {
 			return $location . $this->suffix;
 		}
 
-		$result = '';
+		$result = '~';
 		foreach ($parts as $part) {
 			if (Nano_Route_Abstract::PREFIX_REGEXP === (string)$part[0]) {
 				$result .= str_replace('/', '\/', subStr($part, 1));

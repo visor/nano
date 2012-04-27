@@ -3,8 +3,7 @@
 class Nano_Route_Static extends Nano_Route_Abstract {
 
 	public function __construct($location, $controller, $action, $module, array $params = array()) {
-		$location = mb_strToLower($location, 'UTF-8');
-		parent::__construct($location, $controller, $action, $module, $params);
+		parent::__construct(mb_strToLower($location, 'UTF-8'), $controller, $action, $module, $params);
 	}
 
 	/**

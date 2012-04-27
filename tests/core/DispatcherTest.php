@@ -54,11 +54,6 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		}
 	}
 
-	public function testTestingRouteShouldReturnFalseWhenNotMatches() {
-		$route = new Nano_Route_Static('some-string', 'test', 'test', 'test');
-		self::assertFalse($this->dispatcher->test($route, 'other-string'));
-	}
-
 	public function testGetController() {
 		Nano::setApplication(null);
 		$application = new Application();
@@ -90,16 +85,9 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 				->get('index', 'test', 'index')
 		;
 
+		self::assertInstanceOf('Nano_Route_RegExp', $application->dispatcher->getRoute($routes, 'index.xml'));
 		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.xml'));
 		self::assertEquals('xml', $application->dispatcher->controllerInstance()->context);
-
-		$routes = new Nano_Routes();
-		$routes
-			->suffix('~(\.(?P<context>xml|rss))?')
-				->get('index', 'test', 'index')
-		;
-		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.rss'));
-		self::assertEquals('rss', $application->dispatcher->controllerInstance()->context);
 	}
 
 	public function testSettingParamsShouldSetupModuleControllerActionParams() {
