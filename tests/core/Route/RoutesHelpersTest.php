@@ -99,7 +99,7 @@ class Core_Route_RoutesHelpersTest extends TestUtils_TestCase {
 		self::assertArrayHasKey($method, $this->routes->getIterator()->getArrayCopy());
 		$routesArray = $this->routes->getRoutes($method)->getArrayCopy();
 
-		foreach ($routesArray as /** @var Nano_Route $route */ $route) {
+		foreach ($routesArray as /** @var Nano_Route_Abstract $route */ $route) {
 			if ($route->location() == $location) {
 				return;
 			}

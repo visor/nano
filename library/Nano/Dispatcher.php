@@ -116,9 +116,9 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return string
-	 * @param Nano_Route $route
+	 * @param Nano_Route_Abstract $route
 	 */
-	public function run(Nano_Route $route) {
+	public function run(Nano_Route_Abstract $route) {
 		if ($route instanceof Nano_Route_Runnable) {
 			/* @var $route Nano_Route_Runnable */
 			$route->run();
@@ -137,12 +137,12 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return Nano_C
-	 * @param Nano_Route $route
+	 * @param Nano_Route_Abstract $route
 	 *
 	 * @throws Nano_Exception_NotFound
 	 * @throws Nano_Exception_InternalError
 	 */
-	public function getController(Nano_Route $route) {
+	public function getController(Nano_Route_Abstract $route) {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
@@ -156,14 +156,15 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return Nano_Route|null
+	 * @return Nano_Route_Abstract|null
 	 * @param Nano_Routes $routes
 	 * @param string $url
 	 */
 	public function getRoute(Nano_Routes $routes, $url) {
+		//todo: use $routes->getFor($url);
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
-		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route */
+		foreach ($routes->getRoutes($method)->getArrayCopy() as $route) { /** @var $route Nano_Route_Abstract */
 			if ($this->test($route, $testUrl)) {
 				return $route;
 			}
@@ -173,10 +174,10 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return boolean
-	 * @param Nano_Route $route
+	 * @param Nano_Route_Abstract $route
 	 * @param string $url
 	 */
-	public function test(Nano_Route $route, $url) {
+	public function test(Nano_Route_Abstract $route, $url) {
 		if (false === $route->match($url)) {
 			return false;
 		}
@@ -280,9 +281,9 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return void
-	 * @param Nano_Route $route
+	 * @param Nano_Route_Abstract $route
 	 */
-	protected function setUpController(Nano_Route $route) {
+	protected function setUpController(Nano_Route_Abstract $route) {
 		$this->action     = $route->action();
 		$this->controller = $route->controller();
 		$this->module     = $route->module();

@@ -1,6 +1,6 @@
 <?php
 
-class Nano_Route_RegExp extends Nano_Route {
+class Nano_Route_RegExp extends Nano_Route_Abstract {
 
 	public function __construct($location, $controller, $action, $module, array $params = array()) {
 		$location = null === $location || 0 === strLen($location)
@@ -16,7 +16,6 @@ class Nano_Route_RegExp extends Nano_Route {
 	 */
 	public function match($location) {
 		$this->matches = array();
-
 		return (1 === preg_match($this->location, $location, $this->matches));
 	}
 

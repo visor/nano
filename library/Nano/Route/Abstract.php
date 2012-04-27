@@ -1,6 +1,6 @@
 <?php
 
-abstract class Nano_Route {
+abstract class Nano_Route_Abstract {
 
 	const PREFIX_REGEXP = '~';
 
@@ -27,7 +27,7 @@ abstract class Nano_Route {
 	abstract public function match($location);
 
 	/**
-	 * @return Nano_Route
+	 * @return Nano_Route_Abstract
 	 * @param string $location
 	 * @param string $controller
 	 * @param string $action

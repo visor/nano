@@ -49,7 +49,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		$urls = array('', '/', '//');
 		foreach ($urls as $url) {
 			$route = $this->dispatcher->getRoute($routes, $url);
-			self::assertInstanceOf('Nano_Route', $route, 'for url: [' . $url . ']');
+			self::assertInstanceOf('Nano_Route_Abstract', $route, 'for url: [' . $url . ']');
 			$this->assertEquals('index::index() when location matches []', $route->__toString());
 		}
 	}
@@ -68,7 +68,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 			->configure()
 		;
 
-		$c = $application->dispatcher->getController(Nano_Route::create('', 'test', 'test'));
+		$c = $application->dispatcher->getController(Nano_Route_Abstract::create('', 'test', 'test'));
 		self::assertInstanceOf('Nano_C', $c);
 		self::assertInstanceOf('TestController', $c);
 	}

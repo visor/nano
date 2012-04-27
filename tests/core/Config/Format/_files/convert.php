@@ -10,7 +10,7 @@ file_put_contents(__DIR__ . '/config.igbinary',  igbinary_serialize($data));
 $dir = __DIR__ . '/../../../../../library';
 
 include $dir . '/Nano/Routes.php';
-include $dir . '/Nano/Route.php';
+include $dir . '/Nano/RouteAbstract.php';
 include $dir . '/Nano/Route/Static.php';
 include $dir . '/Nano/Route/RegExp.php';
 include $dir . '/Nano/Route/Subdomain.php';

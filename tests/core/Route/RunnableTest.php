@@ -27,12 +27,12 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 
 	public function testDispatcherShouldRunRouteWithoutInvocingController() {
 		$routes = new Nano_Routes();
-		$route  = new TestRunnableRoute();
+		$route  = new TestRunnableRouteAbstract();
 		$routes->addRoute('get', $route);
 
 		$_SERVER['REQUEST_METHOD'] = 'get';
 		self::assertFalse($route->wasRun());
-		self::assertNull($this->application->dispatcher->dispatch($routes, TestRunnableRoute::LOCATION));
+		self::assertNull($this->application->dispatcher->dispatch($routes, TestRunnableRouteAbstract::LOCATION));
 		self::assertTrue($route->wasRun());
 	}
 

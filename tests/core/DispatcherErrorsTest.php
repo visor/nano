@@ -26,14 +26,14 @@ class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
 		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: NotController');
 
 		require_once __DIR__ . '/_files/controllers/NotController.php';
-		$this->dispatcher->getController(Nano_Route::create('', 'not', 'test'));
+		$this->dispatcher->getController(Nano_Route_Abstract::create('', 'not', 'test'));
 	}
 
 	public function testGetControllerShouldThrowWhenAbstractClassRequired() {
 		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: AbstractController');
 
 		require_once __DIR__ . '/_files/controllers/AbstractController.php';
-		$this->dispatcher->getController(Nano_Route::create('', 'abstract', 'test'));
+		$this->dispatcher->getController(Nano_Route_Abstract::create('', 'abstract', 'test'));
 	}
 
 	public function testDispatchShouldGenerateNotFoundErrorWhenNoRoutesMatched() {

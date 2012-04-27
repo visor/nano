@@ -7,12 +7,12 @@
 class Core_Route_CommonTest extends TestUtils_TestCase {
 
 	public function testTestEmptyUrl() {
-		self::assertTrue(Nano_Route::create('', 'index', 'index')->match(''));
-		self::assertTrue(Nano_Route::create(null, 'index', 'index')->match(''));
+		self::assertTrue(Nano_Route_Abstract::create('', 'index', 'index')->match(''));
+		self::assertTrue(Nano_Route_Abstract::create(null, 'index', 'index')->match(''));
 	}
 
 	public function testTestParametersParsing() {
-		$route = Nano_Route::create('~show\/(?P<page>[-\w]+)', 'index', 'index');
+		$route = Nano_Route_Abstract::create('~show\/(?P<page>[-\w]+)', 'index', 'index');
 
 		self::assertFalse($route->match('show/some-page!'));
 		self::assertTrue($route->match('show/some-page'));
@@ -24,7 +24,7 @@ class Core_Route_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testParamsShouldPassedIntoRoute() {
-		$params = Nano_Route::create('', 'index', 'index', null, array('param' => 'value'))->params();
+		$params = Nano_Route_Abstract::create('', 'index', 'index', null, array('param' => 'value'))->params();
 		self::assertArrayHasKey('param', $params);
 		self::assertEquals('value', $params['param']);
 	}

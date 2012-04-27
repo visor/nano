@@ -89,7 +89,7 @@ class Nano_Routes implements IteratorAggregate {
 	 * @param array $params
 	 */
 	public function add($method, $location, $controller = 'index', $action = 'index', array $params = array()) {
-		$this->addRoute($method, Nano_Route::create(
+		$this->addRoute($method, Nano_Route_Abstract::create(
 			$this->getLocation($location)
 			, $controller
 			, $action
@@ -102,9 +102,9 @@ class Nano_Routes implements IteratorAggregate {
 	/**
 	 * @return Nano_Routes
 	 * @param string $method
-	 * @param Nano_Route $route
+	 * @param Nano_Route_Abstract $route
 	 */
-	public function addRoute($method, Nano_Route $route) {
+	public function addRoute($method, Nano_Route_Abstract $route) {
 		$key = strToLower($method);
 		if (!$this->routes->offsetExists($key)) {
 			$this->routes->offsetSet($key, new ArrayObject());
@@ -144,7 +144,7 @@ class Nano_Routes implements IteratorAggregate {
 			if (null === $part || 0 === strLen($part)) {
 				continue;
 			}
-			if (Nano_Route::PREFIX_REGEXP === $part[0]) {
+			if (Nano_Route_Abstract::PREFIX_REGEXP === $part[0]) {
 				$isRegExp = true;
 			}
 			$parts[] = $part;
@@ -155,7 +155,7 @@ class Nano_Routes implements IteratorAggregate {
 		}
 		$result = '~';
 		foreach ($parts as $part) {
-			if (Nano_Route::PREFIX_REGEXP === (string)$part[0]) {
+			if (Nano_Route_Abstract::PREFIX_REGEXP === (string)$part[0]) {
 				$result .= str_replace('/', '\/', subStr($part, 1));
 			} else {
 				$result .= preg_quote($part, '/');
