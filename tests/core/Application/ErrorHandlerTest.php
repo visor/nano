@@ -130,7 +130,7 @@ class Application_ErrorHandlerTest extends TestUtils_HttpTest {
 
 		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains(
-			'Exception: "Nano_Exception_NotFound" with message "Controller class not found: NoClassController (route: no-class::index() when location matches [error/no-class])"'
+			'Exception: "Nano_Exception_NotFound" with message "Controller class not found: NoClassController (route: no-class::index() when location matches [/no-class])"'
 			, $this->request->getResponseBody()
 		);
 	}

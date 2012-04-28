@@ -6,16 +6,6 @@
 abstract class Nano_Route_Section {
 
 	/**
-	 * @var ArrayObject[]
-	 */
-	protected $routes;
-
-	/**
-	 * @var ArrayObject|Nano_Route_Section[]
-	 */
-	protected $sections;
-
-	/**
 	 * @var string
 	 */
 	protected $location;
@@ -29,6 +19,16 @@ abstract class Nano_Route_Section {
 	 * @var string
 	 */
 	protected $suffix = null;
+
+	/**
+	 * @var ArrayObject|Nano_Route_Section[]
+	 */
+	protected $sections;
+
+	/**
+	 * @var ArrayObject[]
+	 */
+	protected $routes;
 
 	/**
 	 * @return boolean
@@ -47,8 +47,6 @@ abstract class Nano_Route_Section {
 	 */
 	public function __construct($location) {
 		$this->location = $location;
-//		$this->routes   = new SplFixedArray(0);
-//		$this->sections = new SplFixedArray(0);
 		$this->routes   = new ArrayObject();
 		$this->sections = new ArrayObject();
 	}
@@ -221,7 +219,7 @@ abstract class Nano_Route_Section {
 	}
 
 	public function __sleep() {
-		return array('sections', 'routes');
+		return array('sections', 'routes', 'location');
 	}
 
 	/**
