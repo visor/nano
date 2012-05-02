@@ -31,6 +31,11 @@ abstract class Nano_Route_Section {
 	protected $routes;
 
 	/**
+	 * @var array
+	 */
+	protected $params = array();
+
+	/**
 	 * @return boolean
 	 * @param string $location
 	 */
@@ -236,9 +241,11 @@ abstract class Nano_Route_Section {
 	 */
 	protected function findSection($method, $location) {
 		foreach ($this->sections as $section) {
+			$section->params = $this->params;
 			if (($route = $section->getFor($method, $location)) instanceof Nano_Route_Abstract) {
 				return $route;
 			}
+			$section->params = array();
 		}
 		return null;
 	}
@@ -254,6 +261,7 @@ abstract class Nano_Route_Section {
 		}
 		foreach ($this->routes->offsetGet($method) as /** @var Nano_Route_Abstract $route */ $route) {
 			if ($route->match($location)) {
+				$route->addParams($this->params);
 				return $route;
 			}
 		}

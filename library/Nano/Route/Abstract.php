@@ -103,6 +103,13 @@ abstract class Nano_Route_Abstract {
 		return $this->compiledParams;
 	}
 
+	public function addParams(array $params) {
+		$this->compiledParams = null;
+		foreach ($params as $name => $value) {
+			$this->params[$name] = $value;
+		}
+	}
+
 	/**
 	 * @return string
 	 */

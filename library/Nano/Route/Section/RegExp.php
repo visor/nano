@@ -11,7 +11,17 @@ class Nano_Route_Section_RegExp extends Nano_Route_Section {
 	 * @param string $location
 	 */
 	public function sectionMatches($location) {
-		return (1 === preg_match($this->location, $location));
+		$matches = array();
+		if (0 === preg_match($this->location, $location, $matches)) {
+			return false;
+		}
+
+		foreach ($matches as $name => $value) {
+			if (is_string($name)) {
+				$this->params[$name] = $value;
+			}
+		}
+		return true;
 	}
 
 	/**
