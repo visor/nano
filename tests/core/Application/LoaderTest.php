@@ -16,27 +16,27 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	}
 
 	public function testFormatingModuleName() {
-		self::assertEquals('Test_Module\\LibraryClass',        Nano_Loader::formatModuleClassName('test', 'library-class'));
-		self::assertEquals('Test_Module\\ClassController',     Nano_Loader::formatModuleClassName('test', 'class-controller'));
-		self::assertEquals('Test_Module\\SomeClassController', Nano_Loader::formatModuleClassName('test', 'some-class-controller'));
+		self::assertEquals('Test_Module\\LibraryClass',        \Nano\Loader::formatModuleClassName('test', 'library-class'));
+		self::assertEquals('Test_Module\\ClassController',     \Nano\Loader::formatModuleClassName('test', 'class-controller'));
+		self::assertEquals('Test_Module\\SomeClassController', \Nano\Loader::formatModuleClassName('test', 'some-class-controller'));
 	}
 
 	public function testExtractginModuleAndClassName() {
-		self::assertEquals(array('Test_Module', 'LibraryClass'),    Nano_Loader::extractModuleClassParts('Test_Module\\LibraryClass'));
-		self::assertEquals(array('Test_Module', 'ControllerClass'), Nano_Loader::extractModuleClassParts('Test_Module\\ControllerClass'));
-		self::assertEquals(array('Test_Module', 'ModelClass'),      Nano_Loader::extractModuleClassParts('Test_Module\\ModelClass'));
-		self::assertEquals(array('Test_Module', 'PluginClass'),     Nano_Loader::extractModuleClassParts('Test_Module\\PluginClass'));
+		self::assertEquals(array('Test_Module', 'LibraryClass'),    \Nano\Loader::extractModuleClassParts('Test_Module\\LibraryClass'));
+		self::assertEquals(array('Test_Module', 'ControllerClass'), \Nano\Loader::extractModuleClassParts('Test_Module\\ControllerClass'));
+		self::assertEquals(array('Test_Module', 'ModelClass'),      \Nano\Loader::extractModuleClassParts('Test_Module\\ModelClass'));
+		self::assertEquals(array('Test_Module', 'PluginClass'),     \Nano\Loader::extractModuleClassParts('Test_Module\\PluginClass'));
 	}
 
 	public function testDetectingModuleClass() {
-		self::assertFalse(Nano_Loader::isModuleClass(__CLASS__));
-		self::assertFalse(Nano_Loader::isModuleClass('M\\ClassName'));
-		self::assertFalse(Nano_Loader::isModuleClass('M\\ModuleName_'));
-		self::assertTrue(Nano_Loader::isModuleClass('SomeName_Module\\ClassName'));
+		self::assertFalse(\Nano\Loader::isModuleClass(__CLASS__));
+		self::assertFalse(\Nano\Loader::isModuleClass('M\\ClassName'));
+		self::assertFalse(\Nano\Loader::isModuleClass('M\\ModuleName_'));
+		self::assertTrue(\Nano\Loader::isModuleClass('SomeName_Module\\ClassName'));
 	}
 
 	public function testLoaderShouldInitializedWhenApplicationCreated() {
-		self::assertInstanceOf('Nano_Loader', $this->application->loader);
+		self::assertInstanceOf('\\Nano\\Loader', $this->application->loader);
 	}
 
 	public function testNanoClassShouldBeLoaded() {

@@ -61,7 +61,7 @@ class Nano_Dispatcher {
 		if ($controller) {
 			$result .= self::SUFFIX_CONTROLLER;
 			if (null !== $module) {
-				$result = $module . '\\' . $result;
+				$result = $module . NS . $result;
 			}
 		} else {
 			$result  = strToLower($result[0]) . subStr($result, 1);

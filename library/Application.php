@@ -1,10 +1,13 @@
 <?php
 
-require_once __DIR__ . '/TypedRegistry.php';
-require_once __DIR__ . '/Application/ErrorHandler.php';
-require_once __DIR__ . '/Nano.php';
-require_once __DIR__ . '/Nano/Loader.php';
-require_once __DIR__ . '/Nano/Modules.php';
+require __DIR__ . '/TypedRegistry.php';
+require __DIR__ . '/Application/ErrorHandler.php';
+require __DIR__ . '/Nano.php';
+require __DIR__ . '/Names.php';
+require __DIR__ . '/Classes.php';
+require __DIR__ . '/Loader.php';
+require __DIR__ . '/Nano/Config.php';
+require __DIR__ . '/Nano/Modules.php';
 
 /**
  * @property string $rootDir
@@ -15,7 +18,7 @@ require_once __DIR__ . '/Nano/Modules.php';
  *
  * @property Nano_Config_Format $configFormat
  * @property Nano_Config $config
- * @property Nano_Loader $loader
+ * @property \Nano\Loader $loader
  * @property Nano_Dispatcher $dispatcher
  * @property Nano_Modules $modules
  * @property SplObjectStorage $plugins
@@ -50,7 +53,7 @@ class Application extends TypedRegistry {
 		$this
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
-			->readOnly('loader',  new Nano_Loader())
+			->readOnly('loader',  new \Nano\Loader())
 			->readOnly('rootDir')
 			->readOnly('publicDir')
 			->readOnly('modulesDir')
@@ -58,7 +61,7 @@ class Application extends TypedRegistry {
 
 			->ensure('configFormat', 'Nano_Config_Format')
 			->ensure('config',       'Nano_Config')
-			->ensure('loader',       'Nano_Loader')
+			->ensure('loader',       '\\Nano\\Loader')
 			->ensure('modules',      'Nano_Modules')
 			->ensure('dispatcher',   'Nano_Dispatcher')
 			->ensure('helper',       'Nano_HelperBroker')

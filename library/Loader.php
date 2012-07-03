@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Loader {
+namespace Nano;
+
+class Loader {
 
 	const LIBRARY_DIR          = 'library';
 	const NAME_SEPARATOR       = '_';
@@ -39,7 +41,7 @@ class Nano_Loader {
 	 * @param string $class
 	 */
 	public static function formatModuleClassName($module, $class) {
-		return Nano_Modules::nameToNamespace($module) . '\\' . Nano::stringToName($class);
+		return \Nano_Modules::nameToNamespace($module) . NS . \Nano::stringToName($class);
 	}
 
 	/**
@@ -47,7 +49,7 @@ class Nano_Loader {
 	 * @param string $className
 	 */
 	public static function isModuleClass($className) {
-		if (false === strPos($className, Nano_Modules::MODULE_SUFFIX . '\\')) {
+		if (false === strPos($className, \Nano_Modules::MODULE_SUFFIX . NS)) {
 			return false;
 		}
 		return true;
@@ -58,11 +60,11 @@ class Nano_Loader {
 	 * @param string $className
 	 */
 	public static function extractModuleClassParts($className) {
-		return explode('\\', trim($className, '\\'), 2);
+		return explode(NS, trim($className, NS), 2);
 	}
 
 	public function __construct() {
-		$this->nanoDir         = dirName(__DIR__);
+		$this->nanoDir         = __DIR__;
 		$this->baseIncludePath = explode(PATH_SEPARATOR, $this->nanoDir . PATH_SEPARATOR . trim(get_include_path(), PATH_SEPARATOR));
 		spl_autoload_register(array($this, 'loadClass'));
 		spl_autoload_register(array($this, 'loadCommonClass'));
@@ -72,15 +74,15 @@ class Nano_Loader {
 	 * Registers application directories for autoloading
 	 *
 	 * @return void
-	 * @param Application $application
+	 * @param \Application $application
 	 */
-	public function registerApplication(Application $application) {
+	public function registerApplication(\Application $application) {
 		$this->applicationPath = array(
 			$this->nanoDir
-			, $application->rootDir . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::CONTROLLER_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::LIBRARY_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::MODELS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::PLUGINS_DIR_NAME
 		);
 	}
 
@@ -92,11 +94,11 @@ class Nano_Loader {
 	 * @param string $path
 	 */
 	public function registerModule($name, $path) {
-		$this->modulesPath[Nano_Modules::nameToNamespace($name)] = array(
-			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
+		$this->modulesPath[\Nano_Modules::nameToNamespace($name)] = array(
+			$path . DIRECTORY_SEPARATOR . \Application::CONTROLLER_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Application::LIBRARY_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Application::MODELS_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Application::PLUGINS_DIR_NAME
 		);
 	}
 
@@ -130,6 +132,18 @@ class Nano_Loader {
 		if (class_exists($name, false)) {
 			return true;
 		}
+
+		if (Classes::isNanoClass($name)) {
+			return $this->loadFileWithClass($name, Names::nanoFile($name));
+		}
+		if (Classes::isApplicationClass($name)) {
+			return $this->loadFileWithClass($name, Names::applicationFile($name));
+		}
+		if (Classes::isModuleClass($name)) {
+			return $this->loadFileWithClass($name, Names::moduleFile($name));
+		}
+
+		//{{{ todo: deprecated. remove this
 		if (self::isModuleClass($name)) {
 			return $this->loadModuleClass($name);
 		}
@@ -137,10 +151,11 @@ class Nano_Loader {
 			return $this->loadCommonClass($name);
 		}
 		return $this->loadApplicationClass($name);
+		//}}}
+		//return false;
 	}
 
 	public function loadCommonClass($name) {
-//		echo $name, PHP_EOL;
 		return $this->loadWithIncludePath($name, $this->baseIncludePath);
 	}
 
@@ -174,7 +189,7 @@ class Nano_Loader {
 				}
 				break;
 			}
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$result = false;
 		}
 		return $result;

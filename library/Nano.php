@@ -1,7 +1,7 @@
 <?php
 
-//todo: move defines into application or nano start method
-define('DS',          DIRECTORY_SEPARATOR);
+define('DS', DIRECTORY_SEPARATOR);
+define('NS', '\\');
 
 final class Nano {
 
@@ -17,6 +17,11 @@ final class Nano {
 		return self::$app;
 	}
 
+	/**
+	 * @return void
+	 * @param Application|null $app
+	 * @throws Nano_Exception
+	 */
 	public static function setApplication(Application $app = null) {
 		if (null === self::$app || null === $app) {
 			self::$app = $app;
