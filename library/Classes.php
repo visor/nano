@@ -40,7 +40,7 @@ class Classes {
 	 * @param string $namespace
 	 */
 	protected static function isNamespaceClass($className, $namespace) {
-		return 0 === strPos(trim($className, NS), $namespace . NS);
+		return 0 === strPos(lTrim($className, NS), $namespace . NS);
 	}
 
 }

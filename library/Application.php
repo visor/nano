@@ -1,13 +1,12 @@
 <?php
 
-require __DIR__ . '/TypedRegistry.php';
+require __DIR__ . '/Util/TypedRegistry.php';
 require __DIR__ . '/Application/ErrorHandler.php';
 require __DIR__ . '/Nano.php';
 require __DIR__ . '/Names.php';
 require __DIR__ . '/Classes.php';
 require __DIR__ . '/Loader.php';
-require __DIR__ . '/Nano/Config.php';
-require __DIR__ . '/Nano/Modules.php';
+//require __DIR__ . '/Nano/Config.php';
 
 /**
  * @property string $rootDir
@@ -19,13 +18,13 @@ require __DIR__ . '/Nano/Modules.php';
  * @property Nano_Config_Format $configFormat
  * @property Nano_Config $config
  * @property \Nano\Loader $loader
- * @property Nano_Dispatcher $dispatcher
- * @property Nano_Modules $modules
+ * @property \Nano\Dispatcher $dispatcher
+ * @property \Nano\Modules $modules
  * @property SplObjectStorage $plugins
  * @property Event_Manager $eventManager
  * @property Nano_HelperBroker $helper
  */
-class Application extends TypedRegistry {
+class Application extends \Nano\Util\TypedRegistry {
 
 	const PUBLIC_DIR_NAME     = 'public';
 	const MODULES_DIR_NAME    = 'modules';
@@ -54,32 +53,32 @@ class Application extends TypedRegistry {
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
 			->readOnly('loader',  new \Nano\Loader())
+			->readOnly('modules', new \Nano\Modules())
+			->readOnly('plugins', new \SplObjectStorage())
 			->readOnly('rootDir')
 			->readOnly('publicDir')
 			->readOnly('modulesDir')
 			->readOnly('sharedModulesDir')
 
-			->ensure('configFormat', 'Nano_Config_Format')
-			->ensure('config',       'Nano_Config')
-			->ensure('loader',       '\\Nano\\Loader')
-			->ensure('modules',      'Nano_Modules')
-			->ensure('dispatcher',   'Nano_Dispatcher')
-			->ensure('helper',       'Nano_HelperBroker')
-			->ensure('eventManager', 'Event_Manager')
-			->ensure('plugins',      'SplObjectStorage')
-		;
-		$this
-			->readOnly('plugins', new SplObjectStorage())
-			->readOnly('modules', new Nano_Modules())
+			->ensure('configFormat', '\Nano_Config_Format')
+			->ensure('config',       '\Nano_Config')
+			->ensure('loader',       '\Nano\Loader')
+			->ensure('modules',      '\Nano\Modules')
+			->ensure('dispatcher',   '\Nano\Dispatcher')
+			->ensure('helper',       '\Nano_HelperBroker')
+			->ensure('eventManager', '\Event_Manager')
+			->ensure('plugins',      '\SplObjectStorage')
 		;
 	}
 
 	/**
 	 * @return Application
+	 *
+	 * @throws \Application_Exception_InvalidConfiguration
 	 */
 	public function configure() {
 		if (!$this->offsetExists('configFormat')) {
-			throw new Application_Exception_InvalidConfiguration('Configuration format not specified');
+			throw new \Application_Exception_InvalidConfiguration('Configuration format not specified');
 		}
 
 		Nano::setApplication($this);
@@ -103,7 +102,7 @@ class Application extends TypedRegistry {
 		$this
 			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
 			->readOnly('helper',       new Nano_HelperBroker)
-			->readOnly('dispatcher',   new Nano_Dispatcher)
+			->readOnly('dispatcher',   new \Nano\Dispatcher)
 			->readOnly('eventManager', new Event_Manager)
 		;
 

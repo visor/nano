@@ -6,7 +6,7 @@
 class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_Dispatcher
+	 * @var \Nano\Dispatcher
 	 */
 	private $dispatcher;
 

@@ -75,7 +75,7 @@ abstract class Nano_C {
 	 * @param string $action
 	 */
 	public function run($action) {
-		$method = Nano_Dispatcher::formatName($action, false);
+		$method = \Nano\Dispatcher::formatName($action, false);
 		$result = null;
 
 		$this->createResponse();
@@ -101,7 +101,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return Nano_Dispatcher
+	 * @return \Nano\Dispatcher
 	 */
 	public function dispatcher() {
 		return Nano::app()->dispatcher;
@@ -190,7 +190,7 @@ abstract class Nano_C {
 		if (!$this->context) {
 			return;
 		}
-		$method = Nano_Dispatcher::formatName($this->dispatcher()->action() . '-' . $this->context, false);
+		$method = \Nano\Dispatcher::formatName($this->dispatcher()->action() . '-' . $this->context, false);
 		if (!method_exists($this, $method)) {
 			return;
 		}

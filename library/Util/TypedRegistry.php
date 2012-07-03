@@ -1,6 +1,8 @@
 <?php
 
-class TypedRegistry extends ArrayObject {
+namespace Nano\Util;
+
+class TypedRegistry extends \ArrayObject {
 
 	/**
 	 * @var string[]
@@ -21,7 +23,7 @@ class TypedRegistry extends ArrayObject {
 	 * @param string $name
 	 * @param mixed $value
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function register($name, $value) {
 		$this->offsetSet($name, $value);
@@ -33,11 +35,11 @@ class TypedRegistry extends ArrayObject {
 	 * @param string $name
 	 * @param string $instance
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function ensure($name, $instance) {
 		if (isSet($this->instances[$name])) {
-			throw new InvalidArgumentException($name . ' is already instance of ' . $this->instances[$name]);
+			throw new \InvalidArgumentException($name . ' is already instance of ' . $this->instances[$name]);
 		}
 
 		$this->instances[$name] = $instance;
@@ -60,11 +62,11 @@ class TypedRegistry extends ArrayObject {
 	 * @param string $name
 	 * @param mixed $value
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function readOnly($name, $value = null) {
 		if ($this->isReadOnly($name)) {
-			throw new InvalidArgumentException($name . ' is already read-only property');
+			throw new \InvalidArgumentException($name . ' is already read-only property');
 		}
 
 		$this->readOnly[$name] = true;
@@ -79,12 +81,12 @@ class TypedRegistry extends ArrayObject {
 	 * @param string $name
 	 * @param mixed $value
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	public function offsetSet($name, $value) {
 		$this->validateInstance($name, $value);
 		if ($this->isReadOnly($name) && $this->offsetExists($name)) {
-			throw new InvalidArgumentException($name . ' is read-only property');
+			throw new \InvalidArgumentException($name . ' is read-only property');
 		}
 
 		parent::offsetSet($name, $value);
@@ -94,10 +96,10 @@ class TypedRegistry extends ArrayObject {
 	 * Prevent appending values without names
 	 *
 	 * @param mixed $value
-	 * @throws RuntimeException
+	 * @throws \RuntimeException
 	 */
 	public function append($value) {
-		throw new RuntimeException('Invalid TypedRegistry usage. Use register() or offsetSet() method.');
+		throw new \RuntimeException('Invalid \Nano\Util\TypedRegistry usage. Use register() or offsetSet() method.');
 	}
 
 	/**
@@ -105,7 +107,7 @@ class TypedRegistry extends ArrayObject {
 	 * @param string $name
 	 * @param mixed $value
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
 	protected function validateInstance($name, $value) {
 		if (!isSet($this->instances[$name])) {
@@ -115,7 +117,7 @@ class TypedRegistry extends ArrayObject {
 			return;
 		}
 
-		throw new InvalidArgumentException($name . ' should be instance of ' . $this->instances[$name]);
+		throw new \InvalidArgumentException($name . ' should be instance of ' . $this->instances[$name]);
 	}
 
 }

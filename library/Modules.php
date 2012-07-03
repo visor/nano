@@ -1,9 +1,11 @@
 <?php
 
+namespace Nano;
+
 /**
  * todo: rename to application_modules?
  */
-class Nano_Modules extends ArrayObject {
+class Modules extends \ArrayObject {
 
 	const MODULE_NAME_SEPARATOR = '-';
 	const MODULE_SUFFIX         = '_Module';
@@ -15,11 +17,11 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 */
 	public static function isModuleName($name) {
-		$position = strPos($name, Nano_Modules::MODULE_SUFFIX);
+		$position = strPos($name, self::MODULE_SUFFIX);
 		if (false === $position) {
 			return false;
 		}
-		if ($position !== strLen($name) - strLen(Nano_Modules::MODULE_SUFFIX)) {
+		if ($position !== strLen($name) - strLen(self::MODULE_SUFFIX)) {
 			return false;
 		}
 		return true;
@@ -30,7 +32,7 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 */
 	public static function nameToNamespace($name) {
-		return Nano::stringToName($name) . self::MODULE_SUFFIX;
+		return \Nano\Names::common($name);
 	}
 
 	/**
@@ -45,15 +47,15 @@ class Nano_Modules extends ArrayObject {
 	}
 
 	/**
-	 * @return Nano_Modules
+	 * @return \Nano\Modules
 	 * @param string $name
 	 * @param string $path
 	 *
-	 * @throws Application_Exception_ModuleNotFound
+	 * @throws \Application_Exception_ModuleNotFound
 	 */
 	public function append($name, $path = null) {
 		if (null === $path) {
-			throw new Application_Exception_ModuleNotFound($name);
+			throw new \Application_Exception_ModuleNotFound($name);
 		}
 		$this->offsetSet($name, $path);
 		return $this;
@@ -72,11 +74,11 @@ class Nano_Modules extends ArrayObject {
 	 * @param string $name
 	 * @param string $folder
 	 *
-	 * @throws Application_Exception_ModuleNotFound
+	 * @throws \Application_Exception_ModuleNotFound
 	 */
 	public function getPath($name, $folder = null) {
 		if (!$this->offsetExists($name)) {
-			throw new Application_Exception_ModuleNotFound($name);
+			throw new \Application_Exception_ModuleNotFound($name);
 		}
 		$result = $this->offsetGet($name);
 		if (null === $folder) {
@@ -89,27 +91,29 @@ class Nano_Modules extends ArrayObject {
 	 * @return string
 	 * @param string $module
 	 *
-	 * @throws Application_Exception_InvalidModuleNamespace
+	 * @throws \Application_Exception_InvalidModuleNamespace
 	 */
 	public function nameToFolder($module) {
 		if ($this->offsetExists($module)) {
 			return $module;
 		}
 		if (!self::isModuleName($module)) {
-			throw new Application_Exception_InvalidModuleNamespace($module);
+			throw new \Application_Exception_InvalidModuleNamespace($module);
 		}
 
 		return self::namespaceToName($module);
 	}
 
 	/**
-	 * @return Nano_Modules
+	 * @return \Nano\Modules
 	 * @param string $name
 	 * @param string $path
+	 *
+	 * @throws \Application_Exception_PathNotFound
 	 */
 	public function offsetSet($name, $path) {
 		if (!is_dir($path)) {
-			throw new Application_Exception_PathNotFound($path);
+			throw new \Application_Exception_PathNotFound($path);
 		}
 		parent::offsetSet($name, $path);
 	}

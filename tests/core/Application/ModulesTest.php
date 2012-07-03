@@ -8,13 +8,13 @@ require_once __DIR__ . '/Abstract.php';
 class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testDetectingModuleName() {
-		self::assertFalse(Nano_Modules::isModuleName(__CLASS__));
-		self::assertFalse(Nano_Modules::isModuleName('M\\ClassName'));
-		self::assertFalse(Nano_Modules::isModuleName('SomeModule_'));
-		self::assertFalse(Nano_Modules::isModuleName('SomeName_Module2'));
+		self::assertFalse(\Nano\Modules::isModuleName(__CLASS__));
+		self::assertFalse(\Nano\Modules::isModuleName('M\\ClassName'));
+		self::assertFalse(\Nano\Modules::isModuleName('SomeModule_'));
+		self::assertFalse(\Nano\Modules::isModuleName('SomeName_Module2'));
 
-		self::assertTrue(Nano_Modules::isModuleName('SomeName_Module'));
-		self::assertTrue(Nano_Modules::isModuleName('A_Module'));
+		self::assertTrue(\Nano\Modules::isModuleName('SomeName_Module'));
+		self::assertTrue(\Nano\Modules::isModuleName('A_Module'));
 	}
 
 	public function testConvertingModuleNameToFolder() {
@@ -74,13 +74,13 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testWithModuleShouldAddModuleAndPathWhenPassedBoth() {
 		self::assertInstanceOf('Application', $this->application->withModule('test', __DIR__));
-		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals(__DIR__, $this->application->modules->offsetGet('test'));
 	}
 
 	public function testGettingModules() {
 		$first = $this->application->modules;
-		self::assertInstanceOf('Nano_Modules', $first);
+		self::assertInstanceOf('\Nano\Modules', $first);
 		$this->application->withModule('test', __DIR__);
 		self::assertSame($first, $this->application->modules);
 	}
@@ -94,7 +94,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertInstanceOf('Application', $this->application->withModule('module1'));
 		self::assertInstanceOf('Application', $this->application->withModule('module2'));
 
-		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
 		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
 	}
@@ -109,7 +109,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertInstanceOf('Application', $this->application->withModule('module2'));
 		self::assertInstanceOf('Application', $this->application->withModule('module3'));
 
-		self::assertInstanceOf('Nano_Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
 		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
 		self::assertEquals($this->files->get($this, '/application-modules/module3'), $this->application->modules->offsetGet('module3'));

@@ -19,7 +19,7 @@ class Nano_HelperBroker {
 	 * @throws Application_Exception_ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = Nano::app()->modules->nameToFolder($module . Nano_Modules::MODULE_SUFFIX);
+		$moduleName = Nano::app()->modules->nameToFolder($module . \Nano\Modules::MODULE_SUFFIX);
 		if (!Nano::app()->modules->active($moduleName)) {
 			throw new Application_Exception_ModuleNotFound($moduleName);
 		}

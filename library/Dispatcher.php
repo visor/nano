@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Dispatcher {
+namespace Nano;
+
+class Dispatcher {
 
 	const SUFFIX_CONTROLLER = 'Controller';
 	const SUFFIX_ACTION     = 'Action';
@@ -11,7 +13,7 @@ class Nano_Dispatcher {
 	const CONTEXT           = 'context';
 
 	/**
-	 * @var Nano_Dispatcher_Custom
+	 * @var \Nano\Dispatcher\Custom
 	 */
 	protected $custom             = null;
 
@@ -26,7 +28,7 @@ class Nano_Dispatcher {
 	protected $controller         = null;
 
 	/**
-	 * @var Nano_C
+	 * @var \Nano_C
 	 */
 	protected $controllerInstance = null;
 
@@ -46,7 +48,7 @@ class Nano_Dispatcher {
 	protected $throw              = false;
 
 	/**
-	 * @var Nano_C_Response
+	 * @var \Nano_C_Response
 	 */
 	protected $response           = null;
 
@@ -57,7 +59,7 @@ class Nano_Dispatcher {
 	 * @param string|null $module
 	 */
 	public static function formatName($name, $controller = true, $module = null) {
-		$result = Nano::stringToName($name);
+		$result = \Nano::stringToName($name);
 		if ($controller) {
 			$result .= self::SUFFIX_CONTROLLER;
 			if (null !== $module) {
@@ -72,16 +74,16 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return Nano_Dispatcher
-	 * @param Nano_Dispatcher_Custom $value
+	 * @return \Nano\Dispatcher
+	 * @param \Nano\Dispatcher\Custom $value
 	 */
-	public function setCustom(Nano_Dispatcher_Custom $value) {
+	public function setCustom(\Nano\Dispatcher\Custom $value) {
 		$this->custom = $value;
 		return $this;
 	}
 
 	/**
-	 * @return Nano_Dispatcher
+	 * @return \Nano\Dispatcher
 	 * @param boolean $value
 	 */
 	public function throwExceptions($value) {
@@ -91,12 +93,12 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return boolean|null
-	 * @param Nano_Routes $routes
+	 * @param \Nano_Routes $routes
 	 * @param string $url
 	 *
-	 * @throws Nano_Exception_NotFound
+	 * @throws \Nano_Exception_NotFound
 	 */
-	public function dispatch(Nano_Routes $routes, $url) {
+	public function dispatch(\Nano_Routes $routes, $url) {
 		$route = $this->getRoute($routes, $url);
 		if (null !== $route) {
 			$this->run($route);
@@ -105,24 +107,24 @@ class Nano_Dispatcher {
 		if ($this->custom) {
 			$result = $this->custom->dispatch();
 			if (false === $result) {
-				throw new Nano_Exception_NotFound('Custom dispatcher fails for: ' . $url, $route);
+				throw new \Nano_Exception_NotFound('Custom dispatcher fails for: ' . $url, $route);
 			}
 			return $result;
 		}
 
-		if (Nano::app()->errorHandler()) {
-			Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
+		if (\Nano::app()->errorHandler()) {
+			\Nano::app()->errorHandler()->notFound('Route not found for: ' . $url);
 		}
 		return null;
 	}
 
 	/**
 	 * @return string
-	 * @param Nano_Route_Abstract $route
+	 * @param \Nano_Route_Abstract $route
 	 */
-	public function run(Nano_Route_Abstract $route) {
-		if ($route instanceof Nano_Route_Runnable) {
-			/* @var $route Nano_Route_Runnable */
+	public function run(\Nano_Route_Abstract $route) {
+		if ($route instanceof \Nano_Route_Runnable) {
+			/* @var $route \Nano_Route_Runnable */
 			$route->run();
 			return null;
 		}
@@ -139,31 +141,31 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return Nano_C
-	 * @param Nano_Route_Abstract $route
+	 * @return \Nano_C
+	 * @param \Nano_Route_Abstract $route
 	 *
-	 * @throws Nano_Exception_NotFound
-	 * @throws Nano_Exception_InternalError
+	 * @throws \Nano_Exception_NotFound
+	 * @throws \Nano_Exception_InternalError
 	 */
-	public function getController(Nano_Route_Abstract $route) {
+	public function getController(\Nano_Route_Abstract $route) {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
-			throw new Nano_Exception_NotFound('Controller class not found: '. $className, $route);
+			throw new \Nano_Exception_NotFound('Controller class not found: '. $className, $route);
 		}
-		$class = new ReflectionClass($className);
+		$class = new \ReflectionClass($className);
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
-			throw new Nano_Exception_InternalError('Not a controller class: ' . $className);
+			throw new \Nano_Exception_InternalError('Not a controller class: ' . $className);
 		}
 		return $class->newInstance();
 	}
 
 	/**
-	 * @return Nano_Route_Abstract|null
-	 * @param Nano_Routes $routes
+	 * @return \Nano_Route_Abstract|null
+	 * @param \Nano_Routes $routes
 	 * @param string $url
 	 */
-	public function getRoute(Nano_Routes $routes, $url) {
+	public function getRoute(\Nano_Routes $routes, $url) {
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
 		return $routes->getFor($method, $testUrl);
@@ -171,10 +173,10 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return boolean
-	 * @param Nano_Route_Abstract $route
+	 * @param \Nano_Route_Abstract $route
 	 * @param string $url
 	 */
-	public function test(Nano_Route_Abstract $route, $url) {
+	public function test(\Nano_Route_Abstract $route, $url) {
 		if (false === $route->match($url)) {
 			return false;
 		}
@@ -182,7 +184,7 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return Nano_C
+	 * @return \Nano_C
 	 */
 	public function controllerInstance() {
 		return $this->controllerInstance;
@@ -234,20 +236,20 @@ class Nano_Dispatcher {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano_C_Response
 	 */
 	public function getResponse() {
 		if (null === $this->response) {
-			$this->setResponse(new Nano_C_Response);
+			$this->setResponse(new \Nano_C_Response);
 		}
 		return $this->response;
 	}
 
 	/**
-	 * @return Nano_Dispatcher
-	 * @param Nano_C_Response $value
+	 * @return \Nano\Dispatcher
+	 * @param \Nano_C_Response $value
 	 */
-	public function setResponse(Nano_C_Response $value) {
+	public function setResponse(\Nano_C_Response $value) {
 		$this->response = $value;
 		return $this;
 	}
@@ -277,9 +279,9 @@ class Nano_Dispatcher {
 
 	/**
 	 * @return void
-	 * @param Nano_Route_Abstract $route
+	 * @param \Nano_Route_Abstract $route
 	 */
-	protected function setUpController(Nano_Route_Abstract $route) {
+	protected function setUpController(\Nano_Route_Abstract $route) {
 		$this->action     = $route->action();
 		$this->controller = $route->controller();
 		$this->module     = $route->module();

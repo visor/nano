@@ -1,6 +1,8 @@
 <?php
 
-interface Nano_Dispatcher_Custom {
+namespace Nano\Dispatcher;
+
+interface Custom {
 
 	/**
 	 * @return boolean

@@ -1,6 +1,6 @@
 <?php
 
-class Test_Dispatcher implements Nano_Dispatcher_Custom {
+class Test_Dispatcher implements \Nano\Dispatcher\Custom {
 
 	public function dispatch() {
 		if (!isset($_COOKIE['accept'])) {

@@ -6,12 +6,12 @@
 class Core_TypedRegistryTest extends TestUtils_TestCase {
 
 	/**
-	 * @var TypedRegistry
+	 * @var \Nano\Util\TypedRegistry
 	 */
 	protected $registry;
 
 	protected function setUp() {
-		$this->registry = new TypedRegistry();
+		$this->registry = new \Nano\Util\TypedRegistry();
 	}
 
 	public function testRegisteringProperties() {
@@ -29,7 +29,7 @@ class Core_TypedRegistryTest extends TestUtils_TestCase {
 	}
 
 	public function testAppendShouldThrowException() {
-		$this->setExpectedException('RuntimeException', 'Invalid TypedRegistry usage. Use register() or offsetSet() method.');
+		$this->setExpectedException('RuntimeException', 'Invalid \\Nano\\Util\\TypedRegistry usage. Use register() or offsetSet() method.');
 		$this->registry->append('foo');
 	}
 
