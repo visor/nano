@@ -18,12 +18,12 @@ class HelperBroker {
 	 * @return \Nano\HelperBroker\Module
 	 * @param string $module
 	 *
-	 * @throws \Application_Exception_ModuleNotFound
+	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public function __get($module) {
 		$moduleName = \Nano::app()->modules->nameToFolder($module . \Nano\Modules::MODULE_SUFFIX);
 		if (!\Nano::app()->modules->active($moduleName)) {
-			throw new \Application_Exception_ModuleNotFound($moduleName);
+			throw new \Nano\Application\Exception\ModuleNotFound($moduleName);
 		}
 
 		if (isSet($this->modules[$moduleName])) {

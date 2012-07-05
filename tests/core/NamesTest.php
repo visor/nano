@@ -99,7 +99,7 @@ class Core_NamesTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldThrowExceptionWhenModuleNotFound() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'test\' not found');
+		$this->setExpectedException('\Nano\Application\Exception\ModuleNotFound', 'Module \'test\' not found');
 		\Nano\Names::moduleFile('\\Module\\Test\\Plugin\\Foo');
 	}
 

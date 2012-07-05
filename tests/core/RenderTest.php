@@ -79,7 +79,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	}
 
 	public function testRenderShouldThrowExceptionWhenInView() {
-		$this->setExpectedException('Application_Exception', 'Exception from view');
+		$this->setExpectedException('\Nano\Application\Exception', 'Exception from view');
 
 		$this->controller->layout     = null;
 		$this->controller->controller = 'test';

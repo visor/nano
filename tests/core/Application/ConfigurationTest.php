@@ -13,7 +13,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	}
 
 	public function testConfigureShouldThrowExceptionWhenNoConfigurationFormatSpecified() {
-		$this->setExpectedException('Application_Exception_InvalidConfiguration', 'Configuration format not specified');
+		$this->setExpectedException('Nano\Application\Exception\InvalidConfiguration', 'Configuration format not specified');
 		$this->application->configure();
 	}
 

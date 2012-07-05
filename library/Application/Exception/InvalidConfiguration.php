@@ -1,5 +1,5 @@
 <?php
 
-class Application_Exception_InvalidConfiguration extends Application_Exception {
+namespace Nano\Application\Exception;
 
-}
+class InvalidConfiguration extends \Nano\Application\Exception {}

@@ -1,3 +1,3 @@
 <?php
 
-throw new Application_Exception('Exception from view');
+throw new \Nano\Application\Exception('Exception from view');

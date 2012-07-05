@@ -30,7 +30,7 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldThrowExceptionWhenModuleNotFound() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'some-module\' not found in application and shared modules');
+		$this->setExpectedException('\Nano\Application\Exception\ModuleNotFound', 'Module \'some-module\' not found in application and shared modules');
 		$this->helper->someModule;
 	}
 

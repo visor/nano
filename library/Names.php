@@ -125,13 +125,13 @@ class Names {
 	 * @return string
 	 * @param string $className
 	 *
-	 * @throws \Application_Exception_ModuleNotFound
+	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public static function moduleFile($className) {
 		$fileName = self::removeNamespace($className, self::NAMESPACE_MODULE);
 		$module   = \Nano\Modules::namespaceToName(self::extractFirstNamespace($fileName));
 		if (!\Nano::app()->modules->active($module)) {
-			throw new \Application_Exception_ModuleNotFound($module);
+			throw new \Nano\Application\Exception\ModuleNotFound($module);
 		}
 
 		$prefix   = \Nano::app()->modules->getPath($module);

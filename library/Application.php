@@ -78,11 +78,11 @@ class Application extends Util\TypedRegistry {
 	/**
 	 * @return \Nano\Application
 	 *
-	 * @throws \Application_Exception_InvalidConfiguration
+	 * @throws \Nano\Application\Exception\InvalidConfiguration
 	 */
 	public function configure() {
 		if (!$this->offsetExists('configFormat')) {
-			throw new \Application_Exception_InvalidConfiguration('Configuration format not specified');
+			throw new \Nano\Application\Exception\InvalidConfiguration('Configuration format not specified');
 		}
 
 		\Nano::setApplication($this);
@@ -161,7 +161,7 @@ class Application extends Util\TypedRegistry {
 	 * @param string $name
 	 * @param string $path
 	 *
-	 * @throws \Application_Exception_ModuleNotFound
+	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public function withModule($name, $path = null) {
 		if (null === $path) {
@@ -170,7 +170,7 @@ class Application extends Util\TypedRegistry {
 			} elseif ($this->offsetExists('modulesDir') && is_dir($this->modulesDir . DIRECTORY_SEPARATOR . $name)) {
 				$path = $this->modulesDir . DIRECTORY_SEPARATOR . $name;
 			} else {
-				throw new \Application_Exception_ModuleNotFound($name);
+				throw new \Nano\Application\Exception\ModuleNotFound($name);
 			}
 		}
 

@@ -34,11 +34,11 @@ class Modules extends \ArrayObject {
 	 * @param string $name
 	 * @param string $path
 	 *
-	 * @throws \Application_Exception_ModuleNotFound
+	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public function append($name, $path = null) {
 		if (null === $path) {
-			throw new \Application_Exception_ModuleNotFound($name);
+			throw new \Nano\Application\Exception\ModuleNotFound($name);
 		}
 		$this->offsetSet($name, $path);
 		return $this;
@@ -57,11 +57,11 @@ class Modules extends \ArrayObject {
 	 * @param string $name
 	 * @param string $folder
 	 *
-	 * @throws \Application_Exception_ModuleNotFound
+	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public function getPath($name, $folder = null) {
 		if (!$this->offsetExists($name)) {
-			throw new \Application_Exception_ModuleNotFound($name);
+			throw new \Nano\Application\Exception\ModuleNotFound($name);
 		}
 		$result = $this->offsetGet($name);
 		if (null === $folder) {
@@ -74,7 +74,7 @@ class Modules extends \ArrayObject {
 	 * @return string
 	 * @param string $module
 	 *
-	 * @throws \Application_Exception_InvalidModuleNamespace
+	 * @throws \Nano\Application\Exception\InvalidModuleNamespace
 	 */
 	public function nameToFolder($module) {
 		if ($this->offsetExists($module)) {
@@ -89,11 +89,11 @@ class Modules extends \ArrayObject {
 	 * @param string $name
 	 * @param string $path
 	 *
-	 * @throws \Application_Exception_PathNotFound
+	 * @throws \Nano\Application\Exception\PathNotFound
 	 */
 	public function offsetSet($name, $path) {
 		if (!is_dir($path)) {
-			throw new \Application_Exception_PathNotFound($path);
+			throw new \Nano\Application\Exception\PathNotFound($path);
 		}
 		parent::offsetSet($name, $path);
 	}

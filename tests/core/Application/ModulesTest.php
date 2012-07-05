@@ -48,12 +48,12 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotExistedPathPassed() {
-		$this->setExpectedException('Application_Exception_PathNotFound', 'Path not found: ' . __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
+		$this->setExpectedException('Nano\Application\Exception\PathNotFound', 'Path not found: ' . __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
 		$this->application->withModule('module1', __FILE__ . DIRECTORY_SEPARATOR . 'not-exists');
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenModleNotExistInPathPassed() {
-		$this->setExpectedException('Application_Exception_PathNotFound', 'Path not found: ' . __DIR__ . DIRECTORY_SEPARATOR . 'module1');
+		$this->setExpectedException('\Nano\Application\Exception\PathNotFound', 'Path not found: ' . __DIR__ . DIRECTORY_SEPARATOR . 'module1');
 		$this->application->withModule('module1', __DIR__ . DIRECTORY_SEPARATOR . 'module1');
 	}
 
@@ -101,7 +101,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testWithModuleShouldThrowExceptionWhenNotPathAndNotApplicationAndSharedModule() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module6\' not found in application and shared modules');
+		$this->setExpectedException('\Nano\Application\Exception\ModuleNotFound', 'Module \'module6\' not found in application and shared modules');
 
 		$this->application->withSharedModulesDir($this->files->get($this, '/shared-modules'));
 		$this->application->withModulesDir($this->files->get($this, '/application-modules'));
@@ -109,7 +109,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testAppendShouldThrowExceptionWhenPathParamIsNull() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'module\' not found in application and shared modules');
+		$this->setExpectedException('\Nano\Application\Exception\ModuleNotFound', 'Module \'module\' not found in application and shared modules');
 
 		$this->application->modules->append('module', null);
 	}
@@ -200,7 +200,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testGetPathShouldThrowExceptionWhenModuleNotExists() {
-		$this->setExpectedException('Application_Exception_ModuleNotFound', 'Module \'some module\' not found');
+		$this->setExpectedException('\Nano\Application\Exception\ModuleNotFound', 'Module \'some module\' not found');
 		$this->application->modules->getPath('some module');
 	}
 
