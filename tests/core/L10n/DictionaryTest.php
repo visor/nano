@@ -3,7 +3,7 @@
 class Core_L10n_DictionaryTest extends TestUtils_TestCase {
 
 	/**
-	 * @var L10n_Dictionary
+	 * @var \Nano\L10n\Dictionary
 	 */
 	protected $dictionary;
 
@@ -16,7 +16,7 @@ class Core_L10n_DictionaryTest extends TestUtils_TestCase {
 			->withModule('some', __DIR__ . '/_files')
 			->configure()
 		;
-		$this->dictionary = new L10n_Dictionary(new L10n_Locale('ru'));
+		$this->dictionary = new \Nano\L10n\Dictionary(new \Nano\L10n\Locale('ru'));
 	}
 
 	public function testShouldLoadDefaultLanguageFileWhenLanguageFileNotExists() {
@@ -46,7 +46,7 @@ class Core_L10n_DictionaryTest extends TestUtils_TestCase {
 
 	public function testShouldLoadMessageFileOnce() {
 		$file = \Nano::app()->rootDir . DIRECTORY_SEPARATOR . 'messages' . DIRECTORY_SEPARATOR . 'ru' . DIRECTORY_SEPARATOR . 'article';
-		$mock = $this->getMock('L10n_Dictionary', array('getMessageFileName'), array(new L10n_Locale('ru')));
+		$mock = $this->getMock('Nano\L10n\Dictionary', array('getMessageFileName'), array(new \Nano\L10n\Locale('ru')));
 		$mock->expects($this->once())->method('getMessageFileName')->withAnyParameters()->will($this->returnValue($file));
 
 		self::assertTrue($mock->loadMessages('article', null));

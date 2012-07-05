@@ -3,27 +3,27 @@
 class Core_L10n_LocaleTest extends TestUtils_TestCase {
 
 	/**
-	 * @var L10n_Locale
+	 * @var \Nano\L10n\Locale
 	 */
 	protected $en;
 
 	protected function setUp() {
-		$this->en = new L10n_Locale(L10n_Locale::DEFAULT_LOCALE);
+		$this->en = new \Nano\L10n\Locale(Nano\L10n\Locale::DEFAULT_LOCALE);
 	}
 
 	public function testShouldStoreLocaleName() {
-		$locale = new L10n_Locale('ru');
+		$locale = new \Nano\L10n\Locale('ru');
 		self::assertEquals('ru', $locale->getName());
 	}
 
 	public function testShouldUseDefaultLocaleAsFallBackWhenNotPassed() {
-		$locale = new L10n_Locale('ru');
-		self::assertEquals(L10n_Locale::DEFAULT_LOCALE, $locale->getFallBack());
+		$locale = new \Nano\L10n\Locale('ru');
+		self::assertEquals(\Nano\L10n\Locale::DEFAULT_LOCALE, $locale->getFallBack());
 	}
 
 	public function testShouldThrowExceptionWhenFallbackEqualsToLocale() {
-		$this->setExpectedException('L10n_Exception', 'Locale name should not equals to fallback');
-		new L10n_Locale('ru', 'ru');
+		$this->setExpectedException('Nano\L10n\Exception', 'Locale name should not equals to fallback');
+		new \Nano\L10n\Locale('ru', 'ru');
 	}
 
 	public function testShouldNotUseFallbackWhenLocaleIsDefault() {

@@ -1,3 +1,5 @@
 <?php
 
-class L10n_Exception extends \Nano\Exception {}
+namespace Nano\L10n;
+
+class Exception extends \Nano\Exception {}

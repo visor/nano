@@ -1,18 +1,20 @@
 <?php
 
-class L10n_Dictionary {
+namespace Nano\L10n;
+
+class Dictionary {
 
 	/**
-	 * @var L10n_Locale
+	 * @var Locale
 	 */
 	protected $locale;
 
 	protected $messages;
 
 	/**
-	 * @param L10n_Locale $locale
+	 * @param Locale $locale
 	 */
-	public function __construct(L10n_Locale $locale) {
+	public function __construct(Locale $locale) {
 		$this->locale = $locale;
 	}
 

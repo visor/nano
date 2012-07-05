@@ -1,6 +1,8 @@
 <?php
 
-class L10n_Locale {
+namespace Nano\L10n;
+
+class Locale {
 
 	const DEFAULT_LOCALE = 'en_us';
 
@@ -10,7 +12,7 @@ class L10n_Locale {
 	protected $name, $fallBack;
 
 	/**
-	 * @var L10n_Dictionary
+	 * @var Dictionary
 	 */
 	protected $storage;
 
@@ -18,20 +20,20 @@ class L10n_Locale {
 	 * @param string $name
 	 * @param string $fallBack
 	 *
-	 * @throws L10n_Exception
+	 * @throws \Nano\L10n\Exception
 	 */
 	public function __construct($name, $fallBack = self::DEFAULT_LOCALE) {
 		if ($name === $fallBack) {
 			if (self::DEFAULT_LOCALE === $fallBack) {
 				$fallBack = null;
 			} else {
-				throw new L10n_Exception('Locale name should not equals to fallback');
+				throw new Exception('Locale name should not equals to fallback');
 			}
 		}
 
 		$this->name     = $name;
 		$this->fallBack = $fallBack;
-		$this->storage  = new L10n_Dictionary($this);
+		$this->storage  = new Dictionary($this);
 	}
 
 	/**
