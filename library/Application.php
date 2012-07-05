@@ -2,12 +2,12 @@
 
 namespace Nano;
 
-require __DIR__ . '/Util/TypedRegistry.php';
-require __DIR__ . '/Application/ErrorHandler.php';
 require __DIR__ . '/Nano.php';
 require __DIR__ . '/Names.php';
-require __DIR__ . '/Classes.php';
 require __DIR__ . '/Loader.php';
+require __DIR__ . '/Util/TypedRegistry.php';
+require __DIR__ . '/Util/Classes.php';
+require __DIR__ . '/Application/ErrorHandler.php';
 
 /**
  * @property string $rootDir

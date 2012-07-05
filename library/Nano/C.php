@@ -63,7 +63,7 @@ abstract class Nano_C {
 	 * @return string|null
 	 */
 	public function getModule() {
-		if (null === $this->module && \Nano\Classes::isModuleClass($className = get_class($this))) {
+		if (null === $this->module && \Nano\Util\Classes::isModuleClass($className = get_class($this))) {
 			list(, $this->module, ) = explode(NS, $className, 3);
 			$this->module = Nano::app()->modules->nameToFolder($this->module);
 		}

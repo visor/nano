@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano;
+namespace Nano\Util;
 
 class Classes {
 
@@ -11,7 +11,7 @@ class Classes {
 	 * @param string $className
 	 */
 	public static function isNanoClass($className) {
-		return self::isNamespaceClass($className, Names::NAMESPACE_NANO);
+		return self::isNamespaceClass($className, \Nano\Names::NAMESPACE_NANO);
 	}
 
 	/**
@@ -21,7 +21,7 @@ class Classes {
 	 * @param string $className
 	 */
 	public static function isApplicationClass($className) {
-		return self::isNamespaceClass($className, Names::NAMESPACE_APP);
+		return self::isNamespaceClass($className, \Nano\Names::NAMESPACE_APP);
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Classes {
 	 * @param string $className
 	 */
 	public static function isModuleClass($className) {
-		return self::isNamespaceClass($className, Names::NAMESPACE_MODULE);
+		return self::isNamespaceClass($className, \Nano\Names::NAMESPACE_MODULE);
 	}
 
 	/**

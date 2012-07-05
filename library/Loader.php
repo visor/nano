@@ -74,15 +74,15 @@ class Loader {
 	 * Registers application directories for autoloading
 	 *
 	 * @return void
-	 * @param \Nano\Application $application
+	 * @param Application $application
 	 */
-	public function registerApplication(\Nano\Application $application) {
+	public function registerApplication(Application $application) {
 		$this->applicationPath = array(
 			$this->nanoDir
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::CONTROLLER_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::LIBRARY_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::MODELS_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::PLUGINS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
 		);
 	}
 
@@ -95,10 +95,10 @@ class Loader {
 	 */
 	public function registerModule($name, $path) {
 		$this->modulesPath[\Nano\Modules::nameToNamespace($name)] = array(
-			$path . DIRECTORY_SEPARATOR . \Nano\Application::CONTROLLER_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Nano\Application::LIBRARY_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Nano\Application::MODELS_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Nano\Application::PLUGINS_DIR_NAME
+			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . Application::PLUGINS_DIR_NAME
 		);
 	}
 
@@ -133,13 +133,13 @@ class Loader {
 			return true;
 		}
 
-		if (Classes::isNanoClass($name)) {
+		if (Util\Classes::isNanoClass($name)) {
 			return $this->loadFileWithClass($name, Names::nanoFile($name));
 		}
-		if (Classes::isApplicationClass($name)) {
+		if (Util\Classes::isApplicationClass($name)) {
 			return $this->loadFileWithClass($name, Names::applicationFile($name));
 		}
-		if (Classes::isModuleClass($name)) {
+		if (Util\Classes::isModuleClass($name)) {
 			return $this->loadFileWithClass($name, Names::moduleFile($name));
 		}
 

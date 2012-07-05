@@ -73,8 +73,6 @@ class Modules extends \ArrayObject {
 	/**
 	 * @return string
 	 * @param string $module
-	 *
-	 * @throws \Nano\Application\Exception\InvalidModuleNamespace
 	 */
 	public function nameToFolder($module) {
 		if ($this->offsetExists($module)) {
