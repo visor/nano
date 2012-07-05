@@ -45,7 +45,7 @@ abstract class Nano_C {
 	protected $rendered = false;
 
 	/**
-	 * @var Nano_Render
+	 * @var \Nano\Render
 	 */
 	protected $renderer = null;
 
@@ -149,7 +149,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return Nano_Render
+	 * @return \Nano\Render
 	 */
 	public function renderer() {
 		if (null === $this->renderer) {
@@ -161,9 +161,9 @@ abstract class Nano_C {
 
 	/**
 	 * @return void
-	 * @param Nano_Render $value
+	 * @param \Nano\Render $value
 	 */
-	public function setRenderer(Nano_Render $value) {
+	public function setRenderer(\Nano\Render $value) {
 		$this->renderer = $value;
 		$this->configureRenderer();
 	}
@@ -219,19 +219,19 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return Nano_Render
+	 * @return \Nano\Render
 	 */
 	protected function createRenderer() {
-		return new Nano_Render(Nano::app());
+		return new \Nano\Render(Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function configureRenderer() {
-		$this->renderer->setLayoutsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::LAYOUT_DIR);
-		$this->renderer->setViewsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . Nano_Render::VIEW_DIR);
-		$this->renderer->setModuleViewsDirName(Nano_Render::VIEW_DIR);
+		$this->renderer->setLayoutsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::VIEW_DIR);
+		$this->renderer->setModuleViewsDirName(\Nano\Render::VIEW_DIR);
 	}
 
 	/**

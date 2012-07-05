@@ -42,7 +42,7 @@ class Module extends App {
 		$this->mkDir(\Nano\Application::PLUGINS_DIR_NAME);
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'scripts');
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'styles');
-		$this->mkDir(\Nano_Render::VIEW_DIR);
+		$this->mkDir(\Nano\Render::VIEW_DIR);
 	}
 
 }

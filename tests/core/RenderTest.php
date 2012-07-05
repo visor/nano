@@ -11,7 +11,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	protected $application;
 
 	/**
-	 * @var Nano_Render
+	 * @var \Nano\Render
 	 */
 	protected $renderer;
 
@@ -33,7 +33,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 			->configure()
 		;
 
-		$this->renderer = new Nano_Render($this->application);
+		$this->renderer = new \Nano\Render($this->application);
 		$this->renderer->setViewsPath($this->files->get($this, '/views'));
 		$this->renderer->setModuleViewsDirName('views/default');
 		$this->renderer->setLayoutsPath($this->files->get($this, '/layouts'));

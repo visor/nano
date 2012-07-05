@@ -57,7 +57,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 		;
 		$instance  = new $className($application);
 		$instance->setResponse(new \Nano_C_Response_Test($application));
-		$instance->setRenderer(new \Nano_Render($application));
+		$instance->setRenderer(new \Nano\Render($application));
 
 		$params['module']     = $module;
 		$params['controller'] = $controller;

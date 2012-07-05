@@ -48,7 +48,7 @@ class App extends \Nano_Cli_Script {
 	protected function createDirectoryStructure() {
 		$this->mkDir(\Nano\Application::CONTROLLER_DIR_NAME);
 		$this->mkDir(\Nano\Application::HELPERS_DIR_NAME);
-		$this->mkDir(\Nano_Render::LAYOUT_DIR);
+		$this->mkDir(\Nano\Render::LAYOUT_DIR);
 		$this->mkDir(\Nano\Application::LIBRARY_DIR_NAME);
 		$this->mkDir('messages');
 		$this->mkDir('migrate');
@@ -63,7 +63,7 @@ class App extends \Nano_Cli_Script {
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'styles');
 		$this->mkDir('scripts');
 		$this->mkDir('settings');
-		$this->mkDir(\Nano_Render::VIEW_DIR);
+		$this->mkDir(\Nano\Render::VIEW_DIR);
 	}
 
 	protected function createBootstrap() {

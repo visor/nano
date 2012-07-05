@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Render {
+namespace Nano;
+
+class Render {
 
 	const VIEW_DIR   = 'views';
 	const LAYOUT_DIR = 'layouts';
@@ -29,9 +31,9 @@ class Nano_Render {
 
 	/**
 	 * @return string
-	 * @param Nano_C $object
+	 * @param \Nano_C $object
 	 */
-	public function render(Nano_C $object) {
+	public function render(\Nano_C $object) {
 		$module    = $object->getModule();
 		$variables = get_object_vars($object);
 		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
@@ -126,13 +128,13 @@ class Nano_Render {
 	/**
 	 * @return null|string
 	 *
-	 * @param Nano_Render $renderer
+	 * @param \Nano\Render $renderer
 	 * @param string      $fileName
 	 * @param array       $variables
 	 *
 	 * @throws \Exception|\Nano\Exception
 	 */
-	protected static function file(Nano_Render $renderer, $fileName, array $variables = array()) {
+	protected static function file(\Nano\Render $renderer, $fileName, array $variables = array()) {
 		if (!file_exists($fileName)) {
 			throw new \Nano\Exception('View ' . $fileName . ' not exists');
 		}
@@ -165,7 +167,7 @@ class Nano_Render {
 	 */
 	protected function addContext($path, $context) {
 		$result = $path;
-		if (Nano_C::CONTEXT_DEFAULT !== $context && null !== $context) {
+		if (\Nano_C::CONTEXT_DEFAULT !== $context && null !== $context) {
 			$result .= '.' . $context;
 		}
 		return $result;
