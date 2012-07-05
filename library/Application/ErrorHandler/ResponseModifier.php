@@ -1,7 +1,9 @@
 <?php
 
-interface Application_ErrorHandler_ResponseModifier {
+namespace Nano\Application\ErrorHandler;
 
-	public function update(Nano_C_Response $response);
+interface ResponseModifier {
+
+	public function update(\Nano_C_Response $response);
 
 }

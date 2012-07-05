@@ -1,8 +1,8 @@
 <?php
 
-namespace App;
+namespace App\ResponseModifier;
 
-class ResponseModifier_Default implements \Application_ErrorHandler_ResponseModifier {
+class Common implements \Nano\Application\ErrorHandler\ResponseModifier {
 
 	public function update(\Nano_C_Response $response) {
 		$contents = $response->getBody();

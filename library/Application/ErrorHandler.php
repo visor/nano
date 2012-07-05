@@ -1,6 +1,8 @@
 <?php
 
-class Application_ErrorHandler {
+namespace Nano\Application;
+
+class ErrorHandler {
 
 	/**
 	 * @var boolean
@@ -36,7 +38,7 @@ class Application_ErrorHandler {
 	}
 
 	public function notFound($message) {
-		$response = $this->createDefaultResponse(Nano_C_Response::STATUS_NOT_FOUND);
+		$response = $this->createDefaultResponse(\Nano_C_Response::STATUS_NOT_FOUND);
 		$response->appendToBody($message);
 		$this->updateResponse($response);
 		return $this->send($response);
@@ -74,7 +76,7 @@ class Application_ErrorHandler {
 		return $this->send($response);
 	}
 
-	public function handleException(Exception $exception) {
+	public function handleException(\Exception $exception) {
 		$this->errorHandled = true;
 		$response = $this->generateExceptionResponse($exception, $this->getOutput());
 		$this->updateResponse($response);
@@ -82,24 +84,24 @@ class Application_ErrorHandler {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano_C_Response
 	 * @param int $status
 	 */
-	public function createDefaultResponse($status = Nano_C_Response::STATUS_ERROR) {
-		$result = new Nano_C_Response();
+	public function createDefaultResponse($status = \Nano_C_Response::STATUS_ERROR) {
+		$result = new \Nano_C_Response();
 		$result->setStatus($status);
 		return $result;
 	}
 
 	/**
-	 * @return Nano_C_Response
-	 * @param Nano_C_Response $response
+	 * @return \Nano_C_Response
+	 * @param \Nano_C_Response $response
 	 */
-	protected function updateResponse(Nano_C_Response $response) {
-		if (!Nano::app()->config->exists('errors')) {
+	protected function updateResponse(\Nano_C_Response $response) {
+		if (!\Nano::app()->config->exists('errors')) {
 			return $response;
 		}
-		$errors = Nano::app()->config->get('errors');
+		$errors = \Nano::app()->config->get('errors');
 		if (!isSet($errors->response)) {
 			return $response;
 		}
@@ -108,8 +110,8 @@ class Application_ErrorHandler {
 		if (!class_exists($responseClass)) {
 			return $response;
 		}
-		$class = new ReflectionClass($responseClass);
-		if (!$class->implementsInterface('Application_ErrorHandler_ResponseModifier')) {
+		$class = new \ReflectionClass($responseClass);
+		if (!$class->implementsInterface('Nano\Application\ErrorHandler\ResponseModifier')) {
 			return $response;
 		}
 		if (!$class->isInstantiable()) {
@@ -117,7 +119,7 @@ class Application_ErrorHandler {
 		}
 
 		$customResponse = $class->newInstance();
-		/** @var Application_ErrorHandler_ResponseModifier $customResponse */
+		/** @var \Nano\Application\ErrorHandler\ResponseModifier $customResponse */
 		$response->addHeader('X-Modified', 'true');
 		$customResponse->update($response);
 
@@ -125,7 +127,7 @@ class Application_ErrorHandler {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano_C_Response
 	 * @param array $error
 	 * @param string|null $buffer
 	 */
@@ -137,11 +139,11 @@ class Application_ErrorHandler {
 	}
 
 	/**
-	 * @return Nano_C_Response
-	 * @param Exception $exception
+	 * @return \Nano_C_Response
+	 * @param \Exception $exception
 	 * @param string|null $buffer
 	 */
-	protected function generateExceptionResponse(Exception $exception, $buffer = null) {
+	protected function generateExceptionResponse(\Exception $exception, $buffer = null) {
 		$result = $this->createDefaultResponse();
 		$result->appendToBody($this->exceptionToString($exception));
 		$this->appendOutput($result, $buffer);
@@ -158,7 +160,7 @@ class Application_ErrorHandler {
 		return null;
 	}
 
-	protected function appendOutput(Nano_C_Response $response, $buffer) {
+	protected function appendOutput(\Nano_C_Response $response, $buffer) {
 		if (0 != strLen($buffer)) {
 			$response->appendToBody('<hr />' . PHP_EOL);
 			$response->appendToBody('Generated output: <pre>' . htmlSpecialChars($buffer) . '</pre>');
@@ -167,16 +169,16 @@ class Application_ErrorHandler {
 
 	/**
 	 * @return null
-	 * @param Nano_C_Response $response
+	 * @param \Nano_C_Response $response
 	 * @param boolean $forceExit
 	 */
-	protected function send(Nano_C_Response $response, $forceExit = false) {
+	protected function send(\Nano_C_Response $response, $forceExit = false) {
 		if (ob_get_level() > 0) {
 			ob_end_clean();
 		}
-		if (Nano::app()->dispatcher->controllerInstance() && false === $forceExit) {
-			Nano::app()->dispatcher->controllerInstance()->markRendered();
-			Nano::app()->dispatcher->controllerInstance()->setResponse($response);
+		if (\Nano::app()->dispatcher->controllerInstance() && false === $forceExit) {
+			\Nano::app()->dispatcher->controllerInstance()->markRendered();
+			\Nano::app()->dispatcher->controllerInstance()->setResponse($response);
 		}
 		$response->send();
 	}
@@ -192,9 +194,9 @@ class Application_ErrorHandler {
 
 	/**
 	 * @return string
-	 * @param Exception $exception
+	 * @param \Exception $exception
 	 */
-	protected function exceptionToString(Exception $exception) {
+	protected function exceptionToString(\Exception $exception) {
 		$newLine = PHP_EOL . '<br />';
 		return
 			'Exception: "' . get_class($exception) . '" with message "' . $exception->getMessage() . '"'

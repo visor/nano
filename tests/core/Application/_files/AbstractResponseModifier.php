@@ -1,5 +1,5 @@
 <?php
 
-abstract class AbstractResponseModifier implements Application_ErrorHandler_ResponseModifier {
+abstract class AbstractResponseModifier implements \Nano\Application\ErrorHandler\ResponseModifier {
 
 }

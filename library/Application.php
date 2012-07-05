@@ -18,12 +18,12 @@ require __DIR__ . '/Loader.php';
  *
  * @property \Nano_Config_Format $configFormat
  * @property \Nano_Config $config
- * @property \Nano\Loader $loader
- * @property \Nano\Dispatcher $dispatcher
- * @property \Nano\Modules $modules
+ * @property Loader $loader
+ * @property Dispatcher $dispatcher
+ * @property Modules $modules
  * @property \SplObjectStorage $plugins
- * @property \Nano\Event\Manager $eventManager
- * @property \Nano\HelperBroker $helper
+ * @property Event\Manager $eventManager
+ * @property HelperBroker $helper
  */
 class Application extends Util\TypedRegistry {
 
@@ -36,7 +36,7 @@ class Application extends Util\TypedRegistry {
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
-	 * @var \Application_ErrorHandler;
+	 * @var \Nano\Application\ErrorHandler;
 	 */
 	protected $errorHandler;
 
@@ -64,14 +64,14 @@ class Application extends Util\TypedRegistry {
 			->readOnly('modulesDir')
 			->readOnly('sharedModulesDir')
 
-			->ensure('configFormat', '\Nano_Config_Format')
-			->ensure('config',       '\Nano_Config')
-			->ensure('loader',       '\Nano\Loader')
-			->ensure('modules',      '\Nano\Modules')
-			->ensure('dispatcher',   '\Nano\Dispatcher')
-			->ensure('helper',       '\Nano\HelperBroker')
-			->ensure('eventManager', '\Nano\Event\Manager')
-			->ensure('plugins',      '\SplObjectStorage')
+			->ensure('configFormat', 'Nano_Config_Format')
+			->ensure('config',       'Nano_Config')
+			->ensure('loader',       'Nano\Loader')
+			->ensure('modules',      'Nano\Modules')
+			->ensure('dispatcher',   'Nano\Dispatcher')
+			->ensure('helper',       'Nano\HelperBroker')
+			->ensure('eventManager', 'Nano\Event\Manager')
+			->ensure('plugins',      'SplObjectStorage')
 		;
 	}
 
@@ -101,7 +101,7 @@ class Application extends Util\TypedRegistry {
 		}
 
 		if ('cli' !== php_sapi_name()) {
-			$this->errorHandler = new \Application_ErrorHandler;
+			$this->errorHandler = new \Nano\Application\ErrorHandler;
 		}
 
 		$this->readOnly('config', new \Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat));

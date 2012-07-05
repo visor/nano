@@ -1,6 +1,6 @@
 <?php
 
-class PublicErrorHandler extends Application_ErrorHandler {
+class PublicErrorHandler extends \Nano\Application\ErrorHandler {
 
 	public function __construct(\Nano\Application $application, $noHandlers = false) {
 		if (false === $noHandlers) {
