@@ -12,26 +12,26 @@ class Core_Config_Format_FactoryTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldThrowExceptionWhenFormatClassNotExists() {
-		$this->setExpectedException('Nano_Exception_UnsupportedConfigFormat', 'Unsupported format: not-supported');
+		$this->setExpectedException('\Nano\Exception\UnsupportedConfigFormat', 'Unsupported format: not-supported');
 		Nano_Config::format('not-supported');
 	}
 
 	public function testShouldThrowExceptionWhenFormatIsNotImplementsInterface() {
-		$this->setExpectedException('Nano_Exception_UnsupportedConfigFormat', 'Unsupported format: xml');
+		$this->setExpectedException('\Nano\Exception\UnsupportedConfigFormat', 'Unsupported format: xml');
 
 		include_once $this->files->get($this, '/classes/Xml.php');
 		Nano_Config::format('xml');
 	}
 
 	public function testShouldThrowExceptionWhenFormatIsAbstract() {
-		$this->setExpectedException('Nano_Exception_UnsupportedConfigFormat', 'Unsupported format: abstract');
+		$this->setExpectedException('\Nano\Exception\UnsupportedConfigFormat', 'Unsupported format: abstract');
 
 		include_once $this->files->get($this, '/classes/Abstract.php');
 		Nano_Config::format('abstract');
 	}
 
 	public function testShouldThrowExceptionWhenFormatIsNotAvailable() {
-		$this->setExpectedException('Nano_Exception_UnsupportedConfigFormat', 'Unsupported format: unsupported');
+		$this->setExpectedException('\Nano\Exception\UnsupportedConfigFormat', 'Unsupported format: unsupported');
 
 		include_once $this->files->get($this, '/classes/Unsupported.php');
 		Nano_Config::format('unsupported');

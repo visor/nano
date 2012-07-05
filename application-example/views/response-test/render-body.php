@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Nano_HelperBroker $helper
+ * @var \Nano\HelperBroker $helper
  * put view variables here if need
  */
 ?>

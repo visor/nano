@@ -44,7 +44,7 @@ class HelperBroker {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param string $name
 	 */
 	protected function get($name) {
@@ -60,10 +60,10 @@ class HelperBroker {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param string $name
 	 *
-	 * @throws Nano_Exception_HelperNotFound
+	 * @throws \Nano\Exception\HelperNotFound
 	 */
 	protected function search($name) {
 		$className = \Nano\Names::helperClass($name);
@@ -73,7 +73,7 @@ class HelperBroker {
 
 		$classPath = \Nano\Names::applicationFile($className);
 		if (!\Nano::app()->loader->loadFileWithClass($className, $classPath)) {
-			throw new \Nano_Exception_HelperNotFound($name);
+			throw new \Nano\Exception\HelperNotFound($name);
 		}
 
 		return new $className;

@@ -96,7 +96,7 @@ class Dispatcher {
 	 * @param \Nano\Routes $routes
 	 * @param string $url
 	 *
-	 * @throws \Nano_Exception_NotFound
+	 * @throws \Nano\Exception\NotFound
 	 */
 	public function dispatch(\Nano\Routes $routes, $url) {
 		$route = $this->getRoute($routes, $url);
@@ -107,7 +107,7 @@ class Dispatcher {
 		if ($this->custom) {
 			$result = $this->custom->dispatch();
 			if (false === $result) {
-				throw new \Nano_Exception_NotFound('Custom dispatcher fails for: ' . $url, $route);
+				throw new \Nano\Exception\NotFound('Custom dispatcher fails for: ' . $url, $route);
 			}
 			return $result;
 		}
@@ -144,18 +144,18 @@ class Dispatcher {
 	 * @return \Nano_C
 	 * @param \Nano\Route\Common $route
 	 *
-	 * @throws \Nano_Exception_NotFound
-	 * @throws \Nano_Exception_InternalError
+	 * @throws \Nano\Exception\NotFound
+	 * @throws \Nano\Exception\InternalError
 	 */
 	public function getController(\Nano\Route\Common $route) {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
-			throw new \Nano_Exception_NotFound('Controller class not found: '. $className, $route);
+			throw new \Nano\Exception\NotFound('Controller class not found: '. $className, $route);
 		}
 		$class = new \ReflectionClass($className);
 		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
-			throw new \Nano_Exception_InternalError('Not a controller class: ' . $className);
+			throw new \Nano\Exception\InternalError('Not a controller class: ' . $className);
 		}
 		return $class->newInstance();
 	}

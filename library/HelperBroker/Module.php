@@ -29,7 +29,7 @@ class Module {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param $name
 	 */
 	public function __get($name) {
@@ -37,7 +37,7 @@ class Module {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param $name
 	 * @param array $arguments
 	 */
@@ -46,7 +46,7 @@ class Module {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param string $name
 	 */
 	protected function get($name) {
@@ -61,17 +61,17 @@ class Module {
 	}
 
 	/**
-	 * @return Nano_Helper
+	 * @return \Nano\Helper
 	 * @param string $name
 	 *
-	 * @throws Nano_Exception_HelperNotFound
+	 * @throws \Nano\Exception\HelperNotFound
 	 */
 	protected function search($name) {
 		$className = \Nano\Names::helperClass($name, $this->module);
 		$classPath = \Nano\Names::moduleFile($className);
 
 		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
-			throw new \Nano_Exception_HelperNotFound($name, $this->module);
+			throw new \Nano\Exception\HelperNotFound($name, $this->module);
 		}
 
 		return new $className;

@@ -30,23 +30,23 @@ class Nano_Config {
 	 * @return Nano_Config_Format
 	 * @param string $name
 	 *
-	 * @throws Nano_Exception_UnsupportedConfigFormat
+	 * @throws \Nano\Exception\UnsupportedConfigFormat
 	 */
 	public static function format($name) {
 		/** @var Nano_Config_Format $result */
 		$className = __CLASS__ . '_Format_' . ucFirst(strToLower($name));
 		if (false === class_exists($className)) {
-			throw new Nano_Exception_UnsupportedConfigFormat($name);
+			throw new \Nano\Exception\UnsupportedConfigFormat($name);
 		}
 
 		$class = new ReflectionClass($className);
 		if (!$class->implementsInterface('Nano_Config_Format') || !$class->isInstantiable()) {
-			throw new Nano_Exception_UnsupportedConfigFormat($name);
+			throw new \Nano\Exception\UnsupportedConfigFormat($name);
 		}
 
 		$result = $class->newInstance();
 		if (!$result->available()) {
-			throw new Nano_Exception_UnsupportedConfigFormat($name);
+			throw new \Nano\Exception\UnsupportedConfigFormat($name);
 		}
 
 		return $result;
@@ -56,11 +56,11 @@ class Nano_Config {
 	 * @param string $path
 	 * @param Nano_Config_Format $format
 	 *
-	 * @throws Nano_Exception_UnsupportedConfigFormat
+	 * @throws \Nano\Exception\UnsupportedConfigFormat
 	 */
 	public function __construct($path, Nano_Config_Format $format) {
 		if (false === $format->available()) {
-			throw new Nano_Exception_UnsupportedConfigFormat(get_class($format));
+			throw new \Nano\Exception\UnsupportedConfigFormat(get_class($format));
 		}
 
 		$this->format = $format;

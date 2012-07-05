@@ -35,12 +35,12 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	}
 
 	public function testShouldThrowExceptionWhenModuleHelperNotLoaded() {
-		$this->setExpectedException('Nano_Exception_HelperNotFound', 'Helper wrong in module example not found');
+		$this->setExpectedException('\Nano\Exception\HelperNotFound', 'Helper wrong in module example not found');
 		$this->helper->example->wrong;
 	}
 
 	public function testShouldThrowExceptionWhenApplicationHelperNotLoaded() {
-		$this->setExpectedException('Nano_Exception_HelperNotFound', 'Helper notfound not found');
+		$this->setExpectedException('\Nano\Exception\HelperNotFound', 'Helper notfound not found');
 		$this->helper->notFound();
 	}
 

@@ -282,7 +282,7 @@ abstract class Nano_C {
 	/**
 	 * @return null
 	 * @param string $message
-	 * @throws Nano_Exception_NotFound
+	 * @throws \Nano\Exception\NotFound
 	 */
 	protected function pageNotFound($message = null) {
 		$this->markRendered();
@@ -292,7 +292,7 @@ abstract class Nano_C {
 	/**
 	 * @return null
 	 * @param string $message
-	 * @throws Nano_Exception_InternalError
+	 * @throws \Nano\Exception\InternalError
 	 */
 	protected function internalError($message = null) {
 		$this->markRendered();

@@ -25,7 +25,7 @@ class Core_ConfigTest extends TestUtils_TestCase {
 	public function testGetFormatThrowExceptionWhenFormatNotAvailable() {
 		include_once $this->files->get($this, '/classes/Unsupported.php', '/Format');
 
-		$this->setExpectedException('Nano_Exception_UnsupportedConfigFormat', 'Unsupported format: Nano_Config_Format_Unsupported');
+		$this->setExpectedException('\Nano\Exception\UnsupportedConfigFormat', 'Unsupported format: Nano_Config_Format_Unsupported');
 		new Nano_Config('', new Nano_Config_Format_Unsupported());
 	}
 
