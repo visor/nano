@@ -1,4 +1,4 @@
 <?php return array(
 	'showAll'    => true
-	, 'response' => 'ResponseModifier_Default'
+	, 'response' => 'App\ResponseModifier_Default'
 );
