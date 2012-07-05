@@ -37,7 +37,7 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	}
 
 	public function testLoaderShouldInitializedWhenApplicationCreated() {
-		self::assertInstanceOf('\\Nano\\Loader', $this->application->loader);
+		self::assertInstanceOf('\Nano\\Loader', $this->application->loader);
 	}
 
 	public function testNanoClassShouldBeLoaded() {

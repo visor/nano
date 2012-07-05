@@ -29,7 +29,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	}
 
 	public function testSavingRoutes() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		include $this->files->get($this, '/parents/default/routes.php');
 		include $this->files->get($this, '/parents/basic-child/routes.php');
 		$expectedRoutes = $routes;
@@ -41,13 +41,13 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		self::assertFileExists($this->files->get($this, '/settings/routes'));
 		$data = file_get_contents($this->files->get($this, '/settings/routes'));
-		/** @var Nano_Routes $actualRoutes */
+		/** @var \Nano\Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
 	}
 
 	public function testAddingRoutesIntoChildConfigurations() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		include $this->files->get($this, '/parents/default/routes.php');
 		include $this->files->get($this, '/parents/basic-child/routes.php');
 		$expectedRoutes = $routes;
@@ -59,13 +59,13 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		self::assertFileExists($this->files->get($this, '/settings/routes'));
 		$data = file_get_contents($this->files->get($this, '/settings/routes'));
-		/** @var Nano_Routes $actualRoutes */
+		/** @var \Nano\Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
 	}
 
 	public function testOverrideRoutesIntoChildConfigurations() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		include $this->files->get($this, '/parents/default/routes.php');
 		include $this->files->get($this, '/parents/basic-child/routes.php');
 		include $this->files->get($this, '/parents/ext-child/routes.php');
@@ -78,7 +78,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 		self::assertFileExists($this->files->get($this, '/settings/routes'));
 		$data = file_get_contents($this->files->get($this, '/settings/routes'));
-		/** @var Nano_Routes $actualRoutes */
+		/** @var \Nano\Routes $actualRoutes */
 		$actualRoutes = unSerialize($data);
 		self::assertEquals($expectedRoutes, $actualRoutes);
 	}

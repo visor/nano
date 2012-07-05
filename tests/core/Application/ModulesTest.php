@@ -153,7 +153,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testDetectingsControllerClass() {
 		$this->application->withModule('test', $this->files->get($this, '/test'));
-		$route = Nano_Route_Abstract::create('some', 'class1', 'index', 'test');
+		$route = \Nano\Route\Common::create('some', 'class1', 'index', 'test');
 		self::assertEquals('Module\Test\Controller\Class1', $route->controllerClass());
 	}
 
@@ -164,8 +164,8 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 			->configure()
 		;
 
-		$routes     = new Nano_Routes();
-		$route      = Nano_Route_Abstract::create('some', 'class1', 'index', 'test');
+		$routes     = new \Nano\Routes();
+		$route      = \Nano\Route\Common::create('some', 'class1', 'index', 'test');
 		$dispatcher = $this->application->dispatcher;
 		$response   = new Nano_C_Response_Test($this->application);
 
@@ -194,7 +194,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		$response = new Nano_C_Response_Test($this->application);
 
 		$this->application->dispatcher->setResponse($response);
-		$this->application->dispatcher->run(Nano_Route_Abstract::create('', 'class1', 'view', 'test'));
+		$this->application->dispatcher->run(\Nano\Route\Common::create('', 'class1', 'view', 'test'));
 
 		self::assertEquals('view action runned', $response->getBody());
 	}

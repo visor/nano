@@ -26,7 +26,7 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 	}
 
 	public function testDispatcherShouldRunRouteWithoutInvocingController() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		$route  = new TestRunnableRouteAbstract();
 		$routes->addRoute('get', $route);
 

@@ -43,13 +43,13 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 	public function testRouteFindingForEmptyUrl() {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		$routes->add('get', '', 'index', 'index');
 
 		$urls = array('', '/', '//');
 		foreach ($urls as $url) {
 			$route = $this->dispatcher->getRoute($routes, $url);
-			self::assertInstanceOf('Nano_Route_Abstract', $route, 'for url: [' . $url . ']');
+			self::assertInstanceOf('\Nano\Route\Common', $route, 'for url: [' . $url . ']');
 			$this->assertEquals('index::index() when location matches []', $route->__toString());
 		}
 	}
@@ -63,7 +63,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 			->configure()
 		;
 
-		$c = $application->dispatcher->getController(Nano_Route_Abstract::create('', 'test', 'test'));
+		$c = $application->dispatcher->getController(\Nano\Route\Common::create('', 'test', 'test'));
 		self::assertInstanceOf('Nano_C', $c);
 		self::assertInstanceOf('App\Controller\Test', $c);
 	}
@@ -79,13 +79,13 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		$application->dispatcher->setResponse(new Nano_C_Response_Test($application));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		$routes
 			->suffix('~(\.(?P<context>xml|rss))?')
 				->get('index', 'test', 'index')
 		;
 
-		self::assertInstanceOf('Nano_Route_RegExp', $application->dispatcher->getRoute($routes, 'index.xml'));
+		self::assertInstanceOf('Nano\Route\RegExp', $application->dispatcher->getRoute($routes, 'index.xml'));
 		$application->dispatcher->run($application->dispatcher->getRoute($routes, 'index.xml'));
 		self::assertEquals('xml', $application->dispatcher->controllerInstance()->context);
 	}

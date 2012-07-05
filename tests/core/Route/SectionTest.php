@@ -7,20 +7,20 @@
 class Core_Route_SectionTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_Route_Section_Static
+	 * @var \Nano\Route\Section\StaticLocation
 	 */
 	protected $section;
 
 	protected function setUp() {
-		$this->section = new Nano_Route_Section_Static('foo');
+		$this->section = new \Nano\Route\Section\StaticLocation('foo');
 	}
 
 	public function testCreateShouldReturnStaticSectionWhenSimleStringPassed() {
-		self::assertInstanceOf('Nano_Route_Section_Static', Nano_Route_Section::create('foo'));
+		self::assertInstanceOf('\Nano\Route\Section\StaticLocation', \Nano\Route\Section\Common::create('foo'));
 	}
 
 	public function testCreateShouldReturnRegExpSectionWhenPrefixPassed() {
-		self::assertInstanceOf('Nano_Route_Section_RegExp', Nano_Route_Section::create('~foo'));
+		self::assertInstanceOf('\Nano\Route\Section\RegExp', \Nano\Route\Section\Common::create('~foo'));
 	}
 
 	public function testCreateShouldThrowExceptionWhenEmptyLocationPassed() {
@@ -126,25 +126,25 @@ class Core_Route_SectionTest extends TestUtils_TestCase {
 
 	public function testBuildStaticLocationWithoutSuffix() {
 		$this->section->get('', 'index', 'index');
-		self::assertInstanceOf('Nano_Route_Static', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertInstanceOf('Nano\Route\StaticLocation', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
 		self::assertEquals('', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildStaticLocationWithStaticSuffix() {
 		$this->section->suffix('.html')->get('index', 'index', 'index');
-		self::assertInstanceOf('Nano_Route_Static', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertInstanceOf('Nano\Route\StaticLocation', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
 		self::assertEquals('index.html', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildStaticLocationWithRegexpSuffix() {
 		$this->section->suffix('~\.(html|rss)')->get('index', 'index', 'index');
-		self::assertInstanceOf('Nano_Route_RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertInstanceOf('Nano\Route\RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
 		self::assertEquals('/^index\.(html|rss)$/i', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
 	public function testBuildRegexpLocationWithRegexpSuffix() {
 		$this->section->suffix('~\.(html|rss)')->get('~(index|home)', 'index', 'index');
-		self::assertInstanceOf('Nano_Route_RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
+		self::assertInstanceOf('Nano\Route\RegExp', $this->section->getRoutes()->offsetGet('get')->offsetGet(0));
 		self::assertEquals('/^(index|home)\.(html|rss)$/i', $this->section->getRoutes()->offsetGet('get')->offsetGet(0)->location());
 	}
 
@@ -166,7 +166,7 @@ class Core_Route_SectionTest extends TestUtils_TestCase {
 			->get('/bar', 'index', 'another')
 		;
 
-		self::assertInstanceOf('Nano_Route_Static', $this->section->getFor('get', 'foo/bar'));
+		self::assertInstanceOf('\Nano\Route\StaticLocation', $this->section->getFor('get', 'foo/bar'));
 		self::assertEquals('index', $this->section->getFor('get', 'foo/bar')->action());
 	}
 

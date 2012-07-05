@@ -16,8 +16,8 @@ class Core_NamesTest extends TestUtils_TestCase {
 
 	public function testConvertNanoClassToFile() {
 		$root = Nano::app()->nanoRootDir . '/library';
-		self::assertEquals($root . DS . 'Loader.php', \Nano\Names::nanoFile('\\Nano\\Loader'));
-		self::assertEquals($root . DS . 'Event' . DS . 'Manager.php', \Nano\Names::nanoFile('\\Nano\\Event\\Manager'));
+		self::assertEquals($root . DS . 'Loader.php', \Nano\Names::nanoFile('\Nano\\Loader'));
+		self::assertEquals($root . DS . 'Event' . DS . 'Manager.php', \Nano\Names::nanoFile('\Nano\\Event\\Manager'));
 	}
 
 	public function testConvertAppControllerClassToFile() {

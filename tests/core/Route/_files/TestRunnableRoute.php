@@ -1,6 +1,6 @@
 <?php
 
-class TestRunnableRouteAbstract extends Nano_Route_Abstract implements Nano_Route_Runnable {
+class TestRunnableRouteAbstract extends \Nano\Route\Common implements \Nano\Route\Runnable {
 
 	const LOCATION = 'test';
 

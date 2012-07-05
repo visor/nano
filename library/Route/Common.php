@@ -1,6 +1,8 @@
 <?php
 
-abstract class Nano_Route_Abstract {
+namespace Nano\Route;
+
+abstract class Common {
 
 	const PREFIX_REGEXP = '~';
 
@@ -27,7 +29,7 @@ abstract class Nano_Route_Abstract {
 	abstract public function match($location);
 
 	/**
-	 * @return Nano_Route_Abstract
+	 * @return \Nano\Route\Common
 	 * @param string $location
 	 * @param string $controller
 	 * @param string $action
@@ -36,12 +38,12 @@ abstract class Nano_Route_Abstract {
 	 */
 	public static function create($location, $controller = 'index', $action = 'index', $module = null, array $params = array()) {
 		if ('' === $location || null === $location) {
-			return new Nano_Route_Static($location, $controller, $action, $module, $params);
+			return new \Nano\Route\StaticLocation($location, $controller, $action, $module, $params);
 		}
 		if (self::PREFIX_REGEXP == $location[0]) {
-			return new Nano_Route_RegExp(subStr($location, 1), $controller, $action, $module, $params);
+			return new \Nano\Route\RegExp(subStr($location, 1), $controller, $action, $module, $params);
 		}
-		return new Nano_Route_Static($location, $controller, $action, $module, $params);
+		return new \Nano\Route\StaticLocation($location, $controller, $action, $module, $params);
 	}
 
 	/**

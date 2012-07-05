@@ -22,7 +22,7 @@ class Nano_Config {
 	protected $config = null;
 
 	/**
-	 * @var Nano_Routes
+	 * @var \Nano\Routes
 	 */
 	protected $routes = null;
 
@@ -68,7 +68,7 @@ class Nano_Config {
 	}
 
 	/**
-	 * @return Nano_Routes
+	 * @return \Nano\Routes
 	 */
 	public function routes() {
 		$this->load();
@@ -160,7 +160,7 @@ class Nano_Config {
 		if ($this->routesExists()) {
 			$this->routes = $this->format->readRoutes($this->path . DIRECTORY_SEPARATOR . self::ROUTES_FILE_NAME);
 		} else {
-			$this->routes = new Nano_Routes();
+			$this->routes = new \Nano\Routes();
 		}
 	}
 

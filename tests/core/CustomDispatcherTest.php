@@ -28,7 +28,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 	public function testAcceptCustom() {
 		$_COOKIE['accept'] = true;
-		self::assertEquals('dispatched', $this->dispatcher->dispatch(new Nano_Routes(), ''));
+		self::assertEquals('dispatched', $this->dispatcher->dispatch(new \Nano\Routes(), ''));
 	}
 
 	public function testNotAcceptCustom() {
@@ -38,7 +38,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 		$this->dispatcher
 			->setResponse($response)
 			->throwExceptions(true)
-			->dispatch(new Nano_Routes(), '')
+			->dispatch(new \Nano\Routes(), '')
 		;
 	}
 

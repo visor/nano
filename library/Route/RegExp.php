@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Route_RegExp extends Nano_Route_Abstract {
+namespace Nano\Route;
+
+class RegExp extends Common {
 
 	public function __construct($location, $controller, $action, $module, array $params = array()) {
 		$location = null === $location || 0 === strLen($location)

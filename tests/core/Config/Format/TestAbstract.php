@@ -50,7 +50,7 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	}
 
 	public function testSavingRoutes() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		include($this->files->get($this, '/routes.source.php'));
 
 		$this->config->writeRoutes($routes, $this->resultFile);
@@ -60,12 +60,12 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	}
 
 	public function testReadingRoutes() {
-		$routes = new Nano_Routes();
+		$routes = new \Nano\Routes();
 		include($this->files->get($this, '/routes.source.php'));
 
 		$actual = $this->config->readRoutes($this->routesFile);
 //		exit(var_export($actual, true));
-		self::assertInstanceOf('Nano_Routes', $actual);
+		self::assertInstanceOf('\Nano\Routes', $actual);
 		self::assertEquals($routes, $actual);
 	}
 

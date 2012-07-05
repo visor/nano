@@ -14,7 +14,7 @@ interface Nano_Config_Format {
 	public function read($fileName);
 
 	/**
-	 * @return Nano_Routes
+	 * @return \Nano\Routes
 	 * @param string $fileName
 	 */
 	public function readRoutes($fileName);
@@ -28,9 +28,9 @@ interface Nano_Config_Format {
 
 	/**
 	 * @return boolean
-	 * @param Nano_Routes $routes
+	 * @param \Nano\Routes $routes
 	 * @param string $fileName
 	 */
-	public function writeRoutes(Nano_Routes $routes, $fileName);
+	public function writeRoutes(\Nano\Routes $routes, $fileName);
 
 }

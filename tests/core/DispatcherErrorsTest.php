@@ -20,21 +20,21 @@ class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
 	public function testGetControllerShouldThrowWhenClassNotExists() {
 		$this->setExpectedException('Nano_Exception_NotFound', 'Controller class not found');
 
-		$this->dispatcher->getController(new Nano_Route_Static('test', 'std-class', 'index', null));
+		$this->dispatcher->getController(new \Nano\Route\StaticLocation('test', 'std-class', 'index', null));
 	}
 
 	public function testGetControllerShouldThrowWhenNotControllerClassRequired() {
 		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: App\Controller\Invalid');
 
 		require_once __DIR__ . '/_files/controllers/Invalid.php';
-		$this->dispatcher->getController(Nano_Route_Abstract::create('', 'invalid', 'test'));
+		$this->dispatcher->getController(\Nano\Route\Common::create('', 'invalid', 'test'));
 	}
 
 	public function testGetControllerShouldThrowWhenAbstractClassRequired() {
 		$this->setExpectedException('Nano_Exception_InternalError', 'Not a controller class: App\Controller\AbstractController');
 
 		require_once __DIR__ . '/_files/controllers/AbstractController.php';
-		$this->dispatcher->getController(Nano_Route_Abstract::create('', 'abstract-controller', 'test'));
+		$this->dispatcher->getController(\Nano\Route\Common::create('', 'abstract-controller', 'test'));
 	}
 
 	public function testDispatchShouldGenerateNotFoundErrorWhenNoRoutesMatched() {

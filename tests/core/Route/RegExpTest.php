@@ -7,17 +7,17 @@
 class Core_Route_RegExpTest extends TestUtils_TestCase {
 
 	public function testShouldMatchIgnoreCase() {
-		$route = new Nano_Route_RegExp('some-string-with-\d+', 'test', 'test', 'test');
+		$route = new Nano\Route\RegExp('some-string-with-\d+', 'test', 'test', 'test');
 		self::assertTrue($route->match('some-string-with-1'));
 		self::assertTrue($route->match('Some-String-With-1'));
 
-		$route = new Nano_Route_RegExp('Some-String-With-\d+', 'test', 'test', 'test');
+		$route = new Nano\Route\RegExp('Some-String-With-\d+', 'test', 'test', 'test');
 		self::assertTrue($route->match('some-string-with-1'));
 		self::assertTrue($route->match('Some-String-With-1'));
 	}
 
 	public function testMatchWholeStringOnly() {
-		$route = new Nano_Route_RegExp('some-string', 'test', 'test', 'test');
+		$route = new Nano\Route\RegExp('some-string', 'test', 'test', 'test');
 
 		self::assertFalse($route->match('prefixes-some-string'));
 		self::assertFalse($route->match('some-string-with-suffix'));
@@ -25,7 +25,7 @@ class Core_Route_RegExpTest extends TestUtils_TestCase {
 	}
 
 	public function testNamedParamsShouldBeSaved() {
-		$route = new Nano_Route_RegExp('(some)\-(?P<param>string)', 'test', 'test', 'test');
+		$route = new Nano\Route\RegExp('(some)\-(?P<param>string)', 'test', 'test', 'test');
 
 		self::assertTrue($route->match('some-string'));
 

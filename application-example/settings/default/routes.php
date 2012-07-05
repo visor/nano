@@ -1,6 +1,6 @@
 <?php
 /**
- * @var Nano_Routes $routes
+ * @var \Nano\Routes $routes
  */
 $routes
 	->section('error')

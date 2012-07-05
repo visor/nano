@@ -29,7 +29,7 @@ class Core_TypedRegistryTest extends TestUtils_TestCase {
 	}
 
 	public function testAppendShouldThrowException() {
-		$this->setExpectedException('RuntimeException', 'Invalid \\Nano\\Util\\TypedRegistry usage. Use register() or offsetSet() method.');
+		$this->setExpectedException('RuntimeException', 'Invalid \Nano\\Util\\TypedRegistry usage. Use register() or offsetSet() method.');
 		$this->registry->append('foo');
 	}
 

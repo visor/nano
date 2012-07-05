@@ -7,12 +7,12 @@
 class Core_Route_SectionRegExpTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_Route_Section_Static
+	 * @var \Nano\Route\Section\RegExp
 	 */
 	protected $section;
 
 	protected function setUp() {
-		$this->section = new Nano_Route_Section_RegExp('profile\/(?P<id>\d+)');
+		$this->section = new \Nano\Route\Section\RegExp('profile\/(?P<id>\d+)');
 	}
 
 	public function testShouldNotMatchWhenUrlLocationNotStartsWithSectionLocation() {
@@ -32,7 +32,7 @@ class Core_Route_SectionRegExpTest extends TestUtils_TestCase {
 
 	public function testShouldPassMatchedParametersIntoRoute() {
 		$this->section->get('/settings', 'profile', 'settings');
-		self::assertInstanceOf('Nano_Route_Static', $this->section->getFor('get', 'profile/1/settings'));
+		self::assertInstanceOf('Nano\Route\StaticLocation', $this->section->getFor('get', 'profile/1/settings'));
 		self::assertArrayHasKey('id', $this->section->getFor('get', 'profile/1/settings')->params());
 
 		$params = $this->section->getFor('get', 'profile/1/settings')->params();
@@ -46,7 +46,7 @@ class Core_Route_SectionRegExpTest extends TestUtils_TestCase {
 			->end()
 		;
 
-		self::assertInstanceOf('Nano_Route_Static', $this->section->getFor('get', 'profile/1/private/settings'));
+		self::assertInstanceOf('Nano\Route\StaticLocation', $this->section->getFor('get', 'profile/1/private/settings'));
 		self::assertArrayHasKey('id', $this->section->getFor('get', 'profile/1/private/settings')->params());
 
 		$params = $this->section->getFor('get', 'profile/1/private/settings')->params();

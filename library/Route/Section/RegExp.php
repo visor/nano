@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Route_Section_RegExp extends Nano_Route_Section {
+namespace Nano\Route\Section;
+
+class RegExp extends \Nano\Route\Section\Common {
 
 	public function __construct($location) {
 		parent::__construct('/^' . $location . '/i');

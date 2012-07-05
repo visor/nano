@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Route_Section_Root extends Nano_Route_Section {
+namespace Nano\Route\Section;
+
+class Root extends \Nano\Route\Section\Common {
 
 	public function __construct() {
 		parent::__construct(null);
@@ -23,12 +25,12 @@ class Nano_Route_Section_Root extends Nano_Route_Section {
 	}
 
 	/**
-	 * @return Nano_Route_Abstract|null
+	 * @return \Nano\Route\Common|null
 	 * @param string $method
 	 * @param string $location
 	 */
 	public function getFor($method, $location) {
-		if (($result = $this->findSection($method, $location)) instanceof Nano_Route_Abstract) {
+		if (($result = $this->findSection($method, $location)) instanceof \Nano\Route\Common) {
 			return $result;
 		}
 

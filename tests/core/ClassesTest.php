@@ -11,11 +11,11 @@ class Core_ClassesTest extends TestUtils_TestCase {
 	}
 
 	public function testIsNanoShouldIgnoreFirstBackSlash() {
-		self::assertTrue(\Nano\Classes::isNanoClass('\\Nano\\Names'));
+		self::assertTrue(\Nano\Classes::isNanoClass('\Nano\\Names'));
 	}
 
 	public function testIsNanoShouldReturnFalseWhenNanoNamespaceNotTop() {
-		self::assertFalse(\Nano\Classes::isNanoClass('Some\\Nano\\Classes'));
+		self::assertFalse(\Nano\Classes::isNanoClass('Some\Nano\\Classes'));
 	}
 
 	public function testIsNanoShouldReturnFalseWhenNoTopNanoNamespace() {

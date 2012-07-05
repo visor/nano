@@ -9,18 +9,18 @@ file_put_contents(__DIR__ . '/config.igbinary',  igbinary_serialize($data));
 
 $dir = __DIR__ . '/../../../../../library';
 
-include $dir . '/Nano/Route/Section.php';
-include $dir . '/Nano/Route/Section/Root.php';
-include $dir . '/Nano/Route/Section/Static.php';
-include $dir . '/Nano/Route/Section/RegExp.php';
-include $dir . '/Nano/Routes.php';
-include $dir . '/Nano/Route/Abstract.php';
-include $dir . '/Nano/Route/Static.php';
-include $dir . '/Nano/Route/RegExp.php';
-include $dir . '/Nano/Route/Subdomain.php';
-include $dir . '/Nano/Route/Runnable.php';
+include $dir . '/Route/Section/Common.php';
+include $dir . '/Route/Section/Root.php';
+include $dir . '/Route/Section/StaticLocation.php';
+include $dir . '/Route/Section/RegExp.php';
+include $dir . '/Routes.php';
+include $dir . '/Route/Common.php';
+include $dir . '/Route/StaticLocation.php';
+include $dir . '/Route/RegExp.php';
+include $dir . '/Route/Subdomain.php';
+include $dir . '/Route/Runnable.php';
 
-$routes = new Nano_Routes();
+$routes = new \Nano\Routes();
 include __DIR__ . '/routes.source.php';
 
 $serialized = serialize($routes);

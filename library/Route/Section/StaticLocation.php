@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Route_Section_Static extends Nano_Route_Section {
+namespace Nano\Route\Section;
+
+class StaticLocation extends \Nano\Route\Section\Common {
 
 	public function __construct($location) {
 		parent::__construct(mb_strToLower($location, 'UTF-8'));

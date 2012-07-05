@@ -93,12 +93,12 @@ class Dispatcher {
 
 	/**
 	 * @return boolean|null
-	 * @param \Nano_Routes $routes
+	 * @param \Nano\Routes $routes
 	 * @param string $url
 	 *
 	 * @throws \Nano_Exception_NotFound
 	 */
-	public function dispatch(\Nano_Routes $routes, $url) {
+	public function dispatch(\Nano\Routes $routes, $url) {
 		$route = $this->getRoute($routes, $url);
 		if (null !== $route) {
 			$this->run($route);
@@ -120,11 +120,11 @@ class Dispatcher {
 
 	/**
 	 * @return string
-	 * @param \Nano_Route_Abstract $route
+	 * @param \Nano\Route\Common $route
 	 */
-	public function run(\Nano_Route_Abstract $route) {
-		if ($route instanceof \Nano_Route_Runnable) {
-			/* @var $route \Nano_Route_Runnable */
+	public function run(\Nano\Route\Common $route) {
+		if ($route instanceof \Nano\Route\Runnable) {
+			/* @var $route \Nano\Route\Runnable */
 			$route->run();
 			return null;
 		}
@@ -142,12 +142,12 @@ class Dispatcher {
 
 	/**
 	 * @return \Nano_C
-	 * @param \Nano_Route_Abstract $route
+	 * @param \Nano\Route\Common $route
 	 *
 	 * @throws \Nano_Exception_NotFound
 	 * @throws \Nano_Exception_InternalError
 	 */
-	public function getController(\Nano_Route_Abstract $route) {
+	public function getController(\Nano\Route\Common $route) {
 		$this->setUpController($route);
 		$className = $route->controllerClass();
 		if (!class_exists($className)) {
@@ -161,11 +161,11 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano_Route_Abstract|null
-	 * @param \Nano_Routes $routes
+	 * @return \Nano\Route\Common|null
+	 * @param \Nano\Routes $routes
 	 * @param string $url
 	 */
-	public function getRoute(\Nano_Routes $routes, $url) {
+	public function getRoute(\Nano\Routes $routes, $url) {
 		$method  = isSet($_SERVER['REQUEST_METHOD']) ? strToLower($_SERVER['REQUEST_METHOD']) : 'get';
 		$testUrl = trim($url, '/');
 		return $routes->getFor($method, $testUrl);
@@ -173,10 +173,10 @@ class Dispatcher {
 
 	/**
 	 * @return boolean
-	 * @param \Nano_Route_Abstract $route
+	 * @param \Nano\Route\Common $route
 	 * @param string $url
 	 */
-	public function test(\Nano_Route_Abstract $route, $url) {
+	public function test(\Nano\Route\Common $route, $url) {
 		if (false === $route->match($url)) {
 			return false;
 		}
@@ -279,9 +279,9 @@ class Dispatcher {
 
 	/**
 	 * @return void
-	 * @param \Nano_Route_Abstract $route
+	 * @param \Nano\Route\Common $route
 	 */
-	protected function setUpController(\Nano_Route_Abstract $route) {
+	protected function setUpController(\Nano\Route\Common $route) {
 		$this->action     = $route->action();
 		$this->controller = $route->controller();
 		$this->module     = $route->module();

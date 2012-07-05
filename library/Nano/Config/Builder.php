@@ -78,7 +78,7 @@ class Nano_Config_Builder {
 	 * @param string $name
 	 */
 	public function buildRoutes($name) {
-		$routes      = new Nano_Routes();
+		$routes      = new \Nano\Routes();
 		$parents     = $this->getParents($name);
 		$parents[]   = $name;
 		$application = $this->application;

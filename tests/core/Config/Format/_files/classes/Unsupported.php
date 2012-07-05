@@ -17,7 +17,7 @@ class Nano_Config_Format_Unsupported implements Nano_Config_Format {
 	}
 
 	/**
-	 * @return Nano_Routes
+	 * @return \Nano\Routes
 	 * @param string $fileName
 	 */
 	public function readRoutes($fileName) {
@@ -33,10 +33,10 @@ class Nano_Config_Format_Unsupported implements Nano_Config_Format {
 
 	/**
 	 * @return boolean
-	 * @param Nano_Routes $routes
+	 * @param \Nano\Routes $routes
 	 * @param string $fileName
 	 */
-	public function writeRoutes(Nano_Routes $routes, $fileName) {
+	public function writeRoutes(\Nano\Routes $routes, $fileName) {
 	}
 
 	/**

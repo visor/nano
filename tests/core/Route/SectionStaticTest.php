@@ -7,12 +7,12 @@
 class Core_Route_SectionStaticTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_Route_Section_Static
+	 * @var \Nano\Route\Section\StaticLocation
 	 */
 	protected $section;
 
 	protected function setUp() {
-		$this->section = new Nano_Route_Section_Static('foo');
+		$this->section = new \Nano\Route\Section\StaticLocation('foo');
 	}
 
 	public function testShouldMatchesWhenUrlLocationStartsWithSectionLocation() {

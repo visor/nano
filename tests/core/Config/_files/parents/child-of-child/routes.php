@@ -1,4 +1,4 @@
 <?php
 /**
- * @var Nano_Routes $routes
+ * @var \Nano\Routes $routes
  */
