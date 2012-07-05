@@ -2,7 +2,7 @@
 
 namespace Module\Test\Controller;
 
-class Class2 extends \Nano_C {
+class Class2 extends \Nano\Controller {
 
 	public static function name() {
 		return __CLASS__;

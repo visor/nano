@@ -1,4 +1,4 @@
 <?php
 
-class TestApplicationClassController extends Nano_C {
+class TestApplicationClassController extends \Nano\Controller {
 }

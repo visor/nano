@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class Raise extends \Nano_C {
+class Raise extends \Nano\Controller {
 
 	public function okAction() {
 	}

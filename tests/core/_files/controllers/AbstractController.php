@@ -2,4 +2,4 @@
 
 namespace App\Controller;
 
-abstract class AbstractController extends \Nano_C {}
+abstract class AbstractController extends \Nano\Controller {}

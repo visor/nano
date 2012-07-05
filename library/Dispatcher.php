@@ -28,7 +28,7 @@ class Dispatcher {
 	protected $controller         = null;
 
 	/**
-	 * @var \Nano_C
+	 * @var \Nano\Controller
 	 */
 	protected $controllerInstance = null;
 
@@ -59,17 +59,13 @@ class Dispatcher {
 	 * @param string|null $module
 	 */
 	public static function formatName($name, $controller = true, $module = null) {
-		$result = \Nano::stringToName($name);
 		if ($controller) {
-			$result .= self::SUFFIX_CONTROLLER;
-			if (null !== $module) {
-				$result = $module . NS . $result;
-			}
-		} else {
-			$result  = strToLower($result[0]) . subStr($result, 1);
-			$result .= self::SUFFIX_ACTION;
+			return \Nano\Names::controllerClass($name, $module);
 		}
 
+		$result = \Nano::stringToName($name);
+		$result  = strToLower($result[0]) . subStr($result, 1);
+		$result .= self::SUFFIX_ACTION;
 		return $result;
 	}
 
@@ -141,7 +137,7 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano_C
+	 * @return \Nano\Controller
 	 * @param \Nano\Route\Common $route
 	 *
 	 * @throws \Nano\Exception\NotFound
@@ -154,7 +150,7 @@ class Dispatcher {
 			throw new \Nano\Exception\NotFound('Controller class not found: '. $className, $route);
 		}
 		$class = new \ReflectionClass($className);
-		if (false === $class->isInstantiable() || false === $class->isSubclassOf('Nano_C')) {
+		if (false === $class->isInstantiable() || false === $class->isSubclassOf('\Nano\Controller')) {
 			throw new \Nano\Exception\InternalError('Not a controller class: ' . $className);
 		}
 		return $class->newInstance();
@@ -184,7 +180,7 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano_C
+	 * @return \Nano\Controller
 	 */
 	public function controllerInstance() {
 		return $this->controllerInstance;

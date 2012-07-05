@@ -4,20 +4,20 @@ interface Nano_C_Plugin {
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function init(Nano_C $controller);
+	public function init(\Nano\Controller $controller);
 
 	/**
 	 * @return boolean
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function before(Nano_C $controller);
+	public function before(\Nano\Controller $controller);
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function after(Nano_C $controller);
+	public function after(\Nano\Controller $controller);
 
 }

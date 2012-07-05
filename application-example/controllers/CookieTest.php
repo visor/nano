@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class CookieTest extends \Nano_C {
+class CookieTest extends \Nano\Controller {
 
 	/**
 	 * @var string

@@ -34,25 +34,25 @@ class Core_Application_FakePlugin implements Nano_C_Plugin {
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function init(Nano_C $controller) {
+	public function init(\Nano\Controller $controller) {
 		$this->initInvoked = true;
 	}
 
 	/**
 	 * @return boolean
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function before(Nano_C $controller) {
+	public function before(\Nano\Controller $controller) {
 		$this->beforeInvoked = true;
 	}
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function after(Nano_C $controller) {
+	public function after(\Nano\Controller $controller) {
 		$this->afterInvoked = true;
 	}
 

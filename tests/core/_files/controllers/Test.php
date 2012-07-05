@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class Test extends \Nano_C {
+class Test extends \Nano\Controller {
 
 	public function indexAction() {
 		$this->runContextAction();

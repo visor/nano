@@ -31,9 +31,9 @@ class Render {
 
 	/**
 	 * @return string
-	 * @param \Nano_C $object
+	 * @param \Nano\Controller $object
 	 */
-	public function render(\Nano_C $object) {
+	public function render(\Nano\Controller $object) {
 		$module    = $object->getModule();
 		$variables = get_object_vars($object);
 		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
@@ -167,7 +167,7 @@ class Render {
 	 */
 	protected function addContext($path, $context) {
 		$result = $path;
-		if (\Nano_C::CONTEXT_DEFAULT !== $context && null !== $context) {
+		if (\Nano\Controller::CONTEXT_DEFAULT !== $context && null !== $context) {
 			$result .= '.' . $context;
 		}
 		return $result;

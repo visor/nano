@@ -6,7 +6,7 @@
 class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 
 	/**
-	 * @var Nano_C
+	 * @var \Nano\Controller
 	 */
 	protected $controller;
 
@@ -14,25 +14,25 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function init(Nano_C $controller) {
+	public function init(\Nano\Controller $controller) {
 		$this->initWasRun = true;
 	}
 
 	/**
 	 * @return boolean
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function before(Nano_C $controller) {
+	public function before(\Nano\Controller $controller) {
 		$this->beforeWasRun = true;
 	}
 
 	/**
 	 * @return void
-	 * @param Nano_C $controller
+	 * @param \Nano\Controller $controller
 	 */
-	public function after(Nano_C $controller) {
+	public function after(\Nano\Controller $controller) {
 		$this->afterWasRun = true;
 	}
 

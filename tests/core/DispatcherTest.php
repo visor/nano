@@ -28,11 +28,11 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testControllersNamesFormatting() {
-		$this->assertEquals('TestController',         \Nano\Dispatcher::formatName('test', true));
-		$this->assertEquals('AnotherTestController',  \Nano\Dispatcher::formatName('another-test', true));
-		$this->assertEquals('Another_testController', \Nano\Dispatcher::formatName('another_test', true));
+		$this->assertEquals('App\Controller\Test',         \Nano\Dispatcher::formatName('test', true));
+		$this->assertEquals('App\Controller\AnotherTest',  \Nano\Dispatcher::formatName('another-test', true));
+		$this->assertEquals('App\Controller\Another_test', \Nano\Dispatcher::formatName('another_test', true));
 
-		$this->assertEquals('Test_Module\\TestController', \Nano\Dispatcher::formatName('test', true, 'Test_Module'));
+		$this->assertEquals('Module\Test\Controller\Test', \Nano\Dispatcher::formatName('test', true, 'test'));
 	}
 
 	public function testActionsNamesFormatting() {
@@ -64,7 +64,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 		;
 
 		$c = $application->dispatcher->getController(\Nano\Route\Common::create('', 'test', 'test'));
-		self::assertInstanceOf('Nano_C', $c);
+		self::assertInstanceOf('\Nano\Controller', $c);
 		self::assertInstanceOf('App\Controller\Test', $c);
 	}
 

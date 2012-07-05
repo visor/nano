@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-class ResponseTest extends \Nano_C {
+class ResponseTest extends \Nano\Controller {
 
 	public function setBodyAction() {
 		$this->response()

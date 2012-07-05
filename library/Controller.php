@@ -1,6 +1,8 @@
 <?php
 
-abstract class Nano_C {
+namespace Nano;
+
+abstract class Controller {
 
 	const CONTEXT_DEFAULT = 'default';
 
@@ -50,12 +52,12 @@ abstract class Nano_C {
 	protected $renderer = null;
 
 	/**
-	 * @var Nano_C_Response
+	 * @var \Nano_C_Response
 	 */
 	protected $response = null;
 
 	/**
-	 * @var Nano_C_Redirect
+	 * @var \Nano_C_Redirect
 	 */
 	protected $redirect = null;
 
@@ -65,7 +67,7 @@ abstract class Nano_C {
 	public function getModule() {
 		if (null === $this->module && \Nano\Util\Classes::isModuleClass($className = get_class($this))) {
 			list(, $this->module, ) = explode(NS, $className, 3);
-			$this->module = Nano::app()->modules->nameToFolder($this->module);
+			$this->module = \Nano::app()->modules->nameToFolder($this->module);
 		}
 		return $this->module;
 	}
@@ -104,7 +106,7 @@ abstract class Nano_C {
 	 * @return \Nano\Dispatcher
 	 */
 	public function dispatcher() {
-		return Nano::app()->dispatcher;
+		return \Nano::app()->dispatcher;
 	}
 
 	/**
@@ -113,17 +115,17 @@ abstract class Nano_C {
 	 * @param mixed $default
 	 */
 	public function p($name, $default = null) {
-		return Nano::app()->dispatcher->param($name, $default);
+		return \Nano::app()->dispatcher->param($name, $default);
 	}
 
 	/**
-	 * @return Nano_C_Redirect
+	 * @return \Nano_C_Redirect
 	 * @param null|string $to
 	 * @param int $status
 	 */
 	public function redirect($to = null, $status = 302) {
 		if (null === $this->redirect) {
-			$this->redirect = new Nano_C_Redirect($this->response());
+			$this->redirect = new \Nano_C_Redirect($this->response());
 		}
 		$this->markRendered();
 		if (null === $to) {
@@ -134,7 +136,7 @@ abstract class Nano_C {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano_C_Response
 	 */
 	public function response() {
 		return $this->response;
@@ -142,9 +144,9 @@ abstract class Nano_C {
 
 	/**
 	 * @return void
-	 * @param Nano_C_Response $value
+	 * @param \Nano_C_Response $value
 	 */
-	public function setResponse(Nano_C_Response $value) {
+	public function setResponse(\Nano_C_Response $value) {
 		$this->response = $value;
 	}
 
@@ -222,15 +224,15 @@ abstract class Nano_C {
 	 * @return \Nano\Render
 	 */
 	protected function createRenderer() {
-		return new \Nano\Render(Nano::app());
+		return new \Nano\Render(\Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function configureRenderer() {
-		$this->renderer->setLayoutsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::LAYOUT_DIR);
-		$this->renderer->setViewsPath(Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::VIEW_DIR);
+		$this->renderer->setLayoutsPath(\Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::LAYOUT_DIR);
+		$this->renderer->setViewsPath(\Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Render::VIEW_DIR);
 		$this->renderer->setModuleViewsDirName(\Nano\Render::VIEW_DIR);
 	}
 
@@ -241,14 +243,14 @@ abstract class Nano_C {
 		if (null !== $this->response) {
 			return;
 		}
-		$this->response = new Nano_C_Response(Nano::app());
+		$this->response = new \Nano_C_Response(\Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function runInit() {
-		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
 			$plugin->init($this);
 		}
 		$this->init();
@@ -258,7 +260,7 @@ abstract class Nano_C {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
 			if (false === $plugin->before($this)) {
 				return false;
 			}
@@ -273,7 +275,7 @@ abstract class Nano_C {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach (Nano::app()->plugins as $plugin) { /* @var $plugin Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
 			$plugin->after($this);
 		}
 		$this->after();
@@ -286,7 +288,7 @@ abstract class Nano_C {
 	 */
 	protected function pageNotFound($message = null) {
 		$this->markRendered();
-		Nano::app()->errorHandler()->notFound($message);
+		\Nano::app()->errorHandler()->notFound($message);
 	}
 
 	/**
@@ -296,7 +298,7 @@ abstract class Nano_C {
 	 */
 	protected function internalError($message = null) {
 		$this->markRendered();
-		Nano::app()->errorHandler()->notFound($message);
+		\Nano::app()->errorHandler()->notFound($message);
 	}
 
 }
