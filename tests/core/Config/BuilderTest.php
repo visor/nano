@@ -12,13 +12,13 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 	protected $builder;
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
 	protected function setUp() {
 		$this->app->backup();
-		$this->application = new Application();
+		$this->application = new \Nano\Application();
 		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir(__DIR__)

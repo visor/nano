@@ -42,13 +42,13 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * @return Nano_C_Response_Test
-	 * @param Application $application
+	 * @param \Nano\Application $application
 	 * @param string $module
 	 * @param string $controller
 	 * @param string $action
 	 * @param array $params
 	 */
-	protected static function runAction(Application $application, $module, $controller, $action, array $params = array()) {
+	protected static function runAction(\Nano\Application $application, $module, $controller, $action, array $params = array()) {
 		/** @var Nano_C $instance */
 		$className = \Nano\Dispatcher::formatName($controller, true, null === $module ? null : \Nano\Modules::nameToNamespace($module));
 

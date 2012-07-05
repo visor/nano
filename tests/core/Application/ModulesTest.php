@@ -44,13 +44,13 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 		$this->application->configure();
 		self::assertEquals(
-			$GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME
+			$GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::MODULES_DIR_NAME
 			, $this->application->modulesDir
 		);
 	}
 
 	public function testDetectingSharedModulesDir() {
-		$expected = $this->application->nanoRootDir . DIRECTORY_SEPARATOR . Application::MODULES_DIR_NAME;
+		$expected = $this->application->nanoRootDir . DIRECTORY_SEPARATOR . \Nano\Application::MODULES_DIR_NAME;
 		self::assertFalse($this->application->offsetExists('sharedModulesDir'));
 
 		$this->application
@@ -73,7 +73,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testWithModuleShouldAddModuleAndPathWhenPassedBoth() {
-		self::assertInstanceOf('Application', $this->application->withModule('test', __DIR__));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('test', __DIR__));
 		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals(__DIR__, $this->application->modules->offsetGet('test'));
 	}
@@ -91,8 +91,8 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 			->withSharedModulesDir($this->files->get($this, '/shared-modules'))
 			->withModulesDir($this->files->get($this, '/application-modules'))
 		;
-		self::assertInstanceOf('Application', $this->application->withModule('module1'));
-		self::assertInstanceOf('Application', $this->application->withModule('module2'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module1'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module2'));
 
 		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
@@ -105,9 +105,9 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 			->withModulesDir($this->files->get($this, '/application-modules'))
 		;
 
-		self::assertInstanceOf('Application', $this->application->withModule('module1'));
-		self::assertInstanceOf('Application', $this->application->withModule('module2'));
-		self::assertInstanceOf('Application', $this->application->withModule('module3'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module1'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module2'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module3'));
 
 		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
@@ -160,6 +160,8 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testClassesAutoloading() {
 		$this->application->withModule('test', $this->files->get($this, '/test'));
+
+		self::assertTrue(class_exists('Test_Module\LibraryClass'));
 		self::assertEquals('Test_Module\\LibraryClass', Test_Module\LibraryClass::name());
 	}
 

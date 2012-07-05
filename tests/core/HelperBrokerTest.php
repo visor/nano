@@ -6,7 +6,7 @@
 class Core_HelperBrokerTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -18,7 +18,7 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$this->app->backup();
 
-		$this->application = new Application();
+		$this->application = new \Nano\Application();
 		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)

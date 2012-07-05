@@ -5,14 +5,14 @@ class Nano_Log {
 	const NAME = 'app.log';
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
 	/**
-	 * @param Application $application
+	 * @param \Nano\Application $application
 	 */
-	public function __construct(Application $application) {
+	public function __construct(\Nano\Application $application) {
 		$this->application = $application;
 	}
 

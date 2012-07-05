@@ -1,6 +1,6 @@
 <?php
 
-$application = new Application();
+$application = new \Nano\Application();
 
 $application
 	->withConfigurationFormat('php')

@@ -34,12 +34,12 @@ class Module extends App {
 	}
 
 	protected function createDirectoryStructure() {
-		$this->mkDir(\Application::CONTROLLER_DIR_NAME);
-		$this->mkDir(\Application::HELPERS_DIR_NAME);
-		$this->mkDir(\Application::LIBRARY_DIR_NAME);
+		$this->mkDir(\Nano\Application::CONTROLLER_DIR_NAME);
+		$this->mkDir(\Nano\Application::HELPERS_DIR_NAME);
+		$this->mkDir(\Nano\Application::LIBRARY_DIR_NAME);
 		$this->mkDir('migrate');
-		$this->mkDir(\Application::MODELS_DIR_NAME);
-		$this->mkDir(\Application::PLUGINS_DIR_NAME);
+		$this->mkDir(\Nano\Application::MODELS_DIR_NAME);
+		$this->mkDir(\Nano\Application::PLUGINS_DIR_NAME);
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'scripts');
 		$this->mkDir('resources' . DIRECTORY_SEPARATOR . 'styles');
 		$this->mkDir(\Nano_Render::VIEW_DIR);

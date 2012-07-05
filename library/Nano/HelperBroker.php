@@ -67,7 +67,7 @@ class Nano_HelperBroker {
 		$className = ucFirst($name) . 'Helper';
 
 		if (!class_exists($className, false)) {
-			$classPath = Nano::app()->rootDir . DIRECTORY_SEPARATOR . Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className);
+			$classPath = Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className);
 
 			if (!Nano::app()->loader->loadFileWithClass($className, $classPath)) {
 				throw new Nano_Exception_HelperNotFound($name);

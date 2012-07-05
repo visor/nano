@@ -12,7 +12,7 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		$this->app->backup();
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')

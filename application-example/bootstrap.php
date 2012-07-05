@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../library/Application.php';
 
-$application = new Application();
+$application = new \Nano\Application();
 $application
 	->withConfigurationFormat('php')
 	->withRootDir(__DIR__)

@@ -40,7 +40,7 @@ abstract class Nano_Cli_Script {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 */
 	public function getApplication() {
 		return $this->cli->getApplication();

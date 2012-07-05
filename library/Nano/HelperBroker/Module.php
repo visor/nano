@@ -3,7 +3,7 @@
 class Nano_HelperBroker_Module {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -18,10 +18,10 @@ class Nano_HelperBroker_Module {
 	protected $helpers = array();
 
 	/**
-	 * @param Application $application
+	 * @param \Nano\Application $application
 	 * @param string $module
 	 */
-	public function __construct(Application $application, $module) {
+	public function __construct(\Nano\Application $application, $module) {
 		$this->application = $application;
 		$this->module      = $module;
 	}
@@ -66,7 +66,7 @@ class Nano_HelperBroker_Module {
 		$className = ucFirst($name) . 'Helper';
 		$classPath = $this->application->modules->getPath(
 			$this->module
-			, Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className)
+			, \Nano\Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className)
 		);
 		$fullClassName = \Nano\Loader::formatModuleClassName($this->module, $className);
 

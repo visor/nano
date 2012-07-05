@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('error_log', __DIR__ . '/../build/error.log');
 define('TESTING', true);
 
-/** @var Application $application */
+/** @var \Nano\Application $application */
 require_once __DIR__ . '/../application-example/bootstrap.php';
 
 if ($application->config->exists('selenium')) {

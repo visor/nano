@@ -6,12 +6,12 @@ define('NS', '\\');
 final class Nano {
 
 	/**
-	 * @var Application|null
+	 * @var \Nano\Application|null
 	 */
 	private static $app = null;
 
 	/**
-	 * @return Application|null
+	 * @return \Nano\Application|null
 	 */
 	public static function app() {
 		return self::$app;
@@ -19,10 +19,10 @@ final class Nano {
 
 	/**
 	 * @return void
-	 * @param Application|null $app
+	 * @param \Nano\Application|null $app
 	 * @throws Nano_Exception
 	 */
-	public static function setApplication(Application $app = null) {
+	public static function setApplication(\Nano\Application $app = null) {
 		if (null === self::$app || null === $app) {
 			self::$app = $app;
 			return;

@@ -10,7 +10,7 @@ class Core_L10n_DictionaryTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$this->app->backup();
 
-		Application::create()
+		\Nano\Application::create()
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)
 			->withModule('some', __DIR__ . '/_files')

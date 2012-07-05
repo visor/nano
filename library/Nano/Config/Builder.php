@@ -6,7 +6,7 @@ class Nano_Config_Builder {
 	const ROUTES_FILE  = 'routes.php';
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -15,7 +15,7 @@ class Nano_Config_Builder {
 	 */
 	protected $source = null, $destination = null;
 
-	public function __construct(Application $application) {
+	public function __construct(\Nano\Application $application) {
 		$this->application = $application;
 	}
 

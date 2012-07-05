@@ -35,7 +35,7 @@ abstract class Nano_C {
 	protected $module = null;
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 

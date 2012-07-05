@@ -3,7 +3,7 @@
 abstract class Core_Application_Abstract extends TestUtils_TestCase {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -19,7 +19,7 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 		$this->workingDir  = getCwd();
 		chDir($GLOBALS['application']->rootDir);
 
-		$this->application = new Application();
+		$this->application = new \Nano\Application();
 	}
 
 	protected function tearDown() {

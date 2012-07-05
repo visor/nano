@@ -7,7 +7,7 @@
 class Core_Route_RunnableTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -15,7 +15,7 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 		$this->app->backup();
 		include_once $this->files->get($this, '/TestRunnableRoute.php');
 
-		$this->application = new Application();
+		$this->application = new \Nano\Application();
 		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)

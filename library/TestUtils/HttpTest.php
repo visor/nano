@@ -8,7 +8,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	protected $testId = '';
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 

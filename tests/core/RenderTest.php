@@ -6,7 +6,7 @@
 class Core_RenderTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -23,7 +23,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$this->app->backup();
 		require_once $this->files->get($this, '/controllers/TestController.php');
-		$this->application = new Application();
+		$this->application = new \Nano\Application();
 
 		$this->application
 			->withRootDir($GLOBALS['application']->rootDir)

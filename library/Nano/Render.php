@@ -6,7 +6,7 @@ class Nano_Render {
 	const LAYOUT_DIR = 'layouts';
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 
@@ -21,9 +21,9 @@ class Nano_Render {
 	protected $useApplicationDirs = false;
 
 	/**
-	 * @param Application $application
+	 * @param \Nano\Application $application
 	 */
-	public function __construct(Application $application) {
+	public function __construct(\Nano\Application $application) {
 		$this->application = $application;
 	}
 

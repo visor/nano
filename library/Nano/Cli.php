@@ -127,7 +127,7 @@ class Nano_Cli {
 	}
 
 	/**
-	 * @return null|Application
+	 * @return null|\Nano\Application
 	 */
 	public function getApplication() {
 		return $this->application;
@@ -160,7 +160,7 @@ class Nano_Cli {
 		if ($application === null) {
 			return;
 		}
-		if (!($application instanceof Application)) {
+		if (!($application instanceof \Nano\Application)) {
 			return;
 		}
 

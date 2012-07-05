@@ -74,15 +74,15 @@ class Loader {
 	 * Registers application directories for autoloading
 	 *
 	 * @return void
-	 * @param \Application $application
+	 * @param \Nano\Application $application
 	 */
-	public function registerApplication(\Application $application) {
+	public function registerApplication(\Nano\Application $application) {
 		$this->applicationPath = array(
 			$this->nanoDir
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::CONTROLLER_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::LIBRARY_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::MODELS_DIR_NAME
-			, $application->rootDir . DIRECTORY_SEPARATOR . \Application::PLUGINS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::CONTROLLER_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::LIBRARY_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::MODELS_DIR_NAME
+			, $application->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::PLUGINS_DIR_NAME
 		);
 	}
 
@@ -95,10 +95,10 @@ class Loader {
 	 */
 	public function registerModule($name, $path) {
 		$this->modulesPath[\Nano\Modules::nameToNamespace($name)] = array(
-			$path . DIRECTORY_SEPARATOR . \Application::CONTROLLER_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Application::LIBRARY_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Application::MODELS_DIR_NAME
-			, $path . DIRECTORY_SEPARATOR . \Application::PLUGINS_DIR_NAME
+			$path . DIRECTORY_SEPARATOR . \Nano\Application::CONTROLLER_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Nano\Application::LIBRARY_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Nano\Application::MODELS_DIR_NAME
+			, $path . DIRECTORY_SEPARATOR . \Nano\Application::PLUGINS_DIR_NAME
 		);
 	}
 

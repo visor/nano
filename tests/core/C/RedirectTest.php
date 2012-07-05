@@ -12,7 +12,7 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		$this->app->backup();
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withConfigurationFormat('php')
 			->withRootDir(dirName(dirName(dirName(__DIR__))) . DS . 'application-example')

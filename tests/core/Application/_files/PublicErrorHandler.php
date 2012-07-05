@@ -2,7 +2,7 @@
 
 class PublicErrorHandler extends Application_ErrorHandler {
 
-	public function __construct(Application $application, $noHandlers = false) {
+	public function __construct(\Nano\Application $application, $noHandlers = false) {
 		if (false === $noHandlers) {
 			parent::__construct($application);
 		} else {

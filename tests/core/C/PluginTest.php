@@ -40,7 +40,7 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 		$this->app->backup();
 		include_once $this->files->get($this, '/TestController.php');
 
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')

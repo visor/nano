@@ -1,12 +1,13 @@
 <?php
 
+namespace Nano;
+
 require __DIR__ . '/Util/TypedRegistry.php';
 require __DIR__ . '/Application/ErrorHandler.php';
 require __DIR__ . '/Nano.php';
 require __DIR__ . '/Names.php';
 require __DIR__ . '/Classes.php';
 require __DIR__ . '/Loader.php';
-//require __DIR__ . '/Nano/Config.php';
 
 /**
  * @property string $rootDir
@@ -15,16 +16,16 @@ require __DIR__ . '/Loader.php';
  * @property string $sharedModulesDir
  * @property string $nanoRootDir
  *
- * @property Nano_Config_Format $configFormat
- * @property Nano_Config $config
+ * @property \Nano_Config_Format $configFormat
+ * @property \Nano_Config $config
  * @property \Nano\Loader $loader
  * @property \Nano\Dispatcher $dispatcher
  * @property \Nano\Modules $modules
- * @property SplObjectStorage $plugins
- * @property Event_Manager $eventManager
- * @property Nano_HelperBroker $helper
+ * @property \SplObjectStorage $plugins
+ * @property \Event_Manager $eventManager
+ * @property \Nano_HelperBroker $helper
  */
-class Application extends \Nano\Util\TypedRegistry {
+class Application extends Util\TypedRegistry {
 
 	const PUBLIC_DIR_NAME     = 'public';
 	const MODULES_DIR_NAME    = 'modules';
@@ -35,12 +36,12 @@ class Application extends \Nano\Util\TypedRegistry {
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
-	 * @var Application_ErrorHandler;
+	 * @var \Application_ErrorHandler;
 	 */
 	protected $errorHandler;
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 */
 	public static function create() {
 		return new self();
@@ -72,7 +73,7 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 *
 	 * @throws \Application_Exception_InvalidConfiguration
 	 */
@@ -81,7 +82,7 @@ class Application extends \Nano\Util\TypedRegistry {
 			throw new \Application_Exception_InvalidConfiguration('Configuration format not specified');
 		}
 
-		Nano::setApplication($this);
+		\Nano::setApplication($this);
 
 		if (!$this->offsetExists('rootDir')) {
 			$this->withRootDir(getCwd());
@@ -97,13 +98,13 @@ class Application extends \Nano\Util\TypedRegistry {
 		}
 
 		if ('cli' !== php_sapi_name()) {
-			$this->errorHandler = new Application_ErrorHandler;
+			$this->errorHandler = new \Application_ErrorHandler;
 		}
 		$this
-			->readOnly('config',       new Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
-			->readOnly('helper',       new Nano_HelperBroker)
+			->readOnly('config',       new \Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
+			->readOnly('helper',       new \Nano_HelperBroker)
 			->readOnly('dispatcher',   new \Nano\Dispatcher)
-			->readOnly('eventManager', new Event_Manager)
+			->readOnly('eventManager', new \Event_Manager)
 		;
 
 		$this->setupErrorReporting();
@@ -111,16 +112,16 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 * @param string $value
 	 */
 	public function withConfigurationFormat($value) {
-		$this->offsetSet('configFormat', Nano_Config::format($value));
+		$this->offsetSet('configFormat', \Nano_Config::format($value));
 		return $this;
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 * @param string $value
 	 */
 	public function withRootDir($value) {
@@ -130,7 +131,7 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 * @param string $value
 	 */
 	public function withPublicDir($value) {
@@ -139,7 +140,7 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 * @param string $value
 	 */
 	public function withModulesDir($value) {
@@ -148,7 +149,7 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
 	 * @param string $value
 	 */
 	public function withSharedModulesDir($value) {
@@ -157,9 +158,12 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
+	 * @return \Nano\Application
+	 *
 	 * @param string $name
 	 * @param string $path
+	 *
+	 * @throws \Application_Exception_ModuleNotFound
 	 */
 	public function withModule($name, $path = null) {
 		if (null === $path) {
@@ -168,7 +172,7 @@ class Application extends \Nano\Util\TypedRegistry {
 			} elseif ($this->offsetExists('modulesDir') && is_dir($this->modulesDir . DIRECTORY_SEPARATOR . $name)) {
 				$path = $this->modulesDir . DIRECTORY_SEPARATOR . $name;
 			} else {
-				throw new Application_Exception_ModuleNotFound($name);
+				throw new \Application_Exception_ModuleNotFound($name);
 			}
 		}
 
@@ -178,10 +182,10 @@ class Application extends \Nano\Util\TypedRegistry {
 	}
 
 	/**
-	 * @return Application
-	 * @param Nano_C_Plugin $value
+	 * @return \Nano\Application
+	 * @param \Nano_C_Plugin $value
 	 */
-	public function withPlugin(Nano_C_Plugin $value) {
+	public function withPlugin(\Nano_C_Plugin $value) {
 		$this->plugins->attach($value);
 		return $this;
 	}

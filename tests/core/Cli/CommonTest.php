@@ -21,7 +21,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 		ob_start();
 		$this->setUseOutputBuffering(true);
 
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withRootDir($GLOBALS['application']->rootDir)
 			->withConfigurationFormat('php')
@@ -45,7 +45,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 
 		self::assertEquals(0, $this->cli->run(array()));
 		self::assertEquals($this->appRoot, self::getObjectProperty($this->cli, 'applicationDir'));
-		self::assertInstanceOf('Application', $this->cli->getApplication());
+		self::assertInstanceOf('\Nano\Application', $this->cli->getApplication());
 	}
 
 	public function testDetectingApplicationDirectoryInSubdir() {
@@ -55,7 +55,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 		self::assertNull(self::getObjectProperty($this->cli, 'applicationDir'));
 		self::assertEquals(0, $this->cli->run(array()));
 		self::assertEquals($this->appRoot, self::getObjectProperty($this->cli, 'applicationDir'));
-		self::assertInstanceOf('Application', $this->cli->getApplication());
+		self::assertInstanceOf('\Nano\Application', $this->cli->getApplication());
 	}
 
 	public function testApplicationShouldBeNullIfBootstrapIfEmpty() {

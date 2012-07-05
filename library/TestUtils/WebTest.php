@@ -12,7 +12,7 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 	protected $pageUrl = '';
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $application;
 

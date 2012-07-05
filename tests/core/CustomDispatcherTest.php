@@ -15,7 +15,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 
 		require_once $this->files->get($this, '/Test_Dispatcher.php');
 
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withConfigurationFormat('php')
 			->withRootDir(__DIR__)

@@ -8,8 +8,8 @@ require_once __DIR__ . '/Abstract.php';
 class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 
 	public function testFactoryMethod() {
-		self::assertInstanceOf('Application', Application::create());
-		self::assertNotSame(Application::create(), Application::create());
+		self::assertInstanceOf('\Nano\Application', \Nano\Application::create());
+		self::assertNotSame(\Nano\Application::create(), \Nano\Application::create());
 	}
 
 	public function testConfigureShouldThrowExceptionWhenNoConfigurationFormatSpecified() {
@@ -18,7 +18,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	}
 
 	public function testSettingApplicationRootDir() {
-		self::assertInstanceOf('Application', $this->application->withRootDir('/some/path'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withRootDir('/some/path'));
 		self::assertEquals('/some/path', $this->application->rootDir);
 	}
 
@@ -37,7 +37,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	}
 
 	public function testDetectingPublicDir() {
-		$expected = $GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . Application::PUBLIC_DIR_NAME;
+		$expected = $GLOBALS['application']->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::PUBLIC_DIR_NAME;
 		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)
@@ -52,7 +52,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	public function testConfigurationFormat() {
 		$expected = 'Nano_Config_Format_Json';
 		self::assertFalse($this->application->offsetExists('configFormat'));
-		self::assertInstanceOf('Application', $this->application->withConfigurationFormat('json'));
+		self::assertInstanceOf('\Nano\Application', $this->application->withConfigurationFormat('json'));
 		self::assertInstanceOf($expected, $this->application->configFormat);
 	}
 
@@ -62,7 +62,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 		$plugin = new Core_Application_FakePlugin();
 
 		self::assertTrue($this->application->offsetExists('plugins'));
-		self::assertInstanceOf('Application', $this->application->withPlugin($plugin));
+		self::assertInstanceOf('\Nano\Application', $this->application->withPlugin($plugin));
 		self::assertInstanceOf('SplObjectStorage', $this->application->plugins);
 
 		self::assertEquals(1, $this->application->plugins->count());

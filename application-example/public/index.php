@@ -2,5 +2,5 @@
 
 require __DIR__ . '/../bootstrap.php';
 
-/** @var Application $application */
+/** @var \Nano\Application $application */
 $application->start();

@@ -3,7 +3,7 @@
 class TestUtils_Mixin_AppTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Application
+	 * @var \Nano\Application
 	 */
 	protected $app;
 
@@ -20,7 +20,7 @@ class TestUtils_Mixin_AppTest extends TestUtils_TestCase {
 	public function testShouldStoreApplicationIntoInternalPropertyWhenBackup() {
 		$app = Nano::app();
 		$this->mixin->backup();
-		self::assertInstanceOf('Application', self::getObjectProperty($this->mixin, 'backup'));
+		self::assertInstanceOf('\Nano\Application', self::getObjectProperty($this->mixin, 'backup'));
 		self::assertSame($app, self::getObjectProperty($this->mixin, 'backup'));
 		self::assertNull(Nano::app());
 	}
@@ -28,10 +28,10 @@ class TestUtils_Mixin_AppTest extends TestUtils_TestCase {
 	public function testShouldStoreApplicationOnlyOnce() {
 		$original = Nano::app();
 		$this->mixin->backup();
-		$new = Application::create()->withConfigurationFormat('php')->withRootDir(__DIR__)->configure();
+		$new = \Nano\Application::create()->withConfigurationFormat('php')->withRootDir(__DIR__)->configure();
 		$this->mixin->backup();
 
-		self::assertInstanceOf('Application', self::getObjectProperty($this->mixin, 'backup'));
+		self::assertInstanceOf('\Nano\Application', self::getObjectProperty($this->mixin, 'backup'));
 		self::assertSame($original, self::getObjectProperty($this->mixin, 'backup'));
 		self::assertNull(Nano::app());
 	}

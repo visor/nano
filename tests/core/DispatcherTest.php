@@ -18,7 +18,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	protected function setUp() {
 		$this->app->backup();
 
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withConfigurationFormat('php')
 			->withRootDir($GLOBALS['application']->rootDir)
@@ -56,7 +56,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 	public function testGetController() {
 		Nano::setApplication(null);
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withConfigurationFormat('php')
 			->withRootDir($this->files->get($this, ''))
@@ -70,7 +70,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 	public function testDetectingContextBySuffix() {
 		Nano::setApplication(null);
-		$application = new Application();
+		$application = new \Nano\Application();
 		$application
 			->withConfigurationFormat('php')
 			->withRootDir($this->files->get($this, ''))

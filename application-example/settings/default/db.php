@@ -1,6 +1,6 @@
 <?php
 
-/** @var Application $application */
+/** @var \Nano\Application $application */
 
 return array(
 	'default' => array(

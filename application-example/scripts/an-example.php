@@ -17,7 +17,7 @@ class AnExample extends \Nano_Cli_Script {
 			return;
 		}
 
-		echo 'Application modules:', PHP_EOL;
+		echo '\Nano\Application modules:', PHP_EOL;
 		foreach ($this->getApplication()->modules as $name => $path) {
 			echo ' - ', $name, '    ', $path, PHP_EOL;
 		}
