@@ -183,7 +183,6 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testModuleViews() {
-		error_log(__FUNCTION__);
 		$this->application
 			->withConfigurationFormat('php')
 			->withRootDir(__DIR__ . '/_files')
