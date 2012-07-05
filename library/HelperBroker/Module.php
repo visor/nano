@@ -1,6 +1,8 @@
 <?php
 
-class Nano_HelperBroker_Module {
+namespace Nano\HelperBroker;
+
+class Module {
 
 	/**
 	 * @var \Nano\Application
@@ -13,7 +15,7 @@ class Nano_HelperBroker_Module {
 	protected $module;
 
 	/**
-	 * @var Nano_Helper[]
+	 * @var \Nano\Helper[]
 	 */
 	protected $helpers = array();
 
@@ -69,7 +71,7 @@ class Nano_HelperBroker_Module {
 		$classPath = \Nano\Names::moduleFile($className);
 
 		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
-			throw new Nano_Exception_HelperNotFound($name, $this->module);
+			throw new \Nano_Exception_HelperNotFound($name, $this->module);
 		}
 
 		return new $className;

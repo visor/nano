@@ -2,7 +2,7 @@
 
 namespace Module\AnotherExample\Helper;
 
-class Some extends \Nano_Helper {
+class Some extends \Nano\Helper {
 
 	/**
 	 * @return string

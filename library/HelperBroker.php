@@ -1,34 +1,36 @@
 <?php
 
-class Nano_HelperBroker {
+namespace Nano;
+
+class HelperBroker {
 
 	/**
-	 * @var Nano_Helper[]
+	 * @var \Nano\Helper[]
 	 */
 	protected $helpers = array();
 
 	/**
-	 * @var Nano_HelperBroker_Module[]
+	 * @var \Nano\HelperBroker\Module[]
 	 */
 	protected $modules = array();
 
 	/**
-	 * @return Nano_HelperBroker_Module
+	 * @return \Nano\HelperBroker\Module
 	 * @param string $module
 	 *
-	 * @throws Application_Exception_ModuleNotFound
+	 * @throws \Application_Exception_ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = Nano::app()->modules->nameToFolder($module . \Nano\Modules::MODULE_SUFFIX);
-		if (!Nano::app()->modules->active($moduleName)) {
-			throw new Application_Exception_ModuleNotFound($moduleName);
+		$moduleName = \Nano::app()->modules->nameToFolder($module . \Nano\Modules::MODULE_SUFFIX);
+		if (!\Nano::app()->modules->active($moduleName)) {
+			throw new \Application_Exception_ModuleNotFound($moduleName);
 		}
 
 		if (isSet($this->modules[$moduleName])) {
 			return $this->modules[$moduleName];
 		}
 
-		$this->modules[$moduleName] = new Nano_HelperBroker_Module(Nano::app(), $moduleName);
+		$this->modules[$moduleName] = new \Nano\HelperBroker\Module(\Nano::app(), $moduleName);
 		return $this->modules[$moduleName];
 	}
 
@@ -71,7 +73,7 @@ class Nano_HelperBroker {
 
 		$classPath = \Nano\Names::applicationFile($className);
 		if (!\Nano::app()->loader->loadFileWithClass($className, $classPath)) {
-			throw new Nano_Exception_HelperNotFound($name);
+			throw new \Nano_Exception_HelperNotFound($name);
 		}
 
 		return new $className;

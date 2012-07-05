@@ -23,7 +23,7 @@ require __DIR__ . '/Loader.php';
  * @property \Nano\Modules $modules
  * @property \SplObjectStorage $plugins
  * @property \Nano\Event\Manager $eventManager
- * @property \Nano_HelperBroker $helper
+ * @property \Nano\HelperBroker $helper
  */
 class Application extends Util\TypedRegistry {
 
@@ -56,7 +56,7 @@ class Application extends Util\TypedRegistry {
 			->readOnly('loader',       new \Nano\Loader)
 			->readOnly('modules',      new \Nano\Modules)
 			->readOnly('plugins',      new \SplObjectStorage)
-			->readOnly('helper',       new \Nano_HelperBroker)
+			->readOnly('helper',       new \Nano\HelperBroker)
 			->readOnly('dispatcher',   new \Nano\Dispatcher)
 			->readOnly('eventManager', new \Nano\Event\Manager)
 			->readOnly('rootDir')
@@ -69,7 +69,7 @@ class Application extends Util\TypedRegistry {
 			->ensure('loader',       '\Nano\Loader')
 			->ensure('modules',      '\Nano\Modules')
 			->ensure('dispatcher',   '\Nano\Dispatcher')
-			->ensure('helper',       '\Nano_HelperBroker')
+			->ensure('helper',       '\Nano\HelperBroker')
 			->ensure('eventManager', '\Nano\Event\Manager')
 			->ensure('plugins',      '\SplObjectStorage')
 		;

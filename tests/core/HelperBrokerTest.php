@@ -11,7 +11,7 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	protected $application;
 
 	/**
-	 * @var Nano_HelperBroker
+	 * @var \Nano\HelperBroker
 	 */
 	protected $helper;
 
@@ -46,14 +46,14 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 
 	public function testSearchingModuleClasses() {
 		$helper = $this->helper->example;
-		self::assertInstanceOf('Nano_HelperBroker_Module', $helper);
+		self::assertInstanceOf('Nano\HelperBroker\Module', $helper);
 		self::assertInstanceOf('Module\Example\Helper\Some', $helper->some);
 		self::assertInstanceOf('Module\Example\Helper\Some', $helper->some());
 		self::assertEquals('Module\Example\Helper\Some', $helper->some->work());
 		self::assertEquals('Module\Example\Helper\Some', $helper->some()->work());
 
 		$helper = $this->helper->anotherExample;
-		self::assertInstanceOf('Nano_HelperBroker_Module', $helper);
+		self::assertInstanceOf('Nano\HelperBroker\Module', $helper);
 		self::assertInstanceOf('Module\AnotherExample\Helper\Some', $helper->some);
 		self::assertInstanceOf('Module\AnotherExample\Helper\Some', $helper->some());
 		self::assertEquals('example content', $helper->some->work());
