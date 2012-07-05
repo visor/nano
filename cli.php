@@ -1,6 +1,5 @@
 <?php
 
-require_once __DIR__ . '/library/Nano.php';
 require_once __DIR__ . '/library/Application.php';
 
 $loader = new \Nano\Loader();
