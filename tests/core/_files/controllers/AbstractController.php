@@ -1,3 +1,5 @@
 <?php
 
-abstract class AbstractController extends Nano_C {}
+namespace App\Controller;
+
+abstract class AbstractController extends \Nano_C {}

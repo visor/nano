@@ -22,7 +22,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		$this->app->backup();
-		require_once $this->files->get($this, '/controllers/TestController.php');
+		require_once $this->files->get($this, '/controllers/Test.php');
 		$this->application = new \Nano\Application();
 
 		$this->application
@@ -38,7 +38,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 		$this->renderer->setModuleViewsDirName('views/default');
 		$this->renderer->setLayoutsPath($this->files->get($this, '/layouts'));
 
-		$this->controller = new TestController($this->application);
+		$this->controller = new \App\Controller\Test($this->application);
 	}
 
 	public function testGettingApplicationViewPath() {

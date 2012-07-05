@@ -1,6 +1,8 @@
 <?php
 
-class TestController extends Nano_C {
+namespace App\Controller;
+
+class Test extends \Nano_C {
 
 	public function indexAction() {
 		$this->runContextAction();

@@ -65,7 +65,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 		$c = $application->dispatcher->getController(Nano_Route_Abstract::create('', 'test', 'test'));
 		self::assertInstanceOf('Nano_C', $c);
-		self::assertInstanceOf('TestController', $c);
+		self::assertInstanceOf('App\Controller\Test', $c);
 	}
 
 	public function testDetectingContextBySuffix() {
