@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano;
+
 class Event {
 
 	/**
@@ -8,7 +10,7 @@ class Event {
 	protected $type;
 
 	/**
-	 * @var ArrayObject
+	 * @var \ArrayObject
 	 */
 	protected $arguments;
 
@@ -25,7 +27,7 @@ class Event {
 	 */
 	public function __construct($type) {
 		$this->type      = $type;
-		$this->arguments = new ArrayObject();
+		$this->arguments = new \ArrayObject();
 	}
 
 	/**
@@ -59,9 +61,9 @@ class Event {
 
 	/**
 	 * @return Event
-	 * @param Event_Manager $manager
+	 * @param \Nano\Event\Manager $manager
 	 */
-	public function trigger(Event_Manager $manager) {
+	public function trigger(\Nano\Event\Manager $manager) {
 		$manager->trigger($this);
 		return $this;
 	}

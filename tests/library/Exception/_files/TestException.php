@@ -1,6 +1,6 @@
 <?php
 
-class Library_Exception_TestException extends Nano_Exception {
+class Library_Exception_TestException extends \Nano\Exception {
 
 	/**
 	 * @return string

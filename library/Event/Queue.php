@@ -1,6 +1,8 @@
 <?php
 
-class Event_Queue extends SplPriorityQueue {
+namespace Nano\Event;
+
+class Queue extends \SplPriorityQueue {
 
 	protected $serial = PHP_INT_MAX;
 

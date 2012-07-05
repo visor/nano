@@ -7,12 +7,12 @@
 class Library_Events_LoaderTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Event_Manager
+	 * @var \Nano\Event\Manager
 	 */
 	protected $manager;
 
 	protected function setUp() {
-		$this->manager = new Event_Manager();
+		$this->manager = new \Nano\Event\Manager();
 		include_once __DIR__ . '/_files/handlers.php';
 	}
 
@@ -65,7 +65,7 @@ class Library_Events_LoaderTest extends TestUtils_TestCase {
 
 		self::assertTrue($this->manager->callbackExists($eventName));
 		$callbacks = self::getObjectProperty($this->manager, 'callbacks');
-		self::assertInstanceOf('Event_Queue', $callbacks->offsetGet($eventName));
+		self::assertInstanceOf('\Nano\Event\Queue', $callbacks->offsetGet($eventName));
 		self::assertEquals($handlersCount, $callbacks->offsetGet($eventName)->count());
 	}
 

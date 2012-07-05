@@ -24,12 +24,12 @@ class Core_Route_SectionTest extends TestUtils_TestCase {
 	}
 
 	public function testCreateShouldThrowExceptionWhenEmptyLocationPassed() {
-		$this->setExpectedException('Nano_Exception', 'Section location should not be empty');
+		$this->setExpectedException('\Nano\Exception', 'Section location should not be empty');
 		$this->section->section('');
 	}
 
 	public function testCreateShouldThrowExceptionWhenNullLocationPassed() {
-		$this->setExpectedException('Nano_Exception', 'Section location should not be empty');
+		$this->setExpectedException('\Nano\Exception', 'Section location should not be empty');
 		$this->section->section(null);
 	}
 

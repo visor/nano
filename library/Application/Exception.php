@@ -1,4 +1,4 @@
 <?php
 
-class Application_Exception extends Nano_Exception {
+class Application_Exception extends \Nano\Exception {
 }

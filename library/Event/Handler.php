@@ -1,5 +1,5 @@
 <?php
 
-interface Event_Handler {
+namespace Nano\Event;
 
-}
+interface Handler {}

@@ -20,14 +20,14 @@ final class Nano {
 	/**
 	 * @return void
 	 * @param \Nano\Application|null $app
-	 * @throws Nano_Exception
+	 * @throws \Nano\Exception
 	 */
 	public static function setApplication(\Nano\Application $app = null) {
 		if (null === self::$app || null === $app) {
 			self::$app = $app;
 			return;
 		}
-		throw new Nano_Exception('Application inctance already created');
+		throw new \Nano\Exception('Application inctance already created');
 	}
 
 	/**

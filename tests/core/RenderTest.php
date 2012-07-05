@@ -70,7 +70,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	}
 
 	public function testRenderShouldThrowExceptionWhenViewNotFound() {
-		$this->setExpectedException('Nano_Exception', 'View ' . $this->renderer->getViewFileName('test', 'test2') . ' not exists');
+		$this->setExpectedException('\Nano\Exception', 'View ' . $this->renderer->getViewFileName('test', 'test2') . ' not exists');
 
 		$this->controller->layout     = null;
 		$this->controller->controller = 'test';
@@ -88,7 +88,7 @@ class Core_RenderTest extends TestUtils_TestCase {
 	}
 
 	public function testRenderShouldThrowExceptionWhenLayoutNotFound() {
-		$this->setExpectedException('Nano_Exception', 'View ' . $this->renderer->getLayoutFileName('test2') . ' not exists');
+		$this->setExpectedException('\Nano\Exception', 'View ' . $this->renderer->getLayoutFileName('test2') . ' not exists');
 
 		$this->controller->layout     = 'test2';
 		$this->controller->controller = 'test';

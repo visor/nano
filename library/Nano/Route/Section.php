@@ -60,11 +60,11 @@ abstract class Nano_Route_Section {
 	 * @return Nano_Route_Section
 	 * @param string $location
 	 *
-	 * @throws Nano_Exception
+	 * @throws \Nano\Exception
 	 */
 	public static function create($location) {
 		if ('' === $location || null === $location) {
-			throw new Nano_Exception('Section location should not be empty');
+			throw new \Nano\Exception('Section location should not be empty');
 		}
 		if (Nano_Route_Abstract::PREFIX_REGEXP == $location[0]) {
 			return new Nano_Route_Section_RegExp(subStr($location, 1));
@@ -76,7 +76,7 @@ abstract class Nano_Route_Section {
 	 * @return Nano_Route_Section
 	 * @param string $location
 	 *
-	 * @throws Nano_Exception
+	 * @throws \Nano\Exception
 	 */
 	public function section($location) {
 		$result = self::create($location);

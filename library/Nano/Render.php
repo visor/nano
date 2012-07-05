@@ -130,11 +130,11 @@ class Nano_Render {
 	 * @param string      $fileName
 	 * @param array       $variables
 	 *
-	 * @throws \Exception|\Nano_Exception
+	 * @throws \Exception|\Nano\Exception
 	 */
 	protected static function file(Nano_Render $renderer, $fileName, array $variables = array()) {
 		if (!file_exists($fileName)) {
-			throw new Nano_Exception('View ' . $fileName . ' not exists');
+			throw new \Nano\Exception('View ' . $fileName . ' not exists');
 		}
 
 		ob_start();

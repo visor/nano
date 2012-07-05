@@ -7,25 +7,25 @@
 class Library_Events_ManagerTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Event_Manager
+	 * @var \Nano\Event\Manager
 	 */
 	protected $manager;
 
 	protected function setUp() {
 		require_once $this->files->get($this, '/handlers.php');
 		require_once $this->files->get($this, '/TestHandler.php');
-		$this->manager = new Event_Manager();
+		$this->manager = new \Nano\Event\Manager();
 	}
 
 	public function testAddingCallbackAsFunctionName() {
-		$event = Event::create('test-event');
+		$event = \Nano\Event::create('test-event');
 		$this->manager->attach($event->getType(), 'library_events_handler_f1');
 		$this->checkHandlerCalled($event);
 	}
 
 	public function testAddingCallbackAsClosure() {
-		$event = Event::create('test-event');
-		$this->manager->attach($event->getType(), function (Event $e) {
+		$event = \Nano\Event::create('test-event');
+		$this->manager->attach($event->getType(), function (\Nano\Event $e) {
 			$runs = $e->getArgument('runs', 0);
 			++$runs;
 			$e->setArgument('runs', $runs);
@@ -34,8 +34,8 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testAddingCallbackAsAnonynousFunction() {
-		$event   = Event::create('test-event');
-		$handler = function (Event $e) {
+		$event   = \Nano\Event::create('test-event');
+		$handler = function (\Nano\Event $e) {
 			$runs = $e->getArgument('runs', 0);
 			++$runs;
 			$e->setArgument('runs', $runs);
@@ -45,14 +45,14 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testAddingCallbackAsInstanceMethod() {
-		$event    = Event::create('test-event');
+		$event    = \Nano\Event::create('test-event');
 		$instance = new Library_Events_Handler_C1();
 		$this->manager->attach($event->getType(), array($instance, 'instanceHandler'));
 		$this->checkHandlerCalled($event);
 	}
 
 	public function testAddingCallbackAsStaticMethod() {
-		$event = Event::create('test-event');
+		$event = \Nano\Event::create('test-event');
 		$this->manager->attach($event->getType(), array('Library_Events_Handler_C1', 'staticHandler'));
 		$this->checkHandlerCalled($event);
 	}
@@ -64,7 +64,7 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testEventTriggering() {
-		$event    = Event::create('test-event');
+		$event    = \Nano\Event::create('test-event');
 		$instance = new Library_Events_Handler_C1();
 
 		$this->manager
@@ -84,7 +84,7 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testTriggeringEventFromItself() {
-		$event = new Event('test-event');
+		$event = new \Nano\Event('test-event');
 		$this->manager
 			->attach($event->getType(), 'library_events_handler_f1')
 		;
@@ -93,19 +93,19 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 	}
 
 	public function testPassingEventArguments() {
-		$event = Event::create('test-event');
+		$event = \Nano\Event::create('test-event');
 		$this->manager->attach($event->getType(), 'library_events_handler_f1');
 		$this->manager->trigger($event, array('text' => 'some-text'));
 		self::assertEquals('[some-text]', $event->getArgument('text'));
 	}
 
 	public function testPassingWrongHandler() {
-		$this->setExpectedException('Event_Exception', 'Passed handler not callable');
+		$this->setExpectedException('\Nano\Event\Exception', 'Passed handler not callable');
 		$this->manager->attach('test', 'library_events_handler_f2');
 	}
 
 	public function testHandlersOrder() {
-		$event    = Event::create('test-event');
+		$event    = \Nano\Event::create('test-event');
 		$instance = new Library_Events_Handler_C1();
 
 		$this->manager
@@ -132,7 +132,7 @@ class Library_Events_ManagerTest extends TestUtils_TestCase {
 		unSet($this->manager);
 	}
 
-	protected function checkHandlerCalled(Event $event) {
+	protected function checkHandlerCalled(\Nano\Event $event) {
 		self::assertEquals(0, $event->getArgument('runs', 0));
 		$this->manager->trigger($event);
 		self::assertEquals(1, $event->getArgument('runs', 0));

@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Exception extends RuntimeException {
+namespace Nano;
+
+class Exception extends \RuntimeException {
 
 	const VALUE_NULL = 'NULL';
 

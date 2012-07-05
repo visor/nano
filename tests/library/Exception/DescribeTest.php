@@ -16,7 +16,7 @@ class Library_Exception_DescribeTest extends TestUtils_TestCase {
 	}
 
 	public function testDescribeShouldReturnNullStringForNullValue() {
-		self::assertEquals(Nano_Exception::VALUE_NULL, $this->exception->describe(null));
+		self::assertEquals(\Nano\Exception::VALUE_NULL, $this->exception->describe(null));
 	}
 
 	public function testDescribeShouldReturnClassNameForObjects() {

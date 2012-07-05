@@ -22,7 +22,7 @@ require __DIR__ . '/Loader.php';
  * @property \Nano\Dispatcher $dispatcher
  * @property \Nano\Modules $modules
  * @property \SplObjectStorage $plugins
- * @property \Event_Manager $eventManager
+ * @property \Nano\Event\Manager $eventManager
  * @property \Nano_HelperBroker $helper
  */
 class Application extends Util\TypedRegistry {
@@ -53,9 +53,12 @@ class Application extends Util\TypedRegistry {
 		$this
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
-			->readOnly('loader',  new \Nano\Loader())
-			->readOnly('modules', new \Nano\Modules())
-			->readOnly('plugins', new \SplObjectStorage())
+			->readOnly('loader',       new \Nano\Loader)
+			->readOnly('modules',      new \Nano\Modules)
+			->readOnly('plugins',      new \SplObjectStorage)
+			->readOnly('helper',       new \Nano_HelperBroker)
+			->readOnly('dispatcher',   new \Nano\Dispatcher)
+			->readOnly('eventManager', new \Nano\Event\Manager)
 			->readOnly('rootDir')
 			->readOnly('publicDir')
 			->readOnly('modulesDir')
@@ -67,7 +70,7 @@ class Application extends Util\TypedRegistry {
 			->ensure('modules',      '\Nano\Modules')
 			->ensure('dispatcher',   '\Nano\Dispatcher')
 			->ensure('helper',       '\Nano_HelperBroker')
-			->ensure('eventManager', '\Event_Manager')
+			->ensure('eventManager', '\Nano\Event\Manager')
 			->ensure('plugins',      '\SplObjectStorage')
 		;
 	}
@@ -100,13 +103,8 @@ class Application extends Util\TypedRegistry {
 		if ('cli' !== php_sapi_name()) {
 			$this->errorHandler = new \Application_ErrorHandler;
 		}
-		$this
-			->readOnly('config',       new \Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat))
-			->readOnly('helper',       new \Nano_HelperBroker)
-			->readOnly('dispatcher',   new \Nano\Dispatcher)
-			->readOnly('eventManager', new \Event_Manager)
-		;
 
+		$this->readOnly('config', new \Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat));
 		$this->setupErrorReporting();
 		return $this;
 	}

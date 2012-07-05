@@ -1,5 +1,5 @@
 <?php
 
-class Nano_Exception_InternalError extends Nano_Exception {
+class Nano_Exception_InternalError extends \Nano\Exception {
 
 }

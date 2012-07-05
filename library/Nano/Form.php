@@ -70,12 +70,12 @@ class Nano_Form {
 	 * @param Nano_Validator $validator
 	 * @param string $message
 	 *
-	 * @throws Nano_Exception
+	 * @throws \Nano\Exception
 	 */
 	public function addValidator($field, Nano_Validator $validator, $message = null) {
 		$this->invalidate();
 		if (isSet($this->validators[$field])) {
-			throw new Nano_Exception('Validator for field "' . $field . '" already defined');
+			throw new \Nano\Exception('Validator for field "' . $field . '" already defined');
 		}
 		if (null !== $message) {
 			$validator->setMessage($message);
@@ -88,13 +88,13 @@ class Nano_Form {
 	 * @return Nano_Validator
 	 * @param string $field
 	 *
-	 * @throws Nano_Exception
+	 * @throws \Nano\Exception
 	 */
 	public function getValidator($field) {
 		if (isSet($this->validators[$field])) {
 			return $this->validators[$field];
 		}
-		throw new Nano_Exception('Validator for field "' . $field . '" not defined');
+		throw new \Nano\Exception('Validator for field "' . $field . '" not defined');
 	}
 
 	/**

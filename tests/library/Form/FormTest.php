@@ -6,13 +6,13 @@
 class Library_Form_CommonTest extends TestUtils_TestCase {
 
 	public function testGetValidatorShouldThrowsWhenNotExistedValidatorQueries() {
-		$this->setExpectedException('Nano_Exception', 'Validator for field "foo" not defined');
+		$this->setExpectedException('\Nano\Exception', 'Validator for field "foo" not defined');
 		$form = new Nano_Form(array('foo'));
 		$form->getValidator('foo');
 	}
 
 	public function testAddValidatorShouldThrowWhenAlreadyExists() {
-		$this->setExpectedException('Nano_Exception', 'Validator for field "foo" already defined');
+		$this->setExpectedException('\Nano\Exception', 'Validator for field "foo" already defined');
 		$form = new Nano_Form(array('foo'));
 		$form->addValidator('foo', new Nano_Validator_True());
 		$form->addValidator('foo', new Nano_Validator_Required());

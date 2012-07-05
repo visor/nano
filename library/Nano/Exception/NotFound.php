@@ -1,6 +1,6 @@
 <?php
 
-class Nano_Exception_NotFound extends Nano_Exception {
+class Nano_Exception_NotFound extends \Nano\Exception {
 
 	/**
 	 * @param string|null $message
