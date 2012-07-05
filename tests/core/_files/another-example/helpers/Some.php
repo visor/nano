@@ -1,8 +1,8 @@
 <?php
 
-namespace AnotherExample_Module;
+namespace Module\AnotherExample\Helper;
 
-class WrongHelper extends \Nano_Helper {
+class Some extends \Nano_Helper {
 
 	/**
 	 * @return string
@@ -12,5 +12,3 @@ class WrongHelper extends \Nano_Helper {
 	}
 
 }
-
-return false;

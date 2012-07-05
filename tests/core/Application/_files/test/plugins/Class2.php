@@ -1,8 +1,8 @@
 <?php
 
-namespace Test_Module;
+namespace Module\Test\Plugin;
 
-class Model2Class {
+class Class2 {
 
 	public static function name() {
 		return __CLASS__;

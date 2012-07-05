@@ -1,6 +1,8 @@
 <?php
 
-class CookieTestController extends Nano_C {
+namespace App\Controller;
+
+class CookieTest extends \Nano_C {
 
 	/**
 	 * @var string
@@ -38,11 +40,11 @@ class CookieTestController extends Nano_C {
 	}
 
 	/**
-	 * @return Cookie
+	 * @return \Cookie
 	 */
 	protected function cookie() {
 		if (null === $this->cookie) {
-			$this->cookie = new Cookie(Nano::app()->config->get('web')->domain);
+			$this->cookie = new \Cookie(\Nano::app()->config->get('web')->domain);
 		}
 		return $this->cookie;
 	}

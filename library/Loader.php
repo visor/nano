@@ -41,7 +41,7 @@ class Loader {
 	 * @param string $class
 	 */
 	public static function formatModuleClassName($module, $class) {
-		return \Nano\Modules::nameToNamespace($module) . NS . \Nano::stringToName($class);
+		return \Nano\Names::moduleClass($module, $class);
 	}
 
 	/**

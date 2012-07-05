@@ -11,23 +11,6 @@ class Modules extends \ArrayObject {
 	const MODULE_SUFFIX         = '_Module';
 
 	/**
-	 * Checks that given $name is valid module name
-	 *
-	 * @return boolean
-	 * @param string $name
-	 */
-	public static function isModuleName($name) {
-		$position = strPos($name, self::MODULE_SUFFIX);
-		if (false === $position) {
-			return false;
-		}
-		if ($position !== strLen($name) - strLen(self::MODULE_SUFFIX)) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * @return string
 	 * @param string $name
 	 */
@@ -96,9 +79,6 @@ class Modules extends \ArrayObject {
 	public function nameToFolder($module) {
 		if ($this->offsetExists($module)) {
 			return $module;
-		}
-		if (!self::isModuleName($module)) {
-			throw new \Application_Exception_InvalidModuleNamespace($module);
 		}
 
 		return self::namespaceToName($module);

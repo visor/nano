@@ -64,14 +64,14 @@ class Nano_HelperBroker {
 	 * @throws Nano_Exception_HelperNotFound
 	 */
 	protected function search($name) {
-		$className = ucFirst($name) . 'Helper';
+		$className = \Nano\Names::helperClass($name);
+		if (class_exists($className, false)) {
+			return $className;
+		}
 
-		if (!class_exists($className, false)) {
-			$classPath = Nano::app()->rootDir . DIRECTORY_SEPARATOR . \Nano\Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className);
-
-			if (!Nano::app()->loader->loadFileWithClass($className, $classPath)) {
-				throw new Nano_Exception_HelperNotFound($name);
-			}
+		$classPath = \Nano\Names::applicationFile($className);
+		if (!\Nano::app()->loader->loadFileWithClass($className, $classPath)) {
+			throw new Nano_Exception_HelperNotFound($name);
 		}
 
 		return new $className;

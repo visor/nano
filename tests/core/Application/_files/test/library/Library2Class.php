@@ -1,6 +1,6 @@
 <?php
 
-namespace Test_Module;
+namespace Module\Test;
 
 class Library2Class {
 

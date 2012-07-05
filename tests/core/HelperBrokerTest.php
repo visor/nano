@@ -47,15 +47,15 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	public function testSearchingModuleClasses() {
 		$helper = $this->helper->example;
 		self::assertInstanceOf('Nano_HelperBroker_Module', $helper);
-		self::assertInstanceOf('\\Example_Module\\SomeHelper', $helper->some);
-		self::assertInstanceOf('\\Example_Module\\SomeHelper', $helper->some());
-		self::assertEquals('Example_Module\\SomeHelper', $helper->some->work());
-		self::assertEquals('Example_Module\\SomeHelper', $helper->some()->work());
+		self::assertInstanceOf('Module\Example\Helper\Some', $helper->some);
+		self::assertInstanceOf('Module\Example\Helper\Some', $helper->some());
+		self::assertEquals('Module\Example\Helper\Some', $helper->some->work());
+		self::assertEquals('Module\Example\Helper\Some', $helper->some()->work());
 
 		$helper = $this->helper->anotherExample;
 		self::assertInstanceOf('Nano_HelperBroker_Module', $helper);
-		self::assertInstanceOf('\\AnotherExample_Module\\SomeHelper', $helper->some);
-		self::assertInstanceOf('\\AnotherExample_Module\\SomeHelper', $helper->some());
+		self::assertInstanceOf('Module\AnotherExample\Helper\Some', $helper->some);
+		self::assertInstanceOf('Module\AnotherExample\Helper\Some', $helper->some());
 		self::assertEquals('example content', $helper->some->work());
 		self::assertEquals('example content', $helper->some()->work());
 	}
@@ -65,7 +65,7 @@ class Core_HelperBrokerTest extends TestUtils_TestCase {
 	}
 
 	public function testSearchingApplicationHelper() {
-		self::assertInstanceOf('CounterHelper', $this->helper->counter());
+		self::assertInstanceOf('App\Helper\Counter', $this->helper->counter());
 	}
 
 	public function testShouldReturnSameInstancesForOneApplicationHelper() {

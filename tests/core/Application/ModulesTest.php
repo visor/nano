@@ -7,16 +7,6 @@ require_once __DIR__ . '/Abstract.php';
  */
 class Core_Application_ModulesTest extends Core_Application_Abstract {
 
-	public function testDetectingModuleName() {
-		self::assertFalse(\Nano\Modules::isModuleName(__CLASS__));
-		self::assertFalse(\Nano\Modules::isModuleName('M\\ClassName'));
-		self::assertFalse(\Nano\Modules::isModuleName('SomeModule_'));
-		self::assertFalse(\Nano\Modules::isModuleName('SomeName_Module2'));
-
-		self::assertTrue(\Nano\Modules::isModuleName('SomeName_Module'));
-		self::assertTrue(\Nano\Modules::isModuleName('A_Module'));
-	}
-
 	public function testConvertingModuleNameToFolder() {
 		self::assertEquals('example',         $this->application->modules->nameToFolder('Example_Module'));
 		self::assertEquals('a-example',       $this->application->modules->nameToFolder('AExample_Module'));
@@ -28,11 +18,6 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	public function testNameToFolderShouldReturnPassedNameWhenModuleFolderPassed() {
 		$this->application->withModule('some-module', $this->files->get($this, '/test'));
 		self::assertEquals('some-module', $this->application->modules->nameToFolder('some-module'));
-	}
-
-	public function testNameToFolderShouldThrowExceptionWhenNotModuleNamespacePassed() {
-		$this->setExpectedException('Application_Exception_InvalidModuleNamespace', 'Given namespace "some module" is not valid module namespace');
-		$this->application->modules->nameToFolder('some module');
 	}
 
 	public function testDetectingApplicationModulesDir() {
@@ -159,16 +144,17 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 	}
 
 	public function testClassesAutoloading() {
+		\Nano::setApplication($this->application);
 		$this->application->withModule('test', $this->files->get($this, '/test'));
 
-		self::assertTrue(class_exists('Test_Module\LibraryClass'));
-		self::assertEquals('Test_Module\\LibraryClass', Test_Module\LibraryClass::name());
+		self::assertTrue(class_exists('Module\Test\LibraryClass'));
+		self::assertEquals('Module\Test\LibraryClass', \Module\Test\LibraryClass::name());
 	}
 
 	public function testDetectingsControllerClass() {
 		$this->application->withModule('test', $this->files->get($this, '/test'));
-		$route = Nano_Route_Abstract::create('some', 'class', 'index', 'test');
-		self::assertEquals('Test_Module\\ClassController', $route->controllerClass());
+		$route = Nano_Route_Abstract::create('some', 'class1', 'index', 'test');
+		self::assertEquals('Module\Test\Controller\Class1', $route->controllerClass());
 	}
 
 	public function testModuleRoutes() {
@@ -179,7 +165,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		;
 
 		$routes     = new Nano_Routes();
-		$route      = Nano_Route_Abstract::create('some', 'class', 'index', 'test');
+		$route      = Nano_Route_Abstract::create('some', 'class1', 'index', 'test');
 		$dispatcher = $this->application->dispatcher;
 		$response   = new Nano_C_Response_Test($this->application);
 
@@ -189,25 +175,27 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertNotNull($dispatcher->getRoute($routes, '/some'));
 		self::assertEquals($route->controller(), $dispatcher->getRoute($routes, '/some')->controller());
 		self::assertEquals($route->action(),     $dispatcher->getRoute($routes, '/some')->action());
-		self::assertInstanceOf('Test_Module\\ClassController', $dispatcher->getController($route));
+		self::assertInstanceOf('Module\Test\Controller\Class1', $dispatcher->getController($route));
 
 		$dispatcher->dispatch($routes, '/some');
-		self::assertTrue(class_exists('Test_Module\\ClassController', false));
-		self::assertEquals(Test_Module\ClassController::name(), $response->getBody());
+		self::assertTrue(class_exists('Module\Test\Controller\Class1', false));
+		self::assertEquals(Module\Test\Controller\Class1::name(), $response->getBody());
 	}
 
 	public function testModuleViews() {
+		error_log(__FUNCTION__);
 		$this->application
 			->withConfigurationFormat('php')
+			->withRootDir(__DIR__ . '/_files')
 			->withModule('test', $this->files->get($this, '/test'))
 			->configure()
 		;
-		self::assertTrue($this->application->loader->loadClass('Test_Module\\ClassController'));
+		self::assertTrue($this->application->loader->loadClass('Module\Test\Controller\Class1'));
 
 		$response = new Nano_C_Response_Test($this->application);
 
 		$this->application->dispatcher->setResponse($response);
-		$this->application->dispatcher->run(Nano_Route_Abstract::create('', 'class', 'view', 'test'));
+		$this->application->dispatcher->run(Nano_Route_Abstract::create('', 'class1', 'view', 'test'));
 
 		self::assertEquals('view action runned', $response->getBody());
 	}

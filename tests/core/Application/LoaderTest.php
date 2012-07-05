@@ -12,13 +12,14 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	protected function setUp() {
 		parent::setUp();
 
+		\Nano::setApplication($this->application);
 		$this->includePath = get_include_path();
 	}
 
 	public function testFormatingModuleName() {
-		self::assertEquals('Test_Module\\LibraryClass',        \Nano\Loader::formatModuleClassName('test', 'library-class'));
-		self::assertEquals('Test_Module\\ClassController',     \Nano\Loader::formatModuleClassName('test', 'class-controller'));
-		self::assertEquals('Test_Module\\SomeClassController', \Nano\Loader::formatModuleClassName('test', 'some-class-controller'));
+		self::assertEquals('Module\Test\LibraryClass',        \Nano\Loader::formatModuleClassName('test', 'library-class'));
+		self::assertEquals('Module\Test\ClassController',     \Nano\Loader::formatModuleClassName('test', 'class-controller'));
+		self::assertEquals('Module\Test\SomeClassController', \Nano\Loader::formatModuleClassName('test', 'some-class-controller'));
 	}
 
 	public function testExtractginModuleAndClassName() {
@@ -59,10 +60,10 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	public function testLoadingModuleClasses() {
 		$this->application->withModule('test', $this->files->get($this, '/test'));
 
-		$this->assertClassLoaded('Test_Module\\Class2Controller');
-		$this->assertClassLoaded('Test_Module\\Library2Class');
-		$this->assertClassLoaded('Test_Module\\Model2Class');
-		$this->assertClassLoaded('Test_Module\\Plugin2Class');
+		$this->assertClassLoaded('Module\Test\Controller\Class2');
+		$this->assertClassLoaded('Module\Test\Library2Class');
+		$this->assertClassLoaded('Module\Test\Model\Class2');
+		$this->assertClassLoaded('Module\Test\Plugin\Class2');
 	}
 
 	public function testShouldReturnTrueWhenClassAlreadyLoaded() {

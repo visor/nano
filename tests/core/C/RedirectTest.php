@@ -66,14 +66,14 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 	}
 
 	public function testControllerHelperShouldCreateRedirectInstance() {
-		$controller = new ResponseTestController();
+		$controller = new \App\Controller\ResponseTest();
 		$controller->setResponse(new Nano_C_Response_Test());
 
 		self::assertInstanceOf('Nano_C_Redirect', $controller->redirect());
 	}
 
 	public function testControllerHelperShouldAddLocationWhenParameterPassed() {
-		$controller = new ResponseTestController();
+		$controller = new \App\Controller\ResponseTest();
 		$controller->setResponse(new Nano_C_Response_Test());
 		$controller->redirect('/some/location');
 
@@ -82,7 +82,7 @@ class Core_C_RedirectTest extends TestUtils_TestCase {
 	}
 
 	public function testControllerHelperShouldMarkControlerRendered() {
-		$controller = new ResponseTestController();
+		$controller = new \App\Controller\ResponseTest();
 		$controller->setResponse(new Nano_C_Response_Test());
 		$controller->redirect();
 		self::assertTrue(self::getObjectProperty($controller, 'rendered'));

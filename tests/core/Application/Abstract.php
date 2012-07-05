@@ -14,7 +14,6 @@ abstract class Core_Application_Abstract extends TestUtils_TestCase {
 
 	protected function setUp() {
 		$this->app->backup();
-		Nano::setApplication(null);
 
 		$this->workingDir  = getCwd();
 		chDir($GLOBALS['application']->rootDir);

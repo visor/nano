@@ -15,6 +15,7 @@ class TestUtils_Mixin_App extends TestUtils_Mixin {
 		if (null === $this->backup) {
 			return;
 		}
+
 		Nano::setApplication(null);
 		Nano::setApplication($this->backup);
 		$this->backup = null;

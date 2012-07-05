@@ -11,8 +11,8 @@ class Core_Route_CommonTest extends TestUtils_TestCase {
 	}
 
 	public function testControllerClassShouldReturnFormatterControllerClassName() {
-		self::assertEquals('SomeController', Nano_Route_Abstract::create('', 'some', 'action')->controllerClass());
-		self::assertEquals('Common_Module\SomeController', Nano_Route_Abstract::create('', 'some', 'action', 'common')->controllerClass());
+		self::assertEquals('App\Controller\Some', Nano_Route_Abstract::create('', 'some', 'action')->controllerClass());
+		self::assertEquals('Module\Common\Controller\Some', Nano_Route_Abstract::create('', 'some', 'action', 'common')->controllerClass());
 	}
 
 	public function testStringCasting() {

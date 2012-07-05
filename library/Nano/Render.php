@@ -32,6 +32,7 @@ class Nano_Render {
 	 * @param Nano_C $object
 	 */
 	public function render(Nano_C $object) {
+		error_log(var_export($object->getModule(), true));
 		$module    = $object->getModule();
 		$variables = get_object_vars($object);
 		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
@@ -55,6 +56,7 @@ class Nano_Render {
 	 */
 	public function renderView($module, $controller, $template, $context, array $variables) {
 		$viewFile = $this->getViewFileName($controller, $template, $context, $module);
+		error_log($viewFile);
 		return self::file($this, $viewFile, $variables);
 	}
 

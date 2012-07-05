@@ -67,9 +67,9 @@ abstract class Nano_Route_Abstract {
 	 */
 	public function controllerClass() {
 		if (null === $this->module) {
-			return \Nano\Dispatcher::formatName($this->controller, true);
+			return \Nano\Names::applicationClass($this->controller, \Nano\Names::NAMESPACE_CONTROLLER);
 		}
-		return \Nano\Dispatcher::formatName($this->controller, true, \Nano\Modules::nameToNamespace($this->module));
+		return \Nano\Names::moduleClass($this->module, $this->controller, \Nano\Names::NAMESPACE_CONTROLLER);
 	}
 
 	/**

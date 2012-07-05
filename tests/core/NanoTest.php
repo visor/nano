@@ -14,7 +14,7 @@ class Core_NanoTest extends TestUtils_TestCase {
 	}
 
 	public function testSetApplicationShouldThrowExceptionWhenAlreadySetted() {
-		$this->setExpectedException('Nano_Exception', '\Nano\Application inctance already created');
+		$this->setExpectedException('Nano_Exception', 'Application inctance already created');
 		Nano::setApplication($GLOBALS['application']);
 		Nano::setApplication($GLOBALS['application']);
 	}

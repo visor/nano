@@ -1,5 +1,5 @@
 <?php
 
-namespace Test_Module;
+namespace Module\Test;
 
 return false;

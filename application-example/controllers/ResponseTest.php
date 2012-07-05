@@ -1,6 +1,8 @@
 <?php
 
-class ResponseTestController extends Nano_C {
+namespace App\Controller;
+
+class ResponseTest extends \Nano_C {
 
 	public function setBodyAction() {
 		$this->response()

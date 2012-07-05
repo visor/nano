@@ -61,20 +61,18 @@ class Nano_HelperBroker_Module {
 	/**
 	 * @return Nano_Helper
 	 * @param string $name
+	 *
+	 * @throws Nano_Exception_HelperNotFound
 	 */
 	protected function search($name) {
-		$className = ucFirst($name) . 'Helper';
-		$classPath = $this->application->modules->getPath(
-			$this->module
-			, \Nano\Application::HELPERS_DIR_NAME . DIRECTORY_SEPARATOR . \Nano\Loader::classToPath($className)
-		);
-		$fullClassName = \Nano\Loader::formatModuleClassName($this->module, $className);
+		$className = \Nano\Names::helperClass($name, $this->module);
+		$classPath = \Nano\Names::moduleFile($className);
 
-		if (!$this->application->loader->loadFileWithClass($fullClassName, $classPath)) {
+		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
 			throw new Nano_Exception_HelperNotFound($name, $this->module);
 		}
 
-		return new $fullClassName;
+		return new $className;
 	}
 
 }
