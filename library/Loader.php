@@ -143,16 +143,16 @@ class Loader {
 			return $this->loadFileWithClass($name, Names::moduleFile($name));
 		}
 
-		//{{{ todo: deprecated. remove this
-		if (self::isModuleClass($name)) {
-			return $this->loadModuleClass($name);
-		}
-		if (null === $this->applicationPath) {
-			return $this->loadCommonClass($name);
-		}
-		return $this->loadApplicationClass($name);
+//		//{{{ todo: deprecated. remove this
+//		if (self::isModuleClass($name)) {
+//			return $this->loadModuleClass($name);
+//		}
+//		if (null === $this->applicationPath) {
+//			return $this->loadCommonClass($name);
+//		}
+//		return $this->loadApplicationClass($name);
 		//}}}
-		//return false;
+		return false;
 	}
 
 	public function loadCommonClass($name) {

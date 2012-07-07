@@ -1,5 +1,5 @@
 <?php
 
-class DoubleLoaded {
+namespace App;
 
-}
+class DoubleLoaded {}

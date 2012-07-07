@@ -47,10 +47,7 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 	public function testLoadingApplicationLibraryClass() {
 		$this->application->withRootDir($this->files->get($this, ''));
 
-		$this->assertClassLoaded('TestApplicationClassController');
-		$this->assertClassLoaded('TestApplicationPluginClass');
-		$this->assertClassLoaded('TestApplicationModelClass');
-		$this->assertClassLoaded('TestApplicationLibraryClass');
+		$this->assertClassLoaded('App\TestApplicationLibraryClass');
 	}
 
 	public function testLoadingModuleClasses() {
@@ -64,8 +61,8 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 
 	public function testShouldReturnTrueWhenClassAlreadyLoaded() {
 		$this->application->withRootDir($this->files->get($this, ''));
-		self::assertTrue($this->application->loader->loadClass('DoubleLoaded'));
-		self::assertTrue($this->application->loader->loadClass('DoubleLoaded'));
+		self::assertTrue($this->application->loader->loadClass('App\DoubleLoaded'));
+		self::assertTrue($this->application->loader->loadClass('App\DoubleLoaded'));
 	}
 
 	public function testShouldReturnFalseWhenCannotLoadClass() {
