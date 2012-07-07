@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano;
+namespace Nano\Application;
 
 /**
  * todo: rename to application_modules?
@@ -30,7 +30,7 @@ class Modules extends \ArrayObject {
 	}
 
 	/**
-	 * @return \Nano\Modules
+	 * @return \Nano\Application\Modules
 	 * @param string $name
 	 * @param string $path
 	 *
@@ -83,7 +83,7 @@ class Modules extends \ArrayObject {
 	}
 
 	/**
-	 * @return \Nano\Modules
+	 * @return \Nano\Application\Modules
 	 * @param string $name
 	 * @param string $path
 	 *

@@ -21,7 +21,7 @@ class HelperBroker {
 	 * @throws \Nano\Application\Exception\ModuleNotFound
 	 */
 	public function __get($module) {
-		$moduleName = \Nano::app()->modules->nameToFolder($module . \Nano\Modules::MODULE_SUFFIX);
+		$moduleName = \Nano::app()->modules->nameToFolder($module . \Nano\Application\Modules::MODULE_SUFFIX);
 		if (!\Nano::app()->modules->active($moduleName)) {
 			throw new \Nano\Application\Exception\ModuleNotFound($moduleName);
 		}

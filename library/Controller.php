@@ -77,7 +77,7 @@ abstract class Controller {
 	 * @param string $action
 	 */
 	public function run($action) {
-		$method = \Nano\Dispatcher::formatName($action, false);
+		$method = \Nano\Application\Dispatcher::formatName($action, false);
 		$result = null;
 
 		$this->createResponse();
@@ -103,7 +103,7 @@ abstract class Controller {
 	}
 
 	/**
-	 * @return \Nano\Dispatcher
+	 * @return \Nano\Application\Dispatcher
 	 */
 	public function dispatcher() {
 		return \Nano::app()->dispatcher;
@@ -192,7 +192,7 @@ abstract class Controller {
 		if (!$this->context) {
 			return;
 		}
-		$method = \Nano\Dispatcher::formatName($this->dispatcher()->action() . '-' . $this->context, false);
+		$method = \Nano\Application\Dispatcher::formatName($this->dispatcher()->action() . '-' . $this->context, false);
 		if (!method_exists($this, $method)) {
 			return;
 		}

@@ -11,7 +11,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	protected $backupGlobals = true;
 
 	/**
-	 * @var \Nano\Dispatcher
+	 * @var \Nano\Application\Dispatcher
 	 */
 	private $dispatcher;
 
@@ -28,17 +28,17 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 	}
 
 	public function testControllersNamesFormatting() {
-		$this->assertEquals('App\Controller\Test',         \Nano\Dispatcher::formatName('test', true));
-		$this->assertEquals('App\Controller\AnotherTest',  \Nano\Dispatcher::formatName('another-test', true));
-		$this->assertEquals('App\Controller\Another_test', \Nano\Dispatcher::formatName('another_test', true));
+		$this->assertEquals('App\Controller\Test',         \Nano\Application\Dispatcher::formatName('test', true));
+		$this->assertEquals('App\Controller\AnotherTest',  \Nano\Application\Dispatcher::formatName('another-test', true));
+		$this->assertEquals('App\Controller\Another_test', \Nano\Application\Dispatcher::formatName('another_test', true));
 
-		$this->assertEquals('Module\Test\Controller\Test', \Nano\Dispatcher::formatName('test', true, 'test'));
+		$this->assertEquals('Module\Test\Controller\Test', \Nano\Application\Dispatcher::formatName('test', true, 'test'));
 	}
 
 	public function testActionsNamesFormatting() {
-		$this->assertEquals('testAction',             \Nano\Dispatcher::formatName('test', false));
-		$this->assertEquals('anotherTestAction',      \Nano\Dispatcher::formatName('another-test', false));
-		$this->assertEquals('another_testAction',     \Nano\Dispatcher::formatName('another_test', false));
+		$this->assertEquals('testAction',             \Nano\Application\Dispatcher::formatName('test', false));
+		$this->assertEquals('anotherTestAction',      \Nano\Application\Dispatcher::formatName('another-test', false));
+		$this->assertEquals('another_testAction',     \Nano\Application\Dispatcher::formatName('another_test', false));
 	}
 
 	public function testRouteFindingForEmptyUrl() {

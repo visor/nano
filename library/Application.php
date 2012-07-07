@@ -19,7 +19,7 @@ require __DIR__ . '/Application/ErrorHandler.php';
  * @property Application\Config\Format $configFormat
  * @property Application\Config $config
  * @property Loader $loader
- * @property Dispatcher $dispatcher
+ * @property Application\Dispatcher $dispatcher
  * @property Modules $modules
  * @property \SplObjectStorage $plugins
  * @property Event\Manager $eventManager
@@ -54,10 +54,10 @@ class Application extends Util\TypedRegistry {
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
 			->readOnly('loader',       new Loader)
-			->readOnly('modules',      new Modules)
+			->readOnly('modules',      new Application\Modules)
 			->readOnly('plugins',      new \SplObjectStorage)
 			->readOnly('helper',       new HelperBroker)
-			->readOnly('dispatcher',   new Dispatcher)
+			->readOnly('dispatcher',   new Application\Dispatcher)
 			->readOnly('eventManager', new Event\Manager)
 			->readOnly('rootDir')
 			->readOnly('publicDir')
@@ -66,9 +66,8 @@ class Application extends Util\TypedRegistry {
 
 			->ensure('configFormat', 'Nano\Application\Config\Format')
 			->ensure('config',       'Nano\Application\Config')
-			->ensure('loader',       'Nano\Loader')
-			->ensure('modules',      'Nano\Modules')
-			->ensure('dispatcher',   'Nano\Dispatcher')
+			->ensure('modules',      'Nano\Application\Modules')
+			->ensure('dispatcher',   'Nano\Application\Dispatcher')
 			->ensure('helper',       'Nano\HelperBroker')
 			->ensure('eventManager', 'Nano\Event\Manager')
 			->ensure('plugins',      'SplObjectStorage')

@@ -6,7 +6,7 @@
 class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
 
 	/**
-	 * @var \Nano\Dispatcher
+	 * @var \Nano\Application\Dispatcher
 	 */
 	private $dispatcher;
 

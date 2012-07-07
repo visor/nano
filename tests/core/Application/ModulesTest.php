@@ -59,13 +59,13 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 
 	public function testWithModuleShouldAddModuleAndPathWhenPassedBoth() {
 		self::assertInstanceOf('\Nano\Application', $this->application->withModule('test', __DIR__));
-		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Application\Modules', $this->application->modules);
 		self::assertEquals(__DIR__, $this->application->modules->offsetGet('test'));
 	}
 
 	public function testGettingModules() {
 		$first = $this->application->modules;
-		self::assertInstanceOf('\Nano\Modules', $first);
+		self::assertInstanceOf('\Nano\Application\Modules', $first);
 		$this->application->withModule('test', __DIR__);
 		self::assertSame($first, $this->application->modules);
 	}
@@ -79,7 +79,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module1'));
 		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module2'));
 
-		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Application\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
 		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
 	}
@@ -94,7 +94,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module2'));
 		self::assertInstanceOf('\Nano\Application', $this->application->withModule('module3'));
 
-		self::assertInstanceOf('\Nano\Modules', $this->application->modules);
+		self::assertInstanceOf('\Nano\Application\Modules', $this->application->modules);
 		self::assertEquals($this->files->get($this, '/shared-modules/module1'), $this->application->modules->offsetGet('module1'));
 		self::assertEquals($this->files->get($this, '/shared-modules/module2'), $this->application->modules->offsetGet('module2'));
 		self::assertEquals($this->files->get($this, '/application-modules/module3'), $this->application->modules->offsetGet('module3'));

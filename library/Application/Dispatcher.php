@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano;
+namespace Nano\Application;
 
 class Dispatcher {
 
@@ -13,7 +13,7 @@ class Dispatcher {
 	const CONTEXT           = 'context';
 
 	/**
-	 * @var \Nano\Dispatcher\Custom
+	 * @var \Nano\Application\Dispatcher\Custom
 	 */
 	protected $custom             = null;
 
@@ -70,16 +70,16 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano\Dispatcher
-	 * @param \Nano\Dispatcher\Custom $value
+	 * @return \Nano\Application\Dispatcher
+	 * @param \Nano\Application\Dispatcher\Custom $value
 	 */
-	public function setCustom(\Nano\Dispatcher\Custom $value) {
+	public function setCustom(\Nano\Application\Dispatcher\Custom $value) {
 		$this->custom = $value;
 		return $this;
 	}
 
 	/**
-	 * @return \Nano\Dispatcher
+	 * @return \Nano\Application\Dispatcher
 	 * @param boolean $value
 	 */
 	public function throwExceptions($value) {
@@ -242,7 +242,7 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano\Dispatcher
+	 * @return \Nano\Application\Dispatcher
 	 * @param \Nano\Controller\Response $value
 	 */
 	public function setResponse(\Nano\Controller\Response $value) {

@@ -129,7 +129,7 @@ class Names {
 	 */
 	public static function moduleFile($className) {
 		$fileName = self::removeNamespace($className, self::NAMESPACE_MODULE);
-		$module   = \Nano\Modules::namespaceToName(self::extractFirstNamespace($fileName));
+		$module   = \Nano\Application\Modules::namespaceToName(self::extractFirstNamespace($fileName));
 		if (!\Nano::app()->modules->active($module)) {
 			throw new \Nano\Application\Exception\ModuleNotFound($module);
 		}

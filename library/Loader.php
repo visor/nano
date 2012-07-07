@@ -49,7 +49,7 @@ class Loader {
 	 * @param string $className
 	 */
 	public static function isModuleClass($className) {
-		if (false === strPos($className, \Nano\Modules::MODULE_SUFFIX . NS)) {
+		if (false === strPos($className, \Nano\Application\Modules::MODULE_SUFFIX . NS)) {
 			return false;
 		}
 		return true;
@@ -94,7 +94,7 @@ class Loader {
 	 * @param string $path
 	 */
 	public function registerModule($name, $path) {
-		$this->modulesPath[\Nano\Modules::nameToNamespace($name)] = array(
+		$this->modulesPath[\Nano\Application\Modules::nameToNamespace($name)] = array(
 			$path . DIRECTORY_SEPARATOR . Application::CONTROLLER_DIR_NAME
 			, $path . DIRECTORY_SEPARATOR . Application::LIBRARY_DIR_NAME
 			, $path . DIRECTORY_SEPARATOR . Application::MODELS_DIR_NAME

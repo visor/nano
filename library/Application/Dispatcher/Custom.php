@@ -1,6 +1,6 @@
 <?php
 
-namespace Nano\Dispatcher;
+namespace Nano\Application\Dispatcher;
 
 interface Custom {
 
