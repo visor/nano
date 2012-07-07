@@ -6,12 +6,12 @@
 class Library_Cookie_CommonTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Cookie
+	 * @var \Nano\Util\Cookie
 	 */
 	protected $cookie;
 
 	protected function setUp() {
-		$this->cookie = new Cookie('example.com');
+		$this->cookie = new \Nano\Util\Cookie('example.com');
 		$_COOKIE = array();
 	}
 

@@ -10,7 +10,7 @@ class CookieTest extends \Nano\Controller {
 	public $name1, $name2;
 
 	/**
-	 * @var Cookie
+	 * @var \Nano\Util\Cookie
 	 */
 	protected $cookie;
 
@@ -40,11 +40,11 @@ class CookieTest extends \Nano\Controller {
 	}
 
 	/**
-	 * @return \Cookie
+	 * @return \Nano\Util\Cookie
 	 */
 	protected function cookie() {
 		if (null === $this->cookie) {
-			$this->cookie = new \Cookie(\Nano::app()->config->get('web')->domain);
+			$this->cookie = new \Nano\Util\Cookie(\Nano::app()->config->get('web')->domain);
 		}
 		return $this->cookie;
 	}

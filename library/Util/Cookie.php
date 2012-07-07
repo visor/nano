@@ -1,5 +1,7 @@
 <?php
 
+namespace Nano\Util;
+
 class Cookie {
 
 	const ONE_MONTH = 2592000;
