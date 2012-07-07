@@ -20,7 +20,7 @@ require __DIR__ . '/Application/ErrorHandler.php';
  * @property Application\Config $config
  * @property Loader $loader
  * @property Application\Dispatcher $dispatcher
- * @property Modules $modules
+ * @property Application\Modules $modules
  * @property \SplObjectStorage $plugins
  * @property Event\Manager $eventManager
  * @property HelperBroker $helper
