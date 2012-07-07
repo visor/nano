@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Validator_RegExp extends Nano_Validator {
+namespace Nano\Validator;
+
+class RegExp extends \Nano\Validator {
 
 	/**
 	 * @var string

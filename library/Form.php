@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Form {
+namespace Nano;
+
+class Form {
 
 	const MODE_VALIDATE_ALL  = 1;
 	const MODE_STOP_ON_ERROR = 2;
@@ -16,7 +18,7 @@ class Nano_Form {
 	protected $data = array();
 
 	/**
-	 * @var Nano_Validator[]
+	 * @var \Nano\Validator[]
 	 */
 	protected $validators = array();
 
@@ -49,7 +51,7 @@ class Nano_Form {
 	/**
 	 * Fill form with specified values
 	 *
-	 * @return Nano_Form
+	 * @return \Nano\Form
 	 * @param array $data
 	 */
 	public function populate(array $data) {
@@ -65,14 +67,14 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Form
+	 * @return \Nano\Form
 	 * @param string $field
-	 * @param Nano_Validator $validator
+	 * @param \Nano\Validator $validator
 	 * @param string $message
 	 *
 	 * @throws \Nano\Exception
 	 */
-	public function addValidator($field, Nano_Validator $validator, $message = null) {
+	public function addValidator($field, \Nano\Validator $validator, $message = null) {
 		$this->invalidate();
 		if (isSet($this->validators[$field])) {
 			throw new \Nano\Exception('Validator for field "' . $field . '" already defined');
@@ -85,7 +87,7 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Validator
+	 * @return \Nano\Validator
 	 * @param string $field
 	 *
 	 * @throws \Nano\Exception
@@ -108,7 +110,7 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Form
+	 * @return \Nano\Form
 	 */
 	public function validate() {
 		$this->invalidate();
@@ -146,7 +148,7 @@ class Nano_Form {
 	}
 
 	/**
-	 * @return Nano_Form
+	 * @return \Nano\Form
 	 * @param int $value
 	 */
 	public function setMode($value) {

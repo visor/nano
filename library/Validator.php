@@ -1,11 +1,19 @@
 <?php
 
-abstract class Nano_Validator implements Nano_Validator_Interface {
+namespace Nano;
+
+abstract class Validator {
 
 	/**
 	 * @var string
 	 */
 	protected $message = null;
+
+	/**
+	 * @return boolean
+	 * @param mixed $value
+	 */
+	abstract public function isValid($value);
 
 	/**
 	 * @return string
@@ -15,7 +23,7 @@ abstract class Nano_Validator implements Nano_Validator_Interface {
 	}
 
 	/**
-	 * @return Nano_Validator
+	 * @return \Nano\Validator
 	 * @param string $value
 	 */
 	public function setMessage($value) {

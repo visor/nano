@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Log {
+namespace Nano;
+
+class Log {
 
 	const NAME = 'app.log';
 
@@ -20,7 +22,7 @@ class Nano_Log {
 	 * @param string $string Message to write
 	 */
 	public function message($string) {
-		error_log($string . PHP_EOL, 3, self::getFile());
+		error_log($string . PHP_EOL, 3, $this->getFile());
 	}
 
 	/**
@@ -29,8 +31,8 @@ class Nano_Log {
 	 * @return string
 	 */
 	public function get() {
-		if (file_exists(self::getFile())) {
-			return file_get_contents(self::getFile());
+		if (file_exists($this->getFile())) {
+			return file_get_contents($this->getFile());
 		}
 		return '';
 	}
@@ -41,8 +43,8 @@ class Nano_Log {
 	 * @return void
 	 */
 	public function clear() {
-		if (file_exists(self::getFile())) {
-			unLink(self::getFile());
+		if (file_exists($this->getFile())) {
+			unLink($this->getFile());
 		}
 	}
 

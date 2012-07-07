@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Validator_Email extends Nano_Validator {
+namespace Nano\Validator;
+
+class Email extends \Nano\Validator {
 
 	public function isValid($value) {
 		if (false === filter_var($value, FILTER_VALIDATE_EMAIL)) {

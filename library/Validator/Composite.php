@@ -1,18 +1,20 @@
 <?php
 
-class Nano_Validator_Composite extends Nano_Validator implements Nano_Validator_Interface {
+namespace Nano\Validator;
+
+class Composite extends \Nano\Validator {
 
 	/**
-	 * @var Nano_Validator[]
+	 * @var \Nano\Validator[]
 	 */
 	protected $validators = array();
 
 	/**
-	 * @return Nano_Validator_Composite
-	 * @param Nano_Validator $validator
+	 * @return \Nano\Validator\Composite
+	 * @param \Nano\Validator $validator
 	 * @param string|null $message
 	 */
-	public function append(Nano_Validator $validator, $message = null) {
+	public function append(\Nano\Validator $validator, $message = null) {
 		$validator->setMessage($message);
 		$this->validators[] = $validator;
 		return $this;

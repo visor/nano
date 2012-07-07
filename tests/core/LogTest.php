@@ -11,7 +11,7 @@ class Core_LogTest extends TestUtils_TestCase {
 	protected $application;
 
 	/**
-	 * @var Nano_Log
+	 * @var \Nano\Log
 	 */
 	protected $log;
 
@@ -21,7 +21,7 @@ class Core_LogTest extends TestUtils_TestCase {
 		$this->application = new \Nano\Application();
 		$this->application->withRootDir(__DIR__ . DS . '_files');
 
-		$this->log = new Nano_Log($this->application);
+		$this->log = new \Nano\Log($this->application);
 		$this->log->clear();
 	}
 

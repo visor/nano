@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Validator_Date extends Nano_Validator_RegExp {
+namespace Nano\Validator;
+
+class Nano_Validator_Date extends RegExp {
 
 	protected $format;
 
@@ -20,8 +22,8 @@ class Nano_Validator_Date extends Nano_Validator_RegExp {
 			return !$this->required;
 		}
 		try {
-			return $value === Date::createFromFormat($this->format, $value)->format($this->format);
-		} catch (Exception $e) {
+			return $value === \Date::createFromFormat($this->format, $value)->format($this->format);
+		} catch (\Exception $e) {
 			return false;
 		}
 	}

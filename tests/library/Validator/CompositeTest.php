@@ -6,29 +6,29 @@
 class Library_Validator_CompositeTest extends TestUtils_TestCase {
 
 	public function testIsValidShouldReturnTrueWhenAllChildValidatorsValid() {
-		$validator = new Nano_Validator_Composite();
+		$validator = new \Nano\Validator\Composite();
 		$validator
-			->append(new Nano_Validator_True())
-			->append(new Nano_Validator_True())
+			->append(new \Nano\Validator\Valid())
+			->append(new \Nano\Validator\Valid())
 		;
 		self::assertTrue($validator->isValid('some value'));
 	}
 
 	public function testIsValidShouldReturnTrueWhenAnyChildValidatorInvalid() {
-		$validator = new Nano_Validator_Composite();
+		$validator = new \Nano\Validator\Composite();
 		$validator
-			->append(new Nano_Validator_True())
-			->append(new Nano_Validator_True())
-			->append(new Nano_Validator_False())
+			->append(new \Nano\Validator\Valid())
+			->append(new \Nano\Validator\Valid())
+			->append(new \Nano\Validator\Invalid())
 		;
 		self::assertFalse($validator->isValid('some value'));
 	}
 
 	public function testShouldReturnFailedValidatorMessage() {
-		$validator = new Nano_Validator_Composite();
+		$validator = new \Nano\Validator\Composite();
 		$validator
-			->append(new Nano_Validator_True(), 'first message')
-			->append(new Nano_Validator_False(), 'second message')
+			->append(new \Nano\Validator\Valid(), 'first message')
+			->append(new \Nano\Validator\Invalid(), 'second message')
 		;
 		self::assertFalse($validator->isValid('some value'));
 		self::assertEquals('second message', $validator->getMessage());

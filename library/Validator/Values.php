@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Validator_Values extends Nano_Validator {
+namespace Nano\Validator;
+
+class Values extends \Nano\Validator {
 
 	/**
 	 * @var array
