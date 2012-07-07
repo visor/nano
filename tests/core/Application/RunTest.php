@@ -21,15 +21,15 @@ class Core_Application_RunTest extends Core_Application_Abstract {
 		;
 
 		rename(
-			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
-			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME . '.bak'
+			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::CONFIG_FILE_NAME
+			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::CONFIG_FILE_NAME . '.bak'
 		);
 		rename(
-			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME
-			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME . '.bak'
+			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::ROUTES_FILE_NAME
+			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::ROUTES_FILE_NAME . '.bak'
 		);
 
-		$builder = new Nano_Config_Builder($this->application);
+		$builder = new \Nano\Application\Config\Builder($this->application);
 		$builder->setSource($this->application->rootDir . DIRECTORY_SEPARATOR . 'settings');
 		$builder->setDestination($this->application->rootDir . DIRECTORY_SEPARATOR . 'settings');
 		$builder->build('for-test');
@@ -49,12 +49,12 @@ class Core_Application_RunTest extends Core_Application_Abstract {
 
 	protected function tearDown() {
 		rename(
-			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME . '.bak'
-			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
+			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::CONFIG_FILE_NAME . '.bak'
+			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::CONFIG_FILE_NAME
 		);
 		rename(
-			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME . '.bak'
-			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME
+			$this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::ROUTES_FILE_NAME . '.bak'
+			, $this->application->rootDir . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . \Nano\Application\Config::ROUTES_FILE_NAME
 		);
 
 		parent::tearDown();

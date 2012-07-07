@@ -50,7 +50,7 @@ class Core_Application_ConfigurationTest extends Core_Application_Abstract {
 	}
 
 	public function testConfigurationFormat() {
-		$expected = 'Nano_Config_Format_Json';
+		$expected = '\Nano\Application\Config\Format\Json';
 		self::assertFalse($this->application->offsetExists('configFormat'));
 		self::assertInstanceOf('\Nano\Application', $this->application->withConfigurationFormat('json'));
 		self::assertInstanceOf($expected, $this->application->configFormat);

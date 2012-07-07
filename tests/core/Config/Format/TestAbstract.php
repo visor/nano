@@ -8,12 +8,12 @@ abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
 	protected $configFile, $routesFile, $resultFile;
 
 	/**
-	 * @var Nano_Config_Format
+	 * @var \Nano\Application\Config\Format
 	 */
 	protected $config;
 
 	/**
-	 * @return Nano_Config_Format
+	 * @return \Nano\Application\Config\Format
 	 */
 	abstract protected function getConfigInstance();
 

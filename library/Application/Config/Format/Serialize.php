@@ -1,12 +1,14 @@
 <?php
 
-class Nano_Config_Format_Json implements Nano_Config_Format {
+namespace Nano\Application\Config\Format;
+
+class Serialize implements \Nano\Application\Config\Format {
 
 	/**
 	 * @return boolean
 	 */
 	public function available() {
-		return function_exists('json_encode');
+		return true;
 	}
 
 	/**
@@ -15,7 +17,7 @@ class Nano_Config_Format_Json implements Nano_Config_Format {
 	 */
 	public function read($fileName) {
 		$result = file_get_contents($fileName);
-		$result = json_decode($result);
+		$result = unSerialize($result);
 		return $result;
 	}
 
@@ -24,9 +26,7 @@ class Nano_Config_Format_Json implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function readRoutes($fileName) {
-		$result = file_get_contents($fileName);
-		$result = unSerialize($result);
-		return $result;
+		return $this->read($fileName);
 	}
 
 	/**
@@ -35,7 +35,7 @@ class Nano_Config_Format_Json implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function write(array $data, $fileName) {
-		$source = json_encode($data);
+		$source = serialize(json_decode(json_encode($data)));
 		file_put_contents($fileName, $source);
 		return true;
 	}

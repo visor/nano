@@ -1,6 +1,8 @@
 <?php
 
-interface Nano_Config_Format {
+namespace Nano\Application\Config;
+
+interface Format {
 
 	/**
 	 * @return boolean

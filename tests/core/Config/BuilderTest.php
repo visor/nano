@@ -7,7 +7,7 @@
 class Core_Config_BuilderTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_Config_Builder
+	 * @var \Nano\Application\Config\Builder
 	 */
 	protected $builder;
 
@@ -25,7 +25,7 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		;
 
 		$this->files->clean($this, '/settings');
-		$this->builder = new Nano_Config_Builder($this->application);
+		$this->builder = new \Nano\Application\Config\Builder($this->application);
 	}
 
 	public function testSavingRoutes() {
@@ -96,9 +96,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('default');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$expected = (object)array(
 			  'file1'  => (object)array('file1-param1' => 'value1')
 			, 'file2'  => (object)array('file2-param1' => 'value1')
@@ -117,9 +117,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('basic-child');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$config->get('file1');
 		$expected = (object)array(
 			  'file1'  => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'new-value2.1'))
@@ -138,8 +138,8 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('ext-child');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$expected = (object)array(
 			  'file1'  => (object)array('file1-param1' => 'value1', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
 			, 'file2'  => (object)array('file2-param1' => 'value1', 'file2-param2' => 'value2', 'file2-param100' => '100')
@@ -157,8 +157,8 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('child-of-child');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$expected = (object)array(
 			  'file1'  => (object)array('file1-param1' => 'new', 'param2' => (object)array('param2.1' => 'even-new-value2.1'))
 			, 'file2'  => (object)array('file2-param1' => 'value2', 'file2-param2' => 'value2', 'file2-param100' => '100')
@@ -175,9 +175,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setSource($this->files->get($this, '/no-parents'));
 		$this->builder->setDestination($path);
 		$this->builder->build('objects');
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$expected = (object)array(
 			'db' => (object)array(
 				'hostname' => 'localhost', 'username' => 'user', 'password' => 'p4ssw0rd', 'database' => 'db1'
@@ -193,9 +193,9 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setSource($this->files->get($this, '/database'));
 		$this->builder->setDestination($path);
 		$this->builder->build('child-of-child');
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
 
-		$config   = new Nano_Config($path, $this->application->configFormat);
+		$config   = new \Nano\Application\Config($path, $this->application->configFormat);
 		$expected = (object)array(
 			'db' => (object)array(
 				'default' => (object)array(
@@ -231,10 +231,10 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('default');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		self::assertFileExists($path . DS . Nano_Config::ROUTES_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::ROUTES_FILE_NAME);
 
-		$config = new Nano_Config($path, $this->application->configFormat);
+		$config = new \Nano\Application\Config($path, $this->application->configFormat);
 
 		self::assertTrue($config->exists('config'));
 		self::assertInstanceOf('stdClass', $config->get('config'));
@@ -252,12 +252,12 @@ class Core_Config_BuilderTest extends TestUtils_TestCase {
 		$this->builder->setDestination($path);
 		$this->builder->build('default');
 
-		self::assertFileExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		self::assertFileExists($path . DS . Nano_Config::ROUTES_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
+		self::assertFileExists($path . DS . \Nano\Application\Config::ROUTES_FILE_NAME);
 
 		self::assertTrue($this->builder->clean());
-		self::assertFileNotExists($path . DS . Nano_Config::CONFIG_FILE_NAME);
-		self::assertFileNotExists($path . DS . Nano_Config::ROUTES_FILE_NAME);
+		self::assertFileNotExists($path . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
+		self::assertFileNotExists($path . DS . \Nano\Application\Config::ROUTES_FILE_NAME);
 	}
 
 	protected function tearDown() {

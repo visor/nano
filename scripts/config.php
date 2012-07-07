@@ -39,10 +39,10 @@ class Config extends \Nano\Cli\Script {
 			$parents = array();
 		} else {
 			file_put_contents(
-				$new . DIRECTORY_SEPARATOR . \Nano_Config_Builder::PARENTS_FILE
+				$new . DIRECTORY_SEPARATOR . \Nano\Application\Config\Builder::PARENTS_FILE
 				, '<?php return ' . var_export($parents, true) . ';'
 			);
-			echo "\t\t", \Nano_Config_Builder::PARENTS_FILE, PHP_EOL;
+			echo "\t\t", \Nano\Application\Config\Builder::PARENTS_FILE, PHP_EOL;
 		}
 
 		foreach ($parents as $parent) {
@@ -51,10 +51,10 @@ class Config extends \Nano\Cli\Script {
 				if ($file->isDir() || $file->isDir() || !$file->isReadable()) {
 					continue;
 				}
-				if (\Nano_Config_Builder::PARENTS_FILE === $file->getBaseName()) {
+				if (\Nano\Application\Config\Builder::PARENTS_FILE === $file->getBaseName()) {
 					continue;
 				}
-				if (\Nano_Config_Builder::ROUTES_FILE === $file->getBaseName()) {
+				if (\Nano\Application\Config\Builder::ROUTES_FILE === $file->getBaseName()) {
 					continue;
 				}
 				if ('php' !== pathInfo($file->getBaseName(), PATHINFO_EXTENSION)) {
@@ -69,9 +69,9 @@ class Config extends \Nano\Cli\Script {
 				echo "\t\t", $file->getBaseName(), PHP_EOL;
 			}
 		}
-		echo "\t\t", \Nano_Config_Builder::ROUTES_FILE, PHP_EOL;
+		echo "\t\t", \Nano\Application\Config\Builder::ROUTES_FILE, PHP_EOL;
 		file_put_contents(
-			$new . DIRECTORY_SEPARATOR . \Nano_Config_Builder::ROUTES_FILE
+			$new . DIRECTORY_SEPARATOR . \Nano\Application\Config\Builder::ROUTES_FILE
 			, '<?php' . PHP_EOL . PHP_EOL
 		);
 		echo 'Done', PHP_EOL;

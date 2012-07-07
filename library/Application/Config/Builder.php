@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Config_Builder {
+namespace Nano\Application\Config;
+
+class Builder {
 
 	const PARENTS_FILE = '.parent.php';
 	const ROUTES_FILE  = 'routes.php';
@@ -20,7 +22,7 @@ class Nano_Config_Builder {
 	}
 
 	/**
-	 * @return Nano_Config_Builder
+	 * @return \Nano\Application\Config\Builder
 	 * @param string $value
 	 */
 	public function setSource($value) {
@@ -29,7 +31,7 @@ class Nano_Config_Builder {
 	}
 
 	/**
-	 * @return Nano_Config_Builder
+	 * @return \Nano\Application\Config\Builder
 	 * @param string $value
 	 */
 	public function setDestination($value) {
@@ -44,11 +46,11 @@ class Nano_Config_Builder {
 		if (null === $this->destination) {
 			return false;
 		}
-		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME)) {
-			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME);
+		if (file_exists($this->destination . DS . \Nano\Application\Config::CONFIG_FILE_NAME)) {
+			unLink($this->destination . DS . \Nano\Application\Config::CONFIG_FILE_NAME);
 		}
-		if (file_exists($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME)) {
-			unLink($this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME);
+		if (file_exists($this->destination . DS . \Nano\Application\Config::ROUTES_FILE_NAME)) {
+			unLink($this->destination . DS . \Nano\Application\Config::ROUTES_FILE_NAME);
 		}
 		return true;
 	}
@@ -69,7 +71,7 @@ class Nano_Config_Builder {
 	public function buildConfiguration($name) {
 		$this->application->configFormat->write(
 			$this->createSettings($name)
-			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::CONFIG_FILE_NAME
+			, $this->destination . DS . \Nano\Application\Config::CONFIG_FILE_NAME
 		);
 	}
 
@@ -91,18 +93,18 @@ class Nano_Config_Builder {
 
 		$this->application->configFormat->writeRoutes(
 			$routes
-			, $this->destination . DIRECTORY_SEPARATOR . Nano_Config::ROUTES_FILE_NAME
+			, $this->destination . DS . \Nano\Application\Config::ROUTES_FILE_NAME
 		);
 	}
 
 	protected function createSettings($name) {
 		$parents  = $this->getParents($name);
 		$settings = array();
-		$i        = new DirectoryIterator($this->getFilePath($name, null));
+		$i        = new \DirectoryIterator($this->getFilePath($name, null));
 		foreach ($parents as $parent) {
 			$settings = $this->mergeSections($settings, $this->createSettings($parent));
 		}
-		foreach ($i as /** @var DirectoryIterator $file */$file) {
+		foreach ($i as /** @var \DirectoryIterator $file */$file) {
 			if ($file->isDir() || $file->isDir() || !$file->isReadable()) {
 				continue;
 			}
@@ -126,7 +128,7 @@ class Nano_Config_Builder {
 			}
 		}
 
-		$settings[Nano_Config::CONFIG_NAME] = $name;
+		$settings[\Nano\Application\Config::CONFIG_NAME] = $name;
 		return $settings;
 	}
 
@@ -168,7 +170,7 @@ class Nano_Config_Builder {
 	 * @param string $file
 	 */
 	protected function getFilePath($name, $file) {
-		return $this->source . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . $file;
+		return $this->source . DS . $name . DS . $file;
 	}
 
 	/**

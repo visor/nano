@@ -1,5 +1,7 @@
 <?php
 
-class Nano_Config_Format_Xml {
+namespace Nano\Application\Config\Format;
+
+class Xml {
 
 }

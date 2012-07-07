@@ -1,12 +1,14 @@
 <?php
 
-class Nano_Config_Format_Php implements Nano_Config_Format {
+namespace Nano\Application\Config\Format;
+
+class Igbinary implements \Nano\Application\Config\Format {
 
 	/**
 	 * @return boolean
 	 */
 	public function available() {
-		return true;
+		return function_exists('igbinary_unSerialize');
 	}
 
 	/**
@@ -14,7 +16,9 @@ class Nano_Config_Format_Php implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function read($fileName) {
-		return include($fileName);
+		$result = file_get_contents($fileName);
+		$result = igbinary_unSerialize($result);
+		return $result;
 	}
 
 	/**
@@ -33,11 +37,8 @@ class Nano_Config_Format_Php implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function write(array $data, $fileName) {
-		$source = var_export(json_decode(json_encode($data)), true);
-		$source = str_replace('stdClass::__set_state(', '(object)(', $source);
-		$source = preg_replace('/=>[\s\t\r\n]+\(object\)/', '=> (object)', $source);
-		$source = preg_replace('/=>[\s\t\r\n]+array/', '=> array', $source);
-		file_put_contents($fileName, '<?php return ' . $source . ';');
+		$source = igbinary_serialize(json_decode(json_encode($data)));
+		file_put_contents($fileName, $source);
 		return true;
 	}
 

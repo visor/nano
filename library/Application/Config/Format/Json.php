@@ -1,12 +1,14 @@
 <?php
 
-class Nano_Config_Format_Igbinary implements Nano_Config_Format {
+namespace Nano\Application\Config\Format;
+
+class Json implements \Nano\Application\Config\Format {
 
 	/**
 	 * @return boolean
 	 */
 	public function available() {
-		return function_exists('igbinary_unSerialize');
+		return function_exists('json_encode');
 	}
 
 	/**
@@ -15,7 +17,7 @@ class Nano_Config_Format_Igbinary implements Nano_Config_Format {
 	 */
 	public function read($fileName) {
 		$result = file_get_contents($fileName);
-		$result = igbinary_unSerialize($result);
+		$result = json_decode($result);
 		return $result;
 	}
 
@@ -35,7 +37,7 @@ class Nano_Config_Format_Igbinary implements Nano_Config_Format {
 	 * @param string $fileName
 	 */
 	public function write(array $data, $fileName) {
-		$source = igbinary_serialize(json_decode(json_encode($data)));
+		$source = json_encode($data);
 		file_put_contents($fileName, $source);
 		return true;
 	}

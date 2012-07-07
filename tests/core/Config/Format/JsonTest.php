@@ -9,10 +9,10 @@ require_once __DIR__ . '/TestAbstract.php';
 class Core_Config_Format_JsonTest extends Core_Config_Format_TestAbstract {
 
 	/**
-	 * @return Nano_Config_Format
+	 * @return \Nano\Application\Config\Format
 	 */
 	protected function getConfigInstance() {
-		return new Nano_Config_Format_Json();
+		return new \Nano\Application\Config\Format\Json();
 	}
 
 	/**

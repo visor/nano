@@ -16,8 +16,8 @@ require __DIR__ . '/Application/ErrorHandler.php';
  * @property string $sharedModulesDir
  * @property string $nanoRootDir
  *
- * @property \Nano_Config_Format $configFormat
- * @property \Nano_Config $config
+ * @property Application\Config\Format $configFormat
+ * @property Application\Config $config
  * @property Loader $loader
  * @property Dispatcher $dispatcher
  * @property Modules $modules
@@ -36,7 +36,7 @@ class Application extends Util\TypedRegistry {
 	const PLUGINS_DIR_NAME    = 'plugins';
 
 	/**
-	 * @var \Nano\Application\ErrorHandler;
+	 * @var Application\ErrorHandler;
 	 */
 	protected $errorHandler;
 
@@ -53,19 +53,19 @@ class Application extends Util\TypedRegistry {
 		$this
 			->readOnly('configFormat')
 			->readOnly('nanoRootDir', dirName(__DIR__))
-			->readOnly('loader',       new \Nano\Loader)
-			->readOnly('modules',      new \Nano\Modules)
+			->readOnly('loader',       new Loader)
+			->readOnly('modules',      new Modules)
 			->readOnly('plugins',      new \SplObjectStorage)
-			->readOnly('helper',       new \Nano\HelperBroker)
-			->readOnly('dispatcher',   new \Nano\Dispatcher)
-			->readOnly('eventManager', new \Nano\Event\Manager)
+			->readOnly('helper',       new HelperBroker)
+			->readOnly('dispatcher',   new Dispatcher)
+			->readOnly('eventManager', new Event\Manager)
 			->readOnly('rootDir')
 			->readOnly('publicDir')
 			->readOnly('modulesDir')
 			->readOnly('sharedModulesDir')
 
-			->ensure('configFormat', 'Nano_Config_Format')
-			->ensure('config',       'Nano_Config')
+			->ensure('configFormat', 'Nano\Application\Config\Format')
+			->ensure('config',       'Nano\Application\Config')
 			->ensure('loader',       'Nano\Loader')
 			->ensure('modules',      'Nano\Modules')
 			->ensure('dispatcher',   'Nano\Dispatcher')
@@ -82,7 +82,7 @@ class Application extends Util\TypedRegistry {
 	 */
 	public function configure() {
 		if (!$this->offsetExists('configFormat')) {
-			throw new \Nano\Application\Exception\InvalidConfiguration('Configuration format not specified');
+			throw new Application\Exception\InvalidConfiguration('Configuration format not specified');
 		}
 
 		\Nano::setApplication($this);
@@ -101,10 +101,10 @@ class Application extends Util\TypedRegistry {
 		}
 
 		if ('cli' !== php_sapi_name()) {
-			$this->errorHandler = new \Nano\Application\ErrorHandler;
+			$this->errorHandler = new Application\ErrorHandler;
 		}
 
-		$this->readOnly('config', new \Nano_Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat));
+		$this->readOnly('config', new Application\Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat));
 		$this->setupErrorReporting();
 		return $this;
 	}
@@ -114,7 +114,7 @@ class Application extends Util\TypedRegistry {
 	 * @param string $value
 	 */
 	public function withConfigurationFormat($value) {
-		$this->offsetSet('configFormat', \Nano_Config::format($value));
+		$this->offsetSet('configFormat', Application\Config::format($value));
 		return $this;
 	}
 
@@ -170,7 +170,7 @@ class Application extends Util\TypedRegistry {
 			} elseif ($this->offsetExists('modulesDir') && is_dir($this->modulesDir . DIRECTORY_SEPARATOR . $name)) {
 				$path = $this->modulesDir . DIRECTORY_SEPARATOR . $name;
 			} else {
-				throw new \Nano\Application\Exception\ModuleNotFound($name);
+				throw new Application\Exception\ModuleNotFound($name);
 			}
 		}
 

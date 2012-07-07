@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Config_Format_Unsupported implements Nano_Config_Format {
+namespace Nano\Application\Config\Format;
+
+class Unsupported implements \Nano\Application\Config\Format {
 
 	/**
 	 * @return boolean
