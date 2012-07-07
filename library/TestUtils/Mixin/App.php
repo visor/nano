@@ -1,14 +1,19 @@
 <?php
 
-class TestUtils_Mixin_App extends TestUtils_Mixin {
+namespace Nano\TestUtils\Mixin;
 
+class App extends \Nano\TestUtils\Mixin {
+
+	/**
+	 * @var null|\Nano\Application
+	 */
 	protected $backup = null;
 
 	public function backup() {
 		if (null === $this->backup) {
-			$this->backup = Nano::app();
+			$this->backup = \Nano::app();
 		}
-		Nano::setApplication(null);
+		\Nano::setApplication(null);
 	}
 
 	public function restore() {
@@ -16,8 +21,8 @@ class TestUtils_Mixin_App extends TestUtils_Mixin {
 			return;
 		}
 
-		Nano::setApplication(null);
-		Nano::setApplication($this->backup);
+		\Nano::setApplication(null);
+		\Nano::setApplication($this->backup);
 		$this->backup = null;
 	}
 

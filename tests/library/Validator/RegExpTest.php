@@ -3,7 +3,7 @@
 /**
  * @group library
  */
-class Library_Validator_RegExpTest extends TestUtils_TestCase {
+class Library_Validator_RegExpTest extends \Nano\TestUtils\TestCase {
 
 	public function testIsValidShouldReturnFalseWhenPatternNotMatches() {
 		$validator = new \Nano\Validator\RegExp('/foo/');

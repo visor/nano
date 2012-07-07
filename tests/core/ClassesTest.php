@@ -4,7 +4,7 @@
  * @group core
  * @group names
  */
-class Core_ClassesTest extends TestUtils_TestCase {
+class Core_ClassesTest extends \Nano\TestUtils\TestCase {
 
 	public function testIsNanoShouldReturnTrueWhenClassUsesTopNanoNamespace() {
 		self::assertTrue(\Nano\Util\Classes::isNanoClass('Nano\\Util\\Classes'));

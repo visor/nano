@@ -3,7 +3,7 @@
 /**
  * @group library
  */
-class Library_Exception_DescribeTest extends TestUtils_TestCase {
+class Library_Exception_DescribeTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var Library_Exception_TestException

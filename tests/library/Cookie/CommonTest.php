@@ -3,7 +3,7 @@
 /**
  * @group cookie
  */
-class Library_Cookie_CommonTest extends TestUtils_TestCase {
+class Library_Cookie_CommonTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Util\Cookie

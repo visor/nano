@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_RunnableTest extends TestUtils_TestCase {
+class Core_Route_RunnableTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application

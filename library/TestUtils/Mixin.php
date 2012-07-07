@@ -1,8 +1,5 @@
 <?php
 
-abstract class TestUtils_Mixin {
+namespace Nano\TestUtils;
 
-	public function __construct() {
-	}
-
-}
+abstract class Mixin {}

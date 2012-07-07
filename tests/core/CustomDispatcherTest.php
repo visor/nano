@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_CustomDispatcherTest extends TestUtils_TestCase {
+class Core_CustomDispatcherTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application\Dispatcher

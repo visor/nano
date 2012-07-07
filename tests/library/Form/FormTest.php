@@ -3,7 +3,7 @@
 /**
  * @group library
  */
-class Library_Form_CommonTest extends TestUtils_TestCase {
+class Library_Form_CommonTest extends \Nano\TestUtils\TestCase {
 
 	public function testGetValidatorShouldThrowsWhenNotExistedValidatorQueries() {
 		$this->setExpectedException('\Nano\Exception', 'Validator for field "foo" not defined');

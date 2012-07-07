@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_TypedRegistryTest extends TestUtils_TestCase {
+class Core_TypedRegistryTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Util\TypedRegistry

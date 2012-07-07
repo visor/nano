@@ -20,7 +20,7 @@ class Phpunit extends \Nano\Cli\Script {
 	 */
 	public function run(array $args) {
 		include 'PHPUnit/Autoload.php';
-		$command = new \TestUtils_TextUI_Command();
+		$command = new \Nano\TestUtils\TextUI\Command();
 		$command->run($args, true);
 	}
 

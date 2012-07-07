@@ -1,6 +1,6 @@
 <?php
 
-class Core_L10n_LocaleTest extends TestUtils_TestCase {
+class Core_L10n_LocaleTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\L10n\Locale

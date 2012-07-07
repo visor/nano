@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_C_RedirectTest extends TestUtils_TestCase {
+class Core_C_RedirectTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Controller\Redirect

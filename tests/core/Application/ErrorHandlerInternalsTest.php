@@ -4,7 +4,7 @@
  * @group core
  * @group error-handler
  */
-class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
+class Application_ErrorHandlerInternalsTest extends \Nano\TestUtils\TestCase {
 
 	protected function setUp() {
 		$this->app->backup();

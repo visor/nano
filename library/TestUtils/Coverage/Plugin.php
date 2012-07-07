@@ -1,6 +1,8 @@
 <?php
 
-class TestUtils_Coverage_Plugin implements \Nano\Controller\Plugin {
+namespace Nano\TestUtils\Coverage;
+
+class Plugin implements \Nano\Controller\Plugin {
 
 	const DATA_DIR      = 'coverage-data';
 	const FILES_DIR     = 'files';

@@ -1,21 +1,25 @@
 <?php
 
+namespace Nano\TestUtils;
+
 /**
- * @property TestUtils_Mixin_Connect $connection
- * @property TestUtils_Mixin_Files $files
- * @property TestUtils_Mixin_App $app
+ * @property \Nano\TestUtils\Mixin\Connect $connection
+ * @property \Nano\TestUtils\Mixin\Files $files
+ * @property \Nano\TestUtils\Mixin\App $app
+ *
+ * @property \Nano\Application $application
  */
-abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
+abstract class TestCase extends \PHPUnit_Framework_TestCase {
 
 	public function __construct($name = NULL, array $data = array(), $dataName = '') {
 		parent::__construct($name, $data, $dataName);
-		$this->addMixin('files', 'TestUtils_Mixin_Files');
-		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
-		$this->addMixin('app', 'TestUtils_Mixin_App');
+		$this->addMixin('files', '\Nano\TestUtils\Mixin\Files');
+		$this->addMixin('connection', '\Nano\TestUtils\Mixin\Connect');
+		$this->addMixin('app', '\Nano\TestUtils\Mixin\App');
 	}
 
 	public static function getObjectProperty($object, $name) {
-		$class    = new ReflectionClass($object);
+		$class    = new \ReflectionClass($object);
 		$property = $class->getProperty($name);
 		if (!$property->isPublic()) {
 			$property->setAccessible(true);
@@ -28,7 +32,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	public static function setObjectProperty($object, $name, $value) {
-		$class    = new ReflectionClass($object);
+		$class    = new \ReflectionClass($object);
 		$property = $class->getProperty($name);
 		if (!$property->isPublic()) {
 			$property->setAccessible(true);
@@ -72,15 +76,15 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 
 	protected function addMixin($property, $className) {
 		if (isset($this->$property)) {
-			throw new InvalidArgumentException('$property');
+			throw new \InvalidArgumentException('$property');
 		}
 
-		$class = new ReflectionClass($className);
-		if (!$class->isSubclassOf('TestUtils_Mixin')) {
-			throw new InvalidArgumentException('$className');
+		$class = new \ReflectionClass($className);
+		if (!$class->isSubclassOf('\Nano\TestUtils\Mixin')) {
+			throw new \InvalidArgumentException('$className');
 		}
 		if (!$class->isInstantiable()) {
-			throw new InvalidArgumentException('$className');
+			throw new \InvalidArgumentException('$className');
 		}
 
 		$this->$property = $class->newInstance();
@@ -95,7 +99,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	 */
 	protected function runTestAction($module, $controller, $action, array $params = array()) {
 		if (!isSet($this->application)) {
-			throw new RuntimeException('Configure test application');
+			throw new \RuntimeException('Configure test application');
 		}
 		return self::runAction($this->application, $module, $controller, $action, $params);
 	}

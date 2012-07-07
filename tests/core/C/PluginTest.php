@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_C_PluginTest extends TestUtils_TestCase implements \Nano\Controller\Plugin {
+class Core_C_PluginTest extends \Nano\TestUtils\TestCase implements \Nano\Controller\Plugin {
 
 	/**
 	 * @var \Nano\Controller

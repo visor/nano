@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_DispatcherTest extends TestUtils_TestCase {
+class Core_DispatcherTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var boolean

@@ -3,7 +3,7 @@
 /**
  * @group library
  */
-class Library_Validator_CompositeTest extends TestUtils_TestCase {
+class Library_Validator_CompositeTest extends \Nano\TestUtils\TestCase {
 
 	public function testIsValidShouldReturnTrueWhenAllChildValidatorsValid() {
 		$validator = new \Nano\Validator\Composite();

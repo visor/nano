@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_C_TestResponseTest extends TestUtils_TestCase {
+class Core_C_TestResponseTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Controller\Response

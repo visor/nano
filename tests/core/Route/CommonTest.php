@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_CommonTest extends TestUtils_TestCase {
+class Core_Route_CommonTest extends \Nano\TestUtils\TestCase {
 
 	public function testControllerShouldReturnPassedParam() {
 		self::assertEquals('some', \Nano\Route\Common::create('', 'some', 'action')->controller());

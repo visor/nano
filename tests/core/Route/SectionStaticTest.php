@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_SectionStaticTest extends TestUtils_TestCase {
+class Core_Route_SectionStaticTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Route\Section\StaticLocation

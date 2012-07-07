@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_SubdomainTest extends TestUtils_TestCase {
+class Core_Route_SubdomainTest extends \Nano\TestUtils\TestCase {
 
 	public function testMatchSubdomainOnly() {
 		$route = new \Nano\Route\Subdomain('.+', null);

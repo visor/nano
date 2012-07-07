@@ -6,7 +6,7 @@ $application = new \Nano\Application();
 $application
 	->withConfigurationFormat('php')
 	->withRootDir(__DIR__)
-	->withPlugin(new TestUtils_Coverage_Plugin(__DIR__))
+	->withPlugin(new Nano\TestUtils\Coverage\Plugin(__DIR__))
 
 	->configure()
 ;

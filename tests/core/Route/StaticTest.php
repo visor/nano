@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_StaticTest extends TestUtils_TestCase {
+class Core_Route_StaticTest extends \Nano\TestUtils\TestCase {
 
 	public function testShouldMatchIgnoreCase() {
 		$route = new \Nano\Route\StaticLocation('some-string', 'test', 'test', 'test');

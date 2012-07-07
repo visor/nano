@@ -1,6 +1,6 @@
 <?php
 
-class Core_L10n_MessageHelperTest extends TestUtils_TestCase {
+class Core_L10n_MessageHelperTest extends \Nano\TestUtils\TestCase {
 
 	protected function setUp() {
 		$this->app->backup();

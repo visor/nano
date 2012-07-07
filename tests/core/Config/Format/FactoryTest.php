@@ -4,7 +4,7 @@
  * @group core
  * @group config
  */
-class Core_Config_Format_FactoryTest extends TestUtils_TestCase {
+class Core_Config_Format_FactoryTest extends \Nano\TestUtils\TestCase {
 
 	public function testShouldReturnFormatInstanceIfAvailable() {
 		self::assertInstanceOf('\Nano\Application\Config\Format', \Nano\Application\Config::format('php'));

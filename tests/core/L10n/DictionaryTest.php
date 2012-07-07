@@ -1,6 +1,6 @@
 <?php
 
-class Core_L10n_DictionaryTest extends TestUtils_TestCase {
+class Core_L10n_DictionaryTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\L10n\Dictionary

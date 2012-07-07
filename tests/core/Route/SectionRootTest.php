@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_SectionRootTest extends TestUtils_TestCase {
+class Core_Route_SectionRootTest extends \Nano\TestUtils\TestCase {
 
 	public function testSectionMatchesShouldReturnTrue() {
 		$section = new \Nano\Route\Section\Root();

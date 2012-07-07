@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_RenderTest extends TestUtils_TestCase {
+class Core_RenderTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application

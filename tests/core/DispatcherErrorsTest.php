@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
+class Core_DispatcherErrorsTest extends \Nano\TestUtils\HttpTest {
 
 	/**
 	 * @var \Nano\Application\Dispatcher

@@ -1,6 +1,6 @@
 <?php
 
-class TestUtils_Mixin_FilesTest extends TestUtils_TestCase {
+class TestUtils_Mixin_FilesTest extends \Nano\TestUtils\TestCase {
 
 	public function testCountFilesShouldThrowExceptionWhenDirectoryNotExists() {
 		$this->setExpectedException('InvalidArgumentException', ' is not directory');

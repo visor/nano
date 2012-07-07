@@ -1,10 +1,12 @@
 <?php
 
+namespace Nano\TestUtils;
+
 /**
- * @property TestUtils_Mixin_Connect $connection
- * @property TestUtils_Mixin_Files $files
+ * @property \Nano\TestUtils\Mixin\Connect $connection
+ * @property \Nano\TestUtils\Mixin\Files $files
  */
-class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
+class WebTest extends \PHPUnit_Extensions_SeleniumTestCase {
 
 	/**
 	 * @var string
@@ -41,8 +43,8 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 			$this->markTestSkipped('Store tested application instance in $GLOBALS array');
 		}
 
-		$this->addMixin('files', 'TestUtils_Mixin_Files');
-		$this->addMixin('connection', 'TestUtils_Mixin_Connect');
+		$this->addMixin('files', '\Nano\TestUtils\Mixin\Files');
+		$this->addMixin('connection', '\Nano\TestUtils\Mixin\Connect');
 		$this->checkConnection();
 
 		$this->application       = $GLOBALS['application'];
@@ -115,15 +117,15 @@ class TestUtils_WebTest extends PHPUnit_Extensions_SeleniumTestCase {
 
 	protected function addMixin($property, $className) {
 		if (isset($this->$property)) {
-			throw new InvalidArgumentException('$property');
+			throw new \InvalidArgumentException('$property');
 		}
 
-		$class = new ReflectionClass($className);
-		if (!$class->isSubclassOf('TestUtils_Mixin')) {
-			throw new InvalidArgumentException('$className');
+		$class = new \ReflectionClass($className);
+		if (!$class->isSubclassOf('\Nano\TestUtils\Mixin')) {
+			throw new \InvalidArgumentException('$className');
 		}
 		if (!$class->isInstantiable()) {
-			throw new InvalidArgumentException('$className');
+			throw new \InvalidArgumentException('$className');
 		}
 
 		$this->$property = $class->newInstance();

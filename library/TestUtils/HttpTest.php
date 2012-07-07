@@ -1,6 +1,8 @@
 <?php
 
-class TestUtils_HttpTest extends TestUtils_TestCase {
+namespace Nano\TestUtils;
+
+class HttpTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var string
@@ -13,7 +15,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	protected $application;
 
 	/**
-	 * @var HttpRequest
+	 * @var \HttpRequest
 	 */
 	protected $request;
 
@@ -24,7 +26,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 		$this->testId = md5(uniqid(rand(), TRUE));
 	}
 
-	public function run(PHPUnit_Framework_TestResult $result = NULL) {
+	public function run(\PHPUnit_Framework_TestResult $result = NULL) {
 		if (null === $result) {
 			$result = $this->createResult();
 		}
@@ -47,23 +49,23 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 	}
 
 	/**
-	 * @return HttpRequest
+	 * @return \HttpRequest
 	 */
 	protected function getRequest() {
-		$result = new HttpRequest();
+		$result = new \HttpRequest();
 		$result->addCookies(array('PHPUNIT_SELENIUM_TEST_ID' => $this->testId));
 		return $result;
 	}
 
 	protected function sendGet($url) {
 		$this->request->setUrl($this->getUrl($url));
-		$this->request->setMethod(HttpRequest::METH_GET);
+		$this->request->setMethod(\HttpRequest::METH_GET);
 		$this->request->send();
 	}
 
 	protected function sendPost($url, array $data = array()) {
 		$this->request->setUrl($this->getUrl($url));
-		$this->request->setMethod(HttpRequest::METH_POST);
+		$this->request->setMethod(\HttpRequest::METH_POST);
 		if (count($data)) {
 			$this->request->setPostFields($data);
 		}
@@ -88,10 +90,10 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 
 	protected function setUp() {
 		if (!class_exists('HttpRequest', false)) {
-			throw new PHPUnit_Framework_SkippedTestError('Required pecl_http module not installed');
+			throw new \PHPUnit_Framework_SkippedTestError('Required pecl_http module not installed');
 		}
 		if (!isSet($GLOBALS['application'])) {
-			throw new PHPUnit_Framework_SkippedTestError('Store application instance in $GLOBALS[\'application\']');
+			throw new \PHPUnit_Framework_SkippedTestError('Store application instance in $GLOBALS[\'application\']');
 		}
 
 		$this->application = $GLOBALS['application'];
@@ -119,7 +121,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 			return $this->matchLocalAndRemotePaths($coverageData);
 		}
 
-		throw new Exception('Empty or invalid code coverage data received from url "' . $url . '"');
+		throw new \Exception('Empty or invalid code coverage data received from url "' . $url . '"');
 	}
 
 	/**
@@ -134,7 +136,7 @@ class TestUtils_HttpTest extends TestUtils_TestCase {
 			$remotePath = $originalRemotePath;
 			$separator  = $this->findDirectorySeparator($remotePath);
 
-			while (!($localpath = PHPUnit_Util_Filesystem::fileExistsInIncludePath($remotePath)) && strpos($remotePath, $separator) !== FALSE) {
+			while (!($localpath = \PHPUnit_Util_Filesystem::fileExistsInIncludePath($remotePath)) && strpos($remotePath, $separator) !== FALSE) {
 				$remotePath = substr($remotePath, strpos($remotePath, $separator) + 1);
 			}
 

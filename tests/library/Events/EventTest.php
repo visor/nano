@@ -4,7 +4,7 @@
  * @group library
  * @group events
  */
-class Library_Events_EventTest extends TestUtils_TestCase {
+class Library_Events_EventTest extends \Nano\TestUtils\TestCase {
 
 	public function testPassingEventTypesIntoContructor() {
 		$event = new \Nano\Event('some-type');

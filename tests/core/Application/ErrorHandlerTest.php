@@ -4,7 +4,7 @@
  * @group core
  * @group error-handler
  */
-class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
+class Core_Application_ErrorHandlerTest extends \Nano\TestUtils\HttpTest {
 
 	protected function setUp() {
 		parent::setUp();

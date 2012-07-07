@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_HelperBrokerTest extends TestUtils_TestCase {
+class Core_HelperBrokerTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application

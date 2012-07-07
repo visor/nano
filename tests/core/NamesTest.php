@@ -4,7 +4,7 @@
  * @group core
  * @group names
  */
-class Core_NamesTest extends TestUtils_TestCase {
+class Core_NamesTest extends \Nano\TestUtils\TestCase {
 
 	protected function setUp() {
 		$this->app->backup();

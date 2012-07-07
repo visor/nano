@@ -4,7 +4,7 @@
  * @group core
  * @group cli
  */
-class Core_Cli_CommonTest extends TestUtils_TestCase {
+class Core_Cli_CommonTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var string

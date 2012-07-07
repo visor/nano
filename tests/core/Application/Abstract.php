@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Application_Abstract extends TestUtils_TestCase {
+abstract class Core_Application_Abstract extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application

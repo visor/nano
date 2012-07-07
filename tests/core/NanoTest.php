@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_NanoTest extends TestUtils_TestCase {
+class Core_NanoTest extends \Nano\TestUtils\TestCase {
 
 	protected $backup;
 

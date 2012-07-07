@@ -1,17 +1,19 @@
 <?php
 
-class TestUtils_Mixin_Files extends TestUtils_Mixin {
+namespace Nano\TestUtils\Mixin;
+
+class Files extends \Nano\TestUtils\Mixin {
 
 	const EMPTY_FILE = 'empty';
 
 	/**
 	 * @return string
-	 * @param TestUtils_TestCase $test
+	 * @param \Nano\TestUtils\TestCase $test
 	 * @param string $name
 	 * @param string|null $anotherDir
 	 */
-	public function get(TestUtils_TestCase $test, $name, $anotherDir = null) {
-		$class  = new ReflectionClass($test);
+	public function get(\Nano\TestUtils\TestCase $test, $name, $anotherDir = null) {
+		$class  = new \ReflectionClass($test);
 		$name   = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $name);
 		$result = dirName($class->getFileName());
 		if (null !== $anotherDir) {
@@ -20,7 +22,7 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 		return  $result . DIRECTORY_SEPARATOR . '_files' . $name;
 	}
 
-	public function clean(TestUtils_TestCase $test, $dir, $fullPath = false) {
+	public function clean(\Nano\TestUtils\TestCase $test, $dir, $fullPath = false) {
 		if (false === $fullPath) {
 			$dir = $this->get($test, $dir);
 		}
@@ -28,9 +30,9 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 			mkDir($dir, 0755, true);
 			return true;
 		}
-		$i = new DirectoryIterator($dir);
+		$i = new \DirectoryIterator($dir);
 		$result = true;
-		foreach ($i as $file) { /** @var DirectoryIterator $file */
+		foreach ($i as $file) { /** @var \DirectoryIterator $file */
 			if ($file->isDot()) {
 				continue;
 			}
@@ -52,21 +54,21 @@ class TestUtils_Mixin_Files extends TestUtils_Mixin {
 
 	/**
 	 * @return int
-	 * @param TestUtils_TestCase $test
+	 * @param \Nano\TestUtils\TestCase $test
 	 * @param string $dir
 	 *
-	 * @throws InvalidArgumentException
+	 * @throws \InvalidArgumentException
 	 */
-	public function countFiles(TestUtils_TestCase $test, $dir) {
+	public function countFiles(\Nano\TestUtils\TestCase $test, $dir) {
 		$realPath = $this->get($test, $dir);
 		if (!file_exists($realPath)) {
-			throw new InvalidArgumentException($realPath . ' not exists');
+			throw new \InvalidArgumentException($realPath . ' not exists');
 		}
 		if (!is_dir($realPath)) {
-			throw new InvalidArgumentException($realPath . ' is not directory');
+			throw new \InvalidArgumentException($realPath . ' is not directory');
 		}
 
-		$iterator = new DirectoryIterator($realPath);
+		$iterator = new \DirectoryIterator($realPath);
 		$result   = 0;
 		foreach ($iterator as $item) {
 			if ($item->isDot()) {

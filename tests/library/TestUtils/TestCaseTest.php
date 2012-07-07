@@ -4,7 +4,7 @@
  * @group test-utils
  * @group library
  */
-class TestUtils_TestCaseTest extends TestUtils_TestCase {
+class TestUtils_TestCaseTest extends \Nano\TestUtils\TestCase {
 
 	protected $protected = 'some protected value';
 
@@ -12,8 +12,8 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 
 	public function testShouldCreateMixinsInConstructor() {
 		$testCase = new self('test');
-		self::assertInstanceOf('TestUtils_Mixin_Files', $testCase->files);
-		self::assertInstanceOf('TestUtils_Mixin_Connect', $testCase->connection);
+		self::assertInstanceOf('\Nano\TestUtils\Mixin\Files', $testCase->files);
+		self::assertInstanceOf('\Nano\TestUtils\Mixin\Connect', $testCase->connection);
 	}
 
 	public function testAddMixinShouldThrowExceptionWhenPropertyExists() {
@@ -62,4 +62,4 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 
 }
 
-abstract class Abstract_Test_Mixin extends TestUtils_Mixin {}
+abstract class Abstract_Test_Mixin extends \Nano\TestUtils\Mixin {}

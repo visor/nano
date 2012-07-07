@@ -4,7 +4,7 @@
  * @group core
  * @group config
  */
-class Core_Config_BuilderTest extends TestUtils_TestCase {
+class Core_Config_BuilderTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application\Config\Builder

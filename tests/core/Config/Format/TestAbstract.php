@@ -1,6 +1,6 @@
 <?php
 
-abstract class Core_Config_Format_TestAbstract extends TestUtils_TestCase  {
+abstract class Core_Config_Format_TestAbstract extends \Nano\TestUtils\TestCase  {
 
 	/**
 	 * @var string

@@ -3,7 +3,7 @@
 /**
  * @group cookie
  */
-class Library_Cookie_BrowserTest extends TestUtils_HttpTest {
+class Library_Cookie_BrowserTest extends \Nano\TestUtils\HttpTest {
 
 	public function testSetCookieInBrowser() {
 		$this->request->enableCookies();

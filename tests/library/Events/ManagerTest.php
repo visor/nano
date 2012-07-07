@@ -4,7 +4,7 @@
  * @group library
  * @group events
  */
-class Library_Events_ManagerTest extends TestUtils_TestCase {
+class Library_Events_ManagerTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Event\Manager

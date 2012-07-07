@@ -1,6 +1,6 @@
 <?php
 
-class TestUtils_Mixin_AppTest extends TestUtils_TestCase {
+class TestUtils_Mixin_AppTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var \Nano\Application
@@ -8,13 +8,13 @@ class TestUtils_Mixin_AppTest extends TestUtils_TestCase {
 	protected $app;
 
 	/**
-	 * @var TestUtils_Mixin_App
+	 * @var \Nano\TestUtils\Mixin\App
 	 */
 	protected $mixin;
 
 	protected function setUp() {
 		$this->app   = \Nano::app();
-		$this->mixin = new TestUtils_Mixin_App;
+		$this->mixin = new \Nano\TestUtils\Mixin\App;
 	}
 
 	public function testShouldStoreApplicationIntoInternalPropertyWhenBackup() {

@@ -4,7 +4,7 @@
  * @group core
  * @group cli
  */
-class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
+class Core_Cli_ScriptInfoTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @var string

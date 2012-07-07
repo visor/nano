@@ -4,7 +4,7 @@
  * @group core
  * @group routes
  */
-class Core_Route_RegExpTest extends TestUtils_TestCase {
+class Core_Route_RegExpTest extends \Nano\TestUtils\TestCase {
 
 	public function testShouldMatchIgnoreCase() {
 		$route = new Nano\Route\RegExp('some-string-with-\d+', 'test', 'test', 'test');

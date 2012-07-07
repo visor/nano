@@ -4,7 +4,7 @@
  * @group core
  * @group config
  */
-class Core_ConfigTest extends TestUtils_TestCase {
+class Core_ConfigTest extends \Nano\TestUtils\TestCase {
 
 	public function testNameShouldReturnNullWhenConfigurationNameNotSpecified() {
 		$config = new \Nano\Application\Config($this->files->get($this, '/configs/empty-array'), new \Nano\Application\Config\Format\Php());

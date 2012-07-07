@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_C_ResponseSendTest extends TestUtils_HttpTest {
+class Core_C_ResponseSendTest extends \Nano\TestUtils\HttpTest {
 
 	public function testSendingResponseBody() {
 		$this->sendGet('/response/set-body');
