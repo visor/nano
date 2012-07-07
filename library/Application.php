@@ -181,9 +181,9 @@ class Application extends Util\TypedRegistry {
 
 	/**
 	 * @return \Nano\Application
-	 * @param \Nano_C_Plugin $value
+	 * @param \Nano\Controller\Plugin $value
 	 */
-	public function withPlugin(\Nano_C_Plugin $value) {
+	public function withPlugin(\Nano\Controller\Plugin $value) {
 		$this->plugins->attach($value);
 		return $this;
 	}

@@ -1,6 +1,6 @@
 <?php
 
-class Core_Application_FakePlugin implements Nano_C_Plugin {
+class Core_Application_FakePlugin implements \Nano\Controller\Plugin {
 
 	/**
 	 * @var boolean

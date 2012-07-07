@@ -23,7 +23,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		unSet($config->errors);
 		self::setObjectProperty($application->config, 'config', $config);
 
-		$response = new Nano_C_Response_Test($application);
+		$response = new \Nano\Controller\Response\Test($application);
 		$handler  = new PublicErrorHandler($application, true);
 		$handler->updateResponse($response);
 		self::assertFalse($response->hasHeader('X-Modified'));
@@ -37,7 +37,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		unSet($config->errors->response);
 		self::setObjectProperty($application->config, 'config', $config);
 
-		$response = new Nano_C_Response_Test($application);
+		$response = new \Nano\Controller\Response\Test($application);
 		$handler  = new PublicErrorHandler($application, true);
 		$handler->updateResponse($response);
 		self::assertFalse($response->hasHeader('X-Modified'));
@@ -51,7 +51,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		$config->errors->response = 'ClassNotExists';
 		self::setObjectProperty($application->config, 'config', $config);
 
-		$response = new Nano_C_Response_Test($application);
+		$response = new \Nano\Controller\Response\Test($application);
 		$handler  = new PublicErrorHandler($application, true);
 		$handler->updateResponse($response);
 		self::assertFalse($response->hasHeader('X-Modified'));
@@ -65,7 +65,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		$config->errors->response = 'stdClass';
 		self::setObjectProperty($application->config, 'config', $config);
 
-		$response = new Nano_C_Response_Test($application);
+		$response = new \Nano\Controller\Response\Test($application);
 		$handler  = new PublicErrorHandler($application, true);
 		$handler->updateResponse($response);
 		self::assertFalse($response->hasHeader('X-Modified'));
@@ -79,7 +79,7 @@ class Application_ErrorHandlerInternalsTest extends TestUtils_TestCase {
 		$config->errors->response = 'AbstractResponseModifier';
 		self::setObjectProperty($application->config, 'config', $config);
 
-		$response = new Nano_C_Response_Test($application);
+		$response = new \Nano\Controller\Response\Test($application);
 		$handler  = new PublicErrorHandler($application, true);
 		$handler->updateResponse($response);
 		self::assertFalse($response->hasHeader('X-Modified'));

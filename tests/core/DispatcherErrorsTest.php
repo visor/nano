@@ -13,7 +13,7 @@ class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->application->dispatcher->setResponse(new Nano_C_Response_Test($this->application));
+		$this->application->dispatcher->setResponse(new \Nano\Controller\Response\Test($this->application));
 		$this->dispatcher = $this->application->dispatcher;
 	}
 
@@ -40,7 +40,7 @@ class Core_DispatcherErrorsTest extends TestUtils_HttpTest {
 	public function testDispatchShouldGenerateNotFoundErrorWhenNoRoutesMatched() {
 		$this->sendGet('/page-not-found');
 
-		self::assertEquals(Nano_C_Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
 		self::assertContains('Route not found for: page-not-found', $this->request->getResponseBody());
 	}
 

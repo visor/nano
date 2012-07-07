@@ -6,12 +6,12 @@
 class Core_C_TestResponseTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_C_Response
+	 * @var \Nano\Controller\Response
 	 */
 	protected $response;
 
 	protected function setUp() {
-		$this->response = new Nano_C_Response_Test();
+		$this->response = new \Nano\Controller\Response\Test();
 		$this->response->addHeader('X-Header', 'value');
 	}
 

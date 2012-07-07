@@ -22,7 +22,7 @@ class Core_Route_RunnableTest extends TestUtils_TestCase {
 			->configure()
 		;
 
-		$this->application->dispatcher->setResponse(new Nano_C_Response_Test($this->application));
+		$this->application->dispatcher->setResponse(new \Nano\Controller\Response\Test($this->application));
 	}
 
 	public function testDispatcherShouldRunRouteWithoutInvocingController() {

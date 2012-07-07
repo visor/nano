@@ -41,7 +41,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @return Nano_C_Response_Test
+	 * @return \Nano\Controller\Response\Test
 	 * @param \Nano\Application $application
 	 * @param string $module
 	 * @param string $controller
@@ -56,7 +56,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 			: \Nano\Names::moduleClass($module, $controller, \Nano\Names::NAMESPACE_CONTROLLER)
 		;
 		$instance  = new $className($application);
-		$instance->setResponse(new \Nano_C_Response_Test($application));
+		$instance->setResponse(new \Nano\Controller\Response\Test($application));
 		$instance->setRenderer(new \Nano\Render($application));
 
 		$params['module']     = $module;
@@ -87,7 +87,7 @@ abstract class TestUtils_TestCase extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @return Nano_C_Response_Test
+	 * @return \Nano\Controller\Response\Test
 	 * @param string $module
 	 * @param string $controller
 	 * @param string $action

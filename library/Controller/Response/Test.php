@@ -1,6 +1,8 @@
 <?php
 
-class Nano_C_Response_Test extends Nano_C_Response {
+namespace Nano\Controller\Response;
+
+class Test extends \Nano\Controller\Response {
 
 	public function sendHeaders() {
 	}

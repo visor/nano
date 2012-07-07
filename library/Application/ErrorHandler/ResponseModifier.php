@@ -4,6 +4,6 @@ namespace Nano\Application\ErrorHandler;
 
 interface ResponseModifier {
 
-	public function update(\Nano_C_Response $response);
+	public function update(\Nano\Controller\Response $response);
 
 }

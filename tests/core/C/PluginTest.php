@@ -3,7 +3,7 @@
 /**
  * @group core
  */
-class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
+class Core_C_PluginTest extends TestUtils_TestCase implements \Nano\Controller\Plugin {
 
 	/**
 	 * @var \Nano\Controller
@@ -52,7 +52,7 @@ class Core_C_PluginTest extends TestUtils_TestCase implements Nano_C_Plugin {
 	}
 
 	/**
-	 * @cover Nano_C_Plugin
+	 * @cover \Nano\Controller\Plugin
 	 */
 	public function testPluginMethodsShouldRuns() {
 		self::assertNull($this->controller->run('example'));

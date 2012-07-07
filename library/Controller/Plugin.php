@@ -1,6 +1,8 @@
 <?php
 
-interface Nano_C_Plugin {
+namespace Nano\Controller;
+
+interface Plugin {
 
 	/**
 	 * @return void

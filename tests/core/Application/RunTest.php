@@ -8,7 +8,7 @@ require_once __DIR__ . '/Abstract.php';
 class Core_Application_RunTest extends Core_Application_Abstract {
 
 	/**
-	 * @var Nano_C_Response
+	 * @var \Nano\Controller\Response
 	 */
 	protected $response;
 
@@ -36,7 +36,7 @@ class Core_Application_RunTest extends Core_Application_Abstract {
 
 		$this->application->configure();
 
-		$this->response = new Nano_C_Response_Test($this->application);
+		$this->response = new \Nano\Controller\Response\Test($this->application);
 		$this->application->dispatcher->setResponse($this->response);
 	}
 

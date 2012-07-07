@@ -167,7 +167,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		$routes     = new \Nano\Routes();
 		$route      = \Nano\Route\Common::create('some', 'class1', 'index', 'test');
 		$dispatcher = $this->application->dispatcher;
-		$response   = new Nano_C_Response_Test($this->application);
+		$response   = new \Nano\Controller\Response\Test($this->application);
 
 		$dispatcher->setResponse($response);
 		$routes->addRoute('get', $route);
@@ -191,7 +191,7 @@ class Core_Application_ModulesTest extends Core_Application_Abstract {
 		;
 		self::assertTrue($this->application->loader->loadClass('Module\Test\Controller\Class1'));
 
-		$response = new Nano_C_Response_Test($this->application);
+		$response = new \Nano\Controller\Response\Test($this->application);
 
 		$this->application->dispatcher->setResponse($response);
 		$this->application->dispatcher->run(\Nano\Route\Common::create('', 'class1', 'view', 'test'));

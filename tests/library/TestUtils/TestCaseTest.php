@@ -53,7 +53,7 @@ class TestUtils_TestCaseTest extends TestUtils_TestCase {
 	public function testRunTestActionShouldReturnActionResponse() {
 		$this->application = $GLOBALS['application'];
 		$result = $this->runTestAction(null, 'response-test', 'set-body');
-		self::assertInstanceOf('Nano_C_Response_Test', $result);
+		self::assertInstanceOf('\Nano\Controller\Response\Test', $result);
 	}
 
 	protected function tearDown() {

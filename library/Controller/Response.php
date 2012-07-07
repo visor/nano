@@ -1,6 +1,8 @@
 <?php
 
-class Nano_C_Response {
+namespace Nano\Controller;
+
+class Response {
 
 	const STATUS_DEFAULT   = 200;
 	const STATUS_NOT_FOUND = 404;
@@ -79,7 +81,7 @@ class Nano_C_Response {
 	protected $status;
 
 	/**
-	 * @var ArrayObject
+	 * @var \ArrayObject
 	 */
 	protected $headers;
 
@@ -96,14 +98,14 @@ class Nano_C_Response {
 	function __construct() {
 		$this->status      = self::STATUS_DEFAULT;
 		$this->version     = self::VERSION_10;
-		$this->headers     = new ArrayObject();
+		$this->headers     = new \ArrayObject();
 		$this->body        = null;
 		$this->headersSent = false;
 		$this->bodySent    = false;
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param string $value
 	 */
 	public function setVersion($value) {
@@ -119,7 +121,7 @@ class Nano_C_Response {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param int $value
 	 */
 	public function setStatus($value) {
@@ -135,7 +137,7 @@ class Nano_C_Response {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param array $headers
 	 */
 	public function addHeaders(array $headers) {
@@ -146,7 +148,7 @@ class Nano_C_Response {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param string $name
 	 * @param string $value
 	 */
@@ -193,7 +195,7 @@ class Nano_C_Response {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param string $value
 	 */
 	public function setBody($value) {
@@ -206,7 +208,7 @@ class Nano_C_Response {
 	}
 
 	/**
-	 * @return Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param string $value
 	 */
 	public function appendToBody($value) {

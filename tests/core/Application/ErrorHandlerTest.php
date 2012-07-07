@@ -22,7 +22,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->send();
 
 		self::assertEquals('This contents should be displayed!', $this->request->getResponseBody());
-		self::assertEquals(Nano_C_Response::STATUS_DEFAULT, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_DEFAULT, $this->request->getResponseCode());
 	}
 
 	public function testShouldHandleFatalErrorsInActions() {
@@ -31,7 +31,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->send();
 
 		self::assertContains('Error: Call to undefined function generateFatalError()', $this->request->getResponseBody());
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 	}
 
 	public function testShouldHandleGeneratedOutput() {
@@ -39,7 +39,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Error: Call to undefined function generateFatalError()', $this->request->getResponseBody());
 		self::assertContains('Generated output: <pre>This contents should handled in &quot;generated output&quot; section&lt;br /&gt;', $this->request->getResponseBody());
 	}
@@ -49,7 +49,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Parse Error: syntax error, unexpected $end', $this->request->getResponseBody());
 	}
 
@@ -58,7 +58,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Warning: Division by zero', $this->request->getResponseBody());
 	}
 
@@ -67,7 +67,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Notice: Undefined variable: notDefined', $this->request->getResponseBody());
 	}
 
@@ -76,7 +76,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Exception: "RuntimeException" with message "Exception message"', $this->request->getResponseBody());
 	}
 
@@ -85,7 +85,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
 		self::assertContains('Message from action', $this->request->getResponseBody());
 	}
 
@@ -94,7 +94,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_NOT_FOUND, $this->request->getResponseCode());
 		self::assertContains('Route not found for: this-page-not-routed', $this->request->getResponseBody());
 	}
 
@@ -103,7 +103,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Message from action', $this->request->getResponseBody());
 	}
 
@@ -112,7 +112,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains('Error: Message from action', $this->request->getResponseBody());
 	}
 
@@ -128,7 +128,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertContains(
 			'Exception: "Nano\Exception\NotFound" with message "Controller class not found: App\Controller\NoClass (route: no-class::index() when location matches [/no-class])"'
 			, $this->request->getResponseBody()
@@ -140,7 +140,7 @@ class Core_Application_ErrorHandlerTest extends TestUtils_HttpTest {
 		$this->request->setMethod(HttpRequest::METH_GET);
 		$this->request->send();
 
-		self::assertEquals(Nano_C_Response::STATUS_ERROR, $this->request->getResponseCode());
+		self::assertEquals(\Nano\Controller\Response::STATUS_ERROR, $this->request->getResponseCode());
 		self::assertNotContains('Generated output: ', $this->request->getResponseBody());
 	}
 

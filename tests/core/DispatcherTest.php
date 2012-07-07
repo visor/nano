@@ -76,7 +76,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 			->withRootDir($this->files->get($this, ''))
 			->configure()
 		;
-		$application->dispatcher->setResponse(new Nano_C_Response_Test($application));
+		$application->dispatcher->setResponse(new \Nano\Controller\Response\Test($application));
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$routes = new \Nano\Routes();
@@ -104,7 +104,7 @@ class Core_DispatcherTest extends TestUtils_TestCase {
 
 	public function testGetResponseShouldCreateInstanceWhenNull() {
 		self::setObjectProperty($this->dispatcher, 'response', null);
-		self::assertInstanceOf('Nano_C_Response', $this->dispatcher->getResponse());
+		self::assertInstanceOf('\Nano\Controller\Response', $this->dispatcher->getResponse());
 	}
 
 	protected function tearDown() {

@@ -10,7 +10,7 @@ class PublicErrorHandler extends \Nano\Application\ErrorHandler {
 		}
 	}
 
-	public function updateResponse(Nano_C_Response $response) {
+	public function updateResponse(\Nano\Controller\Response $response) {
 		parent::updateResponse($response);
 	}
 

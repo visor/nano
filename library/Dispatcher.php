@@ -48,7 +48,7 @@ class Dispatcher {
 	protected $throw              = false;
 
 	/**
-	 * @var \Nano_C_Response
+	 * @var \Nano\Controller\Response
 	 */
 	protected $response           = null;
 
@@ -232,20 +232,20 @@ class Dispatcher {
 	}
 
 	/**
-	 * @return \Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 */
 	public function getResponse() {
 		if (null === $this->response) {
-			$this->setResponse(new \Nano_C_Response);
+			$this->setResponse(new \Nano\Controller\Response);
 		}
 		return $this->response;
 	}
 
 	/**
 	 * @return \Nano\Dispatcher
-	 * @param \Nano_C_Response $value
+	 * @param \Nano\Controller\Response $value
 	 */
-	public function setResponse(\Nano_C_Response $value) {
+	public function setResponse(\Nano\Controller\Response $value) {
 		$this->response = $value;
 		return $this;
 	}

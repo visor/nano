@@ -6,7 +6,7 @@
 class Core_C_ResponseTest extends TestUtils_TestCase {
 
 	/**
-	 * @var Nano_C_Response
+	 * @var \Nano\Controller\Response
 	 */
 	protected $response;
 
@@ -18,24 +18,24 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 			->withConfigurationFormat('php')
 			->configure()
 		;
-		$this->response = new Nano_C_Response($application);
+		$this->response = new \Nano\Controller\Response($application);
 	}
 
 	public function testSetMethodsShouldReturnSelfInstance() {
-		self::assertInstanceOf('Nano_C_Response', $this->response->setBody(''));
-		self::assertInstanceOf('Nano_C_Response', $this->response->appendToBody(''));
-		self::assertInstanceOf('Nano_C_Response', $this->response->setVersion(''));
-		self::assertInstanceOf('Nano_C_Response', $this->response->setStatus(1));
-		self::assertInstanceOf('Nano_C_Response', $this->response->addHeader('', ''));
-		self::assertInstanceOf('Nano_C_Response', $this->response->addHeaders(array()));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->setBody(''));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->appendToBody(''));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->setVersion(''));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->setStatus(1));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->addHeader('', ''));
+		self::assertInstanceOf('\Nano\Controller\Response', $this->response->addHeaders(array()));
 	}
 
 	public function testDefaultStatus() {
-		self::assertEquals(Nano_C_Response::STATUS_DEFAULT, $this->response->getStatus());
+		self::assertEquals(\Nano\Controller\Response::STATUS_DEFAULT, $this->response->getStatus());
 	}
 
 	public function testDefaultVersion() {
-		self::assertEquals(Nano_C_Response::VERSION_10, $this->response->getVersion());
+		self::assertEquals(\Nano\Controller\Response::VERSION_10, $this->response->getVersion());
 	}
 
 	public function testSettingStatus() {
@@ -44,7 +44,7 @@ class Core_C_ResponseTest extends TestUtils_TestCase {
 	}
 
 	public function testGettingStatus() {
-		self::assertEquals(Nano_C_Response::STATUS_DEFAULT, $this->response->getStatus());
+		self::assertEquals(\Nano\Controller\Response::STATUS_DEFAULT, $this->response->getStatus());
 	}
 
 	public function testAddingHeader() {

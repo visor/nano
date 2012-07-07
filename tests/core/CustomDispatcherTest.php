@@ -34,7 +34,7 @@ class Core_CustomDispatcherTest extends TestUtils_TestCase {
 	public function testNotAcceptCustom() {
 		$this->setExpectedException('\Nano\Exception\NotFound', 'Custom dispatcher fails');
 
-		$response = new Nano_C_Response_Test();
+		$response = new \Nano\Controller\Response\Test();
 		$this->dispatcher
 			->setResponse($response)
 			->throwExceptions(true)

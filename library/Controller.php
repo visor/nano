@@ -52,12 +52,12 @@ abstract class Controller {
 	protected $renderer = null;
 
 	/**
-	 * @var \Nano_C_Response
+	 * @var \Nano\Controller\Response
 	 */
 	protected $response = null;
 
 	/**
-	 * @var \Nano_C_Redirect
+	 * @var \Nano\Controller\Redirect
 	 */
 	protected $redirect = null;
 
@@ -119,13 +119,13 @@ abstract class Controller {
 	}
 
 	/**
-	 * @return \Nano_C_Redirect
+	 * @return \Nano\Controller\Redirect
 	 * @param null|string $to
 	 * @param int $status
 	 */
 	public function redirect($to = null, $status = 302) {
 		if (null === $this->redirect) {
-			$this->redirect = new \Nano_C_Redirect($this->response());
+			$this->redirect = new \Nano\Controller\Redirect($this->response());
 		}
 		$this->markRendered();
 		if (null === $to) {
@@ -136,7 +136,7 @@ abstract class Controller {
 	}
 
 	/**
-	 * @return \Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 */
 	public function response() {
 		return $this->response;
@@ -144,9 +144,9 @@ abstract class Controller {
 
 	/**
 	 * @return void
-	 * @param \Nano_C_Response $value
+	 * @param \Nano\Controller\Response $value
 	 */
-	public function setResponse(\Nano_C_Response $value) {
+	public function setResponse(\Nano\Controller\Response $value) {
 		$this->response = $value;
 	}
 
@@ -243,14 +243,14 @@ abstract class Controller {
 		if (null !== $this->response) {
 			return;
 		}
-		$this->response = new \Nano_C_Response(\Nano::app());
+		$this->response = new \Nano\Controller\Response(\Nano::app());
 	}
 
 	/**
 	 * @return void
 	 */
 	protected function runInit() {
-		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano\Controller\Plugin */
 			$plugin->init($this);
 		}
 		$this->init();
@@ -260,7 +260,7 @@ abstract class Controller {
 	 * @return boolean
 	 */
 	protected function runBefore() {
-		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano\Controller\Plugin */
 			if (false === $plugin->before($this)) {
 				return false;
 			}
@@ -275,7 +275,7 @@ abstract class Controller {
 	 * @return void
 	 */
 	protected function runAfter() {
-		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano_C_Plugin */
+		foreach (\Nano::app()->plugins as $plugin) { /* @var $plugin \Nano\Controller\Plugin */
 			$plugin->after($this);
 		}
 		$this->after();

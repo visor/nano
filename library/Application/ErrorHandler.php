@@ -38,7 +38,7 @@ class ErrorHandler {
 	}
 
 	public function notFound($message) {
-		$response = $this->createDefaultResponse(\Nano_C_Response::STATUS_NOT_FOUND);
+		$response = $this->createDefaultResponse(\Nano\Controller\Response::STATUS_NOT_FOUND);
 		$response->appendToBody($message);
 		$this->updateResponse($response);
 		return $this->send($response);
@@ -84,20 +84,20 @@ class ErrorHandler {
 	}
 
 	/**
-	 * @return \Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param int $status
 	 */
-	public function createDefaultResponse($status = \Nano_C_Response::STATUS_ERROR) {
-		$result = new \Nano_C_Response();
+	public function createDefaultResponse($status = \Nano\Controller\Response::STATUS_ERROR) {
+		$result = new \Nano\Controller\Response();
 		$result->setStatus($status);
 		return $result;
 	}
 
 	/**
-	 * @return \Nano_C_Response
-	 * @param \Nano_C_Response $response
+	 * @return \Nano\Controller\Response
+	 * @param \Nano\Controller\Response $response
 	 */
-	protected function updateResponse(\Nano_C_Response $response) {
+	protected function updateResponse(\Nano\Controller\Response $response) {
 		if (!\Nano::app()->config->exists('errors')) {
 			return $response;
 		}
@@ -127,7 +127,7 @@ class ErrorHandler {
 	}
 
 	/**
-	 * @return \Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param array $error
 	 * @param string|null $buffer
 	 */
@@ -139,7 +139,7 @@ class ErrorHandler {
 	}
 
 	/**
-	 * @return \Nano_C_Response
+	 * @return \Nano\Controller\Response
 	 * @param \Exception $exception
 	 * @param string|null $buffer
 	 */
@@ -160,7 +160,7 @@ class ErrorHandler {
 		return null;
 	}
 
-	protected function appendOutput(\Nano_C_Response $response, $buffer) {
+	protected function appendOutput(\Nano\Controller\Response $response, $buffer) {
 		if (0 != strLen($buffer)) {
 			$response->appendToBody('<hr />' . PHP_EOL);
 			$response->appendToBody('Generated output: <pre>' . htmlSpecialChars($buffer) . '</pre>');
@@ -169,10 +169,10 @@ class ErrorHandler {
 
 	/**
 	 * @return null
-	 * @param \Nano_C_Response $response
+	 * @param \Nano\Controller\Response $response
 	 * @param boolean $forceExit
 	 */
-	protected function send(\Nano_C_Response $response, $forceExit = false) {
+	protected function send(\Nano\Controller\Response $response, $forceExit = false) {
 		if (ob_get_level() > 0) {
 			ob_end_clean();
 		}
