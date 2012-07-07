@@ -5,7 +5,7 @@ namespace CliScript;
 /**
  * @description Test script to use into test cases @ @ @param
  */
-class TestScript extends \Nano_Cli_Script {
+class TestScript extends \Nano\Cli\Script {
 
 	/**
 	 * @return int

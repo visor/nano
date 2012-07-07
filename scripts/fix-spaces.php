@@ -6,7 +6,7 @@ namespace CliScript;
 /**
  * @description Replaces indentation spaces into tabs, converts line endings into Unix and removes trailing spaces
  */
-class FixSpaces extends \Nano_Cli_Script {
+class FixSpaces extends \Nano\Cli\Script {
 
 	/**
 	 * @return void

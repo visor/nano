@@ -5,7 +5,7 @@ namespace CliScript;
 /**
  * @description Wrapper for default PHPUnit cli-script
  */
-class Phpunit extends \Nano_Cli_Script {
+class Phpunit extends \Nano\Cli\Script {
 
 	/**
 	 * @return boolean

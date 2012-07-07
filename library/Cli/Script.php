@@ -1,6 +1,8 @@
 <?php
 
-abstract class Nano_Cli_Script {
+namespace Nano\Cli;
+
+abstract class Script {
 
 	/**
 	 * @var string
@@ -13,7 +15,7 @@ abstract class Nano_Cli_Script {
 	protected $docTags = null;
 
 	/**
-	 * @var Nano_Cli
+	 * @var \Nano\Cli
 	 */
 	protected $cli;
 
@@ -25,9 +27,9 @@ abstract class Nano_Cli_Script {
 
 	/**
 	 * @param string $name
-	 * @param Nano_Cli $cli
+	 * @param \Nano\Cli $cli
 	 */
-	public function __construct($name, Nano_Cli $cli) {
+	public function __construct($name, \Nano\Cli $cli) {
 		$this->name = $name;
 		$this->cli  = $cli;
 	}
@@ -52,7 +54,7 @@ abstract class Nano_Cli_Script {
 	public function usage() {
 		$result =
 			$this->name . ' - ' . $this->getDescription() . PHP_EOL . PHP_EOL
-			. 'Usage' . PHP_EOL . '  ' . Nano_Cli::getPhpBinary() . ' ' . Nano_Cli::getCliScriptPath(). ' ' . $this->name
+			. 'Usage' . PHP_EOL . '  ' . \Nano\Cli::getPhpBinary() . ' ' . \Nano\Cli::getCliScriptPath(). ' ' . $this->name
 		;
 		$params = '';
 		foreach ($this->getDocTags() as $tag) {
@@ -86,23 +88,24 @@ abstract class Nano_Cli_Script {
 	}
 
 	/**
-	 * @return ReflectionClass
+	 * @return \ReflectionClass
 	 */
 	protected function getReflector() {
 		return $this->cli->getScript($this->name);
 	}
 
 	/**
-	 * @return stirng[]
+	 * @return string[]
 	 */
 	protected function getDocTags() {
 		if (null === $this->docTags) {
-			$this->docTags = Nano_Cli_DocBlockParser::parse($this->getReflector()->getDocComment());
+			$this->docTags = DocBlockParser::parse($this->getReflector()->getDocComment());
 		}
 		return $this->docTags;
 	}
 
 	/**
+	 * @return int
 	 * @param string $message
 	 * @param int $code
 	 * @param boolean $usage

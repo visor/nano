@@ -5,7 +5,7 @@ namespace CliScript;
 /**
  * @description Example application script. Prints configured application modules
  */
-class AnExample extends \Nano_Cli_Script {
+class AnExample extends \Nano\Cli\Script {
 
 	/**
 	 * @param string[] $args

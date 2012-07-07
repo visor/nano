@@ -5,7 +5,7 @@ namespace CliScript;
 /**
  * @description Update current GIT branch, run setupand clean assets
  */
-class Deploy extends \Nano_Cli_Script {
+class Deploy extends \Nano\Cli\Script {
 
 	/**
 	 * @param string[] $args

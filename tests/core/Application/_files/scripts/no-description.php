@@ -6,7 +6,7 @@ namespace CliScript;
  * @param required $testParam Required test parameter
  * @param optional $optionalParam Optional test parameter
  */
-class NoDescription extends \Nano_Cli_Script {
+class NoDescription extends \Nano\Cli\Script {
 
 	/**
 	 * @return int

@@ -7,7 +7,7 @@ namespace CliScript;
  * @param required $name Name of new configuration
  * @param required $parent One ore more parent configurations. Pass NONE if no parents required
  */
-class Config extends \Nano_Cli_Script {
+class Config extends \Nano\Cli\Script {
 
 	/**
 	 * @param string[] $args

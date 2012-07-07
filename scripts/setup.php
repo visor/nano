@@ -6,7 +6,7 @@ namespace CliScript;
  * @description Builds application configuration and routes files for given settings set
  * @param required $name Name of settings set to build
  */
-class Setup extends \Nano_Cli_Script {
+class Setup extends \Nano\Cli\Script {
 
 	/**
 	 * @return int

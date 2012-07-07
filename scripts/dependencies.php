@@ -5,7 +5,7 @@ namespace CliScript;
 /**
  * @description Install required modules and framework version
  */
-class Dependencies extends \Nano_Cli_Script {
+class Dependencies extends \Nano\Cli\Script {
 
 	const FILE_NAME    = '.dependencies.php';
 	const FILE_MODULES = '.gitmodules';

@@ -7,7 +7,7 @@ namespace CliScript;
  *
  * @param optional scriptName Name of script to display help
  */
-class Help extends \Nano_Cli_Script {
+class Help extends \Nano\Cli\Script {
 
 	/**
 	 * @return boolean

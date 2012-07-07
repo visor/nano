@@ -12,7 +12,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 	protected $cwd, $appRoot, $nanoRoot;
 
 	/**
-	 * @var Nano_Cli
+	 * @var \Nano\Cli
 	 */
 	protected $cli;
 
@@ -31,12 +31,12 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 		$this->appRoot  = dirName(__DIR__) . '/Application/_files';
 		$this->nanoRoot = $application->nanoRootDir;
 		$this->cwd      = getCwd();
-		$this->cli      = new Nano_Cli();
+		$this->cli      = new \Nano\Cli();
 		chDir($this->appRoot);
 	}
 
 	public function testIsWindows() {
-		self::assertEquals('\\' == DIRECTORY_SEPARATOR, Nano_Cli::isWindows());
+		self::assertEquals('\\' == DIRECTORY_SEPARATOR, \Nano\Cli::isWindows());
 	}
 
 	public function testDetectingApplicationDirectoryInBootstrapDir() {
@@ -80,7 +80,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 		Nano::setApplication(null);
 
 		$expected = array();
-		$iterator = new DirectoryIterator($this->nanoRoot . DIRECTORY_SEPARATOR . Nano_Cli::DIR);
+		$iterator = new DirectoryIterator($this->nanoRoot . DIRECTORY_SEPARATOR . \Nano\Cli::DIR);
 		foreach ($iterator as /** @var DirectoryIterator $item */ $item) {
 			if ($item->isDir() || $item->isDot()) {
 				continue;
@@ -168,7 +168,7 @@ class Core_Cli_CommonTest extends TestUtils_TestCase {
 
 	public function testRunWrapper() {
 		Nano::setApplication(null);
-		self::assertEquals(0, Nano_Cli::main(array()));
+		self::assertEquals(0, \Nano\Cli::main(array()));
 	}
 
 	protected function tearDown() {

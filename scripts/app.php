@@ -7,7 +7,7 @@ namespace CliScript;
  *
  * @param optional $appDir Directory where to create application (default — current working directory)
  */
-class App extends \Nano_Cli_Script {
+class App extends \Nano\Cli\Script {
 
 	/**
 	 * @var string

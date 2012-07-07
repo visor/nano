@@ -2,7 +2,7 @@
 
 namespace CliScript;
 
-class ModuleFiveScript extends \Nano_Cli_Script {
+class ModuleFiveScript extends \Nano\Cli\Script {
 
 	/**
 	 * @return int

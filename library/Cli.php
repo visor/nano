@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Cli {
+namespace Nano;
+
+class Cli {
 
 	const DIR = 'scripts';
 
@@ -12,7 +14,7 @@ class Nano_Cli {
 	protected $loaded = false;
 
 	/**
-	 * @var ReflectionClass[]
+	 * @var \ReflectionClass[]
 	 */
 	protected $scripts;
 
@@ -44,7 +46,7 @@ class Nano_Cli {
 	 * @return boolean
 	 */
 	public static function isWindows() {
-		return '\\' == DIRECTORY_SEPARATOR;
+		return '\\' == DS;
 	}
 
 	/**
@@ -61,11 +63,11 @@ class Nano_Cli {
 	 * @return string
 	 */
 	public static function getCliScriptPath() {
-		return dirName(dirName(__DIR__)) . DIRECTORY_SEPARATOR . 'cli.php';
+		return dirName(__DIR__) . DS . 'cli.php';
 	}
 
 	public function __construct() {
-		$this->scripts        = new ArrayObject();
+		$this->scripts        = new \ArrayObject();
 		$this->applicationDir = null;
 	}
 
@@ -109,14 +111,14 @@ class Nano_Cli {
 	}
 
 	/**
-	 * @return ArrayObject|ReflectionClass[]
+	 * @return \ArrayObject|\ReflectionClass[]
 	 */
 	public function getScripts() {
 		return $this->scripts;
 	}
 
 	/**
-	 * @return ReflectionClass
+	 * @return \ReflectionClass
 	 * @param string $key
 	 */
 	public function getScript($key) {
@@ -140,7 +142,7 @@ class Nano_Cli {
 		$dir   = getCwd();
 		$found = false;
 		do {
-			if (file_exists($dir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
+			if (file_exists($dir . DS . self::BOOTSTRAP)) {
 				$found = true;
 				$this->applicationDir = $dir;
 			} else {
@@ -154,7 +156,7 @@ class Nano_Cli {
 
 	protected function loadApplication() {
 		$application = null;
-		if (false === include($this->applicationDir . DIRECTORY_SEPARATOR . self::BOOTSTRAP)) {
+		if (false === include($this->applicationDir . DS . self::BOOTSTRAP)) {
 			return;
 		}
 		if ($application === null) {
@@ -175,8 +177,7 @@ class Nano_Cli {
 	}
 
 	protected function loadNanoScripts() {
-		$nanoRoot = dirName(dirName(__DIR__));
-		$scriptsRoot = $nanoRoot . DIRECTORY_SEPARATOR . self::DIR;
+		$scriptsRoot = dirName(__DIR__) . DS . self::DIR;
 		$this->loadScriptsFromDir($scriptsRoot);
 	}
 
@@ -185,20 +186,20 @@ class Nano_Cli {
 			return;
 		}
 
-		if (is_dir($this->application->rootDir . DIRECTORY_SEPARATOR . self::DIR)) {
-			$this->loadScriptsFromDir($this->application->rootDir . DIRECTORY_SEPARATOR . self::DIR);
+		if (is_dir($this->application->rootDir . DS . self::DIR)) {
+			$this->loadScriptsFromDir($this->application->rootDir . DS . self::DIR);
 		}
 		foreach ($this->application->modules as $path) {
-			if (is_dir($path . DIRECTORY_SEPARATOR . self::DIR)) {
-				$this->loadScriptsFromDir($path . DIRECTORY_SEPARATOR . self::DIR);
+			if (is_dir($path . DS . self::DIR)) {
+				$this->loadScriptsFromDir($path . DS . self::DIR);
 			}
 		}
 	}
 
 	protected function loadScriptsFromDir($path) {
-		$iterator = new DirectoryIterator($path);
+		$iterator = new \DirectoryIterator($path);
 		foreach ($iterator as $item) {
-			/** @var DirectoryIterator $item */
+			/** @var \DirectoryIterator $item */
 			if ($item->isDir()) {
 				continue;
 			}
@@ -216,7 +217,7 @@ class Nano_Cli {
 
 	protected function addScript($fileName) {
 		$name      = baseName($fileName, '.php');
-		$className = 'CliScript\\' . Nano::stringToName($name);
+		$className = 'CliScript\\' . \Nano::stringToName($name);
 		if (!class_exists($className, false)) {
 			include_once $fileName;
 
@@ -225,8 +226,8 @@ class Nano_Cli {
 			}
 		}
 
-		$script = new ReflectionClass($className);
-		if (!$script->isSubclassOf('Nano_Cli_Script')) {
+		$script = new \ReflectionClass($className);
+		if (!$script->isSubclassOf('\Nano\Cli\Script')) {
 			return;
 		}
 		if (!$script->isInstantiable()) {
@@ -239,7 +240,7 @@ class Nano_Cli {
 	}
 
 	/**
-	 * @return Nano_Cli_Script|null
+	 * @return \Nano\Cli\Script|null
 	 * @param $name
 	 */
 	protected function getScriptToRun($name) {

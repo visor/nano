@@ -2,7 +2,7 @@
 
 namespace CliScript;
 
-class Test_Script extends \Nano_Cli_Script {
+class Test_Script extends \Nano\Cli\Script {
 
 	/**
 	 * @param string[] $args

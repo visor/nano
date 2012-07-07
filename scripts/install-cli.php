@@ -8,7 +8,7 @@ namespace CliScript;
  * @param optional binaryName Name of binary file to create (default - nano)
  * @param optional binaryPath Path to directory where to put binary (default - first writable directory in $PATH)
  */
-class InstallCli extends \Nano_Cli_Script {
+class InstallCli extends \Nano\Cli\Script {
 
 	const BIN = 'nano';
 
@@ -55,12 +55,12 @@ class InstallCli extends \Nano_Cli_Script {
 	 * @param string $path
 	 */
 	protected function createScriptFile($name, $path) {
-		$source = \Nano_Cli::isWindows()
+		$source = \Nano\Cli::isWindows()
 			? $this->getWindowsScriptSource()
 			: $this->getUnixScriptSource()
 		;
 		$fileName = $path . DIRECTORY_SEPARATOR . $name;
-		if (\Nano_Cli::isWindows()) {
+		if (\Nano\Cli::isWindows()) {
 			$fileName .= '.bat';
 		}
 		file_put_contents($fileName, $source);
@@ -72,8 +72,8 @@ class InstallCli extends \Nano_Cli_Script {
 	 */
 	protected function getUnixScriptSource() {
 		return
-			'#!' . \Nano_Cli::getPhpBinary() . PHP_EOL
-			. '<?php include \'' . \Nano_Cli::getCliScriptPath() . '\';'
+			'#!' . \Nano\Cli::getPhpBinary() . PHP_EOL
+			. '<?php include \'' . \Nano\Cli::getCliScriptPath() . '\';'
 		;
 	}
 
@@ -83,7 +83,7 @@ class InstallCli extends \Nano_Cli_Script {
 	protected function getWindowsScriptSource() {
 		return
 			'@echo off' . PHP_EOL
-			. \Nano_Cli::getPhpBinary() . ' ' . \Nano_Cli::getCliScriptPath() . ' %*'
+			. \Nano\Cli::getPhpBinary() . ' ' . \Nano\Cli::getCliScriptPath() . ' %*'
 		;
 	}
 

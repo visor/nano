@@ -2,7 +2,7 @@
 
 namespace CliScript;
 
-class ModuleThreeScript extends \Nano_Cli_Script {
+class ModuleThreeScript extends \Nano\Cli\Script {
 
 	/**
 	 * @return int

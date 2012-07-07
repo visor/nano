@@ -12,7 +12,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	protected $cwd, $appRoot;
 
 	/**
-	 * @var Nano_Cli
+	 * @var \Nano\Cli
 	 */
 	protected $cli;
 
@@ -23,7 +23,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 
 		$this->appRoot  = dirName(__DIR__) . '/Application/_files';
 		$this->cwd      = getCwd();
-		$this->cli      = new Nano_Cli();
+		$this->cli      = new \Nano\Cli();
 		chDir($this->appRoot);
 
 		$this->cli->run(array());
@@ -62,7 +62,7 @@ class Core_Cli_ScriptInfoTest extends TestUtils_TestCase {
 	}
 
 	/**
-	 * @return Nano_Cli_Script
+	 * @return \Nano\Cli\Script
 	 * @param $name
 	 */
 	protected function getScript($name) {

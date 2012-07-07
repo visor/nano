@@ -1,6 +1,8 @@
 <?php
 
-class Nano_Cli_DocBlockParser {
+namespace Nano\Cli;
+
+class DocBlockParser {
 
 	/**
 	 * @return string
