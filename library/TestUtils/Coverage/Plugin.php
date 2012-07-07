@@ -15,12 +15,12 @@ class TestUtils_Coverage_Plugin implements \Nano\Controller\Plugin {
 
 	public function __construct($rootDir) {
 		$this->rootDir          = $rootDir;
-		$this->dataDirName      = $this->rootDir . DIRECTORY_SEPARATOR . self::DATA_DIR;
+		$this->dataDirName      = $this->rootDir . DS . self::DATA_DIR;
 
-		$filesBaseDir           = __DIR__ . DIRECTORY_SEPARATOR . self::FILES_DIR;
-		$this->prependFileName  = $filesBaseDir . DIRECTORY_SEPARATOR . self::PREPEND_FILE;
-		$this->appendFileName   = $filesBaseDir . DIRECTORY_SEPARATOR . self::APPEND_FILE;
-		$this->coverageFileName = $filesBaseDir . DIRECTORY_SEPARATOR . self::COVERAGE_FILE;
+		$filesBaseDir           = __DIR__ . DS . self::FILES_DIR;
+		$this->prependFileName  = $filesBaseDir . DS . self::PREPEND_FILE;
+		$this->appendFileName   = $filesBaseDir . DS . self::APPEND_FILE;
+		$this->coverageFileName = $filesBaseDir . DS . self::COVERAGE_FILE;
 
 		$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'] = $this->dataDirName;
 

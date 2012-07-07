@@ -44,10 +44,6 @@ class Core_Application_LoaderTest extends Core_Application_Abstract {
 		self::assertTrue(class_exists('Nano', false));
 	}
 
-	public function testLoadingCoreClass() {
-		$this->assertClassLoaded('TestUtils_Example');
-	}
-
 	public function testLoadingApplicationLibraryClass() {
 		$this->application->withRootDir($this->files->get($this, ''));
 
