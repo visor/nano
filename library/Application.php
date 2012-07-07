@@ -123,7 +123,6 @@ class Application extends Util\TypedRegistry {
 	 */
 	public function withRootDir($value) {
 		$this->offsetSet('rootDir', $value);
-		$this->loader->registerApplication($this);
 		return $this;
 	}
 
@@ -174,7 +173,6 @@ class Application extends Util\TypedRegistry {
 		}
 
 		$this->modules->append($name, $path);
-		$this->loader->registerModule($name, $path);
 		return $this;
 	}
 

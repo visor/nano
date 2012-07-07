@@ -1,6 +1,8 @@
 <?php
 
-class Date extends DateTime {
+namespace Nano\Util;
+
+class Date extends \DateTime {
 
 	const FORMAT_MYSQL  = 'Y-m-d H:i:s';
 	const FORMAT_SQLITE = 'U';
@@ -26,8 +28,8 @@ class Date extends DateTime {
 	 * @param string $string
 	 */
 	public static function create($string = null) {
-		if ($string instanceof DateTime) {
-			/** @var DateTime $string */
+		if ($string instanceof \DateTime) {
+			/** @var \DateTime $string */
 			return new self($string->format('Y-m-d\TH:i:s'), $string->getTimezone());
 		}
 		if (is_numeric($string)) {
