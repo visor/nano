@@ -155,18 +155,14 @@ class Cli {
 	}
 
 	protected function loadApplication() {
-		$application = null;
 		if (false === include($this->applicationDir . DS . self::BOOTSTRAP)) {
 			return;
 		}
-		if ($application === null) {
-			return;
-		}
-		if (!($application instanceof \Nano\Application)) {
+		if (!(\Nano::app() instanceof \Nano\Application)) {
 			return;
 		}
 
-		$this->application = $application;
+		$this->application = \Nano::app();
 	}
 
 	protected function loadScripts() {

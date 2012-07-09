@@ -42,42 +42,28 @@
  * @since      File available since Release 3.2.10
  */
 
-require_once 'File/Iterator/Factory.php';
-require_once 'PHP/CodeCoverage/Filter.php';
+require_once 'File/Iterator/Autoload.php';
+require_once 'PHP/CodeCoverage/Autoload.php';
 
 if (isset($_GET['PHPUNIT_SELENIUM_TEST_ID'])) {
-	$factory = new File_Iterator_Factory();
-	$files = $factory->getFileIterator(
-		$GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY']
-		, $_GET['PHPUNIT_SELENIUM_TEST_ID']
-	);
-
-	$filter   = new PHP_CodeCoverage_Filter();
-	$used     = array();
+	$facade = new File_Iterator_Facade;
+	$files  = $facade->getFilesAsArray($GLOBALS['PHPUNIT_COVERAGE_DATA_DIRECTORY'], $_GET['PHPUNIT_SELENIUM_TEST_ID']);
+	$filter = new PHP_CodeCoverage_Filter();
 	$coverage = array();
 
 	foreach ($files as $file) {
-		$filename = $file->getPathName();
-		if (isSet($used[$filename])) { //strange bug
-			continue;
-		}
+		$data = unserialize(file_get_contents($file));
+		@unlink($file);
+		unset($file);
 
-		$data = unserialize(file_get_contents($filename));
-		@unlink($filename);
-		$used[$filename] = true;
-		unset($filename);
-
-		foreach ($data as $filename => $lines) {
-			if ($filter->isFile($filename)) {
-				if (!isset($coverage[$filename])) {
-					$coverage[$filename] = array(
-					  'md5' => md5_file($filename), 'coverage' => $lines
-					);
+		foreach ($data as $file => $lines) {
+			if ($filter->isFile($file)) {
+				if (!isset($coverage[$file])) {
+					$coverage[$file] = array('md5' => md5_file($file), 'coverage' => $lines);
 				} else {
 					foreach ($lines as $line => $flag) {
-						if (!isset($coverage[$filename]['coverage'][$line]) ||
-							$flag > $coverage[$filename]['coverage'][$line]) {
-							$coverage[$filename]['coverage'][$line] = $flag;
+						if (!isset($coverage[$file]['coverage'][$line]) || $flag > $coverage[$file]['coverage'][$line]) {
+							$coverage[$file]['coverage'][$line] = $flag;
 						}
 					}
 				}

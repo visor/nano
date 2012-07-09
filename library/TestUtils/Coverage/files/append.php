@@ -42,9 +42,7 @@
  * @since      File available since Release 3.2.10
  */
 
-if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
-	!isset($_GET['PHPUNIT_SELENIUM_TEST_ID']) &&
-	extension_loaded('xdebug')) {
+if (isSet($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) && !isSet($_GET['PHPUNIT_SELENIUM_TEST_ID']) && extension_loaded('xdebug')) {
 	$GLOBALS['PHPUNIT_FILTERED_FILES'][] = __FILE__;
 
 	$data = xdebug_get_code_coverage();
@@ -60,8 +58,10 @@ if ( isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) &&
 		$file = $_SERVER['SCRIPT_FILENAME'];
 	}
 
+	error_log($file);
+
 	file_put_contents(
-		$x = $file . '.' . md5(uniqid(rand(), TRUE)) . '.' . $_COOKIE['PHPUNIT_SELENIUM_TEST_ID'],
+		$file . '.' . md5(uniqid(rand(), TRUE)) . '.' . $_COOKIE['PHPUNIT_SELENIUM_TEST_ID'],
 		serialize($data)
 	);
 

@@ -102,7 +102,7 @@ class HttpTest extends \Nano\TestUtils\TestCase {
 
 	/**
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function getCodeCoverage() {
 		if (null === $this->request) {
