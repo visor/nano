@@ -50,7 +50,14 @@ class Locale {
 		return $this->fallBack;
 	}
 
-	public function translate($message, array $arguments = null) {
+	/**
+	 * @return string|null
+	 * @param string $message
+	 * @param string $baseName
+	 * @param string $module
+	 * @param array  $arguments
+	 */
+	public function translate($message, $baseName, $module, array $arguments = null) {
 		return null;
 	}
 

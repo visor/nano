@@ -45,12 +45,19 @@ class Core_L10n_DictionaryTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testShouldLoadMessageFileOnce() {
+		/** @var \PHPUnit_Framework_MockObject_MockObject|\Nano\L10n\Dictionary $mock */
 		$file = \Nano::app()->rootDir . DIRECTORY_SEPARATOR . 'messages' . DIRECTORY_SEPARATOR . 'ru' . DIRECTORY_SEPARATOR . 'article';
 		$mock = $this->getMock('Nano\L10n\Dictionary', array('getMessageFileName'), array(new \Nano\L10n\Locale('ru')));
 		$mock->expects($this->once())->method('getMessageFileName')->withAnyParameters()->will($this->returnValue($file));
 
 		self::assertTrue($mock->loadMessages('article', null));
 		self::assertTrue($mock->loadMessages('article', null));
+	}
+
+	public function testShouldNotUseFallbackWhenItsNull() {
+		$dictionary = new \Nano\L10n\Dictionary(new \Nano\L10n\Locale(\Nano\L10n\Locale::DEFAULT_LOCALE));
+		self::assertFalse($dictionary->loadMessages('another', null));
+		self::assertFalse($dictionary->loadMessages('another', 'some'));
 	}
 
 	public function testShouldReturnNullWhenMessageNotExists() {

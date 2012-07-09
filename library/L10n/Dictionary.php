@@ -44,7 +44,7 @@ class Dictionary {
 		}
 
 		$fileName = $this->getMessageFileName($this->locale->getName(), $baseName, $module);
-		if (null === $fileName) {
+		if (null === $fileName && null !== $this->locale->getFallBack()) {
 			$fileName = $this->getMessageFileName($this->locale->getFallBack(), $baseName, $module);
 		}
 		if (null === $fileName) {
@@ -66,8 +66,8 @@ class Dictionary {
 
 	protected function getMessageFileName($locale, $baseName, $module) {
 		$name   = $this->generateKey($baseName, $module);
-		$path   = DIRECTORY_SEPARATOR . 'messages' . DIRECTORY_SEPARATOR . $locale;
-		$result = \Nano::app()->rootDir . $path . DIRECTORY_SEPARATOR . $name;
+		$path   = DS . 'messages' . DS . $locale;
+		$result = \Nano::app()->rootDir . $path . DS . $name;
 
 		if (null === $module) {
 			return file_exists($result) ? $result : null;
@@ -77,7 +77,7 @@ class Dictionary {
 			return $result;
 		}
 
-		$result = \Nano::app()->modules->getPath($module, $path . DIRECTORY_SEPARATOR . $baseName);
+		$result = \Nano::app()->modules->getPath($module, $path . DS . $baseName);
 		if (file_exists($result)) {
 			return $result;
 		}

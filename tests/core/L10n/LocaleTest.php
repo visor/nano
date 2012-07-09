@@ -31,7 +31,11 @@ class Core_L10n_LocaleTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testTranslateMethodShouldReturnNullWhenMessageNotExists() {
-		self::assertNull($this->en->translate('some-id'));
+		self::assertNull($this->en->translate('some-id', 'default', null));
+	}
+
+	public function testTranslateShouldReturnStringFromDictionary() {
+		self::markTestIncomplete('Not implemented yet');
 	}
 
 	protected function tearDown() {
