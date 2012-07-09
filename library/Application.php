@@ -44,7 +44,7 @@ class Application extends Util\TypedRegistry {
 	 * @return \Nano\Application
 	 */
 	public static function create() {
-		return new self();
+		return new static();
 	}
 
 	public function __construct() {
