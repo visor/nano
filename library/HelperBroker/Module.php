@@ -68,6 +68,10 @@ class Module {
 	 */
 	protected function search($name) {
 		$className = \Nano\Names::helperClass($name, $this->module);
+		if (class_exists($className, false)) {
+			return new $className;
+		}
+
 		$classPath = \Nano\Names::moduleFile($className);
 
 		if (!$this->application->loader->loadFileWithClass($className, $classPath)) {
