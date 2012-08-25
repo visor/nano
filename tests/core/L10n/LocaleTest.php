@@ -9,6 +9,13 @@ class Core_L10n_LocaleTest extends \Nano\TestUtils\TestCase {
 
 	protected function setUp() {
 		$this->en = new \Nano\L10n\Locale(Nano\L10n\Locale::DEFAULT_LOCALE);
+
+		$this->app->backup();
+		\Nano\Application::create()
+			->withConfigurationFormat('php')
+			->withRootDir($GLOBALS['application']->rootDir)
+			->configure()
+		;
 	}
 
 	public function testShouldStoreLocaleName() {
@@ -31,11 +38,20 @@ class Core_L10n_LocaleTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testTranslateMethodShouldReturnNullWhenMessageNotExists() {
-		self::assertNull($this->en->translate('some-id'));
+		self::assertNull($this->en->translate(null, 'some-file', 'some-id'));
+	}
+
+	public function testTranslateMethodShouldLoadMessageFile() {
+		self::assertEquals('message 1', $this->en->translate(null, 'test', 'm1'));
+	}
+
+	public function testTranslateShouldReplaceVariables() {
+		self::assertEquals('format 2 string', $this->en->translate(null, 'test', 'f1', array('{d}' => '2', '{s}' => 'string')));
 	}
 
 	protected function tearDown() {
 		unSet($this->en);
+		$this->app->restore();
 	}
 
 }

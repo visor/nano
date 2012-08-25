@@ -50,8 +50,27 @@ class Locale {
 		return $this->fallBack;
 	}
 
-	public function translate($message, array $arguments = null) {
-		return null;
+	/**
+	 * @return null|string
+	 * @param null|string $module
+	 * @param string $baseName
+	 * @param string $id
+	 * @param array $arguments
+	 */
+	public function translate($module, $baseName, $id, array $arguments = null) {
+		if (!$this->storage->isLoaded($baseName, $module)) {
+			if (!$this->storage->loadMessages($baseName, $module)) {
+				return null;
+			}
+		}
+
+		$message = $this->storage->getMessage($id, $baseName, $module);
+		if (null === $arguments || array() === $arguments) {
+			return $message;
+		}
+
+		//todo: add support for plural messages one|two|many or one|two
+		return strTr($message, $arguments);
 	}
 
 }

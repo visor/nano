@@ -6,6 +6,8 @@
 	, 'errorController' => null
 	, 'errorReporting'  => false
 
+	, 'locale'   => 'ru'
+
 	, 'auth'     => true
 	, 'username' => 'test'
 	, 'password' => 'tset'

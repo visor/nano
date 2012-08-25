@@ -20,6 +20,16 @@ class Dictionary {
 
 	/**
 	 * @return string|null
+	 * @param string $baseName
+	 * @param string|null $module
+	 */
+	public function isLoaded($baseName, $module) {
+		$key = $this->generateKey($baseName, $module);
+		return is_array($this->messages[$key]);
+	}
+
+	/**
+	 * @return string|null
 	 * @param string $id
 	 * @param string $baseName
 	 * @param string|null $module
@@ -38,8 +48,7 @@ class Dictionary {
 	 * @param string|null $module
 	 */
 	public function loadMessages($baseName, $module) {
-		$key = $this->generateKey($baseName, $module);
-		if (isSet($this->messages[$key])) {
+		if ($this->isLoaded($baseName, $module)) {
 			return true;
 		}
 
@@ -51,6 +60,7 @@ class Dictionary {
 			return false;
 		}
 
+		$key = $this->generateKey($baseName, $module);
 		$this->messages[$key] = \Nano::app()->configFormat->read($fileName);
 		return true;
 	}
