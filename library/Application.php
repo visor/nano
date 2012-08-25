@@ -24,6 +24,7 @@ require __DIR__ . '/Application/ErrorHandler.php';
  * @property \SplObjectStorage $plugins
  * @property Event\Manager $eventManager
  * @property HelperBroker $helper
+ * @property \Nano\L10n\Locale $locale
  */
 class Application extends Util\TypedRegistry {
 
@@ -104,6 +105,11 @@ class Application extends Util\TypedRegistry {
 		}
 
 		$this->readOnly('config', new Application\Config($this->rootDir . DIRECTORY_SEPARATOR . 'settings', $this->configFormat));
+
+		if (isSet($this->config->get('web')->locale)) {
+			$this->readOnly('locale', new \Nano\L10n\Locale($this->config->get('web')->locale));
+		}
+
 		$this->setupErrorReporting();
 		return $this;
 	}

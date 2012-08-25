@@ -18,6 +18,33 @@ final class Nano {
 	}
 
 	/**
+	 * @return null|string
+	 * @param string $base
+	 * @param string $id
+	 * @param array $params
+	 */
+	public static function t($base, $id, array $params = null) {
+		if (self::$app->locale instanceof \Nano\L10n\Locale) {
+			return self::$app->locale->translate(null, $base, $id, $params);
+		}
+		return null;
+	}
+
+	/**
+	 * @return null|string
+	 * @param string $module
+	 * @param string $base
+	 * @param string $id
+	 * @param array $params
+	 */
+	public static function tm($module, $base, $id, array $params = null) {
+		if (self::$app->locale instanceof \Nano\L10n\Locale) {
+			return self::$app->locale->translate($module, $base, $id, $params);
+		}
+		return null;
+	}
+
+	/**
 	 * @return void
 	 * @param \Nano\Application|null $app
 	 * @throws \Nano\Exception
