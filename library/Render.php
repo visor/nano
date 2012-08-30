@@ -20,7 +20,7 @@ class Render {
 	/**
 	 * @var boolean
 	 */
-	protected $useApplicationDirs = false;
+	protected $useApplicationDirs = true;
 
 	/**
 	 * @param \Nano\Application $application
@@ -43,7 +43,7 @@ class Render {
 		}
 
 		$variables['content'] = $content;
-		$layoutFile = $this->getLayoutFileName($object->layout, $object->context);
+		$layoutFile = $this->getLayoutFileName($module, $object->layout, $object->context);
 		return self::file($this, $layoutFile, $variables);
 	}
 
@@ -118,11 +118,25 @@ class Render {
 
 	/**
 	 * @return string
+	 * @param string $module
 	 * @param string $layout
 	 * @param string|null $context
 	 */
-	public function getLayoutFileName($layout, $context = null) {
-		return $this->addContext($this->layoutsPath . DIRECTORY_SEPARATOR . $layout, $context) . '.php';
+	public function getLayoutFileName($module, $layout, $context = null) {
+		if (null === $module) {
+			return $this->addContext($this->application->rootDir . DS . self::LAYOUT_DIR . DS . $layout, $context) . '.php';
+		}
+
+		if (true === $this->useApplicationDirs) {
+			$layoutPath = $this->application->rootDir . DS . self::LAYOUT_DIR . DS . $module . DS . $layout;
+			$applicationLayout = $this->addContext($layoutPath, $context) . '.php';
+			if (file_exists($applicationLayout)) {
+				return $applicationLayout;
+			}
+		}
+
+		$moduleLayout = $this->application->modules->getPath($module, self::LAYOUT_DIR . DS . $layout);
+		return $this->addContext($moduleLayout, $context) . '.php';
 	}
 
 	/**
