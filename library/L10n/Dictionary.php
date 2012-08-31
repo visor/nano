@@ -61,7 +61,7 @@ class Dictionary {
 		}
 
 		$key = $this->generateKey($baseName, $module);
-		$this->messages[$key] = \Nano::app()->configFormat->read($fileName);
+		$this->messages[$key] = include $fileName;
 		return true;
 	}
 
