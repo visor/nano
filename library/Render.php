@@ -123,12 +123,12 @@ class Render {
 	 * @param string|null $context
 	 */
 	public function getLayoutFileName($module, $layout, $context = null) {
+		$layoutPath = $this->application->rootDir . DS . self::LAYOUT_DIR . DS . $layout;
 		if (null === $module) {
-			return $this->addContext($this->application->rootDir . DS . self::LAYOUT_DIR . DS . $layout, $context) . '.php';
+			return $this->addContext($layoutPath, $context) . '.php';
 		}
 
 		if (true === $this->useApplicationDirs) {
-			$layoutPath = $this->application->rootDir . DS . self::LAYOUT_DIR . DS . $module . DS . $layout;
 			$applicationLayout = $this->addContext($layoutPath, $context) . '.php';
 			if (file_exists($applicationLayout)) {
 				return $applicationLayout;
