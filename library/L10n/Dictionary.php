@@ -25,7 +25,7 @@ class Dictionary {
 	 */
 	public function isLoaded($baseName, $module) {
 		$key = $this->generateKey($baseName, $module);
-		return is_array($this->messages[$key]);
+		return isSet($this->messages[$key]) && is_array($this->messages[$key]);
 	}
 
 	/**
@@ -76,8 +76,8 @@ class Dictionary {
 
 	protected function getMessageFileName($locale, $baseName, $module) {
 		$name   = $this->generateKey($baseName, $module);
-		$path   = DIRECTORY_SEPARATOR . 'messages' . DIRECTORY_SEPARATOR . $locale;
-		$result = \Nano::app()->rootDir . $path . DIRECTORY_SEPARATOR . $name;
+		$path   =  'messages' . DS . $locale;
+		$result = \Nano::app()->rootDir . DS . $path . DS . $name;
 
 		if (null === $module) {
 			return file_exists($result) ? $result : null;
@@ -87,7 +87,7 @@ class Dictionary {
 			return $result;
 		}
 
-		$result = \Nano::app()->modules->getPath($module, $path . DIRECTORY_SEPARATOR . $baseName);
+		$result = \Nano::app()->modules->getPath($module, $path . DS . $baseName);
 		if (file_exists($result)) {
 			return $result;
 		}
