@@ -53,7 +53,7 @@ class Dictionary {
 		}
 
 		$fileName = $this->getMessageFileName($this->locale->getName(), $baseName, $module);
-		if (null === $fileName) {
+		if (null === $fileName && $this->locale->getFallBack()) {
 			$fileName = $this->getMessageFileName($this->locale->getFallBack(), $baseName, $module);
 		}
 		if (null === $fileName) {
