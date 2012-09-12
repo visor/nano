@@ -8,11 +8,6 @@ class Render {
 	const LAYOUT_DIR = 'layouts';
 
 	/**
-	 * @var \Nano\Application
-	 */
-	protected $application;
-
-	/**
 	 * @var string
 	 */
 	protected $viewsPath, $moduleViewsDirName, $layoutsPath;
@@ -22,11 +17,7 @@ class Render {
 	 */
 	protected $useApplicationDirs = true;
 
-	/**
-	 * @param \Nano\Application $application
-	 */
-	public function __construct(\Nano\Application $application) {
-		$this->application = $application;
+	public function __construct() {
 	}
 
 	/**
@@ -34,16 +25,28 @@ class Render {
 	 * @param \Nano\Controller $object
 	 */
 	public function render(\Nano\Controller $object) {
-		$module    = $object->getModule();
 		$variables = get_object_vars($object);
-		$content   = $this->renderView($module, $object->controller, $object->template, $object->context, $variables);
+		return $this->renderWithLayout($object->layout, $object->getModule(), $object->controller, $object->template, $object->context, $variables);
+	}
 
-		if (null === $object->layout) {
+	/**
+	 * @return null|string
+	 * @param string $layout
+	 * @param string $module
+	 * @param string $controller
+	 * @param string $template
+	 * @param string $context
+	 * @param array $variables
+	 */
+	public function renderWithLayout($layout, $module, $controller, $template, $context, array $variables) {
+		$content = $this->renderView($module, $controller, $template, $context, $variables);
+
+		if (null === $layout) {
 			return $content;
 		}
 
 		$variables['content'] = $content;
-		$layoutFile = $this->getLayoutFileName($module, $object->layout, $object->context);
+		$layoutFile = $this->getLayoutFileName($module, $layout, $context);
 		return self::file($this, $layoutFile, $variables);
 	}
 
@@ -103,7 +106,7 @@ class Render {
 			return $this->addContext($this->viewsPath . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action, $context) . '.php';
 		}
 		if (false === $this->useApplicationDirs) {
-			$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+			$viewName = \Nano::app()->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
 			return $this->addContext($viewName, $context) . '.php';
 		}
 
@@ -112,7 +115,7 @@ class Render {
 			return $result;
 		}
 
-		$viewName = $this->application->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
+		$viewName = \Nano::app()->modules->getPath($module, $this->moduleViewsDirName . DIRECTORY_SEPARATOR . $controller . DIRECTORY_SEPARATOR . $action);
 		return $this->addContext($viewName, $context) . '.php';
 	}
 
@@ -123,7 +126,7 @@ class Render {
 	 * @param string|null $context
 	 */
 	public function getLayoutFileName($module, $layout, $context = null) {
-		$layoutPath = $this->application->rootDir . DS . self::LAYOUT_DIR . DS . $layout;
+		$layoutPath = \Nano::app()->rootDir . DS . self::LAYOUT_DIR . DS . $layout;
 		if (null === $module) {
 			return $this->addContext($layoutPath, $context) . '.php';
 		}
@@ -135,7 +138,7 @@ class Render {
 			}
 		}
 
-		$moduleLayout = $this->application->modules->getPath($module, self::LAYOUT_DIR . DS . $layout);
+		$moduleLayout = \Nano::app()->modules->getPath($module, self::LAYOUT_DIR . DS . $layout);
 		return $this->addContext($moduleLayout, $context) . '.php';
 	}
 
@@ -157,8 +160,8 @@ class Render {
 		try {
 			extract($variables);
 
-			$application = $renderer->application;
-			$helper      = $renderer->application->helper;
+			$application = \Nano::app();
+			$helper      = \Nano::app()->helper;
 			include($fileName);
 
 			$result = ob_get_contents();

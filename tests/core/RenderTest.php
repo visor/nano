@@ -16,7 +16,7 @@ class Core_RenderTest extends \Nano\TestUtils\TestCase {
 	protected $renderer;
 
 	/**
-	 * @var TestController
+	 * @var \App\Controller\Test
 	 */
 	protected $controller;
 
@@ -26,7 +26,7 @@ class Core_RenderTest extends \Nano\TestUtils\TestCase {
 		$this->application = new \Nano\Application();
 
 		$this->application
-			->withRootDir($GLOBALS['application']->rootDir)
+			->withRootDir($this->files->get($this, ''))
 			->withConfigurationFormat('php')
 			->withModule('module1', $this->files->get($this, '/module1'))
 			->withModule('module2', $this->files->get($this, '/module2'))
@@ -37,6 +37,7 @@ class Core_RenderTest extends \Nano\TestUtils\TestCase {
 		$this->renderer->setViewsPath($this->files->get($this, '/views'));
 		$this->renderer->setModuleViewsDirName('views/default');
 		$this->renderer->setLayoutsPath($this->files->get($this, '/layouts'));
+		$this->renderer->useApplicationDirs(false);
 
 		$this->controller = new \App\Controller\Test($this->application);
 	}
@@ -64,9 +65,9 @@ class Core_RenderTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testGettingLayoutPath() {
-		self::assertEquals($this->files->get($this, '/layouts/name.php'), $this->renderer->getLayoutFileName('name'));
-		self::assertEquals($this->files->get($this, '/layouts/name.php'), $this->renderer->getLayoutFileName('name', null));
-		self::assertEquals($this->files->get($this, '/layouts/name.rss.php'), $this->renderer->getLayoutFileName('name', 'rss'));
+		self::assertEquals($this->files->get($this, '/layouts/name.php'), $this->renderer->getLayoutFileName(null, 'name', null));
+		self::assertEquals($this->files->get($this, '/layouts/name.php'), $this->renderer->getLayoutFileName(null, 'name', null));
+		self::assertEquals($this->files->get($this, '/layouts/name.rss.php'), $this->renderer->getLayoutFileName(null, 'name', 'rss'));
 	}
 
 	public function testRenderShouldThrowExceptionWhenViewNotFound() {
@@ -88,7 +89,7 @@ class Core_RenderTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testRenderShouldThrowExceptionWhenLayoutNotFound() {
-		$this->setExpectedException('\Nano\Exception', 'View ' . $this->renderer->getLayoutFileName('test2') . ' not exists');
+		$this->setExpectedException('\Nano\Exception', 'View ' . $this->renderer->getLayoutFileName(null, 'test2') . ' not exists');
 
 		$this->controller->layout     = 'test2';
 		$this->controller->controller = 'test';
