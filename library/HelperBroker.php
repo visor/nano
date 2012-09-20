@@ -68,7 +68,7 @@ class HelperBroker {
 	protected function search($name) {
 		$className = \Nano\Names::helperClass($name);
 		if (class_exists($className, false)) {
-			return $className;
+			return new $className;
 		}
 
 		$classPath = \Nano\Names::applicationFile($className);
