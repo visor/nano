@@ -63,7 +63,7 @@ class Dispatcher {
 			return \Nano\Names::controllerClass($name, $module);
 		}
 
-		$result = \Nano::stringToName($name);
+		$result = \Nano\Names::common($name);
 		$result  = strToLower($result[0]) . subStr($result, 1);
 		$result .= self::SUFFIX_ACTION;
 		return $result;

@@ -76,7 +76,7 @@ class Manager {
 			$event->setArgument($name, $value);
 		}
 
-		$methodName = 'on' . \Nano::stringToName($event->getType());
+		$methodName = 'on' . \Nano\Names::common($event->getType());
 		foreach ($this->handlers as $instance) {
 			if (method_exists($instance, $methodName)) {
 				call_user_func(array($instance, $methodName), $event);

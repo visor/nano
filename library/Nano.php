@@ -64,19 +64,4 @@ final class Nano {
 		return isset($_COOKIE['PHPUNIT_SELENIUM_TEST_ID']) || defined('TESTING');
 	}
 
-	/**
-	 * Converts given string into CamelCased class name
-	 *
-	 * @return string
-	 * @param string $string
-	 */
-	public static function stringToName($string) {
-		$result = strToLower($string);
-		$result = str_replace('-', ' ', $result);
-		$result = ucWords($result);
-		$result = str_replace(' ', '', $result);
-		$result = trim($result);
-		return $result;
-	}
-
 }
