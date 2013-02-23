@@ -21,25 +21,6 @@ class HttpTest extends \Nano\TestUtils\TestCase {
 
 	protected $collectCodeCoverageInformation = false;
 
-	public function __construct($name = NULL, array $data = array(), $dataName = '') {
-		parent::__construct($name, $data, $dataName);
-		$this->testId = md5(uniqid(rand(), TRUE));
-	}
-
-	public function run(\PHPUnit_Framework_TestResult $result = NULL) {
-		if (null === $result) {
-			$result = $this->createResult();
-		}
-
-		$this->setTestResultObject($result);
-		$this->collectCodeCoverageInformation = $result->getCollectCodeCoverageInformation();
-		$result->run($this);
-		if ($this->collectCodeCoverageInformation) {
-			$result->getCodeCoverage()->append($this->getCodeCoverage(), $this->testId);
-		}
-		return $result;
-	}
-
 	/**
 	 * @return string
 	 * @param $location
@@ -98,67 +79,6 @@ class HttpTest extends \Nano\TestUtils\TestCase {
 
 		$this->application = $GLOBALS['application'];
 		$this->request     = $this->getRequest();
-	}
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	protected function getCodeCoverage() {
-		if (null === $this->request) {
-			return array();
-		}
-
-		$url    = $this->getUrl('/?PHPUNIT_SELENIUM_TEST_ID=' . $this->testId);
-		$buffer = @file_get_contents($url);
-
-		if (false === $buffer) {
-			return array();
-		}
-
-		$coverageData = unSerialize($buffer);
-		if (is_array($coverageData)) {
-			return $this->matchLocalAndRemotePaths($coverageData);
-		}
-
-		throw new \Exception('Empty or invalid code coverage data received from url "' . $url . '"');
-	}
-
-	/**
-	 * @param  array $coverage
-	 * @return array
-	 * @author Mattis Stordalen Flister <mattis@xait.no>
-	 */
-	protected function matchLocalAndRemotePaths(array $coverage) {
-		$coverageWithLocalPaths = array();
-
-		foreach ($coverage as $originalRemotePath => $data) {
-			$remotePath = $originalRemotePath;
-			$separator  = $this->findDirectorySeparator($remotePath);
-
-			while (!($localpath = \PHPUnit_Util_Filesystem::fileExistsInIncludePath($remotePath)) && strpos($remotePath, $separator) !== FALSE) {
-				$remotePath = substr($remotePath, strpos($remotePath, $separator) + 1);
-			}
-
-			if ($localpath && md5_file($localpath) == $data['md5']) {
-				$coverageWithLocalPaths[$localpath] = $data['coverage'];
-			}
-		}
-
-		return $coverageWithLocalPaths;
-	}
-
-	/**
-	 * @param  string $path
-	 * @return string
-	 * @author Mattis Stordalen Flister <mattis@xait.no>
-	 */
-	protected function findDirectorySeparator($path) {
-		if (strpos($path, '/') !== FALSE) {
-			return '/';
-		}
-
-		return '\\';
 	}
 
 }

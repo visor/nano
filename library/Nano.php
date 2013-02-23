@@ -21,7 +21,7 @@ final class Nano {
 	 * @return null|string
 	 * @param string $base
 	 * @param string $id
-	 * @param array $params
+	 * @param array|null $params
 	 */
 	public static function t($base, $id, array $params = null) {
 		if (self::$app->locale instanceof \Nano\L10n\Locale) {
