@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace App\CliScript;
 
 abstract class AbstractScript extends \Nano\Cli\Script {
 

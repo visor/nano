@@ -30,23 +30,23 @@ class Core_Cli_ScriptInfoTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testGettingDescription() {
-		self::assertEquals('Test script to use into test cases @ @', $this->getScript('test-script')->getDescription());
-		self::assertEquals('', $this->getScript('no-description')->getDescription());
+		self::assertEquals('Test script to use into test cases @ @', $this->getScript('app.test-script')->getDescription());
+		self::assertEquals('', $this->getScript('app.no-description')->getDescription());
 	}
 
 	public function testGettingName() {
-		self::assertEquals('test-script', $this->getScript('test-script')->getName());
-		self::assertEquals('no-description', $this->getScript('no-description')->getName());
+		self::assertEquals('app.test-script', $this->getScript('app.test-script')->getName());
+		self::assertEquals('app.no-description', $this->getScript('app.no-description')->getName());
 	}
 
 	public function testGettingApplication() {
-		self::assertSame($this->cli->getApplication(), $this->getScript('test-script')->getApplication());
-		self::assertSame($this->cli->getApplication(), $this->getScript('no-description')->getApplication());
+		self::assertSame($this->cli->getApplication(), $this->getScript('app.test-script')->getApplication());
+		self::assertSame($this->cli->getApplication(), $this->getScript('app.no-description')->getApplication());
 	}
 
 	public function testGettingScriptUsage() {
-		$testScript     = $this->getScript('test-script');
-		$noDescription = $this->getScript('no-description');
+		$testScript     = $this->getScript('app.test-script');
+		$noDescription = $this->getScript('app.no-description');
 		self::assertContains($testScript->getName(), $testScript->usage());
 		self::assertContains($testScript->getDescription(), $testScript->usage());
 
@@ -57,7 +57,7 @@ class Core_Cli_ScriptInfoTest extends \Nano\TestUtils\TestCase {
 
 	public function testStopUsage() {
 		Nano::setApplication(null);
-		self::assertEquals(200, $this->cli->run(array('no-description')));
+		self::assertEquals(200, $this->cli->run(array('app.no-description')));
 		self::assertContains('[script stop message]', $this->getActualOutput());
 	}
 

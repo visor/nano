@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace Module\Module3\CliScript;
 
 class ModuleThreeScript extends \Nano\Cli\Script {
 

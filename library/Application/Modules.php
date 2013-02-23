@@ -2,6 +2,8 @@
 
 namespace Nano\Application;
 
+use \Nano\Names;
+
 /**
  * todo: rename to application_modules?
  */
@@ -15,7 +17,7 @@ class Modules extends \ArrayObject {
 	 * @param string $name
 	 */
 	public static function nameToNamespace($name) {
-		return \Nano\Names::common($name);
+		return Names::common($name);
 	}
 
 	/**
@@ -38,7 +40,7 @@ class Modules extends \ArrayObject {
 	 */
 	public function append($name, $path = null) {
 		if (null === $path) {
-			throw new \Nano\Application\Exception\ModuleNotFound($name);
+			throw new Exception\ModuleNotFound($name);
 		}
 		$this->offsetSet($name, $path);
 		return $this;
@@ -61,7 +63,7 @@ class Modules extends \ArrayObject {
 	 */
 	public function getPath($name, $folder = null) {
 		if (!$this->offsetExists($name)) {
-			throw new \Nano\Application\Exception\ModuleNotFound($name);
+			throw new Exception\ModuleNotFound($name);
 		}
 		$result = $this->offsetGet($name);
 		if (null === $folder) {
@@ -91,7 +93,7 @@ class Modules extends \ArrayObject {
 	 */
 	public function offsetSet($name, $path) {
 		if (!is_dir($path)) {
-			throw new \Nano\Application\Exception\PathNotFound($path);
+			throw new Exception\PathNotFound($path);
 		}
 		parent::offsetSet($name, $path);
 	}

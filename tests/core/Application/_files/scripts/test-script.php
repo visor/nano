@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace App\CliScript;
 
 /**
  * @description Test script to use into test cases @ @ @param

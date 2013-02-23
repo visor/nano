@@ -4,9 +4,9 @@ namespace Nano;
 
 class Cli {
 
-	const DIR = 'scripts';
-
-	const BOOTSTRAP = 'bootstrap.php';
+	const DIR           = 'scripts';
+	const CLI_NAMESPACE = 'CliScript';
+	const BOOTSTRAP     = 'bootstrap.php';
 
 	/**
 	 * @var boolean
@@ -24,7 +24,7 @@ class Cli {
 	protected $applicationDir;
 
 	/**
-	 * @var null
+	 * @var null|\Nano\Application
 	 */
 	protected $application = null;
 
@@ -103,7 +103,8 @@ class Cli {
 		echo self::getPhpBinary() . ' ' . baseName(self::getCliScriptPath()) . ' [script [params]]', PHP_EOL, PHP_EOL;
 		echo 'where script is one of: ', PHP_EOL;
 		foreach ($this->scripts as $name => $script) {
-			$sciptName        = ' - ' . $name . str_repeat(' ', $this->maxLength - strLen($name) + 2);
+			$repeat           = $this->maxLength - strLen($name) + 2;
+			$sciptName        = ' - ' . $name . str_repeat(' ', $repeat);
 			$sciptDescription = $this->alignDescription($this->getScriptToRun($name)->getDescription(), $this->maxLength + 7);
 			echo $sciptName, ' - ', $sciptDescription, PHP_EOL;
 		}
@@ -174,7 +175,7 @@ class Cli {
 
 	protected function loadNanoScripts() {
 		$scriptsRoot = dirName(__DIR__) . DS . self::DIR;
-		$this->loadScriptsFromDir($scriptsRoot);
+		$this->loadScriptsFromDir($scriptsRoot, true);
 	}
 
 	protected function loadApplicationScripts() {
@@ -183,16 +184,16 @@ class Cli {
 		}
 
 		if (is_dir($this->application->rootDir . DS . self::DIR)) {
-			$this->loadScriptsFromDir($this->application->rootDir . DS . self::DIR);
+			$this->loadScriptsFromDir($this->application->rootDir . DS . self::DIR, false);
 		}
-		foreach ($this->application->modules as $path) {
+		foreach ($this->application->modules as $module => $path) {
 			if (is_dir($path . DS . self::DIR)) {
-				$this->loadScriptsFromDir($path . DS . self::DIR);
+				$this->loadScriptsFromDir($path . DS . self::DIR, false, $module);
 			}
 		}
 	}
 
-	protected function loadScriptsFromDir($path) {
+	protected function loadScriptsFromDir($path, $nanoScript, $module = null) {
 		$iterator = new \DirectoryIterator($path);
 		foreach ($iterator as $item) {
 			/** @var \DirectoryIterator $item */
@@ -206,14 +207,26 @@ class Cli {
 			if (1 !== preg_match('/^[a-z\-]+$/', $item->getBaseName('.php'))) {
 				continue;
 			}
-			$this->addScript($item->getPathName());
+			$this->addScript($item->getPathName(), $nanoScript, $module);
 		}
 		unSet($item, $iterator);
 	}
 
-	protected function addScript($fileName) {
-		$name      = baseName($fileName, '.php');
-		$className = 'CliScript\\' . \Nano::stringToName($name);
+	protected function addScript($fileName, $nanoScript, $module = null) {
+		$name = baseName($fileName, '.php');
+
+		if ($nanoScript) {
+			$prefix    = '';
+			$className = self::CLI_NAMESPACE . '\\' . Names::common($name);
+		} elseif (null === $module) {
+			$prefix    = 'app.';
+			$className = Names::applicationClass($name, self::CLI_NAMESPACE);
+		} else {
+			$prefix    = $module . '.';
+			$className = Names::moduleClass($module, $name, self::CLI_NAMESPACE);
+		}
+
+		echo $className, PHP_EOL;
 		if (!class_exists($className, false)) {
 			include_once $fileName;
 
@@ -229,10 +242,14 @@ class Cli {
 		if (!$script->isInstantiable()) {
 			return;
 		}
-		if ($this->maxLength < ($length = strLen($name))) {
+
+		$scriptName = $prefix . $name;
+		if ($this->maxLength < ($length = strLen($scriptName))) {
 			$this->maxLength = $length;
 		}
-		$this->scripts[$name] = $script;
+
+		$this->scripts[$scriptName] = $script;
+//		$this->scripts[$name] = $script;
 	}
 
 	/**

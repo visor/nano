@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace App\CliScript;
 
 /**
  * @param required $testParam Required test parameter

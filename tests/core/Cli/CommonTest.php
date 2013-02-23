@@ -97,7 +97,7 @@ class Core_Cli_CommonTest extends \Nano\TestUtils\TestCase {
 		self::assertEquals(0, $this->cli->run(array()));
 		/** @var ArrayObject $actual */
 		$actual = $this->cli->getScripts();
-		self::assertTrue($actual->offsetExists('test-script'));
+		self::assertTrue($actual->offsetExists('app.test-script'));
 	}
 
 	public function testModulesScriptsShouldBeLoadedIfExists() {
@@ -105,8 +105,8 @@ class Core_Cli_CommonTest extends \Nano\TestUtils\TestCase {
 
 		/** @var ArrayObject $actual */
 		$actual = $this->cli->getScripts();
-		self::assertTrue($actual->offsetExists('module-three-script'));
-		self::assertTrue($actual->offsetExists('module-five-script'));
+		self::assertTrue($actual->offsetExists('module3.module-three-script'));
+		self::assertTrue($actual->offsetExists('module5.module-five-script'));
 	}
 
 	public function testOnlyProperlyNamedScriptsShouldBeLoaded() {
@@ -134,7 +134,7 @@ class Core_Cli_CommonTest extends \Nano\TestUtils\TestCase {
 
 	public function testGetScriptShouldReturnScriptIfExists() {
 		self::assertEquals(0, $this->cli->run(array()));
-		self::assertInstanceOf('ReflectionClass', $this->cli->getScript('test-script'));
+		self::assertInstanceOf('ReflectionClass', $this->cli->getScript('app.test-script'));
 	}
 
 	public function testRunShouldReturn1WhenScriptNotFound() {
@@ -147,7 +147,7 @@ class Core_Cli_CommonTest extends \Nano\TestUtils\TestCase {
 	}
 
 	public function testRunShouldReturnScriptResultAfterExecute() {
-		self::assertEquals(100, $this->cli->run(array('test-script')));
+		self::assertEquals(100, $this->cli->run(array('app.test-script')));
 		self::assertContains('[test script was run]', $this->getActualOutput());
 	}
 

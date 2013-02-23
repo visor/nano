@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace App\CliScript;
 
 /**
  * @description Example application script. Prints configured application modules

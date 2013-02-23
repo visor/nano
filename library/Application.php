@@ -16,14 +16,14 @@ require __DIR__ . '/Application/ErrorHandler.php';
  * @property string $sharedModulesDir
  * @property string $nanoRootDir
  *
- * @property Application\Config\Format $configFormat
- * @property Application\Config $config
- * @property Loader $loader
- * @property Application\Dispatcher $dispatcher
- * @property Application\Modules $modules
+ * @property \Nano\Application\Config\Format $configFormat
+ * @property \Nano\Application\Config $config
+ * @property \Nano\Loader $loader
+ * @property \Nano\Application\Dispatcher $dispatcher
+ * @property \Nano\Application\Modules $modules
  * @property \SplObjectStorage $plugins
- * @property Event\Manager $eventManager
- * @property HelperBroker $helper
+ * @property \Nano\Event\Manager $eventManager
+ * @property \Nano\HelperBroker $helper
  * @property \Nano\L10n\Locale $locale
  */
 class Application extends Util\TypedRegistry {

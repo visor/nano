@@ -1,6 +1,6 @@
 <?php
 
-namespace CliScript;
+namespace App\CliScript;
 
 class Script1 extends \Nano\Cli\Script {
 
