@@ -93,6 +93,10 @@ class ErrorHandler {
 		return $result;
 	}
 
+	protected function isEnabled() {
+		return isSet(\Nano::app()->config->get('web')->errorReporting) && true === \Nano::app()->config->get('web')->errorReporting;
+	}
+
 	/**
 	 * @return \Nano\Controller\Response
 	 * @param \Nano\Controller\Response $response
@@ -180,7 +184,11 @@ class ErrorHandler {
 			\Nano::app()->dispatcher->controllerInstance()->markRendered();
 			\Nano::app()->dispatcher->controllerInstance()->setResponse($response);
 		}
-		$response->send();
+		if ($this->isEnabled()) {
+			$response->send();
+		} else {
+			$response->sendHeaders();
+		}
 	}
 
 	protected function errorToString(array $error) {
