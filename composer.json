@@ -1,6 +1,5 @@
 {
-	"name": "visor/nano",
-	"version": "0.0.1-dev",
+	"name": "nano/core",
 	"description": "Nano: Little MVC-like PHP framework",
 	"keywords": ["nano", "mvc", "framework"],
 	"homepage": "https://github.com/visor/nano",
@@ -18,7 +17,9 @@
 		"composer/composer": "1.0.*@dev"
 	},
 	"minimum-stability": "dev",
-	"config": {
-		"vendor-dir": "dependencies"
+	"extra": {
+		"branch-alias": {
+			"0.1": "0.0.1"
+		}
 	}
 }
