@@ -1,6 +1,7 @@
 {
 	"name": "visor/nano",
-	"description": "Little MVC-like PHP framework",
+	"version": "0.0.1-dev",
+	"description": "Nano: Little MVC-like PHP framework",
 	"keywords": ["nano", "mvc", "framework"],
 	"homepage": "https://github.com/visor/nano",
 	"type": "library",
@@ -16,5 +17,8 @@
 		"php": ">=5.3.2",
 		"composer/composer": "1.0.*@dev"
 	},
-	"minimum-stability": "beta"
+	"minimum-stability": "dev",
+	"config": {
+		"vendor-dir": "dependencies"
+	}
 }
