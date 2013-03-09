@@ -16,10 +16,5 @@
 		"php": ">=5.3.2",
 		"composer/composer": "1.0.*@dev"
 	},
-	"minimum-stability": "dev",
-	"extra": {
-		"branch-alias": {
-			"0.1": "0.0.1"
-		}
-	}
+	"minimum-stability": "dev"
 }
