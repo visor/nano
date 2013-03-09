@@ -1,0 +1,20 @@
+{
+	"name": "visor/nano",
+	"description": "Little MVC-like PHP framework",
+	"keywords": ["nano", "mvc", "framework"],
+	"homepage": "https://github.com/visor/nano",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Victor Karamzin",
+			"email": "admin@visor.ws",
+			"homepage": "http://visor.ws"
+		}
+	],
+	"require": {
+		"php": ">=5.3.2",
+		"composer/composer": "1.0.*@dev"
+	},
+	"minimum-stability": "beta"
+}
