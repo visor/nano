@@ -226,7 +226,6 @@ class Cli {
 			$className = Names::moduleClass($module, $name, self::CLI_NAMESPACE);
 		}
 
-		echo $className, PHP_EOL;
 		if (!class_exists($className, false)) {
 			include_once $fileName;
 
