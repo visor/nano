@@ -4,7 +4,7 @@
 	, 'index'           => 'index.php'
 
 	, 'errorController' => null
-	, 'errorReporting'  => false
+	, 'errorReporting'  => true
 
 	, 'locale'   => 'ru'
 
